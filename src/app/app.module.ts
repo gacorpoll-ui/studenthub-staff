@@ -8,7 +8,7 @@ import { MyApp } from './app.component';
 import { LoginPage } from '../pages/start-pages/login/login';
 // Pages when logged in
 import { NavigationPage } from '../pages/logged-in/navigation/navigation';
-import { HomePage } from '../pages/logged-in/home/home';
+import { DefaultPage } from '../pages/logged-in/default/default';
 
 // Providers / Services
 import { AuthService } from '../providers/auth.service';
@@ -21,7 +21,7 @@ import { ConfigService } from '../providers/config.service';
     LoginPage,
     // Logged In
     NavigationPage,
-    HomePage
+    DefaultPage
   ],
   entryComponents: [
     MyApp,
@@ -29,7 +29,7 @@ import { ConfigService } from '../providers/config.service';
     LoginPage,
     // Logged In
     NavigationPage,
-    HomePage
+    DefaultPage
   ],
   imports: [
     IonicModule.forRoot(MyApp)
