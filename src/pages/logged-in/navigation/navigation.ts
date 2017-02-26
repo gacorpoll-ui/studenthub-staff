@@ -22,6 +22,16 @@ export class NavigationPage {
     private _menuCtrl: MenuController
   ){}
 
+  loadPage(pageName: string){
+    switch(pageName){
+      case "summary":
+        this.rootPage = DefaultPage;
+        break;
+    }
+
+    this._menuCtrl.close();
+  }
+
   /**
    * Log Agent out of the app
    */

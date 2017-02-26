@@ -13,6 +13,11 @@
       <ion-list>
         <ion-list-header>Personal</ion-list-header>
 
+        <button ion-item (click)="loadPage('summary')">
+          <ion-icon name="stats" item-left></ion-icon>
+          Summary
+        </button>
+
         <button ion-item (click)="logout()">
           <ion-icon name="ios-log-out" item-left></ion-icon>
           Logout
