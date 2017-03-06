@@ -31,10 +31,10 @@ export class MyApp implements OnInit {
 
         // Check for App update via Ionic Deploy
         this._checkForUpdate();
-
-        // Initiate the access token request which determines login status.
-        this._auth.getAccessToken();
       }
+
+      // Initiate the access token request which determines login status.
+      this._auth.getAccessToken();
     });
   }
 
