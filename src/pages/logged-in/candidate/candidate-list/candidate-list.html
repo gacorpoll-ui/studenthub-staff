@@ -1,10 +1,12 @@
 <ion-header>
   <ion-navbar>
+  
     <button ion-button menuToggle="left">
       <ion-icon name="menu"></ion-icon>
     </button>
 
     <ion-title>Candidates</ion-title>
+
   </ion-navbar>
 </ion-header>
 
@@ -18,6 +20,11 @@
       Not Assigned
     </ion-segment-button>
   </ion-segment>
+  
+  <ion-searchbar
+    [(ngModel)]="searchBar"
+    (ionInput)="loadData()">
+  </ion-searchbar>
 
   <ion-list>
     <ion-item-sliding *ngFor="let candidate of candidates">

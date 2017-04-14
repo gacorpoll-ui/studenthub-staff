@@ -28,8 +28,8 @@ export class CandidateService {
    * List of all candidates asigned to store 
    * @returns {Observable<any>}
    */
-  listAssigned(): Observable<any> {
-    let url = this._candidateEndpoint + '/assigned';
+  listAssigned(candidate_name: string): Observable<any> {
+    let url = this._candidateEndpoint + '/assigned?candidate_name=' + candidate_name;
     return this._authhttp.get(url);
   }
 
@@ -37,8 +37,8 @@ export class CandidateService {
    * List of all candidates not asigned to store 
    * @returns {Observable<any>}
    */
-  listNotAssigned(): Observable<any> {
-    let url = this._candidateEndpoint + '/not-assigned';
+  listNotAssigned(candidate_name: string): Observable<any> {
+    let url = this._candidateEndpoint + '/not-assigned?candidate_name=' + candidate_name;
     return this._authhttp.get(url);
   }
 
