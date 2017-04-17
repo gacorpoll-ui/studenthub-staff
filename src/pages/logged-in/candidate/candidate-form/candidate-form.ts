@@ -145,8 +145,19 @@ export class CandidateFormPage {
 
       // On Failure
       if (jsonResponse.operation == "error") {
+
+        var html = '';
+
+        for (let i in jsonResponse.message) {
+          
+          for (let j of jsonResponse.message[i]) {
+             
+             html += j + '<br />';
+          }
+        }
+
         let prompt = this._alertCtrl.create({
-          message: JSON.stringify(jsonResponse.message),
+          message: html,
           buttons: ["Ok"]
         });
         prompt.present();
