@@ -121,18 +121,9 @@ export class CandidateListPage {
    * Loads the create page
    */
   create() {
-    let modal = this._modalCtrl.create(CandidateFormPage, {
+    this.navCtrl.push(CandidateFormPage, {
       model: new Candidate()
     });
-    // Refresh List if required
-    modal.onDidDismiss(data => {
-      if (data) {
-        if (data.refresh) {
-          this.loadData();
-        }
-      }
-    });
-    modal.present();
   }
 
   /**
