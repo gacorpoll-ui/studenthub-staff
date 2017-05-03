@@ -25,7 +25,10 @@ export class CandidateFormPage {
   public banklistData;
   public universitylistData;
   public countrylistData;
-  public myDate;
+
+  // Date values for Date Input
+  public todayDate;
+  public maxDate;
 
   constructor(
     params: NavParams,
@@ -41,7 +44,9 @@ export class CandidateFormPage {
   ) {
     // Load the passed model if available
     this.model = params.get('model');
-    this.myDate = new Date().toISOString();
+
+    // Set the min and max dates
+    this.setDates();
 
     // Init Form
     if (!this.model.candidate_id) { // Show Create Form
@@ -85,19 +90,14 @@ export class CandidateFormPage {
   }
 
   ionViewDidLoad() {
-
     //let loader = this._loadingCtrl.create();
     //loader.present();
-
     // Load the all available bank list
     this.loadBanksList();
-
     // Load the all available university list
     this.loadUniversityList();
-
     // Load all country 
     this.loadCountryList();
-
     //loader.dismiss();
   }
 
@@ -129,15 +129,7 @@ export class CandidateFormPage {
   }
 
   /**
-   * Close the page
-   */
-  close() {
-    let data = { 'refresh': false };
-    this._viewCtrl.dismiss(data);
-  }
-
-  /**
-   * Save the model
+   * Save the candidate model
    */
   save() {
     let loader = this._loadingCtrl.create();
@@ -185,6 +177,9 @@ export class CandidateFormPage {
     });
   }
 
+  /**
+   * Load list of countries
+   */
   loadCountryList() {
     this.countryService.listAll().subscribe(response => {
       this.countrylistData = response;
@@ -197,6 +192,9 @@ export class CandidateFormPage {
     });
   }
 
+  /**
+   * Load list of universities available
+   */
   loadUniversityList() {
     this.universityService.listAll().subscribe(response => {
       this.universitylistData = response;
@@ -209,8 +207,10 @@ export class CandidateFormPage {
     });
   }
 
+  /**
+   * Load list of banks
+   */
   loadBanksList() {
-    // Load list of ALL banks
     this.bankService.listAll().subscribe(response => {
       this.banklistData = response;
       response.forEach((value) => {
@@ -220,6 +220,20 @@ export class CandidateFormPage {
         }
       });
     });
+  }
+
+  
+  /**
+   * Sets the default dates for min/max validation
+   */
+  setDates(){
+    let today = new Date();
+    //var dd = today.getDate();
+    var mm = today.getMonth() + 1; // 0 is January, so we must add 1
+    var yyyy = today.getFullYear();
+
+    this.todayDate = new Date().toISOString();
+    this.maxDate = new Date((yyyy+20), mm).toISOString();
   }
 
 }
