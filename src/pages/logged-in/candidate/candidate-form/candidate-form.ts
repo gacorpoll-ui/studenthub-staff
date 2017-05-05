@@ -22,7 +22,11 @@ export class CandidateFormPage {
   @ViewChild('fileInput') fileInput:ElementRef;
 
   public bucketUrl = "https://bawes-public.s3.eu-west-2.amazonaws.com/"; // Used for link generation after upload
-  public uploads = []; // List of uploads to display in this app
+  // Photo Uploads Progress Indicators
+  public isPhotoUploading = false;
+  public isCivilFrontUploading = false;
+  public isCivilBackUploading = false;
+  private _lastClickedFileInputType: string; // last file input item clicked
 
   public model: Candidate;
   public operation: string;
@@ -257,32 +261,32 @@ export class CandidateFormPage {
    * Upload Candidate Personal Photo
    */
   photoUpload(){
-    console.log("Uploading personal photo");
-    this.uploadBtnClicked();
+    this.uploadBtnClicked("photo");
   }
 
   /**
    * Upload Civil ID Photo from Front
    */
   civilFrontUpload(){
-    console.log("Uploading front civil photo");
-    this.uploadBtnClicked();
+    this.uploadBtnClicked("civilfront");
   }
 
   /**
    * Upload Civil ID Photo from Back
    */
   civilBackUpload(){
-    console.log("Uploading back civil photo");
-    this.uploadBtnClicked();
+    this.uploadBtnClicked("civilback");
   }
 
   /**
    * Upload Photo button clicked
    * - On Native device, load native camera/gallery
    * - On Browser, trigger a click on the html file input
-   */
-  uploadBtnClicked(){
+  * @param  {string} fileType which file we're uploading
+  */
+  uploadBtnClicked(fileType: string){
+    this._lastClickedFileInputType = fileType; // stored for loading indicators 
+
     if(this._platform.is("cordova")){
       // Display action sheet giving user option of camera vs local filesystem.
       let actionSheet = this._actionSheetCtrl.create({
@@ -345,6 +349,7 @@ export class CandidateFormPage {
   /**
    * Upload the selected file through regular HTML file input 
    * This method will only be called if the target is not a cordova app.
+   * @param  {} $event
    */
   uploadFileViaHtmlFileInput($event){
     let fileList: FileList = $event.target.files;
@@ -360,18 +365,22 @@ export class CandidateFormPage {
   }
 
   /**
-   * Takes a JS File object for upload to S3
+   * Process S3 upload by subscribing to progress observable
+   * @param  {} uploadObservable
    */
   processFileUpload(uploadObservable){
-    // Create Transfer Record for Display 
+    // Create Temporary Transfer Record
     let newUpload = {
       name: "Preparing file for upload",
+      type: this._lastClickedFileInputType,
       status: "uploading",
       loaded: 0,
       total: 100,
       link: ''
     };
-    this.uploads.push(newUpload);
+
+    // Show File Upload Indicator based on which file is being uploaded
+    this._showProgressIndicator(newUpload.type);
 
     // Process Upload and Display Progress
     uploadObservable.subscribe((progress) => {
@@ -390,9 +399,48 @@ export class CandidateFormPage {
     }, (err) => {
       console.log("Error", err);
       newUpload.status = "error";
+      // Hide File Upload Indicator based on which file is being uploaded
+      this._hideProgressIndicator(newUpload.type);
     }, () => {
       newUpload.status = "complete";
+      // Hide File Upload Indicator based on which file is being uploaded
+      this._hideProgressIndicator(newUpload.type);
     });
+  }
+
+  /**
+   * Show upload progress indicator for specific filetype
+   * @param  {string} fileType
+   */
+  private _showProgressIndicator(fileType: string){
+    switch(fileType){
+      case "photo":
+        this.isPhotoUploading = true;
+        break;
+      case "civilfront":
+        this.isCivilFrontUploading = true;
+        break;
+      case "civilback":
+        this.isCivilBackUploading = true;
+        break;
+    }
+  }
+  /**
+   * Hide upload progress indicator for specific filetype
+   * @param  {string} fileType
+   */
+  private _hideProgressIndicator(fileType: string){
+    switch(fileType){
+      case "photo":
+        this.isPhotoUploading = false;
+        break;
+      case "civilfront":
+        this.isCivilFrontUploading = false;
+        break;
+      case "civilback":
+        this.isCivilBackUploading = false;
+        break;
+    }
   }
 
 }
