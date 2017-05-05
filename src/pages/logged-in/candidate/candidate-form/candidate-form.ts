@@ -235,9 +235,9 @@ export class CandidateFormPage {
 
   /**
    * Image upload handler
-   * @param {{key: string, url: string}} $event
+   * @param {{prefix: string, key: string, url: string}} $event
    */
-  onUploadComplete($event: {key: string, url: string}){
+  onUploadComplete($event: {prefix:string, key: string, url: string}){
     console.log($event);
   }
   
