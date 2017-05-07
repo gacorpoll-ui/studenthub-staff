@@ -10,6 +10,7 @@ export class Candidate {
     candidate_iban: string;
     candidate_name: string;
     candidate_name_ar: string;
+    candidate_personal_photo: string;
     candidate_email: string;
     candidate_password_hash: string;
     candidate_phone: string;
