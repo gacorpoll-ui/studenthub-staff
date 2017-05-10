@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, ViewController, LoadingController, AlertController, NavParams } from 'ionic-angular';
+import { NavController, ViewController, LoadingController, AlertController, NavParams, ToastController } from 'ionic-angular';
 // Forms
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CustomValidator } from '../../../../validators/custom.validator';
@@ -40,6 +40,7 @@ export class CandidateFormPage {
     private _viewCtrl: ViewController,
     private _loadingCtrl: LoadingController,
     private _alertCtrl: AlertController,
+    private _toastCtrl: ToastController,
   ) {
     // Load the passed model if available
     this.model = params.get('model');
@@ -141,6 +142,12 @@ export class CandidateFormPage {
         // Close the page
         let data = { 'refresh': true };
         this._viewCtrl.dismiss(data);
+        
+        let toast = this._toastCtrl.create({
+          message: this.model.candidate_name+' Candidate account data saved successfully',
+          duration: 3000
+        });
+        toast.present();
       }
 
       // On Failure
