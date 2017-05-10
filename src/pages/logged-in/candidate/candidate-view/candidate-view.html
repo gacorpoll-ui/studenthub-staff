@@ -15,7 +15,8 @@
 </ion-header>
 
 <ion-content>
-  <ion-card>
+  <ion-item-group>
+
     <ion-item>
       <ion-avatar item-left *ngIf="candidate.candidate_personal_photo">
         <img [src]="aws.permanentBucketUrl + candidate.candidate_personal_photo">
@@ -24,15 +25,16 @@
       <p>{{ candidate.candidate_name_ar }}</p>
       <p>C{{ candidate.candidate_id }}</p>
     </ion-item>
-  </ion-card>
+    <a href='tel:{{ candidate.candidate_phone }}' ion-item target='_blank'>
+      <ion-icon name="call" item-left></ion-icon>
+      {{ candidate.candidate_phone }}
+    </a>
+    <a href='mailto:{{ candidate.candidate_email }}' ion-item target='_blank'>
+      <ion-icon name="mail" item-left></ion-icon>
+      {{ candidate.candidate_email }}
+    </a>
 
-  <ion-item-group>
-
-    <ion-item-divider color="light">Status</ion-item-divider>
-    <ion-item>
-      <h5>Status</h5>
-      <p>{{ candidate.candidate_status }}</p>
-    </ion-item>
+    <ion-item-divider color="light">Status: {{ candidate.candidate_status }}</ion-item-divider>
     <ion-item *ngIf="candidate.store_id">
       <h5>Currently assigned work at</h5>
       <p>{{ candidate.store_name }} @ TODO:CompanyNameHere</p>
@@ -47,35 +49,30 @@
       <h5>Hourly Rate</h5>
       <p>{{ candidate.candidate_hourly_rate }}</p>
     </ion-item>
-    
-    <ion-item-divider color="light">Contact</ion-item-divider>
-    <ion-item>
-      <h5>Email</h5>
-      <p>{{ candidate.candidate_email }}</p>
-    </ion-item>
-    <ion-item>
-      <h5>Phone</h5>
-      <p>{{ candidate.candidate_phone }}</p>
-    </ion-item>
 
     <ion-item-divider color="light">Personal</ion-item-divider>
     <ion-item>
-      <h5>Birth date</h5>
-      <p>{{ candidate.candidate_birth_date }}</p>
-    </ion-item>
-    <ion-item *ngIf="candidate.university">
-      <h5>University</h5>
-      <p>{{ candidate.university.university_name_en }}</p>
+      <h5>Age</h5>
+      <p>calculate and output age here</p>
     </ion-item>
     <ion-item *ngIf="candidate.country">
       <h5>Nationality</h5>
       <p>{{ candidate.country.country_name_en }}</p>
     </ion-item>
+    <ion-item *ngIf="candidate.university">
+      <h5>University</h5>
+      <p>{{ candidate.university.university_name_en }}</p>
+    </ion-item>
+    
 
     <ion-item-divider color="light">Civil ID</ion-item-divider>
     <ion-item>
       <h5>Civil ID Number</h5>
       <p>{{ candidate.candidate_civil_id }}</p>
+    </ion-item>
+    <ion-item>
+      <h5>Birth date</h5>
+      <p>{{ candidate.candidate_birth_date }}</p>
     </ion-item>
     <ion-item>
       <h5>Expiry Date</h5>
