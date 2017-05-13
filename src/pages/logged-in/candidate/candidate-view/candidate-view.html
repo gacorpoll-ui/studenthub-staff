@@ -37,7 +37,7 @@
     <ion-item-divider color="light">Status: {{ candidate.candidate_status }}</ion-item-divider>
     <ion-item *ngIf="candidate.store_id">
       <h5>Currently assigned work at</h5>
-      <p>{{ candidate.store_name }} @ TODO:CompanyNameHere</p>
+      <p>{{ candidate.store_name }} @ {{ candidate.company_name }}</p>
     </ion-item>
     <ion-item *ngIf="!candidate.store_id">
       <button ion-button full (click)="assignToStoreButtonClicked()">Assign Candidate to Store</button>
