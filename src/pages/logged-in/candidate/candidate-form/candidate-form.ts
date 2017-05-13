@@ -136,6 +136,11 @@ export class CandidateFormPage {
 
       // On Success
       if (jsonResponse.operation == "success") {
+        // Fix photo folder path after upload
+        if(this.model.candidate_personal_photo && !this.model.candidate_personal_photo.includes("photos/")){
+          this.model.candidate_personal_photo = `photos/${this.model.candidate_personal_photo}`;
+        }
+        
         // Close the page
         let data = { 'refresh': true };
         this._viewCtrl.dismiss(data);

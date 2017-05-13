@@ -33,13 +33,13 @@ export class CandidateViewPage {
   }
 
   ionViewDidLoad() {
-    this.loadData();
+    this.LoadStoreData();
   }
 
   /**
    * Load data required
    */
-  loadData() {
+  LoadStoreData() {
     // Load list of ALL stores
     let loader = this._loadingCtrl.create();
     loader.present();
