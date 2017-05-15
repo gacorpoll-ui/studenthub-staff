@@ -53,8 +53,10 @@ export class CountryListPage {
 
       this.countries = response.json();
 
-      loader.dismiss();
-    });
+      },
+    error => {},
+    () => {loader.dismiss();}
+    );
   }
 
   /**

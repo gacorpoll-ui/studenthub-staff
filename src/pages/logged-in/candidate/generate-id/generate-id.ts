@@ -132,8 +132,10 @@ export class GenerateIdPage {
           this.candidates[index] = value.candidate_id;  
         });
 
-      loader.dismiss();
-    });
+      },
+    error => {},
+    ()=>{loader.dismiss();}
+    );
   }
 
   /**
@@ -170,7 +172,9 @@ export class GenerateIdPage {
           this.candidates[index] = value.candidate_id;  
         });
 
-      loader.dismiss();
-    });
+    },
+    error => {},
+    ()=>{loader.dismiss();}
+    );
   }
 }

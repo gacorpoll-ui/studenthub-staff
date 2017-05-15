@@ -106,8 +106,9 @@ export class ExpiredIdPage {
       this.candidatelistData.forEach((value, index) => {
           this.candidates[index] = value.candidate_id;  
         });
-
-      loader.dismiss();
-    });
+    },
+    error => {},
+    ()=>{loader.dismiss();}
+    );
   }
 }

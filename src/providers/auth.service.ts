@@ -115,6 +115,4 @@ export class AuthService {
       .first()
       .map((res: Response) => res.json());
   }
-
-
 }

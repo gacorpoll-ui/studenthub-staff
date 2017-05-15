@@ -66,8 +66,10 @@ export class StoreListPage {
         this.pages = [];
 
       this.stores = response.json();
-      loader.dismiss();
-    });
+      },
+    error => {},
+    () => {loader.dismiss();}
+    );
   }
 
   /**

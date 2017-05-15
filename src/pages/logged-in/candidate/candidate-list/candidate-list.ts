@@ -72,9 +72,13 @@ export class CandidateListPage {
         this.pages = [];
 
       this.candidates = response.json();
-
+    },
+    error => {},
+    () => {
+      console.log('Not Assigned Request Completed');
       loader.dismiss();
-    });
+    }
+    );
   }
 
   loadAssigned(page: number) {
@@ -101,8 +105,10 @@ export class CandidateListPage {
         this.pages = [];
 
       this.candidates = response.json();
-      loader.dismiss();
-    });
+    },
+    error => {},
+    () => { console.log('Assigned Request Completed'); loader.dismiss(); }
+    );
   }
 
   pageLinkColor(page: number) {

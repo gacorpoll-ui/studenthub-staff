@@ -53,8 +53,10 @@ export class UniversityListPage {
 
       this.universities = response.json();
 
-      loader.dismiss();
-    });
+    },
+    error => {},
+    () => {loader.dismiss();}
+    );
   }
 
   /**
