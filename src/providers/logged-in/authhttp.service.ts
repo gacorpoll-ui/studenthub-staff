@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers, Response, ResponseContentType } from '@angular/http';
-import { Platform, Events } from 'ionic-angular';
+import { Platform, Events, AlertController } from 'ionic-angular';
 
 import { saveAs } from 'file-saver';
 
@@ -25,7 +25,8 @@ export class AuthHttpService {
     private _auth: AuthService,
     private _config: ConfigService,
     private _platform: Platform,
-    private _events: Events
+    private _events: Events,
+    private _alertCtrl: AlertController
     ) {}
 
   /**
@@ -41,7 +42,9 @@ export class AuthHttpService {
     return this._http.post(url, params, {
       responseType: ResponseContentType.Blob,
       headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + bearerToken })
-    }).map(
+    })
+    .catch((err) => this._handleError(err))
+    .map(
       (response) => { // download file
 
           var blob = new Blob([response.blob()], { type: 'application/zip' });
@@ -149,13 +152,31 @@ export class AuthHttpService {
       let errMsg = (error.message) ? error.message :
           error.status ? `${error.status} - ${error.statusText}` : 'Server error';
 
+      if (error.status === 400) {
+          let prompt = this._alertCtrl.create({
+            message: 'Invalid Candidate ID',
+            buttons: ["Ok"]
+          });
+          prompt.present();
+          return Observable.empty<Response>();
+      }
+
+      if (error.status === 500) {
+          let prompt = this._alertCtrl.create({
+            message: 'Cannot create a zip file',
+            buttons: ["Ok"]
+          });
+          prompt.present();
+          return Observable.empty<Response>();
+      }
+
       // Handle Bad Requests
       // This error usually appears when agent attempts to handle an 
       // account that he's been removed from assigning
-      if (error.status === 400) {
+      /*if (error.status === 400) {
           this._events.publish("accountAssignment:removed");
           return Observable.empty<Response>();
-      }
+      }*/
 
       // Handle No Internet Connection Error
       if (error.status == 0) {

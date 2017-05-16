@@ -62,16 +62,8 @@ export class GenerateIdPage {
     loader.present();
 
     this.candidateIdCardService.generate(this.candidates).subscribe(response => {
-
-      /*if(response.operation == 'error')
-      {
-        let prompt = this._alertCtrl.create({
-          message: response.message,
-          buttons: ["Ok"]
-        });
-        prompt.present();
-      }*/
-
+    }, (err) => {
+    }, () => {
       loader.dismiss();
     });
   }

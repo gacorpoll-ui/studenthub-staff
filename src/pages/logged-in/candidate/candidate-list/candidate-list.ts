@@ -31,7 +31,7 @@ export class CandidateListPage {
     public toastCtrl: ToastController
   ) { }
 
-  ionViewDidLoad() {
+  ionViewWillEnter() {
     this.loadData(this.currentPage);
   }
 

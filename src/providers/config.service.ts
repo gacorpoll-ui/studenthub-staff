@@ -34,9 +34,12 @@ export class ConfigService {
    * @param {string} [platform]
    */
   initDevEnvironment(platform?: string){
+    
+    this.apiBaseUrl = "http://localhost/payroll/staff/web/v1";
+
     //this.apiBaseUrl = "http://localhost/~BAWES/payroll/staff/web/v1";
-    this.apiBaseUrl = "http://staff.payroll.local/v1";
-    // this.apiBaseUrl = "http://payroll-staff.dev.studenthub.co/v1";
+    //this.apiBaseUrl = "http://staff.payroll.local/v1";
+    //this.apiBaseUrl = "http://payroll-staff.dev.studenthub.co/v1";
 
     this.setupDeviceSpecificConfigs();
   }
