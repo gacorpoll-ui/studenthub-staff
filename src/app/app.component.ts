@@ -33,7 +33,7 @@ export class MyApp implements OnInit {
         splashScreen.hide();
 
         // Check for App update via Ionic Deploy
-        this._checkForUpdate();
+        // this._checkForUpdate();
       }
 
       // Initiate the access token request which determines login status.

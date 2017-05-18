@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ModalController, LoadingController, AlertController } from 'ionic-angular';
+import { NavController, NavParams, ModalController, LoadingController, ToastController, AlertController } from 'ionic-angular';
 // Pages
 import { CandidateFormPage } from '../candidate-form/candidate-form';
 // Models
@@ -27,7 +27,8 @@ export class CandidateViewPage {
     public storeService: StoreService,
     public candidateService: CandidateService,
     public aws: AwsService,
-    private _loadingCtrl: LoadingController
+    private _loadingCtrl: LoadingController,
+    public toastCtrl: ToastController,
   ) {
     this.candidate = params.get('model');
     console.log(this.candidate);
@@ -199,6 +200,61 @@ export class CandidateViewPage {
     }else html = response.message;
 
     return html;
+  }
+
+  /**
+   * Show confirm alert to reset password 
+   */
+  resetPassword(candidate: Candidate) {
+
+    let alert = this.alertCtrl.create({
+      title: 'Confirm password reset',
+      message: 'Do you want to send new password to candidate?',
+      buttons: [
+        {
+          text: 'No',
+          role: 'cancel'
+        },
+        {
+          text: 'Yes',
+          handler: () => {
+            this.resetPasswordConfirm(candidate);
+          }
+        }
+      ]
+    });
+    alert.present();    
+  }
+
+  /**
+   * Reset Password
+   */
+  resetPasswordConfirm(candidate: Candidate) {
+    let loader = this._loadingCtrl.create();
+    loader.present();
+
+    this.candidateService.resetPassword(candidate).subscribe(response => {
+      loader.dismiss();
+
+      if(response.operation == 'error')
+      {
+        let toast = this.toastCtrl.create({
+          message: response.message,
+          duration: 3000
+        });
+        
+        toast.present();
+      } 
+      else 
+      {
+        let alert = this.alertCtrl.create({
+            title: 'Reset Password',
+            subTitle: 'New password sent to candidate',
+            buttons: ['Okay']
+          });
+          alert.present();
+      }      
+    });
   }
 
 }
