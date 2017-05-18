@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, LoadingController, ModalController, ToastController } from 'ionic-angular';
+import { NavController, LoadingController, ModalController, ToastController, AlertController } from 'ionic-angular';
 
 // Pages
 import { CandidateViewPage } from '../candidate-view/candidate-view';
@@ -28,7 +28,8 @@ export class CandidateListPage {
     public candidateService: CandidateService,
     private _modalCtrl: ModalController,
     private _loadingCtrl: LoadingController,
-    public toastCtrl: ToastController
+    public toastCtrl: ToastController,
+    public alertCtrl: AlertController,
   ) { }
 
   ionViewWillEnter() {

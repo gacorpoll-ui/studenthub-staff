@@ -25,6 +25,7 @@
       <p>{{ candidate.candidate_name_ar }}</p>
       <p>C{{ candidate.c_id }}</p>
     </ion-item>
+
     <a href='tel:{{ candidate.candidate_phone }}' ion-item target='_blank'>
       <ion-icon name="call" item-left></ion-icon>
       {{ candidate.candidate_phone }}
@@ -34,7 +35,12 @@
       {{ candidate.candidate_email }}
     </a>
 
+    <ion-item>
+      <button ion-button full color="danger" (click)="resetPassword(candidate)">Send new password to candidate</button>
+    </ion-item>
+
     <ion-item-divider color="light">Status: {{ candidate.candidate_status }}</ion-item-divider>
+
     <ion-item *ngIf="candidate.store_id">
       <h5>Currently assigned work at</h5>
       <p>{{ candidate.store_name }} @ {{ candidate.company_name }}</p>

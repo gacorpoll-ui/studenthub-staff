@@ -107,6 +107,16 @@ export class CandidateService {
   }
 
   /**
+   * Reset Password
+   * @param {Candidate} model
+   * @returns {Observable<any>}
+   */
+  resetPassword(model: Candidate): Observable<any> {
+    let url = `${this._candidateEndpoint}/reset-password/${model.candidate_id}`;
+    return this._authhttp.patch(url, {});
+  }
+
+  /**
    * Delete
    * @param {Candidate} model
    * @returns {Observable<any>}
