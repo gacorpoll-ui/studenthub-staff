@@ -7,27 +7,27 @@
 export const environmentsList = [
   {
     envName: 'khalid',
-    apiEndpoint: 'https://dev-endpoint.com',
+    apiEndpoint: 'http://localhost/~BAWES/payroll/staff/web/v1',
     environmentName: 'Khalid Local Machine'
   },
   {
     envName: 'krushn',
-    apiEndpoint: 'https://dev-endpoint.com',
+    apiEndpoint: 'http://localhost/payroll/staff/web/v1',
     environmentName: 'Krushn Local Machine'
   },
   {
     envName: 'anil',
-    apiEndpoint: 'https://dev-endpoint.com',
+    apiEndpoint: 'http://staff.payroll.local/v1',
     environmentName: 'Anil Local Machine'
   },
   {
     envName: 'prod',
-    apiEndpoint: 'https://dev-endpoint.com',
+    apiEndpoint: 'https://payroll-staff.studenthub.co/v1',
     environmentName: 'Production Server'
   },
   {
     envName: 'dev',
-    apiEndpoint: 'https://dev-endpoint.com',
+    apiEndpoint: 'http://payroll-staff.dev.studenthub.co/v1',
     environmentName: 'Dev Server'
   }
 ];

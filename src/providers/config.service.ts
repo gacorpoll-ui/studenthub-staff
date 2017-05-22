@@ -19,41 +19,17 @@ export class ConfigService {
   public browserOptions: string;
   public browserOptionsWithCache: string;
 
+  /**
+   * Be sure to set NODE_ENV to the envName configured in environments
+   * to load its configuration on Ionic serve / build or any other command
+   * 
+   * eg: export NODE_ENV=prod && ionic serve
+   */
   constructor(public platform: Platform, @Inject(EnvConfig) public envConfig) {
-    console.log(this.envConfig.environmentName);
-    // Initiate dev environment on computer while
-    // running the production on mobile
-    platform.ready().then(() => {
-      if (platform.is('cordova')) {
-        this.initProdEnvironment();
-      }else{
-        this.initDevEnvironment();
-      }
-    });
+    console.log("Loaded Environment: " + this.envConfig.environmentName);
 
-  }
-
-  /**
-   * Initialize the Dev Environment
-   * @param {string} [platform]
-   */
-  initDevEnvironment(platform?: string){
-    
-    this.apiBaseUrl = "http://localhost/payroll/staff/web/v1";
-
-    //this.apiBaseUrl = "http://localhost/~BAWES/payroll/staff/web/v1";
-    //this.apiBaseUrl = "http://staff.payroll.local/v1";
-    //this.apiBaseUrl = "http://payroll-staff.dev.studenthub.co/v1";
-
-    this.setupDeviceSpecificConfigs();
-  }
-
-  /**
-   * Initialize the Production Environment
-   * @param {string} [platform]
-   */
-  initProdEnvironment(platform?: string){
-    this.apiBaseUrl = "http://payroll-staff.dev.studenthub.co/v1";
+    // Set base API endpoint based on env config
+    this.apiBaseUrl = this.envConfig.apiEndpoint;
 
     this.setupDeviceSpecificConfigs();
   }
