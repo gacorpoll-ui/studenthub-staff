@@ -20,6 +20,7 @@ export class ConfigService {
   public browserOptionsWithCache: string;
 
   constructor(public platform: Platform, @Inject(EnvConfig) public envConfig) {
+    console.log(this.envConfig.environmentName);
     // Initiate dev environment on computer while
     // running the production on mobile
     platform.ready().then(() => {

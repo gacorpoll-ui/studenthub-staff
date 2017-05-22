@@ -1,27 +1,21 @@
 import { NgModule } from '@angular/core';
 import { EnvConfig } from './environments.token';
 
-// Local Environments
-import { khalidVariables } from './config/local.khalid';
-
-// Server Environments
-import { devVariables } from './config/server.dev';
-import { prodVariables } from './config/server.prod';
+// List of Environment Configs
+import { environmentsList } from './environments.config';
 
 declare const process: any; // Typescript compiler will complain without this
 
 export function environmentFactory() {
-  // return process.env.IONIC_ENV === 'prod' ? prodVariables : devVariables;
-  switch(process.env.NODE_ENV){
-    case "prod":
-      return prodVariables;
-    case "dev":
-      return devVariables;
-    case "khalid":
-      return khalidVariables;
-    default:
-      return devVariables;
+  let loadEnvironment;
+
+  // Loop through available configured environments
+  // If the environment is available in NODE_ENV then load it, otherwise load the last env in the list.
+  for(var i = 0; i < environmentsList.length; i++){
+    loadEnvironment = environmentsList[i];
+    if(environmentsList[i].envName == process.env.NODE_ENV) break;
   }
+  return loadEnvironment;
 }
 
 @NgModule({
