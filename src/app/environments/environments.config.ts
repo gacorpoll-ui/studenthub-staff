@@ -4,7 +4,7 @@
  * 
  * eg: export NODE_ENV=prod && ionic serve
  */
-export const environmentsList = [
+export const environmentList = [
   {
     envName: 'khalid',
     apiEndpoint: 'http://localhost/~BAWES/payroll/staff/web/v1',
