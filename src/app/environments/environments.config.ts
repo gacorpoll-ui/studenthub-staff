@@ -11,6 +11,11 @@ export const environmentList = [
     environmentName: 'Khalid Local Machine'
   },
   {
+    envName: 'saoud',
+    apiEndpoint: 'http://localhost/~saoud/payroll/staff/web/v1',
+    environmentName: 'Saoud Local Machine'
+  },
+  {
     envName: 'krushn',
     apiEndpoint: 'http://localhost/payroll/staff/web/v1',
     environmentName: 'Krushn Local Machine'
