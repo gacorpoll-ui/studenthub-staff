@@ -16,14 +16,31 @@ export class StoreService {
   constructor(private _authhttp: AuthHttpService) { }
 
   /**
-   * List of all stores
+   * Return list of all stores
+   * Pass comma-separated fields if you wish to only get specific fields from api
+   * @param {string} fields list of fields you wish to get, ALL by default
+   * @param {string} expand list of extra fields/relations you want. None by default
    * @returns {Observable<any>}
    */
-  list(companyId: number = null): Observable<any>{
-    let url = this._storeEndpoint;
-    if(companyId){
-      url = `${url}?companyId=${companyId}`;
+  list(fields: string = "", expand: string = ""): Observable<any>{
+    let append = "";
+    if(fields){
+      append = `?fields=${fields}`
     }
+    if(expand){
+      append = append ? `${append}&expand=${expand}` : `?expand=${expand}`
+    }
+    
+    let url = `${this._storeEndpoint}${append}`;
+    return this._authhttp.get(url);
+  }
+
+  /**
+   * List of all stores belonging to company along with candidates within them
+   * @returns {Observable<any>}
+   */
+  getStoresBelongingToCompany(companyId: number): Observable<any>{
+    let url = `${this._storeEndpoint}?companyId=${companyId}&expand=candidates`;
     return this._authhttp.getRaw(url);
   }
 

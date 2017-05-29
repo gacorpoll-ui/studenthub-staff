@@ -28,9 +28,7 @@ export class CompanyListPage {
     private _loadingCtrl: LoadingController,
   ) {
     this.companies = params.get("companies");
-    
-    console.log(this.companies);
-    
+        
     if(!this.companies)
     {
       this.loadCompanyList(this.currentPage);

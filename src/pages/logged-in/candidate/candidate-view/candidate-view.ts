@@ -43,8 +43,8 @@ export class CandidateViewPage {
   loadStoreData() {
     let loader = this._loadingCtrl.create();
     loader.present();
-    this.storeService.list().subscribe(response => {
-      this.stores = response.json();
+    this.storeService.list("store_id", "storeWithCompany").subscribe(response => {
+      this.stores = response;
       loader.dismiss();
     });
   }
