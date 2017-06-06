@@ -16,12 +16,12 @@
     </ion-card-header>
 
     <ion-list>
-      <button ion-item *ngIf="statistics.id_expired > 0">
-        {{ statistics.id_expired }} - ID Expired
+      <button ion-item *ngIf="statistics.id_expired && statistics.id_expired.length > 0">
+        {{ statistics.id_expired.length }} - ID Expired
       </button>
 
-      <button ion-item *ngIf="statistics.id_need_generated > 0">
-        {{ statistics.id_need_generated }} - ID Need Generated
+      <button ion-item *ngIf="statistics.id_need_generated && statistics.id_need_generated.length > 0">
+        {{ statistics.id_need_generated.length }} - ID Need Generated
       </button>
 
       <button ion-item>
@@ -46,7 +46,7 @@
 
     <ion-list>
       <button ion-item *ngFor="let id of statistics.id_expired">
-        {{ id.candidate_name }} 
+        {{ id.candidate.candidate_name }} 
       </button>
     </ion-list>
   </ion-card>
