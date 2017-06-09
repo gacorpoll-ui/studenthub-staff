@@ -1,23 +1,24 @@
+import { Store } from './store';
+import { Bank } from './bank';
+import { University } from './university';
+import { Country } from './country';
 
 export class Candidate {
+    c_id: number;
     candidate_id: number;
+    candidate_uid: string;    
     store_id: number;
-    store_name: string;
     bank_id: number;
     university_id: number;
     country_id: number;
-    age: number;
-    company_name: string;
-    c_id: string;
     bank_account_name: string;
     candidate_iban: string;
     candidate_name: string;
     candidate_name_ar: string;
     candidate_personal_photo: string;
-    candidate_personal_photo_thumb: string;
     candidate_email: string;
-    //candidate_password_hash: string;
     candidate_phone: string;
+    candidate_address_line1
     candidate_birth_date: string;
     candidate_civil_id: string;
     candidate_civil_expiry_date: string;
@@ -25,4 +26,14 @@ export class Candidate {
     candidate_civil_photo_back: string;
     candidate_hourly_rate: string;
     candidate_status: string;
+    approved: number;
+    candidate_created_at: string;
+    candidate_updated_at: string;
+    age: string;
+    store_name: string;
+    company_name: string;
+    store: Store;
+    bank: Bank;
+    university: University;
+    country: Country;
 }
