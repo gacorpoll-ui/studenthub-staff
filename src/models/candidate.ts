@@ -5,7 +5,7 @@ import { University } from './university';
 import { Country } from './country';
 
 export class Candidate {
-    c_id: number;
+    employee_id:number;
     candidate_id: number;
     candidate_uid: string;    
     store_id: number;
@@ -29,7 +29,6 @@ export class Candidate {
     candidate_status: string;
     approved: number;
     age: string;
-    employee_id: string;
     candidate_personal_photo_thumb: string;
 
     store: Store;
