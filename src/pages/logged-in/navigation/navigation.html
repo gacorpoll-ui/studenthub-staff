@@ -33,7 +33,7 @@
         <button ion-item (click)="loadPage('generateId')">
           <ion-icon name="barcode" item-left></ion-icon>
           Print ID Cards
-          <ion-badge item-right>
+          <ion-badge item-right *ngIf="printIdCount && (printIdCount > 0)">
             {{ printIdCount }}
           </ion-badge>
         </button>
@@ -41,7 +41,7 @@
         <button ion-item (click)="loadPage('expiredId')">
           <ion-icon name="repeat" item-left></ion-icon>
           Renew Expired ID
-          <ion-badge item-right>
+          <ion-badge item-right *ngIf="expiredIdCount && (expiredIdCount > 0)">
             {{ expiredIdCount }}
           </ion-badge>
         </button>
