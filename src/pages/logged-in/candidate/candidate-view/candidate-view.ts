@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ModalController, LoadingController, ToastController, AlertController } from 'ionic-angular';
+import { NavController, NavParams, LoadingController, ToastController, AlertController } from 'ionic-angular';
 // Pages
 import { CandidateFormPage } from '../candidate-form/candidate-form';
 // Models
@@ -19,10 +19,10 @@ export class CandidateViewPage {
   public candidate: Candidate;
   public salaryTransfers: any[] = [];
   public stores: Store[];
-
+  public workHistory: any[] = [];
+  
   constructor(
     public navCtrl: NavController,
-    private _modalCtrl: ModalController,
     params: NavParams,
     public alertCtrl: AlertController,
     public storeService: StoreService,
@@ -32,6 +32,7 @@ export class CandidateViewPage {
     public toastCtrl: ToastController,
   ) {
     this.candidate = params.get('model');
+    this.loadWorkHistoryData();
   }
 
   ionViewDidLoad() {
@@ -206,4 +207,14 @@ export class CandidateViewPage {
       }      
     });
   }
+  
+  /**
+   * Load candidate work history data
+   */
+  loadWorkHistoryData() {
+    this.candidateService.workHistory(this.candidate).subscribe(response => {
+      this.workHistory = response;
+    });
+  }
+  
 }

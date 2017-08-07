@@ -13,6 +13,10 @@ log.txt
 npm-debug.log*
 
 .idea/
+.classpath
+.settings/
+.project
+package-lock.json
 .sass-cache/
 .tmp/
 .versions/
