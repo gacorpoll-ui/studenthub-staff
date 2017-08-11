@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { Events, NavController, LoadingController } from 'ionic-angular';
+
 // Pages
 import { CandidateListPage } from '../candidate/candidate-list/candidate-list';
 import { GenerateIdPage } from '../candidate/generate-id/generate-id';
 import { ExpiredIdPage } from '../candidate/expired-id/expired-id';
+
 // Services
 import { StatisticService } from '../../../providers/logged-in/statistic.service';
 
@@ -39,7 +41,7 @@ export class DefaultPage {
     this.statisticService.get().subscribe(response => {
 		this.statistics = response;
     this._events.publish('navigation:expiredIdCard');
-    this._events.publish('navigation:printIdCard',this.statistics.id_need_generated.length);
+    this._events.publish('navigation:printIdCard', this.statistics.id_need_generated);
 	},
     error => {},
     () => {loader.dismiss();}
