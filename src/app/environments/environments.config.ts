@@ -32,7 +32,7 @@ export const environmentList = [
   },
   {
     envName: 'dev',
-    apiEndpoint: 'http://payroll-staff.dev.studenthub.co/v1';
+    apiEndpoint: 'http://payroll-staff.dev.studenthub.co/v1',
     environmentName: 'Dev Server'
   }
 ];
