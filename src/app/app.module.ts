@@ -34,15 +34,15 @@ import { CandidateViewPage } from '../pages/logged-in/candidate/candidate-view/c
 import { CandidateFormPage } from '../pages/logged-in/candidate/candidate-form/candidate-form';
 // Generate ID
 import { GenerateIdPage } from '../pages/logged-in/candidate/generate-id/generate-id';
-
 import { ExpiredIdPage } from '../pages/logged-in/candidate/expired-id/expired-id';
-
 // Company CRUD
 import { CompanyListPage } from '../pages/logged-in/company/company-list/company-list';
 // Store CRUD
 import { StoreListPage } from '../pages/logged-in/store/store-list/store-list';
 import { StoreViewPage } from '../pages/logged-in/store/store-view/store-view';
 import { StoreFormPage } from '../pages/logged-in/store/store-form/store-form';
+// Account 
+import { ChangePasswordPage } from '../pages/logged-in/account/change-password/change-password';
 
 /**
  * Components
@@ -74,6 +74,7 @@ import { UniversityService } from '../providers/logged-in/university.service';
 import { CountryService } from '../providers/logged-in/country.service';  
 import { CandidateIdCardService } from '../providers/logged-in/candidate-id-card.service';  
 import { StatisticService } from '../providers/logged-in/statistic.service';
+import { AccountService } from '../providers/logged-in/account.service';
 
 export const cloudSettings: CloudSettings = {
   'core': {
@@ -97,6 +98,7 @@ export const cloudSettings: CloudSettings = {
     // Logged In
     NavigationPage,
     DefaultPage,
+    ChangePasswordPage,
     // Candidate Crud
     CandidateListPage,
     CandidateViewPage,
@@ -124,6 +126,7 @@ export const cloudSettings: CloudSettings = {
     // Logged In
     NavigationPage,
     DefaultPage,
+    ChangePasswordPage,
     // Candidate Crud
     CandidateListPage,
     CandidateViewPage,
@@ -174,7 +177,8 @@ export const cloudSettings: CloudSettings = {
       UniversityService,
       CountryService,
       CandidateIdCardService,
-      StatisticService
+      StatisticService,
+      AccountService
   ],
   bootstrap: [IonicApp]
 })

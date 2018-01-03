@@ -115,4 +115,21 @@ export class AuthService {
       .first()
       .map((res: Response) => res.json());
   }
+
+  /**
+   * Change password by password reset token
+   * @param token 
+   * @param newPassword 
+   */
+  changePassword(token: string, newPassword: string): Observable<any>{
+    
+    const url = this._config.apiBaseUrl + '/auth/update-password';
+
+    return this._http.patch(url, {
+        token: token, 
+        newPassword: newPassword
+      })
+      .first()
+      .map((res: Response) => res.json());
+  }
 }

@@ -9,6 +9,7 @@ import { UniversityListPage } from '../university/university-list/university-lis
 import { CountryListPage } from '../country/country-list/country-list'; 
 import { GenerateIdPage } from '../candidate/generate-id/generate-id';
 import { ExpiredIdPage } from '../candidate/expired-id/expired-id';
+import { ChangePasswordPage } from '../account/change-password/change-password';
 
 // Services
 import { AuthService } from '../../../providers/auth.service';
@@ -86,6 +87,9 @@ export class NavigationPage {
         break;
       case "country":
         this.rootPage = CountryListPage;
+        break;
+      case "change-password":
+        this.rootPage = ChangePasswordPage;
         break;
     }
 
