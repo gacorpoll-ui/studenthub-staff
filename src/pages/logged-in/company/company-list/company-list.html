@@ -28,7 +28,7 @@
 
   <ion-row text-center>
     <div class="pagination-wrapper">
-      <button *ngFor="let page of pages" ion-button small color="{{ pageLinkColor(page) }}" (click)="loadData(page)">
+      <button *ngFor="let page of pages" ion-button small color="{{ pageLinkColor(page) }}" (click)="loadCompanyList(page)">
         {{ page }}
       </button>
     </div>
