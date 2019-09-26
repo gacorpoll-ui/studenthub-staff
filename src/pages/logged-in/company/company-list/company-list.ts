@@ -51,7 +51,8 @@ export class CompanyListPage {
     // Load list of companies
     let loader = this._loadingCtrl.create();
     loader.present();
-    this.companyService.list().subscribe(response => {
+
+    this.companyService.list(page).subscribe(response => {
       
       this.pageCount = response.headers.get('X-Pagination-Page-Count');
       this.currentPage = response.headers.get('X-Pagination-Current-Page');

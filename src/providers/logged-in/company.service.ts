@@ -17,8 +17,8 @@ export class CompanyService {
    * List of all companies
    * @returns {Observable<any>}
    */
-  list(): Observable<any>{
-    let url = this._companyEndpoint;
+  list(page): Observable<any>{
+    let url = this._companyEndpoint + '?page=' + page;
     return this._authhttp.getRaw(url);
   }
 
