@@ -7,14 +7,16 @@ import { IonicModule } from '@ionic/angular';
 import { CountryViewPageRoutingModule } from './country-view-routing.module';
 
 import { CountryViewPage } from './country-view.page';
+import {LoadingModalModule} from "../../../../components/loading-modal/loading-modal.module";
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    CountryViewPageRoutingModule
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        CountryViewPageRoutingModule,
+        LoadingModalModule
+    ],
   declarations: [CountryViewPage]
 })
 export class CountryViewPageModule {}

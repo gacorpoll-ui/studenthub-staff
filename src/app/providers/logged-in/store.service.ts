@@ -42,6 +42,15 @@ export class StoreService {
   }
 
   /**
+   * detail
+   * @param story_id
+   */
+  detail(story_id: number): Observable<any>{
+    let url = `${this._storeEndpoint}/${story_id}?expand=candidates`;
+    return this._authhttp.get(url);
+  }
+
+  /**
    * Create
    * @param {Store} model
    * @returns {Observable<any>}

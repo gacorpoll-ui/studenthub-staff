@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Country} from "src/app/models/country";
 import {LoadingController, NavController} from "@ionic/angular";
 import {CountryService} from "src/app/providers/logged-in/country.service";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-country-list',
@@ -10,18 +11,19 @@ import {CountryService} from "src/app/providers/logged-in/country.service";
 })
 export class CountryListPage implements OnInit {
 
-
   public pageCount = 0;
   public currentPage = 1;
   public pages: number[] = [];
-
+  public loading = false;
   public countries: Country[];
-
+  public country_id = null;
   constructor(
     public navCtrl: NavController,
     public countryService: CountryService,
-    private _loadingCtrl: LoadingController,
-  ) {}
+    public activatedRoute: ActivatedRoute
+  ) {
+    this.country_id = this.activatedRoute.snapshot.paramMap.get('id');
+  }
 
   ngOnInit() {
     this.loadData(this.currentPage);
@@ -29,8 +31,7 @@ export class CountryListPage implements OnInit {
 
   async loadData(page: number) {
     // Load list of country
-    let loader = await this._loadingCtrl.create();
-    loader.present();
+    this.loading = true;
     this.countryService.list(page).subscribe(response => {
 
         this.pageCount = response.headers.get('X-Pagination-Page-Count');
@@ -51,7 +52,7 @@ export class CountryListPage implements OnInit {
 
       },
       error => {},
-      () => {loader.dismiss();}
+      () => {this.loading = false;}
     );
   }
 

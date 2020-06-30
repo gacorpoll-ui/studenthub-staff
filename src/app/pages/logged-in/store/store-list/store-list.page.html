@@ -8,6 +8,7 @@
 </ion-header>
 
 <ion-content class="ion-padding">
+  <loading-modal [loading]="loading" type="text-list"></loading-modal>
   <ion-list>
     <ion-item-sliding *ngFor="let store of stores">
       <ion-item button (click)="rowSelected(store)">
@@ -18,7 +19,7 @@
         </ion-badge>
       </ion-item>
 
-      <ion-item-options side="right">
+      <ion-item-options side="end">
         <ion-item button color="danger" (click)="delete(store)">
           <ion-icon name="trash"></ion-icon>
           Delete

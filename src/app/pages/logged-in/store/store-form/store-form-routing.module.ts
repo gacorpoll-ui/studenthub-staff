@@ -7,6 +7,10 @@ const routes: Routes = [
   {
     path: '',
     component: StoreFormPage
+  },
+  {
+    path: ':id',
+    component: StoreFormPage
   }
 ];
 

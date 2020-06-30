@@ -13,13 +13,12 @@ export class UniversityListPage implements OnInit {
   public pageCount = 0;
   public currentPage = 1;
   public pages: number[] = [];
-
+  public loading = false;
   public universities: University[];
 
   constructor(
     public navCtrl: NavController,
-    public universityService: UniversityService,
-    private _loadingCtrl: LoadingController,
+    public universityService: UniversityService
   ) {}
 
   ngOnInit() {
@@ -33,8 +32,7 @@ export class UniversityListPage implements OnInit {
    */
   async loadData(page: number) {
     // Load list of university
-    let loader = await this._loadingCtrl.create();
-    loader.present();
+    this.loading = true;
     this.universityService.list(page).subscribe(response => {
 
         this.pageCount = response.headers.get('X-Pagination-Page-Count');
@@ -55,7 +53,7 @@ export class UniversityListPage implements OnInit {
 
       },
       error => {},
-      () => {loader.dismiss();}
+      () => {this.loading = false;}
     );
   }
 
@@ -69,5 +67,13 @@ export class UniversityListPage implements OnInit {
         model: model
       }
     });
+  }
+
+  pageLinkColor(page: number) {
+
+    if(page == this.currentPage)
+      return 'light';
+
+    return '';
   }
 }

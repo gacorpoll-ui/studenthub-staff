@@ -53,15 +53,14 @@
     </ion-label>
   </ion-item>
 
-<!--  <select-search-input *ngIf="!candidate.store_id"-->
-<!--                       placeholder="Assign to work at store"-->
-<!--                       [(ngModel)]="candidate.store_id"-->
-<!--                       (ngModelChange)="assignCandidateToStore($event)"-->
-<!--                       [collection]="stores"-->
-<!--                       valueAttr="store_id"-->
-<!--                       labelAttr="storeWithCompany">-->
-<!--  </select-search-input>-->
-
+  <app-select-search-input *ngIf="!candidate.store_id"
+                       placeholder="Assign to work at store"
+                       [(ngModel)]="candidate.store_id"
+                       (ngModelChange)="assignCandidateToStore($event)"
+                       [collection]="stores"
+                       valueAttr="store_id"
+                       labelAttr="storeWithCompany">
+  </app-select-search-input>
   <ion-item [hidden]="!candidate.store_id">
     <ion-button *ngIf="candidate.store" expand="full" color="danger" (click)="unassignCandidateFromStore()">
       Unassign candidate from {{ candidate.store.store_name }}
@@ -162,7 +161,7 @@
     <ion-label>
       {{ salary.tc_created_at }}
       <p>KWD {{salary.total | number:'1.3-3' }}</p>
-      <p *ngIf="(salary.bonus | number) > 0">Bonus:<b>KWD {{salary.candidate_bonus | number:'1.3-3' }}</b></p>
+      <p *ngIf="salary.bonus > 0">Bonus:<b>KWD {{salary.candidate_bonus | number:'1.3-3' }}</b></p>
     </ion-label>
     <ion-badge slot="end" color="secondary" *ngIf="salary.status == 'Paid'">{{salary.status}}</ion-badge>
     <ion-badge slot="end" *ngIf="salary.status =='Unpaid'">In Progress</ion-badge>

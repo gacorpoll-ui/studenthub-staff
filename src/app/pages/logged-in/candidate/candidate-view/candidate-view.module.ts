@@ -7,13 +7,14 @@ import { IonicModule } from '@ionic/angular';
 import { CandidateViewPageRoutingModule } from './candidate-view-routing.module';
 
 import { CandidateViewPage } from './candidate-view.page';
-
+import {SelectSearchModule} from "src/app/components/select-search/select-search.module";
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    CandidateViewPageRoutingModule
+    CandidateViewPageRoutingModule,
+    SelectSearchModule
   ],
   declarations: [CandidateViewPage]
 })

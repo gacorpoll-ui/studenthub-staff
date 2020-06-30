@@ -1,4 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import {ModalController, NavController} from "@ionic/angular";
+import {ActivatedRoute} from "@angular/router";
+
+//model
+import {Store} from "../../../../models/store";
+import {Candidate} from "../../../../models/candidate";
+//page
+import {StoreFormPage} from "../store-form/store-form.page";
+//service
+import {StoreService} from "../../../../providers/logged-in/store.service";
 
 @Component({
   selector: 'app-store-view',
@@ -7,9 +17,64 @@ import { Component, OnInit } from '@angular/core';
 })
 export class StoreViewPage implements OnInit {
 
-  constructor() { }
+  public store: Store;
+  public store_id = null;
+  public loading = false;
+  constructor(
+    public navCtrl: NavController,
+    private _modalCtrl: ModalController,
+    private activatedRoute: ActivatedRoute,
+    private _storeService: StoreService
+  ) {
+    this.store_id = this.activatedRoute.snapshot.paramMap.get('id');
+    const state = window.history.state;
+    if (state['model']) {
+      this.store = state['model'];
+    } else {
+      this.loadData();
+    }
+  }
 
   ngOnInit() {
   }
 
+  /**
+   * On candidate selected from list
+   */
+  candidateSelected(candidate: Candidate){
+    this.navCtrl.navigateForward('candidate-view/'+candidate.candidate_id, {
+      state : {
+        model: candidate
+      }
+    });
+  }
+
+  /**
+   * Loads Form in modal to update
+   */
+  async update() {
+    const modal = await this._modalCtrl.create({
+      component: StoreFormPage,
+      componentProps: {
+        model: this.store
+      },
+      cssClass: 'my-custom-class'
+    });
+
+    modal.onDidDismiss().then(data => {
+      if(data && data.data && data.data.refresh){
+        this.loadData();
+      }
+    });
+
+    return await modal.present();
+  }
+
+  loadData() {
+    this.loading = true;
+    this._storeService.detail(this.store_id).subscribe( response => {
+      this.loading = false;
+      this.store = response
+    })
+  }
 }

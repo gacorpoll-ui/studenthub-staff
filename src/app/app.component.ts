@@ -20,6 +20,9 @@ const { SplashScreen } = Plugins;
 export class AppComponent implements OnInit {
 
   public updatesAvailable: boolean = false;
+  public expiredIdCount: number = 5;
+  public printIdCount: number = 0;
+
   constructor(
     public updates: SwUpdate,
     public appRef: ApplicationRef,
@@ -27,7 +30,7 @@ export class AppComponent implements OnInit {
     private eventService: EventService,
     private _alertCtrl: AlertController,
     private navCtrl: NavController,
-    private auth: AuthService
+    public auth: AuthService
   ) {
     this.initializeApp();
   }

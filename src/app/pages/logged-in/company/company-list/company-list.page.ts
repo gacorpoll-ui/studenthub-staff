@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {LoadingController, NavController} from "@ionic/angular";
+import { NavController} from "@ionic/angular";
 import {ActivatedRoute} from "@angular/router";
 //model
 import {Company} from "src/app/models/company";
@@ -16,7 +16,7 @@ export class CompanyListPage implements OnInit {
   public pageCount = 0;
   public currentPage = 1;
   public pages: number[] = [];
-
+  public loading = false;
   public company_id = null;
   public companies: Company[];
 
@@ -24,18 +24,21 @@ export class CompanyListPage implements OnInit {
     public activatedRoute: ActivatedRoute,
     public navCtrl: NavController,
     public companyService: CompanyService,
-    private _loadingCtrl: LoadingController,
   ) {
       this.company_id = this.activatedRoute.snapshot.paramMap.get('id');
   }
 
-  ngOnInit() {
+  ngOnInit() {}
+  ionViewWillEnter() {
     const state = window.history.state;
     if (state['companies']) {
       this.companies = state['companies'];
     }
 
-    if (!this.companies) {
+    if (!this.companies && this.company_id) {
+      this.viewDetail();
+    }
+    if (!this.companies && !this.company_id) {
       this.loadCompanyList(this.currentPage);
     }
   }
@@ -50,8 +53,7 @@ export class CompanyListPage implements OnInit {
 
   async loadCompanyList(page: number){
     // Load list of companies
-    let loader = await this._loadingCtrl.create();
-    loader.present();
+    this.loading = true;
 
     this.companyService.list(page).subscribe(response => {
 
@@ -73,7 +75,7 @@ export class CompanyListPage implements OnInit {
 
       },
       error => {},
-      () => {loader.dismiss();}
+      () => {this.loading = false;}
     );
   }
 
@@ -93,5 +95,16 @@ export class CompanyListPage implements OnInit {
       // Load store list for this company
       this.navCtrl.navigateForward('store-list/'+model.company_id);
     }
+  }
+
+  /**
+   * view detail
+   */
+  viewDetail() {
+    this.loading = true;
+    this.companyService.view(this.company_id).subscribe( response => {
+      this.loading = false;
+      this.companies = response.subCompanies;
+    })
   }
 }

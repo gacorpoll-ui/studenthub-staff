@@ -1,9 +1,31 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>store-view</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/company-list"></ion-back-button>
+    </ion-buttons>
+    <ion-title *ngIf="store">{{ store.store_name }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="update()">
+        Update
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
+  <loading-modal [loading]="loading" type="candidate-list"></loading-modal>
+  <ion-list *ngIf="store">
+    <ion-list-header>
+      Candidates &nbsp; <ion-badge color="dark" *ngIf="store.candidates">{{ store.candidates.length }}</ion-badge>
+    </ion-list-header>
+    <ion-item button *ngFor="let candidate of store.candidates" (click)="candidateSelected(candidate)">
+      <ion-avatar slot="start" *ngIf="candidate.candidate_personal_photo_thumb">
+        <img src="https://sh-payroll.s3.eu-west-2.amazonaws.com/{{candidate.candidate_personal_photo_thumb}}">
+      </ion-avatar>
+      <ion-label>
+        {{ candidate.candidate_name }}
+      </ion-label>
+    </ion-item>
+  </ion-list>
 </ion-content>

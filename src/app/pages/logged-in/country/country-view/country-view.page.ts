@@ -20,6 +20,8 @@ export class CountryViewPage implements OnInit {
   public pageCount = 0;
   public currentPage = 1;
   public pages: number[] = [];
+  public loading = true;
+  public loadingDetail = false;
 
   public country: Country;
   public candidates: Candidate[];
@@ -52,8 +54,7 @@ export class CountryViewPage implements OnInit {
 
   async loadData(page: number) {
     // Load list of candidates
-    let loader = await this._loadingCtrl.create();
-    loader.present();
+    this.loading = true;
     this.candidateService.listByCountry(this.country, page).subscribe(response => {
 
       this.pageCount = response.headers.get('X-Pagination-Page-Count');
@@ -72,7 +73,7 @@ export class CountryViewPage implements OnInit {
 
       this.candidates = response.body;
 
-      loader.dismiss();
+      this.loading = false;
     });
   }
 
@@ -99,15 +100,15 @@ export class CountryViewPage implements OnInit {
    * Delete the provided model
    */
   async deleteCandidates(candidate: Candidate) {
-    let loader = await this._loadingCtrl.create();
-    loader.present();
     let confirm = await this.alertCtrl.create({
       header: 'Delete Candidate?',
       message: 'Are you sure you want to delete this Candidate?',
       buttons: [
         {
           text: 'Yes',
-          handler: () => {
+          handler: async () => {
+            let loader = await this._loadingCtrl.create();
+            loader.present();
             this.candidateService.delete(candidate).subscribe(async jsonResp => {
               loader.dismiss();
 
@@ -134,8 +135,6 @@ export class CountryViewPage implements OnInit {
         {
           text: 'No',
           handler: () => {
-            this.loadData(this.currentPage);
-            loader.dismiss();
           }
         }
       ]
@@ -160,10 +159,9 @@ export class CountryViewPage implements OnInit {
    * @param country_id
    */
   async countryView(country_id) {
-    let loading = await this._loadingCtrl.create();
-    loading.present();
+    this.loadingDetail = true;
     this.countryService.view(country_id).subscribe(response => {
-      loading.dismiss();
+      this.loadingDetail = false;
       this.country = response;
       this.loadData(this.currentPage);
     })

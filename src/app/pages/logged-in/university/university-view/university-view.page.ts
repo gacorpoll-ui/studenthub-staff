@@ -14,9 +14,9 @@ export class UniversityViewPage implements OnInit {
 
   public university: University;
   public university_id;
+  public loading = false;
   constructor(
     public activatedRoute: ActivatedRoute,
-    public loadingCtrl: LoadingController,
     public universityService: UniversityService
   ) {
     this.university_id = this.activatedRoute.snapshot.paramMap.get('id');
@@ -33,10 +33,9 @@ export class UniversityViewPage implements OnInit {
   }
 
   async loadData() {
-    let loading = await this.loadingCtrl.create();
-    loading.present();
+    this.loading = true;
     this.universityService.view(this.university_id).subscribe( response => {
-      loading.dismiss();
+      this.loading = false;
       this.university = response;
     })
   }

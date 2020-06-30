@@ -8,7 +8,8 @@
 </ion-header>
 
 <ion-content>
-  <ion-list>
+  <loading-modal [loading]="loading" type="text-list"></loading-modal>
+  <ion-list *ngIf="!loading">
     <ion-item button *ngFor="let university of universities" (click)="rowSelected(university)">
       <ion-label>
         {{ university.university_name_en }}
@@ -19,7 +20,7 @@
     </ion-item>
   </ion-list>
 
-  <ion-row class="ion-text-center">
+  <ion-row class="ion-text-center" *ngIf="!loading">
     <div class="pagination-wrapper">
       <ion-button *ngFor="let page of pages" size="small" color="{{ pageLinkColor(page) }}" (click)="loadData(page)">
         {{ page }}
@@ -27,5 +28,4 @@
     </div>
   </ion-row>
 </ion-content>
-
 <ion-footer></ion-footer>

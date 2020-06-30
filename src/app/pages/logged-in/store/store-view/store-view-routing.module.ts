@@ -5,7 +5,7 @@ import { StoreViewPage } from './store-view.page';
 
 const routes: Routes = [
   {
-    path: '',
+    path: ':id',
     component: StoreViewPage
   }
 ];

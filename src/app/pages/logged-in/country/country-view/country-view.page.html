@@ -8,6 +8,7 @@
 </ion-header>
 
 <ion-content class="ion-padding">
+  <loading-modal [loading]="loadingDetail" type="text-list-view"></loading-modal>
   <ion-list *ngIf="country">
     <ion-item>
       <ion-label>
@@ -42,7 +43,8 @@
     </ion-item>
   </ion-list>
   <h5 *ngIf="candidates && candidates.length > 0">Candidates</h5>
-  <ion-list>
+  <loading-modal [loading]="loading" type="text-list"></loading-modal>
+  <ion-list *ngIf="!loading">
     <ion-item-sliding *ngFor="let candidate of candidates">
       <ion-item button (click)="candidateSelected(candidate)">
         <ion-label>
@@ -56,8 +58,6 @@
           Delete
         </ion-button>
       </ion-item-options>
-
     </ion-item-sliding>
   </ion-list>
-
 </ion-content>
