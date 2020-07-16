@@ -7,7 +7,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content>
   <loading-modal [loading]="loading" type="text-list"></loading-modal>
   <ion-list *ngIf="!loading">
     <ion-item-sliding *ngFor="let store of stores">

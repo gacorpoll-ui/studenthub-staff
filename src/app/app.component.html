@@ -1,10 +1,12 @@
 <ion-app>
   <ion-split-pane contentId="main-content">
     <ion-menu contentId="main-content" type="overlay"  [disabled]="!this.auth.isLogged">
-      <ion-content>
-        <ion-list id="inbox-list">
+      <ion-header>
+        <ion-toolbar class="ion-text-center" style="height:auto;">
           <img class='logo' src="assets/icon/icon.png" width=100/>
-        </ion-list>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
 
         <ion-list class="labels-list">
           <ion-list-header>Candidate Management</ion-list-header>

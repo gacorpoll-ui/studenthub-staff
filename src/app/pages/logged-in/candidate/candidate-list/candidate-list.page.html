@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Candidates</ion-title>
+    <ion-title>Candidates <span *ngIf="!loading && totalCount">({{totalCount}})</span></ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -51,6 +51,7 @@
         </ion-button>
       </ion-item-options>
     </ion-item-sliding>
+    <no-items *ngIf="candidates && candidates.length == 0" message="No candidate data available"></no-items>
   </ion-list>
 
   <ion-row class="ion-text-center" *ngIf="!loading">

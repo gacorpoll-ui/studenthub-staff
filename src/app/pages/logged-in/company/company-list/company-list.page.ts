@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController} from '@ionic/angular';
+import {NavController, Platform} from '@ionic/angular';
 import {ActivatedRoute} from '@angular/router';
 // model
 import {Company} from 'src/app/models/company';
@@ -24,6 +24,7 @@ export class CompanyListPage implements OnInit {
     public activatedRoute: ActivatedRoute,
     public navCtrl: NavController,
     public companyService: CompanyService,
+    public platform: Platform,
   ) {
       this.company_id = this.activatedRoute.snapshot.paramMap.get('id');
   }

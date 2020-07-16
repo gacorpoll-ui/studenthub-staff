@@ -17,6 +17,7 @@ export class CandidateListPage implements OnInit {
 
   public pageCount = 0;
   public currentPage = 1;
+  public totalCount = 0;
   public pages: number[] = [];
 
   public assignedSearchBar = '';
@@ -72,7 +73,7 @@ export class CandidateListPage implements OnInit {
     // Load list of candidates
     this.loading = true;
     this.candidateService.listNotAssigned(search, page).subscribe(response => {
-
+      this.totalCount = response.headers.get('X-Pagination-Total-Count');
       this.pageCount = response.headers.get('X-Pagination-Page-Count');
       this.currentPage = response.headers.get('X-Pagination-Current-Page');
 
@@ -111,6 +112,7 @@ export class CandidateListPage implements OnInit {
     this.loading = true;
     this.candidateService.listAssigned(search, page).subscribe(response => {
 
+      this.totalCount = response.headers.get('X-Pagination-Total-Count');
       this.pageCount = response.headers.get('X-Pagination-Page-Count');
       this.currentPage = response.headers.get('X-Pagination-Current-Page');
 

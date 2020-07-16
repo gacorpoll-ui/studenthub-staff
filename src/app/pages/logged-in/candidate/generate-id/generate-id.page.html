@@ -4,7 +4,7 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
 
-    <ion-title>Generate ID Card</ion-title>
+    <ion-title class="ion-text-left">Generate ID Card</ion-title>
 
     <ion-buttons slot="end">
       <ion-button color="primary" [disabled]="!form.valid && downloading" (click)="generate()">
@@ -16,7 +16,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content>
 
   <ion-segment [(ngModel)]="cndSegment" (ionChange)="segmentChanged($event)" color="primary">
     <ion-segment-button value="not-generated">
@@ -30,7 +30,7 @@
   <ion-searchbar
     [(ngModel)]="searchBar"
     (ionChange) ="search()"
-    debounce="500"
+    debounce="200"
     animated="true"
   >
   </ion-searchbar>
@@ -43,7 +43,7 @@
         <ion-checkbox [(ngModel)]="candidates[i]" [ngModelOptions]="{standalone: true}"></ion-checkbox>
       </ion-item>
     </ion-list>
-
+    <no-items *ngIf="!loading && candidatelistData && candidatelistData.length == 0" message="No data available"></no-items>
     <ion-row class="ion-text-center"  *ngIf="!loading">
       <div class="pagination-wrapper">
         <ion-button *ngFor="let page of pages" size="small" color="{{ pageLinkColor(page) }}" (click)="loadData(page)">

@@ -16,16 +16,31 @@
       <ion-label>
         {{ company.company_name }}
       </ion-label>
-      <ion-badge slot="end" *ngIf="company.total_candidates > 0">
-        {{ company.total_candidates }} candidates
-      </ion-badge>
+      <ng-container *ngIf="platform.width() > 450">
+        <ion-badge slot="end" *ngIf="company.total_candidates > 0">
+          {{ company.total_candidates }} candidates
+        </ion-badge>
+        <ion-badge slot="end" *ngIf="company.subCompanies && company.subCompanies.length > 0">
+          {{ company.subCompanies.length }} sub-companies
+        </ion-badge>
+        <ion-badge slot="end" *ngIf="company.stores.length > 0">
+          {{ company.stores.length }} stores
+        </ion-badge>
+      </ng-container>
 
-      <ion-badge slot="end" *ngIf="company.subCompanies && company.subCompanies.length > 0">
-        {{ company.subCompanies.length }} sub-companies
-      </ion-badge>
-      <ion-badge slot="end" *ngIf="company.stores.length > 0">
-        {{ company.stores.length }} stores
-      </ion-badge>
+      <ng-container *ngIf="platform.width() <= 449">
+        <div slot="end" class="end">
+          <ion-badge *ngIf="company.total_candidates > 0">
+            {{ company.total_candidates }} candidates
+          </ion-badge>
+          <ion-badge  *ngIf="company.subCompanies && company.subCompanies.length > 0">
+            {{ company.subCompanies.length }} sub-companies
+          </ion-badge>
+          <ion-badge *ngIf="company.stores.length > 0">
+            {{ company.stores.length }} stores
+          </ion-badge>
+        </div>
+      </ng-container>
     </ion-item>
   </ion-list>
 
