@@ -40,7 +40,7 @@ export class CandidateService {
    */
   list(): Observable<any> {
     const url = this._candidateEndpoint;
-    return this._authhttp.getRaw(url);
+    return this._authhttp.getRaw(url + '?expand=candidateSkills,candidateExperiences');
   }
 
   /**
@@ -48,7 +48,7 @@ export class CandidateService {
    * @returns {Observable<any>}
    */
   listAssigned(candidate_name: string, page: number): Observable<any> {
-    const url = this._candidateEndpoint + '/assigned?candidate_name=' + candidate_name + '&page=' + page;
+    const url = this._candidateEndpoint + '/assigned?candidate_name=' + candidate_name + '&page=' + page + '&expand=candidateSkills,candidateExperiences';
     return this._authhttp.getRaw(url);
   }
 
@@ -57,7 +57,7 @@ export class CandidateService {
    * @returns {Observable<any>}
    */
   listNotAssigned(candidate_name: string, page: number): Observable<any> {
-    const url = this._candidateEndpoint + '/not-assigned?candidate_name=' + candidate_name + '&page=' + page;
+    const url = this._candidateEndpoint + '/not-assigned?candidate_name=' + candidate_name + '&page=' + page + '&expand=candidateSkills,candidateExperiences';
     return this._authhttp.getRaw(url);
   }
 

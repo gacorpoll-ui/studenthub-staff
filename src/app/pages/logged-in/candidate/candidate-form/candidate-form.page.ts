@@ -133,7 +133,7 @@ export class CandidateFormPage implements OnInit {
         // open view page
         this.navCtrl.navigateForward('candidate-view/' + jsonResponse.candidate.candidate_id, {
           state: {
-            model: jsonResponse.candidate
+            model: this.model
           }
         });
 
@@ -260,6 +260,8 @@ export class CandidateFormPage implements OnInit {
         skills: [this.model.skill, Validators.required],
         experiences: [this.model.experience, Validators.required]
       });
+      this.loadExp();
+      this.loadSkill();
     }
   }
 
@@ -276,7 +278,6 @@ export class CandidateFormPage implements OnInit {
   }
 
   async updateSkills() {
-
     const modal = await this.modalCtrl.create({
       component: SkillFormPage,
       componentProps: {
@@ -310,4 +311,26 @@ export class CandidateFormPage implements OnInit {
       this.model.experience = data.experiences;
     }
   }
+
+  loadSkill() {
+    const skills = [];
+    if (this.model.candidateSkills && this.model.candidateSkills.length > 0) {
+      for (let skl of this.model.candidateSkills) {
+          skills.push(skl.skill);
+          this.form.controls.skills.setValue(skills.join(','));
+          this.model.experience = skills.join(',');
+        }
+      }
+    }
+
+  loadExp() {
+    const experiences = [];
+    if (this.model.candidateExperiences && this.model.candidateExperiences.length > 0) {
+      for (let exp of this.model.candidateExperiences) {
+          experiences.push(exp.experience);
+          this.form.controls.experiences.setValue(experiences.join(','));
+          this.model.experience = experiences.join(',');
+        }
+      }
+    }
 }

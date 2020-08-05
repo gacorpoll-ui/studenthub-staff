@@ -124,6 +124,28 @@
     </ion-label>
   </ion-item>
 
+  <ion-item>
+    <ion-label>
+      <h5>Skills</h5>
+      <div *ngIf="candidate.candidateSkills && candidate.candidateSkills.length > 0">
+        <p *ngFor="let skills of candidate.candidateSkills">
+          {{skills.skill}}
+        </p>
+      </div>
+    </ion-label>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>
+      <h5>Experiences</h5>
+      <div *ngIf="candidate.candidateExperiences && candidate.candidateExperiences.length > 0">
+        <p *ngFor="let exp of candidate.candidateExperiences">
+          {{exp.experience}}
+        </p>
+      </div>
+    </ion-label>
+  </ion-item>
+
   <ion-item-divider color="light">Civil ID</ion-item-divider>
   <ion-item>
     <ion-label>

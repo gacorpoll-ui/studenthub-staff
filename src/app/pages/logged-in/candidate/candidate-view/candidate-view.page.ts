@@ -43,11 +43,12 @@ export class CandidateViewPage implements OnInit {
   ngOnInit() {
     const state = window.history.state;
 
-    if (state.model) {
-      this.candidate = state.model;
-    } else  {
-      this.loadCandidateDetail();
-    }
+    // if (state.model) {
+    //   this.candidate = state.model;
+    // } else  {
+    //   this.loadCandidateDetail();
+    // }
+    this.loadCandidateDetail();
     this.loadWorkHistoryData();
 
     this.loadStoreData();
