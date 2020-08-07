@@ -13,4 +13,5 @@ export class Company{
     subcompanies: Company[];
     subCompanies: Company[];
     stores: Store[];
+    files: any[];
 }

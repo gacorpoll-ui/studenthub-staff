@@ -5,6 +5,7 @@ import {ActivatedRoute} from '@angular/router';
 import {Company} from 'src/app/models/company';
 // service
 import {CompanyService} from 'src/app/providers/logged-in/company.service';
+import {AwsService} from '../../../../providers/aws.service';
 
 @Component({
   selector: 'app-company-list',
@@ -26,6 +27,7 @@ export class CompanyListPage implements OnInit {
     public navCtrl: NavController,
     public companyService: CompanyService,
     public platform: Platform,
+    public aws: AwsService,
   ) {
       this.company_id = this.activatedRoute.snapshot.paramMap.get('id');
   }
@@ -36,7 +38,6 @@ export class CompanyListPage implements OnInit {
     if (state.companies) {
       this.company = state.company;
       this.companies = state.companies;
-      console.log(this.company);
     }
 
     if (!this.companies && this.company_id) {
@@ -110,7 +111,7 @@ export class CompanyListPage implements OnInit {
       // Load Subcompany List
       this.navCtrl.navigateForward('company-view/' + model.company_id, {
         state : {
-          model: model
+          model
         }
       });
     }else{

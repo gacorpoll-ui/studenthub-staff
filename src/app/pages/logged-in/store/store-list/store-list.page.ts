@@ -2,11 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 
 import {AlertController, ModalController, NavController, ToastController} from '@ionic/angular';
-import {StoreService} from 'src/app/providers/logged-in/store.service';
+
 import {Store} from 'src/app/models/store';
-import {StoreFormPage} from '../store-form/store-form.page';
-import {CompanyService} from '../../../../providers/logged-in/company.service';
 import {Company} from '../../../../models/company';
+
+import {StoreFormPage} from '../store-form/store-form.page';
+
+import {StoreService} from 'src/app/providers/logged-in/store.service';
+import {CompanyService} from '../../../../providers/logged-in/company.service';
+import {AwsService} from '../../../../providers/aws.service';
+
+
 
 @Component({
   selector: 'app-store-list',
@@ -32,6 +38,7 @@ export class StoreListPage implements OnInit {
     private _modalCtrl: ModalController,
     private _alertCtrl: AlertController,
     private _toastCtrl: ToastController,
+    private aws: AwsService
   ) {
     this._companyId = this.activatedRoute.snapshot.paramMap.get('id');
   }

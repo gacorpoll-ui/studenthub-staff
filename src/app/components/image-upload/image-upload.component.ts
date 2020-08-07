@@ -52,11 +52,11 @@ export class ImageUploadComponent implements ControlValueAccessor, OnInit {
     private _actionSheetCtrl: ActionSheetController,
     private _alertCtrl: AlertController,
   ) {
-    this._bucketUrlPermanent = this._awsService.permanentBucketUrl;
+    this._bucketUrlPermanent = this._awsService.permanentBucketUrl + 'photos/';
     this._bucketUrlTemporary = this._awsService.bucketUrl;
 
     // By Default, use the permanent bucket url
-    this.bucketUrl = this._bucketUrlPermanent;
+    this.bucketUrl = this._bucketUrlPermanent + 'photos/';
   }
 
   ngOnInit() {

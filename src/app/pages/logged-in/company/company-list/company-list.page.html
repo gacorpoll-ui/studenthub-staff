@@ -27,6 +27,24 @@
       </ion-label>
     </ion-item>
 
+    <div *ngIf="company.files && company.files.length > 0">
+      <ion-item-divider color="light">
+        <ion-label>
+          Uploaded Document
+        </ion-label>
+      </ion-item-divider>
+
+      <ion-item *ngFor="let file of company.files">
+        <ion-label>
+          <ion-icon name="caret-forward-outline"></ion-icon> &nbsp;
+          <a target="_blank" (click)="$event.stopPropagation()"
+             href="{{ aws.permanentBucketUrl }}{{ file.file_s3_path }}">
+            {{file.file_title}}
+          </a>
+        </ion-label>
+      </ion-item>
+    </div>
+
     <ion-item-divider color="light">
       <ion-label>
         Payment

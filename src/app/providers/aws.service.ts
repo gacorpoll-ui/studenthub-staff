@@ -19,7 +19,7 @@ export class AwsService implements OnInit {
   public bucketUrl = 'https://studenthub-public-anyone-can-upload-24hr-expiry.s3.eu-west-2.amazonaws.com/';
   public permanentBucketUrl = environment.permanentBucketUrl;
   public cloudinaryUrl = environment.cloudinaryUrl;
-  public urlResume = environment.urlResume;
+  public urlResume = environment.permanentBucketUrl + 'candidate-resume/';
 
   private _region = 'eu-west-2'; // London
   private _access_key_id = 'AKIAJXOMRCDE65WKBPUA';
