@@ -38,7 +38,7 @@ export class StoreListPage implements OnInit {
     private _modalCtrl: ModalController,
     private _alertCtrl: AlertController,
     private _toastCtrl: ToastController,
-    private aws: AwsService
+    public aws: AwsService
   ) {
     this._companyId = this.activatedRoute.snapshot.paramMap.get('id');
   }
