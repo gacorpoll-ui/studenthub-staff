@@ -2,7 +2,7 @@
   "name": "payroll-staff",
   "author": "BAWES",
   "homepage": "http://bawes.net/",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -23,7 +23,7 @@
     "@angular/platform-browser": "~9.1.6",
     "@angular/platform-browser-dynamic": "~9.1.6",
     "@angular/router": "~9.1.6",
-    "@angular/service-worker": "^9.1.11",
+    "@angular/service-worker": "10.0.8",
     "@capacitor/core": "2.2.0",
     "@ionic-native/core": "^5.0.7",
     "@ionic-native/file": "^5.27.0",
