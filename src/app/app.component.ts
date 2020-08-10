@@ -113,10 +113,13 @@ export class AppComponent implements OnInit {
     if (!this.platform.is('capacitor')) {
 
       if ('serviceWorker' in navigator) {
+        console.log(navigator);
         navigator.serviceWorker.getRegistrations().then((registrations)  => {
+          console.log(registrations);
           // returns installed service workers
           if (registrations.length) {
             for (let registration of registrations) {
+              console.log(registration);
               registration.unregister();
             }
           }
