@@ -96,6 +96,7 @@ export class CandidateViewPage implements OnInit {
       this.assigning = false;
       if (response.operation == 'success') {
         this.candidate = response.candidate_detail;
+        this.loadWorkHistoryData();
       } else {
         this.candidate.store_id = null;
         const alert = await this.alertCtrl.create({
@@ -134,6 +135,7 @@ export class CandidateViewPage implements OnInit {
 
               if (response.operation == 'success') {
                 this.candidate = response.candidate_detail;
+                this.loadWorkHistoryData();
               } else {
                 const prompt = await this.alertCtrl.create({
                   message: this._processResponseMessage(response),

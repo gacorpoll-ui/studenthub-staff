@@ -47,7 +47,7 @@
   <ion-item-divider color="light">Store Assignment</ion-item-divider>
 
   <ion-item *ngIf="workHistory">
-    <ion-label>
+    <ion-label *ngIf="!assigning">
       <p *ngFor="let history of workHistory">
         <label tappable [routerLink]="['/store-view', history.store.store_id]" >{{ history.store.store_name }}: {{ history.start_date | date }} </label> to
         <label *ngIf="history.end_date" >{{ history.end_date | date }}</label>
