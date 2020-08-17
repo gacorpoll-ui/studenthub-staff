@@ -1,15 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import {AlertController, NavController, ToastController} from '@ionic/angular';
-import {ActivatedRoute} from '@angular/router';
-
+import { AlertController, NavController, ToastController } from '@ionic/angular';
+import { ActivatedRoute } from '@angular/router';
 // models
-import {Store} from 'src/app/models/store';
-import {Candidate} from 'src/app/models/candidate';
-
+import { Store } from 'src/app/models/store';
+import { Candidate } from 'src/app/models/candidate';
 // service
-import {StoreService} from 'src/app/providers/logged-in/store.service';
-import {CandidateService} from 'src/app/providers/logged-in/candidate.service';
-import {AwsService} from 'src/app/providers/aws.service';
+import { StoreService } from 'src/app/providers/logged-in/store.service';
+import { CandidateService } from 'src/app/providers/logged-in/candidate.service';
+import { AwsService } from 'src/app/providers/aws.service';
 
 
 @Component({
@@ -20,14 +18,21 @@ import {AwsService} from 'src/app/providers/aws.service';
 export class CandidateViewPage implements OnInit {
 
   public candidate: Candidate;
+
   public salaryTransfers: any[] = [];
+
   public stores: Store[];
+
   public workHistory: any[] = [];
+
   public candidate_id;
-  public sendingPassword = false;
-  public assigning = false;
-  public unassinging = false;
-  public loading = false;
+
+  public sendingPassword: boolean = false;
+  public assigning: boolean = false;
+  public unassinging: boolean = false;
+  public loading: boolean = false;
+
+  public updatingJobSearchStatus: boolean = false;
 
   constructor(
     public navCtrl: NavController,
@@ -40,7 +45,6 @@ export class CandidateViewPage implements OnInit {
   ) {
     this.candidate_id = this.activatedRoute.snapshot.paramMap.get('id');
   }
-
 
   ngOnInit() {
     const state = window.history.state;
@@ -79,7 +83,7 @@ export class CandidateViewPage implements OnInit {
    */
   update() {
     this.navCtrl.navigateForward('candidate-form/' + this.candidate.candidate_id, {
-      state : {
+      state: {
         model: this.candidate
       }
     });
@@ -157,7 +161,7 @@ export class CandidateViewPage implements OnInit {
    * @param {any} response
    * @returns message to display in error message
    */
-  private _processResponseMessage(response){
+  private _processResponseMessage(response) {
     let html = '';
     if (response.code == 2) {
       for (const i in response.message) {
@@ -165,7 +169,7 @@ export class CandidateViewPage implements OnInit {
           html += j + '<br />';
         }
       }
-    }else { html = response.message; }
+    } else { html = response.message; }
 
     return html;
   }
@@ -202,8 +206,7 @@ export class CandidateViewPage implements OnInit {
     this.candidateService.resetPassword(this.candidate).subscribe(async response => {
       this.sendingPassword = false;
 
-      if (response.operation == 'error')
-      {
+      if (response.operation == 'error') {
         const toast = await this.toastCtrl.create({
           message: response.message,
           duration: 3000
@@ -211,14 +214,38 @@ export class CandidateViewPage implements OnInit {
 
         toast.present();
       }
-      else
-      {
+      else {
         const alert = await this.alertCtrl.create({
           header: 'Reset Password',
           subHeader: 'New password sent to candidate',
           buttons: ['Okay']
         });
         alert.present();
+      }
+    });
+  }
+
+  toggleJobSearchStatus() {
+
+    this.updatingJobSearchStatus = true;
+
+    const params = {
+      'candidate_id': this.candidate_id,
+      'job_search_status': this.candidate.candidate_job_search_status == 1? 0: 1
+    }
+    this.candidateService.updateJobSearchStatus(params).subscribe(async data => {
+
+      this.updatingJobSearchStatus = false;
+
+      if (data.operation == 'success') {
+        this.candidate.candidate_job_search_status = params.job_search_status;
+      } else {
+        const toast = await this.toastCtrl.create({
+          message: data.message,
+          duration: 3000
+        });
+
+        toast.present();
       }
     });
   }
@@ -234,7 +261,7 @@ export class CandidateViewPage implements OnInit {
 
   loadCandidateDetail() {
     this.loading = true;
-    this.candidateService.detail(this.candidate_id).subscribe( response => {
+    this.candidateService.detail(this.candidate_id).subscribe(response => {
       this.loading = false;
       this.candidate = response;
     });

@@ -28,3 +28,9 @@
 .hidden {
     display: none;
 }
+
+.blank_bg {
+    background: none !important;
+    color: var(--ion-color-primary) !important;
+}
+
