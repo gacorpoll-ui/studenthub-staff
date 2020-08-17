@@ -156,6 +156,18 @@ export class CandidateService {
   }
 
   /**
+   * update job search status 
+   * @param params 
+   */
+  updateJobSearchStatus(params) : Observable<any> {
+    const url = `${this._candidateEndpoint}/job-search-status`;
+    return this._authhttp.patch(url, {
+      candidate_id: params.candidate_id,
+      job_search_status: params.job_search_status
+    });
+  }
+
+  /**
    * Reset Password
    * @param {Candidate} model
    * @returns {Observable<any>}

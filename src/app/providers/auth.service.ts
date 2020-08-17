@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, RendererFactory2 } from '@angular/core';
 import {EMPTY, Observable, throwError} from 'rxjs';
 import {first, map, retryWhen, take} from 'rxjs/operators';
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
@@ -17,24 +17,33 @@ const { Storage } = Plugins;
 })
 export class AuthService {
 
+  public renderer;
+
   private _accessToken;
   public staff_id: number;
   public name: string;
   public email: string;
+  public theme: string;
+
   public currency_pref = 'USD';
+
   public isLogged = false;
 
   public displayCookieMessage = '0';
 
   public showOneSignalPrompt = false;
+
   private _urlBasicAuth = '/auth/login';
   private _urlUpdatePass = '/auth/update-password';
 
   constructor(
     public _http: HttpClient,
     public router: Router,
-    public eventService: EventService
-  ) { }
+    public eventService: EventService,
+    public rendererFactory: RendererFactory2
+  ) { 
+    this.renderer = this.rendererFactory.createRenderer(null, null);
+  }
 
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -51,6 +60,7 @@ export class AuthService {
       }
 
       const ret = await Storage.get({ key: 'loggedInStaff' });
+
       const user = JSON.parse(ret.value);
 
       if (user) {
@@ -59,6 +69,7 @@ export class AuthService {
         this.staff_id = user.staff_id;
         this.email = user.email;
         this.name = user.name;
+        this.theme = user.theme;
 
         resolve(true);
       } else {
@@ -67,6 +78,27 @@ export class AuthService {
       }
 
     });
+  }
+
+  /**
+   * set app theme
+   * @param theme 
+   */
+  setTheme(theme) {
+    Storage.set({
+      key: 'theme',
+      value: theme
+    });
+
+    this.theme = theme;
+
+    if (theme == 'night') {
+      this.renderer.removeClass(document.body, 'day');
+      this.renderer.addClass(document.body, 'night');
+    } else {
+      this.renderer.addClass(document.body, 'day');
+      this.renderer.removeClass(document.body, 'night');
+    }
   }
 
   /**
@@ -132,19 +164,19 @@ export class AuthService {
   // This is the method you want to call at bootstrap
   async load(): Promise<any> {
     const ret = await Storage.get({ key: 'loggedInStaff' });
-    const promises = [
-      JSON.parse(ret.value)
-    ];
 
-    return Promise.all(promises).then(data => {
-      // for guest use language value in storage, for login user loggedInAgent.language_pref
+    const staff = JSON.parse(ret.value);
 
-      if (data[0] && data[0].token) {
-        return this.setAccessToken(data[0]);
-      } else {
-        // return this.logout('error with store variables',true);
-      }
-    });
+    if (staff && staff.token) {
+      return this.setAccessToken(staff);
+    } else {
+      // return this.logout('error with store variables',true);
+    }
+
+    const { value } = await Storage.get({ key: 'theme' });
+
+    if(value)
+      this.setTheme(value);
   }
 
   /**

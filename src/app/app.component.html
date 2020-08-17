@@ -1,9 +1,14 @@
 <ion-app>
   <ion-split-pane contentId="main-content">
-    <ion-menu contentId="main-content" type="overlay" [disabled]="!this.auth.isLogged">
+    <ion-menu contentId="main-content" type="overlay" [disabled]="!this.authService.isLogged">
       <ion-header>
         <ion-toolbar class="ion-text-center" style="height:auto;">
           <img class='logo' src="assets/icon/icon.png" width=100 />
+
+          <ion-button fill="clear" class="btn-theme" (click)="changeTheme()">
+            <ion-icon *ngIf="authService.theme == 'night'" slot="icon-only" name="moon-outline"></ion-icon>
+            <ion-icon *ngIf="authService.theme != 'night'" slot="icon-only" name="partly-sunny-outline"></ion-icon>
+          </ion-button>
         </ion-toolbar>
       </ion-header>
       <ion-content>
