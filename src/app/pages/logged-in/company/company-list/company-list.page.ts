@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import {NavController, Platform} from '@ionic/angular';
+import {ModalController, NavController, Platform} from '@ionic/angular';
 import {ActivatedRoute} from '@angular/router';
 // model
 import {Company} from 'src/app/models/company';
 // service
 import {CompanyService} from 'src/app/providers/logged-in/company.service';
 import {AwsService} from '../../../../providers/aws.service';
+import {UploadFilePage} from '../upload-file/upload-file.page';
 
 @Component({
   selector: 'app-company-list',
@@ -21,10 +22,14 @@ export class CompanyListPage implements OnInit {
   public company_id = null;
   public company: Company;
   public companies: Company[];
+  public segment = 1;
+  public enableCompanies: Company[] = [];
+  public disableCompanies: Company[] = [];
 
   constructor(
     public activatedRoute: ActivatedRoute,
     public navCtrl: NavController,
+    public modalCtrl: ModalController,
     public companyService: CompanyService,
     public platform: Platform,
     public aws: AwsService,
@@ -38,10 +43,11 @@ export class CompanyListPage implements OnInit {
     if (state.companies) {
       this.company = state.company;
       this.companies = state.companies;
+      this.loadCompaniesSegmentData();
     }
 
     if (!this.companies && this.company_id) {
-      this.viewDetail();
+      this.viewDetail(true);
     }
     if (!this.companies && !this.company_id) {
       this.loadCompanyList(this.currentPage);
@@ -79,7 +85,7 @@ export class CompanyListPage implements OnInit {
         }
 
         this.companies = response.body;
-
+        this.loadCompaniesSegmentData();
       },
       error => {},
       () => {this.loading = false; }
@@ -123,13 +129,46 @@ export class CompanyListPage implements OnInit {
   /**
    * view detail
    */
-  viewDetail() {
-    this.loading = true;
+  viewDetail(loading = true) {
+    this.loading = loading;
     this.companyService.view(this.company_id).subscribe( response => {
       this.loading = false;
       this.company = response;
-      
+
       this.companies = response.subCompanies;
     });
+  }
+
+  segmentChanged($event) {
+    this.segment = $event.detail.value;
+  }
+
+  /**
+   * segment data
+   */
+  loadCompaniesSegmentData() {
+    for (const company of this.companies) {
+      if (company.company_status == 10) {
+        this.enableCompanies.push(company);
+      } else  {
+        this.disableCompanies.push(company);
+      }
+    }
+  }
+
+
+  async uploadDocument() {
+    const modal = await this.modalCtrl.create({
+      component: UploadFilePage,
+      componentProps: {
+        company: this.company,
+      }
+    });
+    modal.present();
+
+    const { data } = await modal.onWillDismiss();
+    if (data && data.refresh) {
+      this.viewDetail(false);
+    }
   }
 }

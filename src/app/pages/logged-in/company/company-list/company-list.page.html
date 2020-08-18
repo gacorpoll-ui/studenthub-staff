@@ -8,10 +8,21 @@
     <ion-title *ngIf="!company">Select Company</ion-title>
     <ion-title *ngIf="company">{{ company.company_name }}</ion-title>
   </ion-toolbar>
+  <ion-toolbar *ngIf="!company">
+    <ion-segment (ionChange)="segmentChanged($event)" [value]="segment">
+      <ion-segment-button value="1">
+        <ion-label>Active</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="0">
+        <ion-label>In Active</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <loading-modal [loading]="loading" type="text-list"></loading-modal>
+
 
   <section *ngIf="company && company.company_email">
     <ion-item-divider color="light">
@@ -26,6 +37,42 @@
         {{ company.company_email }}
       </ion-label>
     </ion-item>
+    <ion-item>
+      <ion-label>
+        <h3>Common Name En.</h3>
+        <p>{{ company.company_common_name_en }}</p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <h3>Common Name Ar.</h3>
+        <p>{{ company.company_common_name_ar }}</p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <h3>Description En.</h3>
+        <p>{{ company.company_description_en }}</p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <h3>Description Ar.</h3>
+        <p>{{ company.company_description_ar }}</p>
+      </ion-label>
+    </ion-item>
+    <ion-item href='{{ company.company_website }}'>
+      <ion-label>
+        <h3>Website</h3>
+        <p>{{ company.company_website }}</p>
+      </ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-button expand="full" color="danger" (click)="uploadDocument()">
+        <span>Upload Document</span>
+      </ion-button>
+    </ion-item>
 
     <div *ngIf="company.files && company.files.length > 0">
       <ion-item-divider color="light">
@@ -36,11 +83,11 @@
 
       <ion-item *ngFor="let file of company.files">
         <ion-label>
-          <ion-icon name="caret-forward-outline"></ion-icon> &nbsp;
           <a target="_blank" (click)="$event.stopPropagation()"
              href="{{ aws.permanentBucketUrl }}{{ file.file_s3_path }}">
             {{file.file_title}}
           </a>
+          <p>{{file.file_description}}</p>
         </ion-label>
       </ion-item>
     </div>
@@ -73,36 +120,73 @@
           Companies under this company
         </ion-label>
       </ion-item-divider>
-    <ion-item tappable *ngFor="let company of companies" (click)="rowSelected(company)">
-      <ion-label>
-        {{ company.company_name }}
-      </ion-label>
-      <ng-container *ngIf="platform.width() > 450">
-        <ion-badge slot="end" *ngIf="company.total_candidates > 0">
-          {{ company.total_candidates }} candidates
-        </ion-badge>
-        <ion-badge slot="end" *ngIf="company.subCompanies && company.subCompanies.length > 0">
-          {{ company.subCompanies.length }} sub-companies
-        </ion-badge>
-        <ion-badge slot="end" *ngIf="company.stores.length > 0">
-          {{ company.stores.length }} stores
-        </ion-badge>
+
+      <ng-container *ngIf="segment == 1">
+        <ion-item tappable *ngFor="let company of enableCompanies" (click)="rowSelected(company)">
+          <ion-label>
+            {{ company.company_name }}
+          </ion-label>
+          <ng-container *ngIf="platform.width() > 450">
+            <ion-badge slot="end" *ngIf="company.total_candidates > 0">
+              {{ company.total_candidates }} candidates
+            </ion-badge>
+            <ion-badge slot="end" *ngIf="company.subCompanies && company.subCompanies.length > 0">
+              {{ company.subCompanies.length }} sub-companies
+            </ion-badge>
+            <ion-badge slot="end" *ngIf="company.stores.length > 0">
+              {{ company.stores.length }} stores
+            </ion-badge>
+          </ng-container>
+
+          <ng-container *ngIf="platform.width() <= 449">
+            <div slot="end" class="end">
+              <ion-badge *ngIf="company.total_candidates > 0">
+                {{ company.total_candidates }} candidates
+              </ion-badge>
+              <ion-badge  *ngIf="company.subCompanies && company.subCompanies.length > 0">
+                {{ company.subCompanies.length }} sub-companies
+              </ion-badge>
+              <ion-badge *ngIf="company.stores.length > 0">
+                {{ company.stores.length }} stores
+              </ion-badge>
+            </div>
+          </ng-container>
+        </ion-item>
+      </ng-container>
+      <ng-container *ngIf="segment == 0">
+        <ion-item tappable *ngFor="let company of disableCompanies" (click)="rowSelected(company)">
+          <ion-label>
+            {{ company.company_name }}
+          </ion-label>
+          <ng-container *ngIf="platform.width() > 450">
+            <ion-badge slot="end" *ngIf="company.total_candidates > 0">
+              {{ company.total_candidates }} candidates
+            </ion-badge>
+            <ion-badge slot="end" *ngIf="company.subCompanies && company.subCompanies.length > 0">
+              {{ company.subCompanies.length }} sub-companies
+            </ion-badge>
+            <ion-badge slot="end" *ngIf="company.stores.length > 0">
+              {{ company.stores.length }} stores
+            </ion-badge>
+          </ng-container>
+
+          <ng-container *ngIf="platform.width() <= 449">
+            <div slot="end" class="end">
+              <ion-badge *ngIf="company.total_candidates > 0">
+                {{ company.total_candidates }} candidates
+              </ion-badge>
+              <ion-badge  *ngIf="company.subCompanies && company.subCompanies.length > 0">
+                {{ company.subCompanies.length }} sub-companies
+              </ion-badge>
+              <ion-badge *ngIf="company.stores.length > 0">
+                {{ company.stores.length }} stores
+              </ion-badge>
+            </div>
+          </ng-container>
+        </ion-item>
       </ng-container>
 
-      <ng-container *ngIf="platform.width() <= 449">
-        <div slot="end" class="end">
-          <ion-badge *ngIf="company.total_candidates > 0">
-            {{ company.total_candidates }} candidates
-          </ion-badge>
-          <ion-badge  *ngIf="company.subCompanies && company.subCompanies.length > 0">
-            {{ company.subCompanies.length }} sub-companies
-          </ion-badge>
-          <ion-badge *ngIf="company.stores.length > 0">
-            {{ company.stores.length }} stores
-          </ion-badge>
-        </div>
-      </ng-container>
-    </ion-item>
+
     </section>
   </ion-list>
   <ion-row class="ion-text-center" *ngIf="!loading">

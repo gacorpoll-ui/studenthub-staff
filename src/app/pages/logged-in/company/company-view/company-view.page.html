@@ -27,6 +27,38 @@
         </ion-label>
       </ion-item>
 
+      <ion-item>
+        <ion-label>
+          {{ company.company_common_name_en }}
+        </ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          {{ company.company_common_name_ar }}
+        </ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          {{ company.company_description_en }}
+        </ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          {{ company.company_description_ar }}
+        </ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          {{ company.company_website }}
+        </ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-button expand="full" color="danger" (click)="uploadDocument()">
+          <span>Upload Document</span>
+        </ion-button>
+      </ion-item>
+
       <ion-item-divider color="light">
         <ion-label>
           Payment

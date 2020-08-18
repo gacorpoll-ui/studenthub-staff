@@ -32,7 +32,7 @@ export class AppComponent implements OnInit {
     private eventService: EventService,
     private _alertCtrl: AlertController,
     private navCtrl: NavController,
-    public auth: AuthService,
+    public authService: AuthService,
     public translateService: TranslateLabelService,
     public candidateIdCardService: CandidateIdCardService
   ) {
@@ -117,6 +117,17 @@ export class AppComponent implements OnInit {
   }
 
   /**
+   * change theme
+   */
+  changeTheme() {
+    if (!this.authService.theme || this.authService.theme == 'day') {
+      this.authService.setTheme('night');
+    } else {
+      this.authService.setTheme('day');
+    }
+  }
+
+  /**
    * keep checking for service worker update
    */
   setServiceWorker() {
@@ -177,6 +188,6 @@ export class AppComponent implements OnInit {
 
 
   logout() {
-    this.auth.logout();
+    this.authService.logout();
   }
 }
