@@ -196,7 +196,7 @@
     <ion-label>
       <h5>ID Photo Front</h5>
       <p>
-        <a [href]="aws.permanentBucketUrl + candidate.candidate_civil_photo_front" target='_blank'>
+        <a [href]="aws.permanentBucketUrl + 'photos/' + candidate.candidate_civil_photo_front" target='_blank'>
           {{ candidate.candidate_civil_photo_front }}
         </a>
       </p>
@@ -206,7 +206,7 @@
     <ion-label>
       <h5>ID Photo Back</h5>
       <p>
-        <a [href]="aws.permanentBucketUrl + candidate.candidate_civil_photo_back" target='_blank'>
+        <a [href]="aws.permanentBucketUrl + 'photos/' + candidate.candidate_civil_photo_back" target='_blank'>
           {{ candidate.candidate_civil_photo_back }}
         </a>
       </p>

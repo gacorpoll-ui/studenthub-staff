@@ -53,7 +53,10 @@ export class CandidateViewPage implements OnInit {
   }
 
   ngOnInit() {
-    const state = window.history.state;
+
+  }
+  ionViewDidEnter() {
+    // const state = window.history.state;
     // if (state.model) {
     //   this.candidate = state.model;
     // } else  {
