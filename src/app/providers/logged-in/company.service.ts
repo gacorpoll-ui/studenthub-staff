@@ -33,7 +33,7 @@ export class CompanyService {
    * @param id
    */
   companyDetail(id) {
-    return this._authhttp.get(this._companyEndpoint + '/' + id + '?expand=files');
+    return this._authhttp.get(this._companyEndpoint + '/' + id + '?expand=files,notes');
   }
 
   /**
