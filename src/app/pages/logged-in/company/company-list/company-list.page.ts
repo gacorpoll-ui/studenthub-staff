@@ -15,6 +15,7 @@ import { AuthService } from 'src/app/providers/auth.service';
 import { UploadFilePage } from '../upload-file/upload-file.page';
 import { CompanyNoteFormPage } from "../company-note-form/company-note-form.page";
 import { CompanyContactFormPage } from '../company-contact-form/company-contact-form.page';
+import { CompanyFollowupNotePage } from '../company-followup-note/company-followup-note.page';
 
 
 @Component({
@@ -69,6 +70,25 @@ export class CompanyListPage implements OnInit {
     modal.onDidDismiss().then(e => {
       if (e && e.data && e.data.refresh) {
         this.loadContacts();
+      }
+    });
+    modal.present();
+  }
+
+  /**
+   * add followup note
+   */
+  async addFollowupNote() {
+    const modal = await this.modalCtrl.create({
+      component: CompanyFollowupNotePage,
+      componentProps: { 
+        company_id: this.company_id
+      }
+    });
+    modal.onDidDismiss().then(e => {
+      if (e && e.data && e.data.company_last_followup_datetime && this.company) {
+        this.company.company_last_followup_datetime = e.data.company_last_followup_datetime;
+        this.viewDetail(false);
       }
     });
     modal.present();

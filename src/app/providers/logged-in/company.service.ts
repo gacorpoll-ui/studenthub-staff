@@ -46,6 +46,19 @@ export class CompanyService {
   }
 
   /**
+   * add followup note
+   * @param note 
+   * @param company_id 
+   */
+  addFollowupNote(note: string, company_id: number): Observable<any>{
+    const url = `${this._companyEndpoint}/add-followup-note/${company_id}`;
+    const params = {
+      note: note
+    };
+    return this._authhttp.post(url, params);
+  }
+
+  /**
    * create file for company
    * @param {Company} model
    * @returns {Observable<any>}

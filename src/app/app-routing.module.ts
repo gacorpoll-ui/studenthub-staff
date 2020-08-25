@@ -148,6 +148,10 @@ const routes: Routes = [
   {
     path: '**',
     redirectTo: 'not-found'
+  },
+  {
+    path: 'company-followup-note',
+    loadChildren: () => import('./pages/logged-in/company/company-followup-note/company-followup-note.module').then( m => m.CompanyFollowupNotePageModule)
   }
 ];
 
