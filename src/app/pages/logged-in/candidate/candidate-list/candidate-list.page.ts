@@ -29,7 +29,7 @@ export class CandidateListPage implements OnInit {
     name: null,
     email: null,
     phone: null,
-    type: 'assigned'
+    type: null
   };
   public searchName = null;
   public searchEmail = null;
@@ -93,7 +93,7 @@ export class CandidateListPage implements OnInit {
         name: null,
         email: null,
         phone: null,
-        type: 'assigned'
+        type: null
       };
     this.loadData(1); // reload all result
   }
