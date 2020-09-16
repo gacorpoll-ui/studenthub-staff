@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient, HttpResponse } from '@angular/common/http';
-import { AlertController } from "@ionic/angular";
+import { AlertController } from '@ionic/angular';
 import { environment } from '../../../environments/environment';
 import { EMPTY, Observable, throwError } from 'rxjs';
 import { catchError, map, take, retryWhen } from 'rxjs/operators';
 import { genericRetryStrategy } from '../../util/genericRetryStrategy';
 import { saveAs } from 'file-saver';
-//service
-import { EventService } from "../event.service";
-import { AuthService } from "../auth.service";
+// service
+import { EventService } from '../event.service';
+import { AuthService } from '../auth.service';
+import {TranslateLabelService} from '../translate-label.service';
 
 
 @Injectable({
@@ -20,7 +21,8 @@ export class AuthHttpService {
     private _http: HttpClient,
     public _auth: AuthService,
     public _alertCtrl: AlertController,
-    public eventService: EventService
+    public eventService: EventService,
+    public translateService: TranslateLabelService
   ) { }
 
   /**
@@ -34,10 +36,10 @@ export class AuthHttpService {
     const bearerToken = this._auth.getAccessToken();
 
     return this._http.post(url, params, {
-      responseType: 'blob', //ResponseContentType.Blob,  https://github.com/angular/angular/issues/18654#issuecomment-321947661
+      responseType: 'blob', // ResponseContentType.Blob,  https://github.com/angular/angular/issues/18654#issuecomment-321947661
       headers: new HttpHeaders({
         // 'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Bearer ' + bearerToken
+        Authorization: 'Bearer ' + bearerToken
       })
     }).pipe(
       // retryWhen(genericRetryStrategy()),

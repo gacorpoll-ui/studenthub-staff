@@ -10,6 +10,7 @@ import {EventService} from './event.service';
 import {environment} from '../../environments/environment';
 
 import { Plugins } from '@capacitor/core';
+
 const { Storage } = Plugins;
 
 @Injectable({
@@ -24,7 +25,7 @@ export class AuthService {
   public name: string;
   public email: string;
   public theme: string;
-
+  public navEnable = true;
   public currency_pref = 'USD';
 
   public isLogged = false;
@@ -49,11 +50,18 @@ export class AuthService {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+
     /**
      * new router changes don't wait for startup service
      * https://github.com/angular/angular/issues/14615
      */
     return new Promise(async resolve => {
+
+      this.navEnable = true;
+
+      if (route.data.navDisable) {
+        this.navEnable = false;
+      }
 
       if (this.isLogged) {
         resolve(true);
@@ -212,7 +220,7 @@ export class AuthService {
   basicAuth(email: string, password: string): Observable<any> {
     // Add Basic Auth Header with Base64 encoded email and password
     const authHeader = new HttpHeaders({
-      Authorization: 'Basic ' + btoa(`${email}:${password}`),
+      Authorization: 'Basic ' + btoa(unescape(encodeURIComponent(`${email}:${password}`)))
     });
     const url = environment.apiEndpoint + this._urlBasicAuth;
     return this._http.get(url, {

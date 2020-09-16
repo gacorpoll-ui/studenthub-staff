@@ -134,6 +134,7 @@ export class CandidateViewPage implements OnInit {
 
       } else {
         this.candidate.store_id = null;
+        
         const alert = await this.alertCtrl.create({
           message: this._processResponseMessage(response),
           buttons: ['Ok']

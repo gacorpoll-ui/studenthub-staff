@@ -4,8 +4,13 @@ import {AlertController, LoadingController, ModalController} from '@ionic/angula
 import {ActivatedRoute} from '@angular/router';
 // service
 import {StoreService} from 'src/app/providers/logged-in/store.service';
+import {AuthService} from 'src/app/providers/auth.service';
+import {MallService} from 'src/app/providers/logged-in/mall.service';
 // model
 import {Store} from 'src/app/models/store';
+import {Mall} from 'src/app/models/mall';
+import {Brand} from "../../../../models/brand";
+
 
 @Component({
   selector: 'app-store-form',
@@ -15,6 +20,8 @@ import {Store} from 'src/app/models/store';
 export class StoreFormPage implements OnInit {
 
   public model: Store = new Store();
+  public brands: Brand[];
+  public malls: Mall[];
   public operation: string;
   public store_id = null;
   public company_id;
@@ -26,20 +33,27 @@ export class StoreFormPage implements OnInit {
     public storeService: StoreService,
     private _fb: FormBuilder,
     private _modelCtrl: ModalController,
-    private _alertCtrl: AlertController
+    private _alertCtrl: AlertController,
+    private authService: AuthService
   ){
     this.store_id = this.activatedRoute.snapshot.paramMap.get('id');
-
   }
 
   ngOnInit() {
-
     // Load the passed model if available
     const state = window.history.state;
     if (state.model) {
       this.model = state.model;
     } else {
       this.model.company_id = this.company_id;
+    }
+
+    if (state.brands) {
+      this.brands = state.brands;
+    }
+
+    if (state.malls) {
+      this.malls = state.malls;
     }
     this.formInit();
   }
@@ -49,12 +63,18 @@ export class StoreFormPage implements OnInit {
     if (!this.model.store_id){ // Show Create Form
       this.operation = 'Create';
       this.form = this._fb.group({
-        name: ['', Validators.required]
+        name: ['', Validators.required],
+        location: ['', Validators.required],
+        brand: [''],
+        mall: ['']
       });
     }else{ // Show Update Form
       this.operation = 'Update';
       this.form = this._fb.group({
-        name: [this.model.store_name, Validators.required]
+        name: [this.model.store_name, Validators.required],
+        location: [this.model.store_location, Validators.required],
+        brand: [this.model.brand_uuid],
+        mall: [this.model.mall_uuid]
       });
     }
   }
@@ -63,6 +83,9 @@ export class StoreFormPage implements OnInit {
    */
   updateModelDataFromForm(){
     this.model.store_name = this.form.value.name;
+    this.model.store_location = this.form.value.location;
+    this.model.brand_uuid = this.form.value.brand || null;
+    this.model.mall_uuid = this.form.value.mall || null;
   }
 
   /**
@@ -103,7 +126,7 @@ export class StoreFormPage implements OnInit {
       // On Failure
       if (jsonResponse.operation == 'error'){
         const prompt = await this._alertCtrl.create({
-          message: JSON.stringify(jsonResponse.message),
+          message: this.authService.errorMessage(jsonResponse.message),
           buttons: ['Ok']
         });
         prompt.present();

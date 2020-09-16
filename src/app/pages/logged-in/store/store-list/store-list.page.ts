@@ -7,9 +7,11 @@ import { Store } from 'src/app/models/store';
 import { Company } from '../../../../models/company';
 import { Note } from '../../../../models/note';
 import { Request } from 'src/app/models/request';
+import {Brand} from "src/app/models/brand";
 
 import { StoreFormPage } from '../store-form/store-form.page';
 import { CompanyNoteFormPage } from '../../company/company-note-form/company-note-form.page';
+import {BrandFormPage} from "src/app/pages/logged-in/company/brand-form/brand-form.page";
 
 import { StoreService } from 'src/app/providers/logged-in/store.service';
 import { CompanyService } from '../../../../providers/logged-in/company.service';
@@ -22,7 +24,11 @@ import { CompanyNoteService } from '../../../../providers/logged-in/company-note
 import { CompanyFollowupNotePage } from '../../company/company-followup-note/company-followup-note.page';
 import { CompanyRequestService } from 'src/app/providers/logged-in/company-request.service';
 import { CompanyRequestFormPage } from '../../company/company-request-form/company-request-form.page';
-
+import { EventService } from "src/app/providers/event.service";
+import { BrandService } from "src/app/providers/logged-in/brand.service";
+import {MallService} from "../../../../providers/logged-in/mall.service";
+import {Mall} from "../../../../models/mall";
+import {UploadFilePage} from "../../company/upload-file/upload-file.page";
 
 
 @Component({
@@ -36,8 +42,11 @@ export class StoreListPage implements OnInit {
   public currentPage = 1;
   public pages: number[] = [];
   public loading = false;
+  public deleting = false;
   public stores: Store[];
   public company: Company;
+  public brands: Brand[] = [];
+  public malls: Mall[];
 
   public companyContacts: CompanyContact[] = [];
 
@@ -56,15 +65,28 @@ export class StoreListPage implements OnInit {
     public aws: AwsService,
     public requestService: CompanyRequestService,
     public authService: AuthService,
-    public companyContactService: CompanyContactService
+    public companyContactService: CompanyContactService,
+    public eventService: EventService,
+    public brandService: BrandService,
+    public mallService: MallService
   ) {
     this.company_id = this.activatedRoute.snapshot.paramMap.get('id');
+    console.log(this.company_id);
   }
 
   ngOnInit() {
+
+    this.loadMall();
+
     this.loadData(this.currentPage);
     this.loadCompany();
     this.loadContacts();
+
+    this.eventService.reloadCandidateHistory$.subscribe(response => {
+      this.loadData(this.currentPage);
+      this.loadCompany();
+      this.loadContacts();
+    });
   }
 
   loadContacts() {
@@ -98,7 +120,7 @@ export class StoreListPage implements OnInit {
         window['history-back-from'] = 'onDidDismiss';
         window.history.back();
       }
-    
+
       if (e && e.data && e.data.refresh) {
         this.loadContacts();
       }
@@ -124,7 +146,7 @@ export class StoreListPage implements OnInit {
         window['history-back-from'] = 'onDidDismiss';
         window.history.back();
       }
-   
+
       if (e && e.data && e.data.refresh) {
         this.loadContacts();
       }
@@ -174,7 +196,7 @@ export class StoreListPage implements OnInit {
         window['history-back-from'] = 'onDidDismiss';
         window.history.back();
       }
-    
+
       if (e && e.data && e.data.company_last_followup_datetime && this.company) {
         this.company.company_last_followup_datetime = e.data.company_last_followup_datetime;
         this.loadCompany();
@@ -251,7 +273,10 @@ export class StoreListPage implements OnInit {
     const modal = await this.modalCtrl.create({
       component: StoreFormPage,
       componentProps: {
-        company_id: this.company_id
+        company_id: this.company_id,
+        company: this.company,
+        brands: this.company.brands,
+        malls: this.malls
       },
       cssClass: 'my-custom-class'
     });
@@ -261,7 +286,7 @@ export class StoreListPage implements OnInit {
         window['history-back-from'] = 'onDidDismiss';
         window.history.back();
       }
-    
+
       if (e.data && e.data.refresh) {
         this.loadData(this.currentPage);
       }
@@ -277,7 +302,6 @@ export class StoreListPage implements OnInit {
     event.preventDefault();
     event.stopPropagation();
 
-    this.loading = true;
     const confirm = await this.alertCtrl.create({
       header: 'Delete Store?',
       message: 'Are you sure you want to delete this Store?',
@@ -285,6 +309,7 @@ export class StoreListPage implements OnInit {
         {
           text: 'Yes',
           handler: () => {
+            this.loading = true;
             this.storeService.delete(store).subscribe(async jsonResp => {
               this.loading = false;
 
@@ -347,6 +372,7 @@ export class StoreListPage implements OnInit {
   loadCompany() {
     this.companyService.companyDetail(this.company_id).subscribe(response => {
       this.company = response;
+      this.brands = response.brands;
     });
   }
 
@@ -372,8 +398,9 @@ export class StoreListPage implements OnInit {
         window.history.back();
       }
     });
-    
+
     const { data } = await modal.onWillDismiss();
+
     if (data && data.refresh) {
       this.loadCompany();
     }
@@ -454,7 +481,7 @@ export class StoreListPage implements OnInit {
         window.history.back();
       }
     });
-    
+
     const { data } = await modal.onWillDismiss();
 
     if (data && data.refresh) {
@@ -590,5 +617,161 @@ export class StoreListPage implements OnInit {
       ]
     }).then( alert => { alert.present(); });
 
+  }
+
+
+  async deleteBrand(event, brand) {
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const confirm = await this.alertCtrl.create({
+      header: 'Delete Brand?',
+      message: 'Do you want to delete this brand?',
+      buttons: [
+        {
+          text: 'Yes',
+          handler: () => {
+
+            this.deleting = true;
+
+            this.brandService.delete(brand).subscribe(async jsonResp => {
+
+              // On Success
+              if (jsonResp.operation == 'success') {
+                const toast = await this.toastCtrl.create({
+                  message: jsonResp.message,
+                  duration: 3000
+                });
+                toast.present();
+
+                this.loadCompany();
+              }
+
+              // On Failure
+              if (jsonResp.operation == 'error') {
+
+                this.deleting = false;
+
+                // failer text
+                const prompt = await this.alertCtrl.create({
+                  header: 'Deletion Error!',
+                  message: jsonResp.message,
+                  buttons: ['Ok']
+                });
+                prompt.present();
+              }
+
+            });
+          }
+        },
+        {
+          text: 'No'
+        }
+      ]
+    });
+    confirm.present();
+  }
+
+  /**
+   * open brand edit page
+   * @param brand
+   */
+  async editSelected($event, brand) {
+    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+
+    const modal = await this.modalCtrl.create({
+      component: BrandFormPage,
+      componentProps: {
+        model: brand
+      }
+    });
+    modal.onDidDismiss().then(e => {
+
+      if (!e.data || e.data.from != 'native-back-btn') {
+        window['history-back-from'] = 'onDidDismiss';
+        window.history.back();
+      }
+
+      if (e && e.data && e.data.refresh) {
+        this.loadCompany();
+      }
+    });
+    modal.present();
+  }
+
+  /**
+   * form to add new brand
+   */
+  async addBrand() {
+    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+
+    const brand = new Brand;
+    brand.company_id = this.company_id;
+
+    const modal = await this.modalCtrl.create({
+      component: BrandFormPage,
+      componentProps: {
+        model: brand
+      }
+    });
+    modal.onDidDismiss().then(e => {
+
+      if (!e.data || e.data.from != 'native-back-btn') {
+        window['history-back-from'] = 'onDidDismiss';
+        window.history.back();
+      }
+
+      if (e && e.data && e.data.refresh) {
+        this.loadCompany();
+      }
+    });
+    modal.present();
+  }
+
+  /**
+   * open brand edit page
+   * @param brand
+   */
+  async brandSelected(brand) {
+    this.navCtrl.navigateForward('brand-view/' + brand.brand_uuid, {
+      state: {
+        model: brand
+      }
+    });
+  }
+
+  /**
+   * load all mails
+   */
+  async loadMall() {
+    this.mallService.fullList().subscribe(response => {
+      this.malls = response;
+    });
+  }
+
+  async uploadDocument() {
+    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+
+    const modal = await this.modalCtrl.create({
+      component: UploadFilePage,
+      componentProps: {
+        company: this.company,
+      }
+    });
+    modal.present();
+    modal.onDidDismiss().then(e => {
+
+      if (!e.data || e.data.from != 'native-back-btn') {
+        window['history-back-from'] = 'onDidDismiss';
+        window.history.back();
+      }
+    });
+
+    const { data } = await modal.onWillDismiss();
+    
+    if (data && data.refresh) {
+      this.loadCompany();
+    }
   }
 }

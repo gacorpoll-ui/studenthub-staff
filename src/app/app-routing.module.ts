@@ -125,6 +125,9 @@ const routes: Routes = [
     path: 'candidate-search',
     loadChildren: () => import('./pages/logged-in/candidate/candidate-search/candidate-search.module').then( m => m.CandidateSearchPageModule),
     canActivate: [AuthService],
+    data: {
+      navDisable: true,
+    }
   },
   {
     path: 'candidate-filter',
@@ -146,16 +149,36 @@ const routes: Routes = [
     loadChildren: () => import('./pages/logged-in/company/company-followup-list/company-followup-list.module').then( m => m.CompanyFollowupListPageModule)
   },
   {
-    path: '**',
-    redirectTo: 'not-found'
-  },
-  {
     path: 'company-followup-note',
     loadChildren: () => import('./pages/logged-in/company/company-followup-note/company-followup-note.module').then( m => m.CompanyFollowupNotePageModule)
   },
   {
     path: 'company-request-form',
     loadChildren: () => import('./pages/logged-in/company/company-request-form/company-request-form.module').then( m => m.CompanyRequestFormPageModule)
+  },
+  {
+    path: 'brand-view',
+    loadChildren: () => import('./pages/logged-in/company/brand-view/brand-view.module').then( m => m.BrandViewPageModule),
+    canActivate: [AuthService],
+  },
+  {
+    path: 'mall-form',
+    loadChildren: () => import('./pages/logged-in/mall/mall-form/mall-form.module').then( m => m.MallFormPageModule),
+    canActivate: [AuthService],
+  },
+  {
+    path: 'mall-list',
+    loadChildren: () => import('./pages/logged-in/mall/mall-list/mall-list.module').then( m => m.MallListPageModule),
+    canActivate: [AuthService],
+  },
+  {
+    path: 'mall-view',
+    loadChildren: () => import('./pages/logged-in/mall/mall-view/mall-view.module').then( m => m.MallViewPageModule),
+    canActivate: [AuthService],
+  },
+  {
+    path: '**',
+    redirectTo: 'not-found'
   }
 ];
 

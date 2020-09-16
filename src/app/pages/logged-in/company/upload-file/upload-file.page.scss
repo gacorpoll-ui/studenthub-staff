@@ -116,17 +116,18 @@ h3 {
         }
 
         ion-icon {
-            position: absolute; 
-            top: 20px; 
+            position: absolute;
+            top: 20px;
+            right: 26px;
         }
     }
 }
 
-[dir="ltr"] .progress-wrapper ion-icon { 
+[dir="ltr"] .progress-wrapper ion-icon {
     right: 20px;
 }
 
-[dir="rtl"] .progress-wrapper ion-icon { 
+[dir="rtl"] .progress-wrapper ion-icon {
     left: 20px;
 }
 
@@ -162,7 +163,7 @@ h3 {
         width: calc(100% - 120px);
         white-space: nowrap;
         text-overflow: ellipsis;
-        overflow: hidden; 
+        overflow: hidden;
         padding-top: 5px;
         position: relative;
         top: 5px;
@@ -178,7 +179,7 @@ h3 {
     width: calc(100% - 24px) !important;
     border: 1px solid rgba(130, 130, 130, 0.3) !important;
     margin: 12px !important;
-    
+
     span {
         font-weight: 500;
         color: #828282;
