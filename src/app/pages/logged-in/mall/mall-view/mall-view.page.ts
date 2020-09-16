@@ -74,5 +74,4 @@ export class MallViewPage implements OnInit {
   rowSelected(store) {
     this.navCtrl.navigateForward('store-view/' + store.store_id);
   }
-
 }

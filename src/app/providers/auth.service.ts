@@ -10,6 +10,7 @@ import {EventService} from './event.service';
 import {environment} from '../../environments/environment';
 
 import { Plugins } from '@capacitor/core';
+
 const { Storage } = Plugins;
 
 @Injectable({
@@ -219,7 +220,7 @@ export class AuthService {
   basicAuth(email: string, password: string): Observable<any> {
     // Add Basic Auth Header with Base64 encoded email and password
     const authHeader = new HttpHeaders({
-      Authorization: 'Basic ' + btoa(`${email}:${password}`),
+      Authorization: 'Basic ' + btoa(unescape(encodeURIComponent(`${email}:${password}`)))
     });
     const url = environment.apiEndpoint + this._urlBasicAuth;
     return this._http.get(url, {

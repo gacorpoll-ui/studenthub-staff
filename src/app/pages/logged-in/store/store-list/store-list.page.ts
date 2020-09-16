@@ -400,6 +400,7 @@ export class StoreListPage implements OnInit {
     });
 
     const { data } = await modal.onWillDismiss();
+
     if (data && data.refresh) {
       this.loadCompany();
     }
@@ -768,6 +769,7 @@ export class StoreListPage implements OnInit {
     });
 
     const { data } = await modal.onWillDismiss();
+    
     if (data && data.refresh) {
       this.loadCompany();
     }

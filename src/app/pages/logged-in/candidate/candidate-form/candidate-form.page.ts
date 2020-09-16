@@ -368,7 +368,7 @@ export class CandidateFormPage implements OnInit {
     
     const { data } = await modal.onWillDismiss();
 
-    if (data.resume) {
+    if (data && data.resume) {
       this.form.controls.resume.setValue(data.resume);
       this.form.controls.resume.markAsDirty();
       this.model.candidate_resume = data.resume;

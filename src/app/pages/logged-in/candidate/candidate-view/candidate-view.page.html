@@ -65,7 +65,7 @@
     </ion-item>
 
     <app-select-search-input
-      *ngIf="!candidate.store_id && !candidate.store && !assigning && candidate.candidate_hourly_rate"
+      *ngIf="candidate && !candidate.store_id && !candidate.store && !assigning && candidate.candidate_hourly_rate"
       placeholder="Assign to work at store" [(ngModel)]="candidate.store_id"
       (ngModelChange)="assignCandidateToStore($event)" [collection]="stores" valueAttr="store_id"
       labelAttr="storeWithCompany">

@@ -248,6 +248,7 @@ export class CompanyViewPage implements OnInit {
     });
 
     const { data } = await modal.onWillDismiss();
+
     if (data && data.refresh) {
       this.loadData(false);
     }
@@ -442,6 +443,7 @@ export class CompanyViewPage implements OnInit {
     });
 
     const { data } = await modal.onWillDismiss();
+    
     if (data && data.refresh) {
       this.loadData();
     }
