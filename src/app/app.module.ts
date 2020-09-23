@@ -29,6 +29,7 @@ import { CompanyContactFormPageModule } from './pages/logged-in/company/company-
 import { OptionPageModule } from './pages/logged-in/candidate/option/option.module';
 import {BrandFormPageModule} from './pages/logged-in/company/brand-form/brand-form.module';
 import {MallFormPageModule} from './pages/logged-in/mall/mall-form/mall-form.module';
+import { SelectiveLoadingStrategy } from './util/SelectiveLoadingStrategy';
 
 export function startupServiceFactory(authService) {
   return () => authService.load();
@@ -85,6 +86,7 @@ export function createTranslateLoader(http: HttpClient) {
     IOSFilePicker,
     SwUpdate,
     TranslateLabelService,
+    SelectiveLoadingStrategy,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: ErrorHandler, useClass: SentryErrorhandlerService }
   ],
