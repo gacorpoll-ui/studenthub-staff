@@ -744,6 +744,7 @@ export class CompanyViewPage implements OnInit {
    * @param totalCandidates
    * @param totalCandidatePaid
    * @param canAvgPayment
+   * @param averageProfitPerCandidate
    */
   createBarChart(
     xAxis,
@@ -753,7 +754,8 @@ export class CompanyViewPage implements OnInit {
     profit,
     totalCandidates,
     totalCandidatePaid,
-    canAvgPayment
+    canAvgPayment,
+    averageProfitPerCandidate
   ) {
     if (this.barChart.nativeElement) {
       this.bars = new Chart(this.barChart.nativeElement, {
@@ -811,6 +813,13 @@ export class CompanyViewPage implements OnInit {
               // backgroundColor: '#ffff00',
               borderColor: '#F5CAC3',
               borderWidth: 1
+            }, {
+              label: 'Average Profit Per Candidate',
+              fill: false,
+              data: averageProfitPerCandidate,
+              // backgroundColor: '#ffff00',
+              borderColor: '#00ffff',
+              borderWidth: 1
             }
           ]
         },
@@ -848,6 +857,7 @@ export class CompanyViewPage implements OnInit {
     const totalCandidates = [0];
     const totalCandidatePaid = [0];
     const canAvgPayment = [0];
+    const averageProfitPerCandidate = [0];
     if (this.company) {
       console.log(this.company.parentTransfers);
       if (this.company.parentTransfers && this.company.parentTransfers.length > 0) {
@@ -889,10 +899,17 @@ export class CompanyViewPage implements OnInit {
           // average payment per candidate
           canAvgPayment.push((totalPaid / transfer.totalPaid));
 
+
+          // Also average profit per candidate would be nice
+          if (transfer.profit && transfer.paidTransferCandidates && transfer.paidTransferCandidates.length > 0) {
+            averageProfitPerCandidate.push((transfer.profit / transfer.paidTransferCandidates.length));
+          }
+
+
           // Horizontal line shows transfer date
           xAxis.push(transfer.transfer_updated_at_unix);
         }
-        this.createBarChart(xAxis, complete, paymentReceived, inprogress, profit, totalCandidates, totalCandidatePaid, canAvgPayment);
+        this.createBarChart(xAxis, complete, paymentReceived, inprogress, profit, totalCandidates, totalCandidatePaid, canAvgPayment, averageProfitPerCandidate);
       }
     }
   }
