@@ -36,6 +36,7 @@ import { StoreFormPage } from '../../store/store-form/store-form.page';
 export class CompanyViewPage implements OnInit {
 
   @ViewChild('barChart') barChart;
+  @ViewChild('lineChart2') lineChart2;
   public company_id;
 
   public company: Company;
@@ -740,13 +741,124 @@ export class CompanyViewPage implements OnInit {
    * @param complete
    * @param paymentReceived
    * @param inProgress
+   */
+  createBarChart(
+    xAxis,
+    complete,
+    paymentReceived,
+    inProgress,
+  ) {
+    if (this.barChart.nativeElement) {
+      this.bars = new Chart(this.barChart.nativeElement, {
+        type: 'line',
+        data: {
+          labels: ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8'],
+          datasets: [
+            {
+              label: 'Completed Transfer (' + complete.length + ')',
+              data: complete,
+              // data: [[150, 150], [150, 150] ],
+              fill: false,
+              // backgroundColor: this.colorArray,
+              backgroundColor: 'rgb(38, 194, 129)',
+              borderColor: 'rgb(38, 194, 129)',
+              borderWidth: 1
+            }
+            , {
+              label: 'Received Transfer (' + paymentReceived.length + ')',
+              fill: false,
+              data: paymentReceived,
+              backgroundColor: '#8000ff',
+              borderColor: '#8000ff',
+              borderWidth: 1
+            }, {
+              label: 'In Progress Transfer (' + inProgress.length + ')',
+              fill: false,
+              data: inProgress,
+              backgroundColor: '#387ef5',
+              borderColor: '#387ef5',
+              borderWidth: 1
+            }
+          ]
+        },
+        options: {
+          legend: {
+              display: true,
+              position: 'bottom'
+            },
+          scales: {
+            xAxes: [{
+              type: 'category',
+              labels: xAxis,
+              time: {
+                displayFormats: {
+                  day: 'DD MMM YYYY'
+                }
+              },
+              displayFormats: {
+                'millisecond': 'MM/YY',
+                'second': 'MM/YY',
+                'minute': 'MM/YY',
+                'hour': 'MM/YY',
+                'day': 'MM/YY',
+                'week': 'MM/YY',
+                'month': 'MM/YY',
+                'quarter': 'MM/YY',
+                'year': 'MM/YY',
+              },
+              tooltipFormat: "DD/MM/YY"
+            }],
+            yAxes: [{
+              ticks: {
+                beginAtZero: false,
+                callback: (value) => {
+                  return (new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'KWD',
+                  })).format(value);
+                }
+              }
+            }]
+          },
+          // tooltips: {
+          //   callbacks: {
+          //     label: (context) => {
+          //
+          //       console.log(context);
+          //       return 'test';
+          //       let label = context.label || '';
+          //
+          //       if (label) {
+          //         label += ': ';
+          //       }
+          //       console.log(label);
+          //       if (!isNaN(context.y)) {
+          //         label += new Intl.NumberFormat('en-US', {
+          //           style: 'currency',
+          //           currency: 'KWD'
+          //         }).format(context.y);
+          //       }
+          //       return label;
+          //     }
+          //   }
+          // }
+        }
+      });
+    }
+  }
+
+  /**
+   * @param xAxis
+   * @param complete
+   * @param paymentReceived
+   * @param inProgress
    * @param profit
    * @param totalCandidates
    * @param totalCandidatePaid
    * @param canAvgPayment
    * @param averageProfitPerCandidate
    */
-  createBarChart(
+  createSecondLineChart(
     xAxis,
     complete,
     paymentReceived,
@@ -757,64 +869,44 @@ export class CompanyViewPage implements OnInit {
     canAvgPayment,
     averageProfitPerCandidate
   ) {
+
     if (this.barChart.nativeElement) {
-      this.bars = new Chart(this.barChart.nativeElement, {
+      this.bars = new Chart(this.lineChart2.nativeElement, {
         type: 'line',
         data: {
           labels: ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8'],
           datasets: [
             {
-              label: 'Completed Transfer',
-              data: complete,
-              fill: false,
-              // backgroundColor: this.colorArray,
-              backgroundColor: 'rgb(38, 194, 129)',
-              borderColor: 'rgb(38, 194, 129)',
-              borderWidth: 1
-            }, {
-              label: 'Received Transfer',
-              fill: false,
-              data: paymentReceived,
-              backgroundColor: '#8000ff',
-              borderColor: '#8000ff',
-              borderWidth: 1
-            }, {
-              label: 'In Progress Transfer',
-              fill: false,
-              data: inProgress,
-              backgroundColor: '#387ef5',
-              borderColor: '#387ef5',
-              borderWidth: 1
-            }, {
               label: 'Profit',
+              // xLabel: 'Profit (' + profit.length + ')',
               fill: false,
               data: profit,
-              backgroundColor: 'red',
+              // backgroundColor: 'red',
               borderColor: 'red',
               borderWidth: 1
             }, {
-              label: 'Total Candidates',
+              label: 'Total Candidates (' + totalCandidates.length + ')',
               fill: false,
               data: totalCandidates,
               backgroundColor: 'Blue',
               borderColor: 'Blue',
               borderWidth: 1
             }, {
-              label: 'Total Candidates Paid',
+              label: 'Total Candidates Paid (' + totalCandidatePaid.length + ')',
               fill: false,
               data: totalCandidatePaid,
               // backgroundColor: '#ffff00',
               borderColor: '#ffbf00',
               borderWidth: 1
             }, {
-              label: 'Average Candidates Payment',
+              label: 'Average Candidates Payment (' + canAvgPayment.length + ')',
               fill: false,
               data: canAvgPayment,
               // backgroundColor: '#ffff00',
               borderColor: '#F5CAC3',
               borderWidth: 1
             }, {
-              label: 'Average Profit Per Candidate',
+              label: 'Average Profit Per Candidate (' + averageProfitPerCandidate.length + ')',
               fill: false,
               data: averageProfitPerCandidate,
               // backgroundColor: '#ffff00',
@@ -824,17 +916,66 @@ export class CompanyViewPage implements OnInit {
           ]
         },
         options: {
+          legend: {
+              display: true,
+              position: 'bottom'
+            },
           scales: {
             xAxes: [{
               type: 'category',
-              labels: xAxis
+              labels: xAxis,
+              time: {
+                displayFormats: {
+                  day: 'DD MMM YYYY'
+                }
+              },
+              displayFormats: {
+                'millisecond': 'MM/YY',
+                'second': 'MM/YY',
+                'minute': 'MM/YY',
+                'hour': 'MM/YY',
+                'day': 'MM/YY',
+                'week': 'MM/YY',
+                'month': 'MM/YY',
+                'quarter': 'MM/YY',
+                'year': 'MM/YY',
+              },
+              tooltipFormat: "DD/MM/YY"
             }],
             yAxes: [{
               ticks: {
-                beginAtZero: true
+                beginAtZero: false,
+                callback: (value) => {
+                  return (new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'KWD',
+                  })).format(value);
+                }
               }
             }]
-          }
+          },
+          // tooltips: {
+          //   callbacks: {
+          //     label: (context) => {
+          //
+          //       console.log(context);
+          //       return 'test';
+          //       let label = context.label || '';
+          //
+          //       if (label) {
+          //         label += ': ';
+          //       }
+          //       console.log(label);
+          //       if (!isNaN(context.y)) {
+          //         label += new Intl.NumberFormat('en-US', {
+          //           style: 'currency',
+          //           currency: 'KWD'
+          //         }).format(context.y);
+          //       }
+          //       return label;
+          //     }
+          //   }
+          // }
         }
       });
     }
@@ -849,20 +990,22 @@ export class CompanyViewPage implements OnInit {
 
   loadChartStats() {
 
-    const complete = [0];
-    const paymentReceived = [0];
-    const inprogress = [0];
-    const xAxis = [0];
-    const profit = [0];
-    const totalCandidates = [0];
-    const totalCandidatePaid = [0];
-    const canAvgPayment = [0];
-    const averageProfitPerCandidate = [0];
+    const complete = [];
+    const paymentReceived = [];
+    const inprogress = [];
+    const xAxis = [];
+    const profit = [];
+    const totalCandidates = [];
+    const totalCandidatePaid = [];
+    const canAvgPayment = [];
+    const averageProfitPerCandidate = [];
     if (this.company) {
       console.log(this.company.parentTransfers);
       if (this.company.parentTransfers && this.company.parentTransfers.length > 0) {
-        for (const transfer of this.company.parentTransfers) {
+        for (const transfer of this.company.parentTransfers.reverse()) {
           // Complete/payment received/inprogress
+
+          // complete.push(transfer.company_total);
 
           if (transfer.transfer_status == 4) {
             // Complete transfer
@@ -907,9 +1050,11 @@ export class CompanyViewPage implements OnInit {
 
 
           // Horizontal line shows transfer date
-          xAxis.push(transfer.transfer_updated_at_unix);
+          xAxis.push(transfer.transfer_created_at_unix);
         }
-        this.createBarChart(xAxis, complete, paymentReceived, inprogress, profit, totalCandidates, totalCandidatePaid, canAvgPayment, averageProfitPerCandidate);
+        console.log(complete);
+        this.createBarChart(xAxis, complete, paymentReceived, inprogress);
+        this.createSecondLineChart(xAxis, complete, paymentReceived, inprogress, profit, totalCandidates, totalCandidatePaid, canAvgPayment, averageProfitPerCandidate);
       }
     }
   }

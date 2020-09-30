@@ -83,14 +83,30 @@
 <!--  </ion-list>-->
   <section *ngIf="segment == 'info'">
 
-    <ion-card class="welcome-card">
-      <ion-card-header>
-        <ion-card-title>Stats</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <canvas #barChart></canvas>
-      </ion-card-content>
-    </ion-card>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-card class="welcome-card">
+            <ion-card-header>
+              <ion-card-title>Completed / Received / InProgress Transfer</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <canvas #barChart></canvas>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col>
+          <ion-card class="welcome-card">
+            <ion-card-header>
+              <ion-card-title> Profit, Total Candidates, Total Paid Candidate, Candidate Average Payment,Average Profit/Candidate</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <canvas #lineChart2></canvas>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
 
 
     <div class="ion-text-center ion-padding">
