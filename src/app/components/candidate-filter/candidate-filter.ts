@@ -55,7 +55,7 @@ export class CandidateFilterComponent {
             if (item.name == '1' || item.label == '1') {
                 item.label = item.highlighted = item.name = this.translateLabel.transform('Yes');
             }
-            else if (item.name == '0' || item.label == '0') {
+            else if (item.name == '2' || item.label == '2') {
                 item.label = item.highlighted = item.name = this.translateLabel.transform('No');
             }
 
