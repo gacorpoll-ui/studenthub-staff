@@ -1027,11 +1027,11 @@ export class CompanyViewPage implements OnInit {
           });
 
           if (transfer.transfer_status == 4) {
-            pointBackgroundColors.push('red');
+            pointBackgroundColors.push('rgb(38, 194, 129)');
           } else if (transfer.transfer_status == 1) {
-            pointBackgroundColors.push('green');
+            pointBackgroundColors.push('#8000ff');
           } else if (transfer.transfer_status == 3) {
-            pointBackgroundColors.push('blue');
+            pointBackgroundColors.push('#387ef5');
           }
 
           // Horizontal line shows transfer date
