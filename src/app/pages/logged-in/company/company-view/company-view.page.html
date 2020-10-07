@@ -26,7 +26,7 @@
       <ion-segment-button value="requests">
         <ion-label>Requests</ion-label>
       </ion-segment-button>
-      <ion-segment-button value="documents" *ngIf="company && company.files && company.files.length > 0">
+      <ion-segment-button value="documents">
         <ion-label>Documents</ion-label>
       </ion-segment-button>
       <!-- store can't be assigned to company having sub companies -->
@@ -57,7 +57,7 @@
       <ion-select-option value="requests">
         <ion-label>Requests</ion-label>
       </ion-select-option>
-      <ion-select-option value="documents" *ngIf="company && company.files && company.files.length > 0">
+      <ion-select-option value="documents">
         <ion-label>Documents</ion-label>
       </ion-select-option>
       <!-- store can't be assigned to company having sub companies -->
