@@ -95,7 +95,7 @@ export function createTranslateLoader(http: HttpClient) {
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  
+
   static injector: Injector;
 
   constructor(public injector: Injector) {
