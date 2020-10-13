@@ -26,8 +26,8 @@ export class ExpiredIdPage implements OnInit {
 
   public loading = false;
   public renewLoader: boolean = false;
-
-  public checkAll = false;
+  
+  public checkAll = null;
 
   constructor(
     public candidateIdCardService: CandidateIdCardService,
