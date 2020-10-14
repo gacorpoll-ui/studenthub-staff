@@ -2,7 +2,6 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Platform, ModalController, AlertController, ToastController } from '@ionic/angular';
 import { Chart } from 'chart.js';
-//import { ChangeEvent } from '@ckeditor/ckeditor5-build-classic';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 // services
@@ -49,7 +48,9 @@ export class CompanyViewPage implements OnInit {
   public Editor = ClassicEditor;
 
   public editorConfig = {
-    placeholder: 'Click here to take notes...'
+    placeholder: 'Click here to take notes...',
+    // removePlugins: [ 'Heading', 'Link' ],
+    toolbar: [ 'Heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', '|', 'indent', 'outdent'],
   };
 
   public company_id;
@@ -80,6 +81,7 @@ export class CompanyViewPage implements OnInit {
   colorArray: any;
 
   public legendDisplay = true;
+  public editNoteData: Note = new Note();
 
   constructor(
     public platform: Platform,
@@ -421,9 +423,6 @@ export class CompanyViewPage implements OnInit {
   }
 
   addNote() {
-    console.log(this.ckeditor.editorInstance.data);
-    console.log(this.Editor);//setData('')
-
     this.addingNote = true;
 
     let model = new Note;
@@ -465,6 +464,12 @@ export class CompanyViewPage implements OnInit {
   }
 
   async editNote(note: Note) {
+    // this.editNoteData = note;
+    // this.ckeditor.editorInstance.setData(note.note_text);
+    // setTimeout(() => this.ckeditor.editorInstance.editing.view.focus(), 1000);
+    // this.onEditorFocus();
+    // setTimeout(() => this.editorReady.focus(), 250);
+
     window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
@@ -1237,4 +1242,9 @@ export class CompanyViewPage implements OnInit {
           );
         }
     }
+
+  onEditorReady(event: any){
+    console.log('log');
+    // this.editorReady = event.editor;
+  }
 }

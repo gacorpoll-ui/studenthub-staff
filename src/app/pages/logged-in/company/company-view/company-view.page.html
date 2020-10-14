@@ -382,8 +382,9 @@
             <h5>{{ mall.mall_name_en }}</h5>
             <p>{{ mall.mall_name_ar }}</p>
           </ion-label>
-          <ion-badge slot="end">
-            <ion-icon name="person"></ion-icon> {{ mall.candidate_count }}
+
+          <ion-badge slot="end" *ngIf="mall.candidate_count > 0">
+            {{ mall.candidate_count }}
           </ion-badge>
           </ion-item>
     </ion-list>
