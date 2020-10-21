@@ -4,6 +4,7 @@ import { Bank } from './bank';
 import { University } from './university';
 import { Country } from './country';
 import { Area } from './area';
+import { CandidateIdCard } from './candidate-id-card';
 
 export class Candidate {
     employee_id: number;
@@ -41,6 +42,7 @@ export class Candidate {
     experience: string;
     candidate_resume: string;
     candidate_video: string;
+    candidate_video_processed: any;
     candidate_created_at: string;
     candidate_updated_at: string;
 
@@ -53,4 +55,5 @@ export class Candidate {
     bank: Bank;
     candidateExperiences: any;
     candidateSkills: any;
+    candidateIdCard: CandidateIdCard;
 }
