@@ -13,7 +13,7 @@
         Update
       </ion-button>
 
-      <ion-button (click)="openPopover($event)">
+      <ion-button (click)="openPopover($event)" *ngIf="candidate">
         <ion-icon name="options-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
