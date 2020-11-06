@@ -38,7 +38,7 @@ export class CandidateNoteService {
 
   /**
    * toggle committed
-   * @param model 
+   * @param model
    */
   toggleCommitted(model: CandidateNote): Observable<any>{
     const url = `${this.candidateNoteEndpoint}/toggle-committed`;
@@ -60,6 +60,6 @@ export class CandidateNoteService {
    * list candidate note
    */
   list(): Observable<any>{
-    return this.authhttp.getRaw(`${this.candidateNoteEndpoint}`);
+    return this.authhttp.getRaw(`${this.candidateNoteEndpoint}?expand=createdBy,updatedBy`);
   }
 }
