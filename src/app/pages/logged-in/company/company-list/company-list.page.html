@@ -4,6 +4,11 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>Select Company</ion-title>
+    <ion-buttons slot="end">
+      <ion-button expand="full" (click)="create()">
+        Create
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 
 </ion-header>
@@ -157,9 +162,3 @@
   </ion-infinite-scroll>
 
 </ion-content>
-
-<ion-footer>
-  <ion-button expand="full" (click)="create()">
-    Create
-  </ion-button>
-</ion-footer>
