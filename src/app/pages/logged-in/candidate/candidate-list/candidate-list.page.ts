@@ -17,9 +17,9 @@ import { CandidateIdCardService } from 'src/app/providers/logged-in/candidate.id
 export class CandidateListPage implements OnInit {
 
   public pageCount = 0;
-  
+
   public currentPage: any = 1;
-  
+
   public totalCount = 0;
 
   public pages: number[] = [];
@@ -51,7 +51,7 @@ export class CandidateListPage implements OnInit {
 
   public downloading: boolean = false;
 
-  public merging: boolean = false; 
+  public merging: boolean = false;
 
   constructor(
     public navCtrl: NavController,
@@ -206,7 +206,7 @@ export class CandidateListPage implements OnInit {
 
   /**
    * Load list of candidates
-   * @param page 
+   * @param page
    */
   loadData(page: number) {
     const search = this.urlParams();
@@ -232,17 +232,17 @@ export class CandidateListPage implements OnInit {
   /**
    * Loads the create page
    */
-  create() {
-    this.navCtrl.navigateForward('candidate-form');
-  }
+  // create() {
+  //   this.navCtrl.navigateForward('candidate-form');
+  // }
 
 
   doInfinite(event) {
-    
+
     const search = this.urlParams();
-    
+
     this.paginationLoading = true;
-    
+
     this.currentPage++;
 
     this.candidateService.listFilter(search, this.currentPage).subscribe(response => {

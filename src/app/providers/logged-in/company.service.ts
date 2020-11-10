@@ -73,7 +73,7 @@ export class CompanyService {
    * @param company_id
    */
   view(company_id) {
-    return this._authhttp.get(this._companyEndpoint + '/' + company_id + '?expand=brands,subCompanies,subCompanies.stores,subCompanies.stores.mall,stores,stores.mall,subCompanies.stores.candidates,files,requests,notes,brands,parentTransfers,parentTransfers.profit,parentTransfers.childTransfers,parentTransfers.childTransfers.company,parentTransfers.totalCandidateTransferTotal,parentTransfers.totalPaid,parentTransfers.paidTransferCandidates,malls');
+    return this._authhttp.get(this._companyEndpoint + '/' + company_id + '?expand=brands,subCompanies,subCompanies.stores,subCompanies.stores.mall,stores,stores.mall,subCompanies.stores.candidates,files,requests,notes,brands,parentTransfers,parentTransfers.profit,parentTransfers.childTransfers,parentTransfers.childTransfers.company,parentTransfers.totalCandidateTransferTotal,parentTransfers.totalPaid,parentTransfers.paidTransferCandidates,malls,notes.createdBy,notes.updatedBy');
   }
 
   /**
@@ -169,5 +169,16 @@ export class CompanyService {
   resetPassword(model: Company): Observable<any> {
     const url = `${this._companyEndpoint}/reset-password/${model.company_id}`;
     return this._authhttp.patch(url, {});
+  }
+
+
+  /**
+   * change company status
+   * @param model
+   * @param status
+   */
+  changeStatus(model: Company, status: number = 10): Observable<any> {
+    const url = `${this._companyEndpoint}/change-status/${model.company_id}`;
+    return this._authhttp.patch(url, {status});
   }
 }
