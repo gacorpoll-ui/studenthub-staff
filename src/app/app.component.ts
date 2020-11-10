@@ -94,6 +94,7 @@ export class AppComponent implements OnInit {
       }
 
       this.loadStats();
+
       this.setServiceWorker();
     });
   }
@@ -189,32 +190,35 @@ export class AppComponent implements OnInit {
   setServiceWorker() {
 
     // service worker watcher
-    if (!this.platform.is('capacitor')) {
-      if ('serviceWorker' in navigator && environment.serviceWorker && window.location.hostname != 'localhost') {
 
-        navigator.serviceWorker.register('./ngsw-worker.js');
+    if (
+      !this.platform.is('capacitor') && 'serviceWorker' in navigator && 
+      environment.serviceWorker && 
+      window.location.hostname != 'localhost'
+    ) {
 
-        // Allow the app to stabilize first, before starting polling for updates with `interval()`.
-        const appIsStable$ = this.appRef.isStable.pipe(first(isStable => isStable === true));
-        const updateInterval$ = interval(60 * 1000); // every minute
-        const updateIntervalOnceAppIsStable$ = concat(appIsStable$, updateInterval$);
+      navigator.serviceWorker.register('./ngsw-worker.js');
 
-        updateIntervalOnceAppIsStable$.subscribe(() => {
-          this.updates.checkForUpdate().then((e) => {
-          });
+      // Allow the app to stabilize first, before starting polling for updates with `interval()`.
+      const appIsStable$ = this.appRef.isStable.pipe(first(isStable => isStable === true));
+      const updateInterval$ = interval(5 * 1000); // every minute
+      const updateIntervalOnceAppIsStable$ = concat(appIsStable$, updateInterval$);
+
+      updateIntervalOnceAppIsStable$.subscribe(() => {
+        this.updates.checkForUpdate().then((e) => {
         });
+      });
 
-        this.updates.available.subscribe((e) => {
-          this.updatesAvailable = true;
-        });
+      this.updates.available.subscribe((e) => {
+        this.updatesAvailable = true;
+      });
 
-        this.updates.activated.subscribe((e) => {
-          this.updatesAvailable = false;
-        }, reason => {
-          console.error('service worker update activation failed', reason);
-        });
-      }
-    }
+      this.updates.activated.subscribe((e) => {
+        this.updatesAvailable = false;
+      }, reason => {
+        console.error('service worker update activation failed', reason);
+      });
+    } 
   }
 
   /**

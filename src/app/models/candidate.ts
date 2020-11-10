@@ -33,6 +33,7 @@ export class Candidate {
     approved: number;
     isProfileCompleted: any;
     candidate_job_search_status: any;
+    candidate_committed: any;
     age: string;
     candidate_objective: string;
     candidate_gender: any;
