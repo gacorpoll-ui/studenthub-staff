@@ -136,9 +136,11 @@ export class CompanyViewPage implements OnInit {
   async loadData(silent = false) {
 
     if (!silent) {
-      this.loading = true;
+      setTimeout(_ => {
+        this.loading = true;
+      }, 500);
     } else {
-      this.updating = true;
+      this.updating = false;
     }
 
     setTimeout(_ => {

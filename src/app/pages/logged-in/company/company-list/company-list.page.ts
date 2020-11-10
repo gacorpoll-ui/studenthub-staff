@@ -15,27 +15,25 @@ import {CompanyFormPage} from 'src/app/pages/logged-in/company/company-form/comp
 })
 export class CompanyListPage implements OnInit {
 
-  public activePageCount = 0;
-  public activeCurrentPage = 1;
-  public inActivePageCount = 0;
-  public inActiveCurrentPage = 1;
+  public pageCount = 0;
+  public currentPage = 1;
   public loading = false;
   public loadingMore = false;
   public active = 1;
   public inActive = 0;
   public companies: Company[];
   public segment = 1;
-  public activeCompanies: Company[] = [];
-  public inActiveCompanies: Company[] = [];
 
   public filters: {
     name: string,
     common_name_en: string,
     common_name_ar: string
+    status: string
   } = {
     name: null,
     common_name_en: null,
-    common_name_ar: null
+    common_name_ar: null,
+    status: null
   };
 
   constructor(
@@ -88,6 +86,9 @@ export class CompanyListPage implements OnInit {
     if (this.filters.common_name_ar) {
       urlParams += '&common_name_ar=' + this.filters.common_name_ar;
     }
+    if (this.filters.status) {
+      urlParams += '&status=' + this.filters.status;
+    }
 
     return urlParams;
   }
@@ -99,7 +100,8 @@ export class CompanyListPage implements OnInit {
     this.filters = {
       name: null,
       common_name_en: null,
-      common_name_ar: null
+      common_name_ar: null,
+      status: null
     };
 
     this.loadData(1); // reload all result
@@ -110,20 +112,12 @@ export class CompanyListPage implements OnInit {
     // Load list of companies
     this.loading = true;
 
-    let searchParams = this.urlParams();
+    const searchParams = this.urlParams();
 
     this.companyService.list(page, searchParams).subscribe(response => {
-      if (this.segment == this.active) {
-
-        this.activePageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
-        this.activeCurrentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
-        this.activeCompanies = response.body;
-
-      } else {
-        this.inActivePageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
-        this.inActiveCurrentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
-        this.inActiveCompanies = response.body;
-      }
+        this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
+        this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
+        this.companies = response.body;
     },
       error => { },
       () => { this.loading = false; }
@@ -149,32 +143,18 @@ export class CompanyListPage implements OnInit {
     company.company_logo = null;
   }
 
-  doInfinite(event, status) {
+  doInfinite(event) {
 
     this.loadingMore = true;
-
-    if (status == this.active) {
-      this.activeCurrentPage++;
-    } else {
-      this.inActiveCurrentPage++;
-    }
+    this.currentPage++;
 
     const urlParams = this.urlParams();
 
-    this.companyService.list((status == this.active) ? this.activeCurrentPage : this.inActiveCurrentPage, urlParams).subscribe(response => {
+    this.companyService.list(this.currentPage, urlParams).subscribe(response => {
 
-      if (status == this.active) {
-
-        this.activePageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
-        this.activeCurrentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
-        this.activeCompanies = this.activeCompanies.concat(response.body);
-
-      } else if (status == this.inActive) {
-
-        this.inActiveCompanies = this.inActiveCompanies.concat(response.body);
-        this.inActivePageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
-        this.inActiveCurrentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
-      }
+        this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
+        this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
+        this.companies = this.companies.concat(response.body);
     },
       error => { },
       () => {
