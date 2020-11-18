@@ -29,7 +29,7 @@ import { CompanyRequestFormPage } from '../company-request-form/company-request-
 import { CompanyNoteFormPage } from '../company-note-form/company-note-form.page';
 import { BrandFormPage } from '../brand-form/brand-form.page';
 import { StoreFormPage } from '../../store/store-form/store-form.page';
-import {CompanyFormPage} from 'src/app/pages/logged-in/company/company-form/company-form.page';
+import { CompanyFormPage } from 'src/app/pages/logged-in/company/company-form/company-form.page';
 
 import NumberFormat = Intl.NumberFormat;
 
@@ -85,6 +85,9 @@ export class CompanyViewPage implements OnInit {
 
   public legendDisplay = true;
   public editNoteData: Note = new Note();
+  public companyStatus = false;
+
+  public borderLimit = false;
 
   constructor(
     public platform: Platform,
@@ -141,7 +144,10 @@ export class CompanyViewPage implements OnInit {
       this.updating = true;
     }
 
-    this.followup = !!(this.company && this.company.company_followup);
+    setTimeout(_ => {
+      this.companyStatus = !!(this.company && this.company.company_status);
+      this.followup = !!(this.company && this.company.company_followup);
+    }, 500);
 
     if (!this.company) {
       this.company = new Company;
@@ -156,7 +162,10 @@ export class CompanyViewPage implements OnInit {
 
       this.company = response;
 
-      this.followup = !!(this.company.company_followup);
+      setTimeout(_=>{
+        this.companyStatus = !!(this.company.company_status);
+        this.followup = !!(this.company.company_followup);
+      },500);
 
       this.subCompanies = response.subCompanies;
       this.stores = response.stores;
@@ -216,6 +225,10 @@ export class CompanyViewPage implements OnInit {
    * @param $event
    */
   toggleFollowup($event) {
+    // if same value then do nothing
+    if (this.followup == $event.detail.checked){
+      return;
+    }
 
     this.followup = $event.detail.checked;
     this.company.company_followup = $event.detail.checked;
@@ -1127,7 +1140,7 @@ export class CompanyViewPage implements OnInit {
           tooltips: {
             callbacks: {
               label: (context) => {
- 
+
                 let label = '';
                 // let label = context.label || '';Complete/payment received/inprogress
                 if (context.datasetIndex == 0) {
@@ -1170,7 +1183,7 @@ export class CompanyViewPage implements OnInit {
     }
   }
 
-  loadChartStats() { 
+  loadChartStats() {
     const allTransfers = [];
     const complete = [];
     const paymentReceived = [];
@@ -1257,7 +1270,7 @@ export class CompanyViewPage implements OnInit {
           xAxis.push(transfer.transfer_created_at_unix);
         }
       }
- 
+
       this.createStatsChart(
         xAxis, complete, paymentReceived,
         inprogress, profit, totalCandidates,
@@ -1269,7 +1282,7 @@ export class CompanyViewPage implements OnInit {
     }
   }
 
-  onEditorReady(event: any) { 
+  onEditorReady(event: any) {
     // this.editorReady = event.editor;
   }
 
@@ -1337,4 +1350,62 @@ export class CompanyViewPage implements OnInit {
     modal.present();
   }
 
+  /**
+   * change company status
+   * @param $event
+   */
+  async changeStatus($event) {
+
+    this.companyStatus = $event.detail.checked;
+
+    this.updating = true;
+
+    const status = ($event.detail.checked) ? 10 : 0;
+
+    if (status == this.company.company_status) {
+      return;
+    }
+
+
+    // if (!status) {
+    //   const prompt = await this.alertCtrl.create({
+    //     header: 'Attention!',
+    //     message: 'Please unassign all staff from this company before making client inactive',
+    //     buttons: ['Ok']
+    //   });
+    //   prompt.present();
+    // }
+
+    this.updating = true;
+
+    this.companyService.changeStatus(this.company, status).subscribe(async response => {
+
+      this.updating = false;
+
+      if (response && response.operation == 'success') {
+
+        this.eventService.reloadCompanyList$.next();
+        this.company.company_status = status;
+        const toast = await this.toastCtrl.create({
+          message: response.message,
+          duration: 3000
+        });
+        toast.present();
+      } else if (response.operation != 'success') {
+        this.companyStatus = !$event.detail.checked;
+        const prompt = await this.alertCtrl.create({
+          header: 'Error!',
+          message: response.message,
+          buttons: ['Ok']
+        });
+        prompt.present();
+      }
+    }, () => {
+      this.updating = false;
+    });
+  }
+  
+  logScrolling(e) {
+    this.borderLimit = (e.detail.scrollTop > 20) ? true : false;
+  }
 }

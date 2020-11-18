@@ -17,9 +17,9 @@ import { CandidateIdCardService } from 'src/app/providers/logged-in/candidate.id
 export class CandidateListPage implements OnInit {
 
   public pageCount = 0;
-  
+
   public currentPage: any = 1;
-  
+
   public totalCount = 0;
 
   public pages: number[] = [];
@@ -51,7 +51,9 @@ export class CandidateListPage implements OnInit {
 
   public downloading: boolean = false;
 
-  public merging: boolean = false; 
+  public merging: boolean = false;
+
+  public borderLimit = false;
 
   constructor(
     public navCtrl: NavController,
@@ -135,7 +137,7 @@ export class CandidateListPage implements OnInit {
    */
   async merge() {
 
-    if (this.candidateIdCardService.candidates.length != 2) {
+    if (this.candidateService.candidates.length != 2) {
       const prompt = await this.alertCtrl.create({
         message: 'Please select any 2 candidates',
         buttons: ['Okay']
@@ -186,6 +188,7 @@ export class CandidateListPage implements OnInit {
             }, () => {
               this.merging = false;
               this.candidateIdCardService.candidates = [];
+              this.loadData(this.currentPage);
             });
           }
         }
@@ -206,7 +209,7 @@ export class CandidateListPage implements OnInit {
 
   /**
    * Load list of candidates
-   * @param page 
+   * @param page
    */
   loadData(page: number) {
     const search = this.urlParams();
@@ -232,17 +235,17 @@ export class CandidateListPage implements OnInit {
   /**
    * Loads the create page
    */
-  create() {
-    this.navCtrl.navigateForward('candidate-form');
-  }
+  // create() {
+  //   this.navCtrl.navigateForward('candidate-form');
+  // }
 
 
   doInfinite(event) {
-    
+
     const search = this.urlParams();
-    
+
     this.paginationLoading = true;
-    
+
     this.currentPage++;
 
     this.candidateService.listFilter(search, this.currentPage).subscribe(response => {
@@ -258,6 +261,10 @@ export class CandidateListPage implements OnInit {
       error => { },
       () => { event.target.complete(); }
     );
+  }
+  
+  logScrolling(e) {
+    this.borderLimit = (e.detail.scrollTop > 20) ? true : false;
   }
 }
 

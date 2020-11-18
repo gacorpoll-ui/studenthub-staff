@@ -1,14 +1,19 @@
-<ion-header>
+<ion-header [class.add-border]="borderLimit" class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>Select Company</ion-title>
+    <ion-buttons slot="end">
+      <ion-button expand="full" (click)="create()">
+        Create
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 
 </ion-header>
 
-<ion-content>
+<ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
 
   <ion-card>
     <ion-card-header>
@@ -17,24 +22,36 @@
     <ion-card-content>
       <ion-grid>
         <ion-row>
-          <ion-col>
+          <ion-col size-md="6" size-xs="12" size-lg="3">
             <ion-item>
               <ion-label position="floating" color="primary">Name</ion-label>
               <ion-input type="text" [(ngModel)]="filters.name"></ion-input>
             </ion-item>
           </ion-col>
-          <ion-col>
+          <ion-col size-md="6" size-xs="12" size-lg="3">
             <ion-item>
               <ion-label position="floating" color="primary">Common Name - English</ion-label>
               <ion-input type="text" [(ngModel)]="filters.common_name_en"></ion-input>
             </ion-item>
           </ion-col>
 
-          <ion-col>
+          <ion-col size-md="6" size-xs="12" size-lg="3">
             <ion-item>
               <ion-label position="floating" color="primary">Common Name - Arabic</ion-label>
               <ion-input type="text" [(ngModel)]="filters.common_name_ar"></ion-input>
             </ion-item>
+          </ion-col>
+
+          <ion-col size-md="6" size-xs="12" size-lg="3">
+              <ion-item>
+                <ion-label color="primary" position="floating">Filter By</ion-label>
+                <ion-select [(ngModel)]="filters.status">
+                  <ion-select-option value="4">All</ion-select-option>
+                  <ion-select-option value="1">Active</ion-select-option>
+                  <ion-select-option value="2">In-Active</ion-select-option>
+                  <ion-select-option value="3">active+40 days passed without payment</ion-select-option>
+                </ion-select>
+              </ion-item>
           </ion-col>
 
         </ion-row>
@@ -48,20 +65,9 @@
 
   </ion-card>
 
-  <ion-segment (ionChange)="segmentChanged($event)" [value]="segment">
-    <ion-segment-button value="1">
-      <ion-label>Active</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="0">
-      <ion-label>In Active</ion-label>
-    </ion-segment-button>
-  </ion-segment>
-
   <ion-list>
     <section>
-
-      <ng-container *ngIf="segment == 1">
-        <ion-item tappable *ngFor="let company of activeCompanies" (click)="rowSelected(company)">
+        <ion-item tappable *ngFor="let company of companies" (click)="rowSelected(company)">
           <div tabindex="0"></div>
           <ion-avatar slot="start">
             <img *ngIf="company.company_logo" src="{{ aws.cloudinaryUrl + company.company_logo }}"
@@ -70,7 +76,16 @@
           </ion-avatar>
 
           <ion-label>
-            {{ company.company_name }}
+            {{ company.company_name }}<br/>
+            <ion-badge class="company_status_badge" slot="start" color="danger" *ngIf="!company.company_status">
+              Inactive
+            </ion-badge>
+            <ion-badge class="company_status_badge" slot="start" color="success" *ngIf="company.company_status">
+              Active
+            </ion-badge>
+            <ion-badge slot="start" color="danger" *ngIf="company.company_status && !company.last_40_days_transfer_count">
+              40 days passed without payment
+            </ion-badge>
           </ion-label>
           <ng-container *ngIf="platform.width() > 450">
             <ion-badge slot="end" *ngIf="company.total_candidates > 0">
@@ -98,68 +113,13 @@
             </div>
           </ng-container>
         </ion-item>
-      </ng-container>
-
-      <ng-container *ngIf="segment == 0">
-        <no-items *ngIf="!loading && inActiveCompanies && inActiveCompanies.length == 0" message="no inactive company right now"></no-items>
-
-        <ion-item tappable *ngFor="let company of inActiveCompanies" (click)="rowSelected(company)">
-          <div tabindex="0"></div>
-          <ion-avatar slot="start">
-            <img *ngIf="company.company_logo" src="{{ aws.cloudinaryUrl + company.company_logo }}"
-                  (error)="loadLogo($event,company)">
-            <img *ngIf="!company.company_logo" src="/assets/icon/icon.png">
-          </ion-avatar>
-
-          <ion-label>
-            {{ company.company_name }}
-          </ion-label>
-
-          <ng-container *ngIf="platform.width() > 450">
-            <ion-badge slot="end" *ngIf="company.total_candidates > 0">
-              {{ company.total_candidates }} candidates
-            </ion-badge>
-            <ion-badge slot="end" *ngIf="company.subCompanies && company.subCompanies.length > 0">
-              {{ company.subCompanies.length }} sub-companies
-            </ion-badge>
-            <ion-badge slot="end" *ngIf="company.stores.length > 0">
-              {{ company.stores.length }} stores
-            </ion-badge>
-          </ng-container>
-
-          <ng-container *ngIf="platform.width() <= 449">
-            <div slot="end" class="end">
-              <ion-badge *ngIf="company.total_candidates > 0">
-                {{ company.total_candidates }} candidates
-              </ion-badge>
-              <ion-badge *ngIf="company.subCompanies && company.subCompanies.length > 0">
-                {{ company.subCompanies.length }} sub-companies
-              </ion-badge>
-              <ion-badge *ngIf="company.stores.length > 0">
-                {{ company.stores.length }} stores
-              </ion-badge>
-            </div>
-          </ng-container>
-        </ion-item>
-      </ng-container>
-
     </section>
   </ion-list>
 
   <loading-modal [loading]="loading || loadingMore" type="text-list"></loading-modal>
 
-  <ion-infinite-scroll *ngIf="segment == 1 && activeCurrentPage < activePageCount" (ionInfinite)="doInfinite($event, this.active)">
-    <ion-infinite-scroll-content></ion-infinite-scroll-content>
-  </ion-infinite-scroll>
-
-  <ion-infinite-scroll *ngIf="segment == 2 && inActiveCurrentPage < inActivePageCount" (ionInfinite)="doInfinite($event,this.inActive)">
+  <ion-infinite-scroll *ngIf="currentPage < pageCount" (ionInfinite)="doInfinite($event)">
     <ion-infinite-scroll-content></ion-infinite-scroll-content>
   </ion-infinite-scroll>
 
 </ion-content>
-
-<ion-footer>
-  <ion-button expand="full" (click)="create()">
-    Create
-  </ion-button>
-</ion-footer>

@@ -47,6 +47,7 @@ export class Candidate {
     candidate_video_processed: any;
     candidate_created_at: string;
     candidate_updated_at: string;
+    candidate_mom_kuwaiti: any;
 
     store: Store;
     company: Company;

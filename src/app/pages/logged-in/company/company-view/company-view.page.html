@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header [class.add-border]="borderLimit" class="ion-no-border">
   <ion-toolbar>
 
     <ion-buttons slot="start">
@@ -92,7 +92,7 @@
 
 </ion-header>
 
-<ion-content>
+<ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
 
   <!--  </ion-list>-->
   <section *ngIf="segment == 'info'">
@@ -138,7 +138,7 @@
       </ion-buttons>
     </ion-item>
 
-    <ion-item *ngIf="company.company_followup">
+    <ion-item *ngIf="followup">
       <div tabindex="0"></div>
       <ion-button (click)="addFollowupNote()">
         I have followed up with this company
@@ -222,6 +222,13 @@
           <p *ngIf="company.company_website">{{ company.company_website }}</p>
           <p *ngIf="!company.company_website">-</p>
         </ion-label>
+      </ion-item>
+
+      <ion-item *ngIf="company && !company.parent_company_id">
+        <div tabindex="0"></div>
+        <ion-label>Company Status (<small>{{companyStatus ? 'Active' : 'Inactive'}}</small>)</ion-label>
+        <ion-toggle [checked]="companyStatus"
+                    (ionChange)="changeStatus($event)"></ion-toggle>
       </ion-item>
 
       <ion-item-divider color="light">
@@ -320,8 +327,8 @@
         <ion-badge slot="end" *ngIf="company.subCompanies && company.subCompanies.length > 0">
           {{ company.subCompanies.length }} sub-companies
         </ion-badge>
-        <ion-badge slot="end" *ngIf="company.stores.length > 0">
-          {{ company.stores.length }} stores
+        <ion-badge slot="end" *ngIf="stores.length > 0">
+          {{ stores.length }} stores
         </ion-badge>
       </ng-container>
 
@@ -333,8 +340,8 @@
           <ion-badge *ngIf="company.subCompanies && company.subCompanies.length > 0">
             {{ company.subCompanies.length }} sub-companies
           </ion-badge>
-          <ion-badge *ngIf="company.stores.length > 0">
-            {{ company.stores.length }} stores
+          <ion-badge *ngIf="stores.length > 0">
+            {{ stores.length }} stores
           </ion-badge>
         </div>
       </ng-container>
@@ -586,7 +593,10 @@
 
           <ion-label>
             <div [innerHTML]="note.note_text"></div>
-            <small>{{ toDate(note.note_created_datetime) | date}}</small>
+            <p><small>Created On : {{ toDate(note.note_created_datetime) | date}} | </small>
+              <small>Updated On : {{ toDate(note.note_updated_datetime) | date}} </small></p>
+            <p><small>Created By : {{note.createdBy.staff_name}} | </small>
+              <small>Updated By : {{note.updatedBy.staff_name}} </small></p>
           </ion-label>
 
           <ion-buttons slot="end" *ngIf="platform.width() > 768">

@@ -12,20 +12,24 @@ import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 })
 export class CompanyNoteFormPage implements OnInit {
 
-  public saving = false;
+  @ViewChild('ckeditor', { static: false }) ckeditor: ClassicEditor;
+
   @Input() company;
   @Input() note;
+
+  public saving = false;
+
   public model: Note = new Note();
+
   public operation: string;
-  @ViewChild('ckeditor', { static: false }) ckeditor: ClassicEditor;
 
   public Editor = ClassicEditor;
 
   public editorConfig = {
     placeholder: 'Click here to take notes...',
+    startupFocus : true,
     toolbar: [ 'Heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', '|', 'indent', 'outdent'],
   };
-
 
   public form: FormGroup;
 
@@ -38,6 +42,7 @@ export class CompanyNoteFormPage implements OnInit {
   ) {
 
   }
+
   ngOnInit() {
     if (this.note) {
       this.model = this.note;
@@ -46,14 +51,17 @@ export class CompanyNoteFormPage implements OnInit {
     this.form = this.fb.group({
       note: [(this.model && this.model.note_uuid) ? this.model.note_text : '', Validators.required],
     });
+
     this.operation  = (this.model && this.model.note_uuid) ? 'Update' : 'Create';
+
+    // this is causing issue. https://www.pivotaltracker.com/story/show/175598774
+    // setTimeout(() => this.ckeditor.editorInstance.editing.view.focus(), 1000);
   }
 
-  ionViewDidEnter() { 
-      if (this.model && this.ckeditor) {
-        this.ckeditor.editorInstance.setData(this.model.note_text);
-        setTimeout(() => this.ckeditor.editorInstance.editing.view.focus(), 1000);
-      }
+  ionViewDidEnter() {
+    if (this.model && this.ckeditor) {
+      this.ckeditor.editorInstance.setData(this.model.note_text);
+    }
   }
 
   /**

@@ -9,11 +9,11 @@ import { StoreFormPage } from "../store-form/store-form.page";
 //service
 import { StoreService } from "../../../../providers/logged-in/store.service";
 import { AwsService } from 'src/app/providers/aws.service';
-import {EventService} from "../../../../providers/event.service";
-import {MallService} from "../../../../providers/logged-in/mall.service";
-import {Mall} from "../../../../models/mall";
+import { EventService } from "../../../../providers/event.service";
+import { MallService } from "../../../../providers/logged-in/mall.service";
+import { Mall } from "../../../../models/mall";
 import { StoreManagerFormPage } from '../store-manager-form/store-manager-form.page';
-import {AuthService} from "../../../../providers/auth.service";
+import { AuthService } from "../../../../providers/auth.service";
 
 
 @Component({
@@ -28,6 +28,8 @@ export class StoreViewPage implements OnInit {
   public loading = false;
   public malls: Mall[];
 
+  public borderLimit = false; 
+  
   public updating: boolean = false;
 
   constructor(
@@ -99,6 +101,40 @@ export class StoreViewPage implements OnInit {
     return await modal.present();
   }
 
+  /**
+   * remove store manager
+   */
+  removeStoreManager() {
+
+    this.updating = true;
+
+    this.storeService.removeStoreManager(this.store).subscribe(async data => {
+      
+      this.updating = false;
+
+      if (data.operation == 'success') {
+        this.store.storeManager = null;
+        this.store.store_manager_uuid = null;
+      }
+
+      if (data.operation == 'error') {
+        const alert = await this.alertCtrl.create({
+          header: 'Selection Error!',
+          subHeader: this.authService.errorMessage(data.message),
+          buttons: ['Okay']
+        });
+        alert.present();
+      }
+    }, () => {
+      this.updating = false;
+    });
+  }
+
+  /**
+   * open popup to select store manager
+   * @param event 
+   * @param store 
+   */
   async selectStoreManager() {
 
     window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
@@ -132,6 +168,7 @@ export class StoreViewPage implements OnInit {
     this.updating = true;
 
     this.storeService.updateStoreManager(this.store, storeManager).subscribe(async data => {
+
       this.updating = false;
 
       if (data.operation == 'success') {
@@ -176,5 +213,9 @@ export class StoreViewPage implements OnInit {
     this.mallService.fullList().subscribe(response => {
       this.malls = response;
     });
+  }
+  
+  logScrolling(e) {
+    this.borderLimit = (e.detail.scrollTop > 20) ? true : false;
   }
 }

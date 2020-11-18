@@ -5,4 +5,6 @@ export class CandidateNote {
     note_text: string;
     note_created_datetime: string;
     note_updated_datetime: string;
+    createdBy: any;
+    updatedBy: any;
 }

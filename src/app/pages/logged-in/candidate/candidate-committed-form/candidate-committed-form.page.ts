@@ -27,10 +27,13 @@ export class CandidateCommittedFormPage implements OnInit {
 
   public editorConfig = {
     placeholder: 'Click here to take notes...',
+    startupFocus : true,
     toolbar: ['Heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', '|', 'indent', 'outdent'],
   };
 
   public form: FormGroup;
+
+  public borderLimit = false;
 
   constructor(
     public noteService: CandidateNoteService,
@@ -46,9 +49,6 @@ export class CandidateCommittedFormPage implements OnInit {
       note: ['', Validators.required],
     });
 
-  }
-
-  ionViewDidEnter() {
     setTimeout(() => this.ckeditor.editorInstance.editing.view.focus(), 1000);
   }
 
@@ -59,7 +59,6 @@ export class CandidateCommittedFormPage implements OnInit {
     this.model = new CandidateNote;
     this.model.note_text = this.form.value.note;
     this.model.candidate_id = this.candidate.candidate_id;
-    console.log(this.model);
   }
 
   /**
@@ -125,5 +124,9 @@ export class CandidateCommittedFormPage implements OnInit {
     this.form.controls.note.setValue(data);
     this.form.markAsDirty();
     this.form.updateValueAndValidity();
+  }
+  
+  logScrolling(e) {
+    this.borderLimit = (e.detail.scrollTop > 20) ? true : false;
   }
 }

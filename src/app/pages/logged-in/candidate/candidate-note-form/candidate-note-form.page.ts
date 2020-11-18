@@ -17,7 +17,7 @@ import { CandidateNote } from '../../../../models/candidate.note';
 export class CandidateNoteFormPage implements OnInit {
 
   @Input() candidate;
-  
+
   @Input() note;
 
   @ViewChild('ckeditor', { static: false }) ckeditor: ClassicEditor;
@@ -25,13 +25,16 @@ export class CandidateNoteFormPage implements OnInit {
   public model: CandidateNote = new CandidateNote();
 
   public operation: string;
-  
+
   public Editor = ClassicEditor;
 
   public saving = false;
 
+  public borderLimit = false;
+
   public editorConfig = {
     placeholder: 'Click here to take notes...',
+    startupFocus : true,
     toolbar: ['Heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', '|', 'indent', 'outdent'],
   };
 
@@ -46,6 +49,7 @@ export class CandidateNoteFormPage implements OnInit {
   ) {
 
   }
+
   ngOnInit() {
     if (this.note) {
       this.model = this.note;
@@ -54,13 +58,15 @@ export class CandidateNoteFormPage implements OnInit {
     this.form = this.fb.group({
       note: [(this.model && this.model.candidate_note_uuid) ? this.model.note_text : '', Validators.required],
     });
+
     this.operation = (this.model && this.model.candidate_note_uuid) ? 'Update' : 'Create';
+
+    setTimeout(() => this.ckeditor.editorInstance.editing.view.focus(), 1000);
   }
 
   ionViewDidEnter() {
-    if (this.model && this.ckeditor) {
+    if (this.model && this.ckeditor && this.ckeditor.editorInstance && this.ckeditor.editorInstance.editing) {
       this.ckeditor.editorInstance.setData(this.model.note_text);
-      setTimeout(() => this.ckeditor.editorInstance.editing.view.focus(), 1000);
     }
   }
 
@@ -139,5 +145,9 @@ export class CandidateNoteFormPage implements OnInit {
     this.form.controls.note.setValue(data);
     this.form.markAsDirty();
     this.form.updateValueAndValidity();
+  }
+  
+  logScrolling(e) {
+    this.borderLimit = (e.detail.scrollTop > 20) ? true : false;
   }
 }

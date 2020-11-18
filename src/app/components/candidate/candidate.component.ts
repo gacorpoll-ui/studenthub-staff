@@ -42,14 +42,14 @@ export class CandidateComponent implements OnInit {
     this.eventService.clearCandidateSelection$.subscribe(() => {
       if(this.checkbox) {
         this.checkbox.checked = false;
-      } 
+      }
     });
   }
 
   /**
    * When its selected
    */
-  rowSelected(model) { 
+  rowSelected(model) {
     this.navCtrl.navigateForward('candidate-view/' + model.candidate_id, {
       state: {
         model
@@ -130,25 +130,26 @@ export class CandidateComponent implements OnInit {
     if(!this.candidateIdCardService.candidates) {
       this.candidateIdCardService.candidates = [];
     }
-    
+
     const candidate_id = parseInt(event.target.value);
 
-    //for candidate operations 
+    // for candidate operations
 
-    if(event.detail.checked) {//on check
+    if (event.detail.checked) { // on check
       this.candidateService.candidates.push(this.candidate);
-    } else {//on uncheck
+    } else { // on uncheck
       this.candidateService.candidates = this.candidateService.candidates.filter((c) => c.candidate_id != candidate_id);
     }
 
-    //for candidate id operations 
+    // for candidate id operations
 
-    if(!this.candidate.store) 
-      return false; 
+    if (!this.candidate.store) {
+      return false;
+    }
 
-    if(event.detail.checked) {//on check 
+    if (event.detail.checked) { // on check
       this.candidateIdCardService.candidates.push(candidate_id);
-    } else {//on uncheck
+    } else { // on uncheck
       this.candidateIdCardService.candidates = this.candidateIdCardService.candidates.filter((c) => c != candidate_id);
     }
   }

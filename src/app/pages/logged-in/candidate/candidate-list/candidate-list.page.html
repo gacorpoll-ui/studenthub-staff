@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header [class.add-border]="borderLimit" class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
@@ -6,13 +6,13 @@
     <ion-title>Candidates <span *ngIf="!loading && totalCount">({{totalCount}})</span></ion-title>
 
     <ion-buttons slot="end">
-      
+
       <ion-button color="primary" [disabled]="candidateIdCardService.candidates.length == 0 || merging || downloading"
         (click)="generate()">
         <span *ngIf="!downloading">Download Zip</span>
         <ion-spinner *ngIf="downloading"></ion-spinner>
       </ion-button>
-      
+
       <ion-button color="primary" [disabled]="candidateService.candidates.length != 2 || merging || downloading"
         (click)="merge()">
         <span *ngIf="!merging">Merge</span>
@@ -24,7 +24,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
   <ion-card>
     <ion-card-header>
       <ion-card-title>Filter by</ion-card-title>
@@ -86,9 +86,3 @@
     <ion-infinite-scroll-content></ion-infinite-scroll-content>
   </ion-infinite-scroll>
 </ion-content>
-
-<ion-footer *ngIf="!loading">
-  <ion-button expand="full" (click)="create()">
-    Create
-  </ion-button>
-</ion-footer>
