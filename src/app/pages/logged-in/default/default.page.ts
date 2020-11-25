@@ -25,6 +25,7 @@ export class DefaultPage implements OnInit {
     incompleteAssignedToWork: any;
     profileApprovalRequire: any;
     assignedIdleCandidates: any;
+    companyMoreThen40DaysWithoutPayment: any;
   };
 
   public loading = false;
@@ -91,7 +92,7 @@ export class DefaultPage implements OnInit {
   }
 
   logScrolling(e) {
-    this.borderLimit = (e.detail.scrollTop > 20) ? true : false;
+    this.borderLimit = (e.detail.scrollTop > 20);
   }
 
   scrollToActive() {
@@ -103,5 +104,17 @@ export class DefaultPage implements OnInit {
    */
   scrollToPending() {
     this.navCtrl.navigateForward('/company-request-dashboard');
+  }
+  /**
+   * scroll to pending request
+   */
+  companyList() {
+    this.navCtrl.navigateForward('/company-list', {
+        state : {
+          filter : 'last40days',
+          value : '3'
+        }
+      }
+    );
   }
 }

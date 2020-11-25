@@ -15,6 +15,15 @@
 
   <div *ngIf="statistics && !loading">
 
+    <ion-card class="danger stats" *ngIf="statistics.companyMoreThen40DaysWithoutPayment > 0" tappable (click)="companyList()">
+      <ion-card-content>
+        <div class="count">{{ statistics.companyMoreThen40DaysWithoutPayment }}</div>
+        <div class="message">
+          <b>Urgent! Companies with assigned staff that have not made a payment in 40 days</b>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
     <ion-card class="danger stats" *ngIf="statistics.totalPendingRequests > 0" tappable (click)="scrollToPending()">
       <ion-card-content>
         <div class="count">{{ statistics.totalPendingRequests }}</div>

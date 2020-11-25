@@ -29,6 +29,7 @@ export class AppComponent implements OnInit {
 
   public assignedExpiredCivilID = 0;
   public assignedIdleCandidates = 0;
+  public companyMoreThen40DaysWithoutPayment = 0;
 
   public totalCandidateToReview = null;
 
@@ -271,6 +272,7 @@ export class AppComponent implements OnInit {
       this.assignedExpiredCivilID = response.assignedExpiredCivilID;
       this.assignedIdleCandidates = response.assignedIdleCandidates;
       this.totalRequest = parseInt(response.totalPendingRequests) + parseInt(response.activeRequests);
+      this.companyMoreThen40DaysWithoutPayment = response.companyMoreThen40DaysWithoutPayment;
     },
       error => { },
       () => { }
