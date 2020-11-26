@@ -6,6 +6,7 @@ export class Note {
     staff_id: number;
     note_type: any;
     note_text: string;
+    
     note_created_datetime: string;
     note_updated_datetime: string;
 }
