@@ -94,7 +94,7 @@ export class TeamViewPage implements OnInit {
     this.loadMore = true;
 
     this.currentPage++;
-    this.staffService.listByStaff(this.currentPage).subscribe(response => {
+    this.noteService.listByStaff(this.currentPage, this.staffID).subscribe(response => {
 
         this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
         this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
