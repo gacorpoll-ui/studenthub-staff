@@ -58,6 +58,13 @@ export class CompanyViewPage implements OnInit {
     toolbar: ['Heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', '|', 'indent', 'outdent'],
   };
 
+  public loadingNotes: boolean = false;
+
+  public notePageCount;
+  public currentNotePage;
+
+  public notes: Note[] = [];
+
   public company_id;
 
   public company: Company;
@@ -127,6 +134,7 @@ export class CompanyViewPage implements OnInit {
     this.loadData();
     this.loadContacts();
     this.loadRequests();
+    this.loadNotes();
 
     if (this.platform.is('mobile')) {
       this.legendDisplay = false;
@@ -180,6 +188,61 @@ export class CompanyViewPage implements OnInit {
       this.deleting = false;
       this.updating = false;
     });
+  }
+
+  /**
+   * load company notes
+   */
+  loadNotes() {
+    const searchParams = this.getNoteSearchParams();
+
+    this.loadingNotes = true;
+
+    this.noteService.list(1, searchParams).subscribe(response => {
+      
+      this.loadingNotes = false;
+
+      this.notePageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
+      this.currentNotePage = parseInt(response.headers.get('X-Pagination-Current-Page'));
+
+      this.notes = response.body;
+    }, () => {
+      this.loadingNotes = false;
+    });
+  }
+
+  /**
+   * load more notes on scroll to bottom
+   * @param event 
+   */
+  doInfiniteNoteLoading(event) {
+
+    this.loadingNotes = true;
+
+    this.currentNotePage++;
+
+    const urlParams = this.getNoteSearchParams();
+
+    this.noteService.list(this.currentNotePage, urlParams).subscribe(response => {
+
+      this.notePageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
+      this.currentNotePage = parseInt(response.headers.get('X-Pagination-Current-Page'));
+
+      this.notes = this.notes.concat(response.body);
+    },
+      error => { },
+      () => {
+        this.loadingNotes = false;
+        event.target.complete();
+      }
+    );
+  }
+
+  /**
+   * search params for note listing
+   */
+  getNoteSearchParams() {
+    return '&company_id=' + this.company_id;
   }
 
   loadRequests() {
@@ -561,7 +624,7 @@ export class CompanyViewPage implements OnInit {
 
         this.ckeditor.editorInstance.setData('');
 
-        this.loadData(false);
+        this.loadNotes();
       }
 
       // On Failure
@@ -685,7 +748,7 @@ export class CompanyViewPage implements OnInit {
 
         this.content.scrollToPoint(0, 1);
 
-        //this.loadData(true);
+        this.loadNotes();
       }
     });
     modal.present();

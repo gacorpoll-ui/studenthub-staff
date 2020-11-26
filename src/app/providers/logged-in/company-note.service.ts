@@ -16,6 +16,16 @@ export class CompanyNoteService {
   constructor(private authhttp: AuthHttpService) { }
 
   /**
+   * List of all notest
+   * @param page
+   * @param searchParams
+   */
+  list(page, searchParams = ''): Observable<any> {
+    const url = this.companyNoteEndpoint + '?page=' + page + searchParams + '&expand=createdBy,updatedBy';
+    return this.authhttp.getRaw(url);
+  }
+
+  /**
    * create note
    * @param model
    */
