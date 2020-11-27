@@ -30,11 +30,11 @@
 
     <p *ngIf="request.request_additional_info" class="txt-additional-info">{{ request.request_additional_info }} </p>
     <small class="time">Request made {{ request.request_created_datetime | timeAgo }} </small>
-    <div *ngIf="request.lastActivity" class="content-footer" [class.background-red]="!getColorGreen()" [class.background-green]="getColorGreen()">
+    <div *ngIf="request" class="content-footer" [class.background-red]="!this.active" [class.background-green]="this.active">
       <p *ngIf="!request.staff">Please pick up</p>
       <ng-container *ngIf="request.staff">
-        <p>{{ request.lastActivity.createdBy.staff_name  }} is handling it</p>
-        <p>Last updated {{ request.lastActivity.note_created_datetime | timeAgo }} </p>
+        <p>{{ request.staff.staff_name  }} is handling it</p>
+        <p>Last updated {{ request.request_updated_datetime | timeAgo }} </p>
       </ng-container>
     </div>
   </ion-card-content>
