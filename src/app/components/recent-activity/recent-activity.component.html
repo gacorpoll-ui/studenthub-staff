@@ -9,12 +9,14 @@
         </div>
       </ion-col>
       <ion-col size="9" class="detail-col">
-        <b class="txt-staff">{{ activity.staff.staff_name }} {{ "@" }} {{ toDate(activity.note_created_datetime) | date:'h:mmaaaaa' }}m</b>
-        
+        <b class="txt-staff">
+          <ng-container  *ngIf="activity && activity.updatedBy">{{ activity.updatedBy.staff_name }}</ng-container> {{ "@" }} {{ toDate(activity.note_created_datetime) | date:'h:mmaaaaa' }}
+        </b>
+
         <p>{{ activity.note_type }}</p>
-        
+
         <p>{{ activity.note_text }}</p>
-        
+
       </ion-col>
     </ion-row>
   </ion-grid>
