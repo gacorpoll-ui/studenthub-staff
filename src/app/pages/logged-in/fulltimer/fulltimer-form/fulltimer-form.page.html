@@ -15,6 +15,9 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
+
+  <ion-progress-bar *ngIf="progress" type="indeterminate"></ion-progress-bar>
+
 </ion-header>
 
 <ion-content scrollEvents="true" (ionScroll)="logScrolling($event)" class="ion-padding">
@@ -26,16 +29,35 @@
         <ion-input type="telephone" formControlName="name"></ion-input>
       </ion-item>
 
+      <div class="error-wrapper" *ngIf="!form.controls.name.pristine">
+        <p class="error" *ngIf="form.controls.name.errors && form.controls.name.errors.required">
+          * required
+        </p>
+      </div>
+
       <ion-item>
         <ion-label position="floating">Phone</ion-label>
         <ion-input type="telephone" formControlName="phone"></ion-input>
       </ion-item>
       
+      <div class="error-wrapper" *ngIf="!form.controls.phone.pristine">
+        <p class="error" *ngIf="form.controls.phone.errors && form.controls.phone.errors.required">
+          * required
+        </p>
+      </div>
+
       <ion-item>
         <ion-label position="floating">Email</ion-label>
         <ion-input type="email" formControlName="email"></ion-input>
       </ion-item>
 
+      <div class="error-wrapper" *ngIf="!form.controls.email.pristine">
+        <p class="error" *ngIf="form.controls.email.errors && form.controls.email.errors.required">
+          * required
+        </p>
+      </div>
+
+      <!--
       <app-select-search-input
         *ngIf="countrylistData"
         formControlName="nationality_id"
@@ -43,17 +65,49 @@
         [collection]="countrylistData"
         valueAttr="nationality_id"
         labelAttr="country_nationality_name_en">
-      </app-select-search-input>
+      </app-select-search-input>-->
 
-      <div class="error-wrapper" *ngIf="!form.controls.country_id.pristine">
-        <p class="error" *ngIf="form.controls.country_id.errors && form.controls.country_id.errors.required">
+      <ion-item (click)="selectNationality()">
+        <ion-label position="floating">Nationality</ion-label>
+        <ion-input formControlName="nationality"></ion-input>
+      </ion-item>
+
+      <div class="error-wrapper" *ngIf="!form.controls.nationality_id.pristine">
+        <p class="error" *ngIf="form.controls.nationality_id.errors && form.controls.nationality_id.errors.required">
           * required
         </p>
       </div>
       
-      <ion-item (click)="updateResume()">
+      <ion-item tappable>
         <ion-label position="floating">PDF CV</ion-label>
         <ion-input type="text" readonly formControlName="pdf_cv"></ion-input>
+        <ion-buttons slot="end">
+
+          <!-- download -->
+
+          <ion-button *ngIf="form.controls.pdf_cv.value || form.controls.tempPdfCVLocation.value"  
+            [href]="getResumeUrl()" target="_blank">
+            <ion-icon name="cloud-download-outline"></ion-icon>
+          </ion-button>
+          
+          <!-- change/ upload -->
+
+          <ion-button (click)="mobileUpload();" *ngIf="platform.is('hybrid')">
+            <ion-icon name="cloud-upload-outline"></ion-icon>
+          </ion-button>
+          
+          <ion-button *ngIf="!platform.is('hybrid')">
+            <ion-icon name="cloud-upload-outline"></ion-icon>
+            <input class="upload" accept=".pdf" type='file' #fileInput (change)="browserUpload($event)">
+          </ion-button>
+          
+          <!-- remove -->
+
+          <ion-button *ngIf="form.controls.pdf_cv.value || form.controls.tempPdfCVLocation.value" 
+            (click)="removeResume($event)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
       </ion-item>
 
       <div class="error-wrapper" *ngIf="!form.controls.pdf_cv.pristine">
@@ -62,12 +116,27 @@
         </p>
       </div>
 
-      country_id: model.country_id,
-      area_uuid: model.fulltimer_area_uuid,
-      latitude: model.fulltimer_latitude,
-      longitude: model.fulltimer_longitude,
-    
-      : model.fulltimer_pdf_cv,
+      <ion-item (click)="updateLocation()">
+        <ion-label position="floating">Location</ion-label>
+        <ion-input readonly formControlName="location"></ion-input>
+      </ion-item>
+
+      <div class="error-wrapper" *ngIf="!form.controls.location.pristine">
+        <p class="error" *ngIf="form.controls.location.errors && form.controls.location.errors.required">
+          * required
+        </p>
+      </div>
+
+      <ion-item>
+        <ion-label position="floating">Tags <small>(comma separated)</small></ion-label>
+        <ion-input formControlName="tags"></ion-input>
+      </ion-item>
+
+      <div class="error-wrapper" *ngIf="!form.controls.tags.pristine">
+        <p class="error" *ngIf="form.controls.tags.errors && form.controls.tags.errors.required">
+          * required
+        </p>
+      </div>
 
     </ion-list>
   </form>

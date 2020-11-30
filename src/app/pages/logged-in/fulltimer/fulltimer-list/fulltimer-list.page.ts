@@ -101,7 +101,6 @@ export class FulltimerListPage implements OnInit {
     return await modal.present();
   }
 
-
   async delete(event, fulltimer: Fulltimer) {
     event.preventDefault();
     event.stopPropagation();

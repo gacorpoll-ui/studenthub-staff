@@ -11,6 +11,8 @@ import { AuthHttpService } from './authhttp.service';
 })
 export class FulltimerService {
 
+  public algoliaConfig;
+
   private _fulltimerEndpoint = '/fulltimers';
 
   constructor(private _authhttp: AuthHttpService) { }
@@ -20,7 +22,7 @@ export class FulltimerService {
    * @param fulltimer_uuid
    */
   view(fulltimer_uuid) {
-    const url = this._fulltimerEndpoint + '/' + fulltimer_uuid + '?expand=candidates,stores';
+    const url = this._fulltimerEndpoint + '/' + fulltimer_uuid + '?expand=nationality,country,area,fulltimerTags';
     return this._authhttp.get(url);
   }
 
@@ -51,6 +53,7 @@ export class FulltimerService {
       phone: model.fulltimer_phone,
       email: model.fulltimer_email,
       pdf_cv: model.fulltimer_pdf_cv,
+      tags: model.fulltimerTags
     };
 
     return this._authhttp.post(postUrl, params);
@@ -74,6 +77,7 @@ export class FulltimerService {
       phone: model.fulltimer_phone,
       email: model.fulltimer_email,
       pdf_cv: model.fulltimer_pdf_cv,
+      tags: model.fulltimerTags
     };
 
     return this._authhttp.patch(url, params);

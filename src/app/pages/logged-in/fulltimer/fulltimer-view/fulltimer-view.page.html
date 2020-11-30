@@ -1,7 +1,7 @@
 <ion-header [class.add-border]="borderLimit" class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/company-list"></ion-back-button>
+      <ion-back-button defaultHref="/fulltimer-search"></ion-back-button>
     </ion-buttons>
     <ion-title *ngIf="fulltimer">{{ fulltimer.fulltimer_name }}</ion-title>
     <ion-buttons slot="end">
@@ -55,6 +55,14 @@
       </ion-label>
     </ion-item>
 
+    <ion-item *ngIf="fulltimer.fulltimerTags">
+      <ion-label>
+        <h5>Tags</h5>
+        <ion-chip *ngFor="let fulltimerTag of fulltimer.fulltimerTags">
+          {{ fulltimerTag.tag }}
+        </ion-chip>
+      </ion-label>
+    </ion-item>
 
   </ion-list>
 

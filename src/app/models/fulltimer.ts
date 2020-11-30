@@ -1,3 +1,6 @@
+import { Area } from './area';
+import { Country } from './country';
+
 export class FulltimerTag {
     fulltimer_tags_id: number;
     fulltimer_uuid: string;
@@ -18,4 +21,7 @@ export class Fulltimer {
     fulltimer_created_datetime: string;
     fulltimer_updated_datetime: string;
     fulltimerTags: FulltimerTag[];
+    area: Area;
+    country: Country;
+    nationality: Country;
 }
