@@ -23,7 +23,7 @@ export class CompanyService {
    * @param searchParams
    */
   list(page, searchParams): Observable<any> {
-    return this._authhttp.getRaw(this._companyEndpoint + '?page=' + page + searchParams + '&expand=subCompanies,stores,transferInLast40Days');
+    return this._authhttp.getRaw(this._companyEndpoint + '?page=' + page + searchParams + '&expand=subCompanies,stores,transferInLast40Days,subCompanies.stores,subCompanies.stores.candidateWorkHistoryByLast40Days,stores.candidateWorkHistoryByLast40Days');
   }
 
   /**
@@ -74,7 +74,7 @@ export class CompanyService {
    * @param company_id
    */
   view(company_id) {
-    return this._authhttp.get(this._companyEndpoint + '/' + company_id + '?expand=brands,subCompanies,subCompanies.stores,subCompanies.stores.mall,stores,stores.mall,subCompanies.stores.candidates,files,requests,notes,brands,parentTransfers,parentTransfers.profit,parentTransfers.childTransfers,parentTransfers.childTransfers.company,parentTransfers.totalCandidateTransferTotal,parentTransfers.totalPaid,parentTransfers.paidTransferCandidates,malls,notes.createdBy,notes.updatedBy');
+    return this._authhttp.get(this._companyEndpoint + '/' + company_id + '?expand=brands,subCompanies,subCompanies.stores,subCompanies.stores.mall,stores,stores.mall,subCompanies.stores.candidates,files,requests,notes,brands,parentTransfers,parentTransfers.profit,parentTransfers.childTransfers,parentTransfers.childTransfers.company,parentTransfers.totalCandidateTransferTotal,parentTransfers.totalPaid,parentTransfers.paidTransferCandidates,malls,notes.createdBy,notes.updatedBy,companyContacts');
   }
 
   /**

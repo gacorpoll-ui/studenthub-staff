@@ -121,7 +121,7 @@ export class CompanyListPage implements OnInit {
     const searchParams = this.urlParams();
 
     this.companyService.list(page, searchParams).subscribe(response => {
-      
+
       this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
       this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
       this.companies = response.body;
@@ -200,7 +200,30 @@ export class CompanyListPage implements OnInit {
   }
 
   logScrolling(e) {
-    this.borderLimit = (e.detail.scrollTop > 20) ? true : false;
+    this.borderLimit = (e.detail.scrollTop > 20);
+  }
+
+  /**
+   *  "40 days passed without payment" functionality currently ("Active" + Has assigned staff + hasn't made any payment in 40 days)
+   *  has issue for newly added company and just now assigned staff. We need to add rule to check if all above rules pass,
+   *  we query for the oldest candidate assignment datetime assigned to that company,
+   *  if its less than 40 days then no need to mark as  "40 days passed without payment"
+   */
+
+  candidateWorkHistoryByLast40Days(company) {
+    if (company.company_status && !company.transferInLast40Days) {
+      if (company.stores.length > 0) {
+        return (company.stores.find(store => store.candidateWorkHistoryByLast40Days === true));
+      }
+      if (company.subCompanies.length > 0) {
+        company.subCompanies.map(subCompany => {
+          if (subCompany.stores.length > 0) {
+            return (subCompany.stores.find(store => store.candidateWorkHistoryByLast40Days === true));
+          }
+        });
+      }
+    }
+    return false;
   }
 }
 

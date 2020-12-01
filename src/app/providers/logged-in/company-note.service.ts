@@ -33,7 +33,8 @@ export class CompanyNoteService {
     return this.authhttp.post(this.companyNoteEndpoint, {
       company_id: model.company_id,
       note: model.note_text,
-      type: model.note_type
+      type: model.note_type,
+      contact_uuid: model.contact_uuid
     });
   }
 
@@ -44,7 +45,8 @@ export class CompanyNoteService {
   update(model: Note): Observable<any>{
     return this.authhttp.patch(`${this.companyNoteEndpoint}/${model.note_uuid}`, {
       note: model.note_text,
-      type: model.note_type
+      type: model.note_type,
+      contact_uuid: model.contact_uuid
     });
   }
 

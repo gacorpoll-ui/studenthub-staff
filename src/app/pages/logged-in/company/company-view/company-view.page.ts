@@ -199,7 +199,7 @@ export class CompanyViewPage implements OnInit {
     this.loadingNotes = true;
 
     this.noteService.list(1, searchParams).subscribe(response => {
-      
+
       this.loadingNotes = false;
 
       this.notePageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
@@ -213,7 +213,7 @@ export class CompanyViewPage implements OnInit {
 
   /**
    * load more notes on scroll to bottom
-   * @param event 
+   * @param event
    */
   doInfiniteNoteLoading(event) {
 
@@ -315,21 +315,21 @@ export class CompanyViewPage implements OnInit {
   }
 
   isFollowUpIntervalPassed() {
-  
-    if(this.company.company_followup_interval_weeks == 0) {
+
+    if(this.company.company_followup_interval_weeks == 0 || !this.company.company_last_followup_datetime) {
       return true;
     }
-
+    
     let followup_datetime = new Date(this.company.company_last_followup_datetime.replace(/-/g, '/') + ' UTC');
 
-    //date to follow 
+    //date to follow
 
     followup_datetime.setDate(followup_datetime.getDate() + this.company.company_followup_interval_weeks * 7);
     followup_datetime.setHours(0, 0, 0, 0);
 
-    //current date 
+    //current date
 
-    const currentDate = new Date(); 
+    const currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0);
 
     return followup_datetime.getTime() <= currentDate.getTime();
@@ -597,6 +597,7 @@ export class CompanyViewPage implements OnInit {
     this.noteForm = this.fb.group({
       note: ['', Validators.required],
       type: ['Internal Note', Validators.required],
+      contact: [''],
     });
   }
 
@@ -610,6 +611,7 @@ export class CompanyViewPage implements OnInit {
     model.company_id = this.company_id;
     model.note_text = this.noteForm.controls.note.value;
     model.note_type = this.noteForm.controls.type.value;
+    model.contact_uuid = this.noteForm.controls.contact.value;
 
     this.noteService.create(model).subscribe(async jsonResponse => {
 
@@ -621,6 +623,8 @@ export class CompanyViewPage implements OnInit {
         this.editorFocused = false;
 
         this.noteForm.controls.note.reset();
+        this.noteForm.controls.type.reset();
+        this.noteForm.controls.contact.reset();
 
         this.ckeditor.editorInstance.setData('');
 
@@ -652,6 +656,7 @@ export class CompanyViewPage implements OnInit {
       component: CompanyNoteFormPage,
       componentProps: {
         company: this.company,
+        companyContacts: this.companyContacts,
         note,
       }
     });
@@ -743,8 +748,8 @@ export class CompanyViewPage implements OnInit {
 
       if (e && e.data && e.data.company_last_followup_datetime && this.company) {
         this.company.company_last_followup_datetime = e.data.company_last_followup_datetime;
-        
-        //to update view 
+
+        //to update view
 
         this.content.scrollToPoint(0, 1);
 
