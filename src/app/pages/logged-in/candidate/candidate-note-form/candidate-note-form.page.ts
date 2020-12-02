@@ -64,8 +64,8 @@ export class CandidateNoteFormPage implements OnInit {
       type: [(this.model && this.model.note_type) ? this.model.note_type : '', Validators.required],
       company_id: [(this.model && this.model.company_id) ? this.model.company_id : '', Validators.required],
       request_uuid: [(this.model && this.model.request_uuid) ? this.model.request_uuid : '', Validators.required],
-      company_name: [(this.model && this.model.company_name) ? this.model.company_name : '', Validators.required],
-      request_name: [(this.model && this.model.request_name) ? this.model.request_name : '', Validators.required],
+      company_name: ['', Validators.required],
+      request_name: ['', Validators.required],
     });
 
     this.operation = (this.model && this.model.note_uuid) ? 'Update' : 'Create';
