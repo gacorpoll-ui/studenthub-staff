@@ -9,6 +9,7 @@ import { CompanyViewPageRoutingModule } from './company-view-routing.module';
 import { CompanyViewPage } from './company-view.page';
 import { LoadingModalModule } from 'src/app/components/loading-modal/loading-modal.module';
 import { PipesModule } from 'src/app/pipes/pipes.module';
+import {RequestListingModule} from "../../../../components/request-listing/request-listing.module";
 
 @NgModule({
   imports: [
@@ -19,6 +20,7 @@ import { PipesModule } from 'src/app/pipes/pipes.module';
     IonicModule,
     PipesModule,
     CKEditorModule,
+    RequestListingModule,
     CompanyViewPageRoutingModule
   ],
   declarations: [CompanyViewPage]

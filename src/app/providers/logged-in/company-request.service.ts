@@ -21,7 +21,7 @@ export class CompanyRequestService {
    */
   list(companyID: number): Observable<any> {
     const url = this.companyRequestEndpoint + '?company_id=' + companyID +
-      '&expand=requestCreatedBy,requestUpdatedBy,contact,requestActivities,requestActivities.staff';
+      '&expand=company,staff,requestCreatedBy,requestUpdatedBy,contact,requestActivities,requestActivities.staff';
     return this.authhttp.get(url);
   }
 
@@ -31,7 +31,7 @@ export class CompanyRequestService {
    */
   listWithPagination(page: number, urlParams: string = ''): Observable<any> {
     const url = this.companyRequestEndpoint + '?page=' + page + urlParams +
-      '&expand=requestCreatedBy,requestUpdatedBy,contact,company,company.companyContact,requestActivities,requestActivities.staff';
+      '&expand=staff,requestCreatedBy,requestUpdatedBy,contact,company,company.companyContact,requestActivities,requestActivities.staff';
     return this.authhttp.getRaw(url);
   }
 

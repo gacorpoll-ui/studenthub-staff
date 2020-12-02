@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import { AuthService } from 'src/app/providers/auth.service';
 import {Request} from '../../models/request';
 
@@ -7,7 +7,7 @@ import {Request} from '../../models/request';
   templateUrl: './request-listing.component.html',
   styleUrls: ['./request-listing.component.scss'],
 })
-export class RequestListingComponent {
+export class RequestListingComponent implements OnInit {
 
   @Input() request: Request;
   @Input() showStatus = true;
@@ -22,6 +22,9 @@ export class RequestListingComponent {
        */
       this.active = (((this.request.staff_id) && (time < 24)) || (this.request.request_status == 'delivered'));
     }
+  }
+  ngOnInit() {
+    console.log(this.request);
   }
 
   /**

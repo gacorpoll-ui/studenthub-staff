@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Platform, ModalController, AlertController, ToastController, IonContent } from '@ionic/angular';
+import {Router, ActivatedRoute, NavigationCancel} from '@angular/router';
+import {Platform, ModalController, AlertController, ToastController, IonContent, NavController} from '@ionic/angular';
 import { Chart } from 'chart.js';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -114,7 +114,8 @@ export class CompanyViewPage implements OnInit {
     public noteService: CompanyNoteService,
     public companyContactService: CompanyContactService,
     public storeService: StoreService,
-    public awsService: AwsService
+    public awsService: AwsService,
+    public navCtrl: NavController
   ) {
   }
 
@@ -247,7 +248,7 @@ export class CompanyViewPage implements OnInit {
 
   loadRequests() {
     this.requestService.list(this.company_id).subscribe(response => {
-      this.requests = response;
+        this.requests = response;
     });
   }
 

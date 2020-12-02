@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {
   AlertController,
   ToastController,
@@ -17,6 +17,7 @@ import { CompanyRequestService } from 'src/app/providers/logged-in/company-reque
 // models
 import { Request } from 'src/app/models/request';
 import { Note } from 'src/app/models/note';
+import {Location} from "@angular/common";
 
 
 @Component({
@@ -51,6 +52,7 @@ export class CompanyRequestViewPage implements OnInit {
     public requestActivityService: RequestActivityService,
     public menuCtrl: MenuController,
     public navCtrl: NavController,
+    public location: Location,
     public translateLabelService: TranslateLabelService,
     public platform: Platform
   ) {
@@ -200,21 +202,17 @@ export class CompanyRequestViewPage implements OnInit {
    */
   dismiss() {
     this.navCtrl.navigateBack('/company-request-dashboard');
-    // const state = window.history.state;
-    //
-    // this.modalCtrl.getTop().then(overlay => {
-    //   if (overlay) {
-    //     overlay.dismiss();
-    //   } else if (state && state.from == 'company-request-dashboard') {
-    //     this.navCtrl.navigateBack('/company-request-dashboard');
-    //   } else if (state && state.from == 'company-request-list') {
-    //     this.navCtrl.navigateBack('/company-request-list');
-    //   } else if (state && state.from == 'client') {
-    //     this.navCtrl.navigateBack('/client');
-    //   } else {
-    //     this.navCtrl.navigateBack('/default');
-    //   }
-    // });
+    const state = window.history.state;
+    console.log(state);
+    if (state && state.from == 'company-request-dashboard') {
+        this.location.back();
+      } else if (state && state.from == 'company-request-list') {
+        this.location.back();
+      } else if (state && state.from == 'client') {
+        this.location.back();
+      } else {
+        this.navCtrl.navigateBack('/default');
+      }
   }
 
   /**
