@@ -8,12 +8,12 @@
       <ion-button (click)="update()">
         Update
       </ion-button>
+
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
-
 
   <ion-segment (ionChange)="segmentChanged($event)" [value]="sections">
     <ion-segment-button value="personal">
@@ -141,7 +141,7 @@
       </form>
 
       <ion-list *ngIf="this.editNoteData && !this.editNoteData.note_uuid">
-        <ion-item-sliding *ngFor="let note of fulltimer.notes" [disabled]="platform.width() > 768">
+        <ion-item-sliding *ngFor="let note of notes" [disabled]="platform.width() > 768">
           <ion-item tappable (click)="editNote(note)">
             <div tabindex="0"></div>
 
@@ -184,8 +184,11 @@
     </section>
   </ng-container>
 
-
-
   <loading-modal [loading]="loading" type="candidate-list"></loading-modal>
 
 </ion-content>
+<ion-footer>
+  <ion-button expand="full" (click)="suggest()">
+    Suggest this candidate
+  </ion-button>
+</ion-footer>

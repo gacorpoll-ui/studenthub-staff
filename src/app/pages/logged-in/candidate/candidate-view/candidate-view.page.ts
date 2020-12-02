@@ -25,8 +25,9 @@ import { AuthService } from '../../../../providers/auth.service';
 import { OptionPage } from '../option/option.page';
 import { CandidateNoteFormPage } from "../candidate-note-form/candidate-note-form.page";
 import { CandidateCommittedFormPage } from '../candidate-committed-form/candidate-committed-form.page';
-import {AllCompanyListPage} from "../../company/company-request-list/all-company-list/all-company-list.page";
-import {CompanyRequestListPopupPage} from "../../company/company-request-list/company-request-list-popup/company-request-list-popup.page";
+import { AllCompanyListPage } from "../../company/company-request-list/all-company-list/all-company-list.page";
+import { CompanyRequestListPopupPage } from "../../company/company-request-list/company-request-list-popup/company-request-list-popup.page";
+import { SuggestPage } from '../../suggest/suggest.page';
 
 
 @Component({
@@ -37,6 +38,8 @@ import {CompanyRequestListPopupPage} from "../../company/company-request-list/co
 export class CandidateViewPage implements OnInit {
 
   public candidate: Candidate;
+
+  public notes: Note[] = [];
 
   public salaryTransfers: any[] = [];
 
@@ -78,6 +81,7 @@ export class CandidateViewPage implements OnInit {
   public borderLimit = false;
 
   @ViewChild('ckeditor') ckeditor;
+
   public company;
 
   constructor(
@@ -123,6 +127,7 @@ export class CandidateViewPage implements OnInit {
     // }
     this.loadCandidateDetail();
     this.loadWorkHistoryData();
+    this.loadCandidateNotes();
 
     this.loadStoreData();
     this.loadTransfersData();
@@ -236,7 +241,9 @@ export class CandidateViewPage implements OnInit {
 
   loadCandidateDetail(loading = true) {
     this.loading = loading;
+
     this.candidateService.detail(this.candidate_id).subscribe(response => {
+    
       this.loading = false;
       this.candidate = response;
     });
@@ -328,6 +335,37 @@ export class CandidateViewPage implements OnInit {
       event: e
     });
     popover.present();
+
+    popover.onDidDismiss().then(e => {
+
+      if (e.data && e.data.suggess) {
+        this.suggest();
+      }
+    });
+  }
+
+  async suggest() {
+
+    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+
+    const modal = await this.modalCtrl.create({
+      component: SuggestPage,
+      componentProps: {
+        candidate: this.candidate
+      }
+    });
+    modal.onDidDismiss().then(e => {
+
+      if (!e.data || e.data.from != 'native-back-btn') {
+        window['history-back-from'] = 'onDidDismiss';
+        window.history.back();
+      }
+
+      if(e.data && e.data.refresh) {
+        this.loadCandidateNotes();
+      }
+    });
+    await modal.present();
   }
 
   public segmentChanged($e) {
@@ -426,7 +464,7 @@ export class CandidateViewPage implements OnInit {
     const { data } = await modal.onWillDismiss();
 
     if (data && data.refresh) {
-      this.loadCandidateNotes(this.candidate_id, false);
+      this.loadCandidateNotes();
       this.candidate.candidate_committed = data.candidate_committed;
     }
   }
@@ -442,6 +480,7 @@ export class CandidateViewPage implements OnInit {
     this.editorFocused = true;
 
     this.noteForm.controls.type.setValue(note.note_type);
+
     if (note.company) {
         this.noteForm.controls.company_name.setValue(note.company.company_name);
         this.noteForm.controls.company_id.setValue(note.company.company_id);
@@ -478,7 +517,7 @@ export class CandidateViewPage implements OnInit {
               this.deletingNote = false;
 
               if (response.operation == 'success') {
-                this.loadCandidateNotes(this.candidate_id, true);
+                this.loadCandidateNotes();
               } else {
 
                 this.deletingNote = false;
@@ -513,12 +552,10 @@ export class CandidateViewPage implements OnInit {
 
   /**
    * load candidate notes
-   * @param candidateID
-   * @param loading
    */
-  loadCandidateNotes(candidateID: number, loading = true) {
-    this.candidateNoteService.listById(candidateID).subscribe(async jsonResponse => {
-      this.candidate.notes = jsonResponse.body;
+  loadCandidateNotes() {
+    this.candidateNoteService.listById(this.candidate_id).subscribe(async jsonResponse => {
+      this.notes = jsonResponse.body;
     });
   }
 
@@ -550,7 +587,7 @@ export class CandidateViewPage implements OnInit {
       if (jsonResponse.operation == 'success') {
 
         this.cancelAddNote();
-        this.loadCandidateNotes(this.candidate_id, false);
+        this.loadCandidateNotes();
       }
 
       // On Failure
