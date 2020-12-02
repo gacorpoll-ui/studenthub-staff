@@ -1,12 +1,14 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ModalController, AlertController } from '@ionic/angular';
+import {ModalController, AlertController, PopoverController} from '@ionic/angular';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 //services
 import { AuthService } from '../../../../providers/auth.service';
 import { CandidateNoteService } from '../../../../providers/logged-in/candidate-note.service';
 //models
 import { Note } from '../../../../models/note';
+import {AllCompanyListPage} from "../../company/company-request-list/all-company-list/all-company-list.page";
+import {CompanyRequestListPopupPage} from "../../company/company-request-list/company-request-list-popup/company-request-list-popup.page";
 
 
 @Component({
@@ -31,6 +33,7 @@ export class CandidateNoteFormPage implements OnInit {
   public saving = false;
 
   public borderLimit = false;
+  public company:any;
 
   public editorConfig = {
     placeholder: 'Click here to take notes...',
@@ -45,7 +48,8 @@ export class CandidateNoteFormPage implements OnInit {
     private fb: FormBuilder,
     private modalCtrl: ModalController,
     private alertCtrl: AlertController,
-    private authService: AuthService
+    private authService: AuthService,
+    private popoverCtrl: PopoverController
   ) {
 
   }
@@ -57,13 +61,17 @@ export class CandidateNoteFormPage implements OnInit {
 
     this.form = this.fb.group({
       note: [(this.model && this.model.note_uuid) ? this.model.note_text : '', Validators.required],
-      type: [(this.model && this.model.note_uuid) ? this.model.note_type : '', Validators.required],
+      type: [(this.model && this.model.note_type) ? this.model.note_type : '', Validators.required],
+      company_id: [(this.model && this.model.company_id) ? this.model.company_id : '', Validators.required],
+      request_uuid: [(this.model && this.model.request_uuid) ? this.model.request_uuid : '', Validators.required],
+      company_name: [(this.model && this.model.company_name) ? this.model.company_name : '', Validators.required],
+      request_name: [(this.model && this.model.request_name) ? this.model.request_name : '', Validators.required],
     });
 
     this.operation = (this.model && this.model.note_uuid) ? 'Update' : 'Create';
 
     setTimeout(() => {
-      if(this.ckeditor.editorInstance) 
+      if(this.ckeditor.editorInstance)
         this.ckeditor.editorInstance.editing.view.focus()
     }, 1000);
   }
@@ -151,8 +159,67 @@ export class CandidateNoteFormPage implements OnInit {
     this.form.markAsDirty();
     this.form.updateValueAndValidity();
   }
-  
+
   logScrolling(e) {
-    this.borderLimit = (e.detail.scrollTop > 20) ? true : false;
+    this.borderLimit = (e.detail.scrollTop > 20);
+  }
+
+  /**
+   * open client page
+   * @param e
+   */
+  async openClient(e) {
+    const popover = await this.popoverCtrl.create({
+      component: AllCompanyListPage,
+      event: e,
+    });
+    popover.onDidDismiss().then((_) => {
+
+      if (_ && _.data) {
+
+        this.company = _.data;
+        this.form.controls.company_name.setValue(_.data.company_name);
+        this.form.controls.company_id.setValue(_.data.company_id);
+        this.form.controls.request_name.setValue(null);
+        this.form.controls.request_uuid.setValue(null);
+      }
+    });
+    popover.present();
+  }
+
+  /**
+   * open popup to select contact
+   * @param e
+   */
+  async openRequest(e) {
+
+    let popover;
+
+    // if (this.company) {
+      popover = await this.popoverCtrl.create({
+        component: CompanyRequestListPopupPage,
+        event: e,
+        componentProps: {
+          company: this.company
+        }
+      });
+    // } else {
+    //   popover = await this.modalCtrl.create({
+    //     component: CompanyRequestListPopupPage
+    //   });
+    // }
+
+    popover.onDidDismiss().then((_) => {
+      if (_ && _.data && _.data.data) {
+
+        if (!this.company || !this.company.company_id) {
+          this.form.controls.company_name.setValue(_.data.data.company.company_name);
+          this.form.controls.company_id.setValue(_.data.data.company.company_id);
+        }
+        this.form.controls.request_name.setValue(_.data.data.request_position_title);
+        this.form.controls.request_uuid.setValue(_.data.data.request_uuid);
+      }
+    });
+    popover.present();
   }
 }

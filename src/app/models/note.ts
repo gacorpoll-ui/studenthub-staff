@@ -1,4 +1,6 @@
 import { Staff } from './staff';
+import {Company} from './company';
+import {Request} from './request';
 
 export class Note {
     note_uuid: string;
@@ -15,6 +17,8 @@ export class Note {
     note_created_datetime: string;
     note_updated_datetime: string;
 
+    company: Company;
+    request: Request;
     createdBy: Staff;
     updatedBy: Staff;
 }

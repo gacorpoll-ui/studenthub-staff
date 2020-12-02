@@ -255,10 +255,7 @@ export class FulltimerViewPage implements OnInit {
       if (jsonResponse.operation == 'success') {
 
         this.editorFocused = false;
-
-        this.noteForm.controls.note.setValue('');
-
-        this.ckeditor.editorInstance.setData('');
+        this.cancelAddNote();
 
         this.loadNotes(false);
       }
@@ -278,36 +275,38 @@ export class FulltimerViewPage implements OnInit {
   }
 
   cancelAddNote() {
+    this.editNoteData = new Note();
+    this.noteForm.controls.note.setValue('');
+    this.ckeditor.editorInstance.setData('');
     this.editorFocused = false;
+
+    this.noteForm.controls.type.setValue('');
+    this.noteForm.controls.company_name.setValue('');
+    this.noteForm.controls.company_id.setValue('');
+    this.noteForm.controls.request_name.setValue('');
+    this.noteForm.controls.request_uuid.setValue('');
   }
+
 
   /**
    * edit note
    * @param note
    */
   async editNote(note: Note) {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    this.editNoteData = note;
+    this.noteForm.controls.note.setValue(note.note_text);
+    this.ckeditor.editorInstance.setData(note.note_text);
+    this.editorFocused = true;
 
-    const modal = await this.modalCtrl.create({
-      component: CandidateNoteFormPage,
-      componentProps: {
-        candidate: this.fulltimer,
-        note,
-      }
-    });
-    modal.present();
-    modal.onDidDismiss().then(e => {
+    this.noteForm.controls.type.setValue(note.note_type);
+    if (note.company) {
+      this.noteForm.controls.company_name.setValue(note.company.company_name);
+      this.noteForm.controls.company_id.setValue(note.company.company_id);
+    }
 
-      if (!e.data || e.data.from != 'native-back-btn') {
-        window['history-back-from'] = 'onDidDismiss';
-        window.history.back();
-      }
-    });
-
-    const { data } = await modal.onWillDismiss();
-
-    if (data && data.refresh) {
-      this.loadNotes(false);
+    if (note.request) {
+      this.noteForm.controls.request_name.setValue(note.request.request_position_title);
+      this.noteForm.controls.request_uuid.setValue(note.request.request_uuid);
     }
   }
 
