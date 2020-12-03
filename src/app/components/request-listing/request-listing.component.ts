@@ -11,10 +11,12 @@ export class RequestListingComponent implements OnInit {
 
   @Input() request: Request;
   @Input() showStatus = true;
-  public active = false;
-  constructor(public authService: AuthService) {
 
+  public active = false;
+  
+  constructor(public authService: AuthService) {
   }
+  
   ngOnInit() {
     if (this.request) {
       const time = this.getHours(this.request.request_updated_datetime);

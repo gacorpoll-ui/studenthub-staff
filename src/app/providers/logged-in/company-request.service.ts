@@ -54,8 +54,13 @@ export class CompanyRequestService {
   /**
    * requests started/active but not by login user
    */
-  listActiveRequests() : Observable<any> {
-    const url = this.companyRequestEndpoint + '/active?expand=staff,lastActivity,lastActivity.createdBy,company';
+  listActiveRequests(excludeMyRequests = false) : Observable<any> {
+    let url = this.companyRequestEndpoint + '/active?expand=staff,lastActivity,lastActivity.createdBy,company';
+    
+    if(excludeMyRequests) {
+      url += '&excludeMyRequests=' + excludeMyRequests;
+    }
+    
     return this.authhttp.get(url);
   }
 

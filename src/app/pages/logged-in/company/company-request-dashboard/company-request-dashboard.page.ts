@@ -44,13 +44,19 @@ export class CompanyRequestDashboardPage implements OnInit {
     this.loadMyRequests();
   }
 
+  /**
+   * load active request I'm not handling
+   */
   loadActiveRequests() {
-    this.requestService.listActiveRequests().subscribe(data => {
+    this.requestService.listActiveRequests(true).subscribe(data => {
       this.activeRequests = data;
       this.loading = false;
     });
   }
 
+  /**
+   * load pending requests
+   */
   loadPendingRequests() {
     this.requestService.listPendingRequests().subscribe(data => {
       this.pendingRequests = data;
@@ -58,6 +64,9 @@ export class CompanyRequestDashboardPage implements OnInit {
     });
   }
 
+  /**
+   * load requests I'm handling
+   */
   loadMyRequests() {
     this.requestService.listMyRequests().subscribe(data => {
       this.myRequests = data;

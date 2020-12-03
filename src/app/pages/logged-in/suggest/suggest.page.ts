@@ -73,7 +73,7 @@ export class SuggestPage implements OnInit {
       this.activeRequests = data;
     }, () => {
       this.loadingRequests = false;
-    })
+    });
   }
 
   /**
