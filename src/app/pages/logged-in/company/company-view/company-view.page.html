@@ -485,7 +485,7 @@
   <section *ngIf="segment == 'requests'">
     <ion-list  class="ion-padding">
       <request-listing *ngFor="let request of requests" tappable [routerLink]="'/request-view/' + request.request_uuid"
-                       [request]="request" [showStatus]="false" [state]="{from: 'client'}"></request-listing>
+        [request]="request" [showStatus]="false"></request-listing>
 
       <ion-item lines="none">
         <div tabindex="0"></div>
