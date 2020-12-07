@@ -49,7 +49,7 @@ export class CompanyRequestViewPage implements OnInit {
   public pickingUp = false;
 
   public borderLimit = false;
-
+  public backState = null;
   constructor(
     public modalCtrl: ModalController,
     public alertCtrl: AlertController,
@@ -70,6 +70,7 @@ export class CompanyRequestViewPage implements OnInit {
 
   ngOnInit() {
     this.request_uuid = this.route.snapshot.params.request_uuid;
+    this.backState = window.history.state;
     const model = window.history.state.model;
     this.loadDetail();
     // this.loadInvoice();

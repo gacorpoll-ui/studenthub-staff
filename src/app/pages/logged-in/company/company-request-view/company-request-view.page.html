@@ -1,7 +1,8 @@
 <ion-header mode="md" [class.add-border]="borderLimit" class="clear-header">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button fill="clear" (click)="dismiss()" class="btn-close">
+      <ion-back-button icon="assets/images/ic_cancel.svg" *ngIf="backState && !backState.from"></ion-back-button>
+      <ion-button fill="clear" (click)="dismiss()" class="btn-close" *ngIf="backState && backState.from">
         <ion-icon src="assets/images/ic_cancel.svg"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -76,13 +77,13 @@
 
       <suggestion (onUpdate)="onSuggestionUpdate()" *ngFor="let suggestion of suggestedSuggestions" [model]="suggestion"></suggestion>
     </div>
-    
+
     <div *ngIf="acceptedSuggestions.length > 0">
       <h4>Accepted Suggestions <ion-badge color="success">{{ acceptedSuggestions.length }}</ion-badge></h4>
 
       <suggestion (onUpdate)="onSuggestionUpdate()" *ngFor="let suggestion of acceptedSuggestions" [model]="suggestion"></suggestion>
     </div>
-    
+
     <div *ngIf="rejectedSuggestions.length > 0">
       <h4>Rejected Suggestions <ion-badge color="light">{{ rejectedSuggestions.length }}</ion-badge></h4>
 

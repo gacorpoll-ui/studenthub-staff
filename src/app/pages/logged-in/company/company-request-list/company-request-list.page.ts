@@ -41,7 +41,7 @@ export class CompanyRequestListPage implements OnInit {
   public max; // max date
 
   public borderLimit = false;
-  
+
   constructor(
     public navCtrl: NavController,
     public platform: Platform,
@@ -67,7 +67,7 @@ export class CompanyRequestListPage implements OnInit {
 
   /**
    * list all requests
-   * @param page 
+   * @param page
    */
   async list(page: number) {
 
@@ -89,7 +89,7 @@ export class CompanyRequestListPage implements OnInit {
 
   /**
    * load more on scroll to bottom
-   * @param event 
+   * @param event
    */
   doInfinite(event) {
 
@@ -159,8 +159,8 @@ export class CompanyRequestListPage implements OnInit {
 
   /**
    * open request detail page
-   * @param $event 
-   * @param request 
+   * @param $event
+   * @param request
    */
   async viewRequest($event, request) {
     this.router.navigate(['request-view', request.request_uuid], {
@@ -173,8 +173,8 @@ export class CompanyRequestListPage implements OnInit {
 
   /**
    * open request form to edit
-   * @param $event 
-   * @param request 
+   * @param $event
+   * @param request
    */
   async editRequest($event, request) {
     $event.preventDefault();
@@ -188,8 +188,8 @@ export class CompanyRequestListPage implements OnInit {
 
   /**
    * mark request as started
-   * @param event 
-   * @param request 
+   * @param event
+   * @param request
    */
   startRequest(event, request) {
 
@@ -213,8 +213,8 @@ export class CompanyRequestListPage implements OnInit {
 
   /**
    * mark request as cancelled
-   * @param event 
-   * @param request 
+   * @param event
+   * @param request
    */
   cancelledRequest(event, request) {
 
@@ -268,8 +268,8 @@ export class CompanyRequestListPage implements OnInit {
 
   /**
    * mark request as delivered
-   * @param event 
-   * @param request 
+   * @param event
+   * @param request
    */
   deliveredRequest(event, request) {
 
@@ -321,8 +321,16 @@ export class CompanyRequestListPage implements OnInit {
       ]
     }).then(alert => { alert.present(); });
   }
-  
+
   logScrolling(e) {
-    this.borderLimit = (e.detail.scrollTop > 20) ? true : false;
+    this.borderLimit = (e.detail.scrollTop > 20);
+  }
+
+  requestDetail(request) {
+    this.navCtrl.navigateForward('/request-view/' + request.request_uuid, {
+      state : {
+        from: 'company-request-list'
+      }
+    });
   }
 }

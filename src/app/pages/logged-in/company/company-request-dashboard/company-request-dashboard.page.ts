@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Request } from 'src/app/models/request';
 //services
 import { CompanyRequestService } from 'src/app/providers/logged-in/company-request.service';
+import {NavController} from "@ionic/angular";
 
 
 @Component({
@@ -23,7 +24,8 @@ export class CompanyRequestDashboardPage implements OnInit {
   public activeRequests: Request[] = [];
 
   constructor(
-    public requestService: CompanyRequestService
+    public requestService: CompanyRequestService,
+    public navCtrl: NavController
   ) { }
 
   ngOnInit() {
@@ -76,5 +78,13 @@ export class CompanyRequestDashboardPage implements OnInit {
 
   logScrolling(e) {
     this.borderLimit = (e.detail.scrollTop > 20);
+  }
+
+  requestDetail(request) {
+    this.navCtrl.navigateForward('/request-view/' + request.request_uuid, {
+      state : {
+        from: 'company-request-dashboard'
+      }
+    });
   }
 }
