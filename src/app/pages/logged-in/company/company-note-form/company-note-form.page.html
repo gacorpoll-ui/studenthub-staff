@@ -32,27 +32,23 @@
         </ion-select>
       </ion-item>
 
-      <ion-item>
+      <ion-item (click)="openClient($event)">
+        <div tabindex="0"></div>
+        <ion-label position="floating">Company Name</ion-label>
+        <ion-input type="text" formControlName="company_name" readonly></ion-input>
+      </ion-item>
+    
+      <ion-item (click)="openContact($event)">
         <div tabindex="0"></div>
         <ion-label position="floating">Contact</ion-label>
-        <ion-select formControlName="contact">
-          <ion-select-option value="{{ companyContact.contact_uuid }}" *ngFor="let companyContact of companyContacts">{{ companyContact.contact_name }}</ion-select-option>
-        </ion-select>
+        <ion-input type="text" formControlName="contact_name" readonly></ion-input>
       </ion-item>
-
-      <ion-item *ngIf="company">
+    
+      <ion-item (click)="openRequest($event)">
         <div tabindex="0"></div>
         <ion-label position="floating">Request</ion-label>
-        <ion-select formControlName="request" interface="popover">
-          <ng-container *ngFor="let request of company.requests">
-            <ion-select-option value="{{ request.request_uuid }}" *ngIf="request.request_status == 'started'">
-              {{ request.request_position_title }} -
-              <span *ngIf="request.request_position_type == 1">Fulltime</span>
-              <span *ngIf="request.request_position_type == 2">Partime</span>
-            </ion-select-option>
-          </ng-container>
-        </ion-select>
-      </ion-item>
+        <ion-input type="text" formControlName="request_name" readonly></ion-input>
+      </ion-item> 
 
       <ion-item-divider class="ckeditor-title">
         <ion-label>
@@ -60,7 +56,7 @@
         </ion-label>
       </ion-item-divider>
 
-      <ckeditor [config]="editorConfig" #ckeditor [editor]="Editor" (change)="onChange($event)">
+      <ckeditor [config]="editorConfig" #ckeditor [editor]="Editor" (ready)="onEditorReady()" (change)="onChange($event)">
       </ckeditor>
       
     </ion-list>
