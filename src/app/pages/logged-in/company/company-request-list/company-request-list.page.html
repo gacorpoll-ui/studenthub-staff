@@ -62,9 +62,9 @@
     </ion-card-header>
   </ion-card>
 
-  <ion-list>
-    <request-listing *ngFor="let request of requests" tappable [routerLink]="'/request-view/' + request.request_uuid"
-                     [request]="request" [showStatus]="false" [state]="{from: 'company-request-list'}"></request-listing>
+  <ion-list class="ion-padding">
+    <request-listing *ngFor="let request of requests" tappable (click)="requestDetail(request)"
+                     [request]="request" [showStatus]="false"></request-listing>
   </ion-list>
 
   <ion-infinite-scroll *ngIf="currentPage < pageCount" (ionInfinite)="doInfinite($event)">

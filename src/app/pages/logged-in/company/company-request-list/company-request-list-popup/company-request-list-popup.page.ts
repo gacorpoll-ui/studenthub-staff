@@ -15,6 +15,7 @@ import { CompanyService } from 'src/app/providers/logged-in/company.service';
 import { AwsService } from 'src/app/providers/aws.service';
 import { CompanyRequestService } from 'src/app/providers/logged-in/company-request.service';
 
+
 @Component({
   selector: 'app-company-request-list-popup',
   templateUrl: './company-request-list-popup.page.html',
@@ -47,9 +48,6 @@ export class CompanyRequestListPopupPage implements OnInit {
       endDate: null
     };
 
-  public min; // min date
-  public max; // max date
-
   public borderLimit = false;
 
   constructor(
@@ -66,18 +64,16 @@ export class CompanyRequestListPopupPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.min = '1930/01/01';
-
-    const d = new Date();
-    this.max = (this.platform.is('mobile')) ? d.getFullYear() + '-12-12' : d;
   }
 
   ionViewWillEnter() {
     if (this.company && this.company.company_id) {
+      console.log('test');
       this.filters.companyID = this.company.company_id;
       this.requests = this.company.requests;
     }
-    if (this.requests.length == 0) {
+
+    if (!this.requests || (this.requests && this.requests.length == 0)) {
       this.list(this.currentPage);
     }
   }
@@ -198,9 +194,9 @@ export class CompanyRequestListPopupPage implements OnInit {
 
     this.popupCtrl.getTop().then(overlay => {
       if(overlay) {
-        this.popupCtrl.dismiss({ data });
+        this.popupCtrl.dismiss(data);
       } else {
-        this.modalCtrl.dismiss({ data });
+        this.modalCtrl.dismiss(data);
       }
     });
   }

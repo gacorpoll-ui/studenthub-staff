@@ -11,9 +11,9 @@ import { CompanyContactService } from 'src/app/providers/logged-in/company-conta
 import { AwsService } from 'src/app/providers/aws.service';
 import { AuthService } from 'src/app/providers/auth.service';
 import { CompanyRequestService } from 'src/app/providers/logged-in/company-request.service';
-import { CompanyNoteService } from 'src/app/providers/logged-in/company-note.service';
 import { BrandService } from 'src/app/providers/logged-in/brand.service';
 import { EventService } from 'src/app/providers/event.service';
+import {NoteService} from "../../../../providers/logged-in/note.service";
 // models
 import { CompanyContact } from 'src/app/models/company-contact';
 import { Company } from 'src/app/models/company';
@@ -26,12 +26,12 @@ import { UploadFilePage } from '../upload-file/upload-file.page';
 import { CompanyContactFormPage } from '../company-contact-form/company-contact-form.page';
 import { CompanyFollowupNotePage } from '../company-followup-note/company-followup-note.page';
 import { CompanyRequestFormPage } from '../company-request-form/company-request-form.page';
-import { CompanyNoteFormPage } from '../company-note-form/company-note-form.page';
 import { BrandFormPage } from '../brand-form/brand-form.page';
 import { StoreFormPage } from '../../store/store-form/store-form.page';
 import { CompanyFormPage } from 'src/app/pages/logged-in/company/company-form/company-form.page';
 
 import NumberFormat = Intl.NumberFormat;
+
 
 
 @Component({
@@ -111,7 +111,7 @@ export class CompanyViewPage implements OnInit {
     public authService: AuthService,
     public requestService: CompanyRequestService,
     public brandService: BrandService,
-    public noteService: CompanyNoteService,
+    public noteService: NoteService,
     public companyContactService: CompanyContactService,
     public storeService: StoreService,
     public awsService: AwsService,
@@ -195,11 +195,11 @@ export class CompanyViewPage implements OnInit {
    * load company notes
    */
   loadNotes() {
-    const searchParams = this.getNoteSearchParams();
-
     this.loadingNotes = true;
 
-    this.noteService.list(1, searchParams).subscribe(response => {
+    const params = '&company_id=' + this.company_id;
+
+    this.noteService.list(params, 1).subscribe(response => {
 
       this.loadingNotes = false;
 
@@ -222,9 +222,9 @@ export class CompanyViewPage implements OnInit {
 
     this.currentNotePage++;
 
-    const urlParams = this.getNoteSearchParams();
+    const params = '&company_id=' + this.company_id;
 
-    this.noteService.list(this.currentNotePage, urlParams).subscribe(response => {
+    this.noteService.list(params, this.currentNotePage).subscribe(response => {
 
       this.notePageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
       this.currentNotePage = parseInt(response.headers.get('X-Pagination-Current-Page'));
@@ -237,13 +237,6 @@ export class CompanyViewPage implements OnInit {
         event.target.complete();
       }
     );
-  }
-
-  /**
-   * search params for note listing
-   */
-  getNoteSearchParams() {
-    return '&company_id=' + this.company_id;
   }
 
   loadRequests() {
@@ -609,28 +602,29 @@ export class CompanyViewPage implements OnInit {
   addNote() {
     this.addingNote = true;
 
-    const model = new Note;
+    const model = new Note();
     model.company_id = this.company_id;
     model.note_text = this.noteForm.controls.note.value;
     model.note_type = this.noteForm.controls.type.value;
     model.contact_uuid = this.noteForm.controls.contact.value;
     model.request_uuid = this.noteForm.controls.request.value;
 
-    this.noteService.create(model).subscribe(async jsonResponse => {
+    let response = null;
+    if (this.editNoteData && this.editNoteData.note_uuid) {
+      model.note_uuid = this.editNoteData.note_uuid;
+      response = this.noteService.update(model);
+    } else {
+      response = this.noteService.create(model);
+    }
+
+    response.subscribe(async jsonResponse => {
 
       this.addingNote = false;
 
       // On Success
       if (jsonResponse.operation == 'success') {
 
-        this.editorFocused = false;
-
-        this.noteForm.controls.note.reset();
-        this.noteForm.controls.type.reset();
-        this.noteForm.controls.contact.reset();
-
-        this.ckeditor.editorInstance.setData('');
-
+        this.cancelAddNote();
         this.loadNotes();
       }
 
@@ -648,34 +642,24 @@ export class CompanyViewPage implements OnInit {
     });
   }
 
-  cancelAddNote() {
-    this.editorFocused = false;
-  }
-
+  /**
+   * edit note
+   * @param note
+   */
   async editNote(note: Note) {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+  
+    this.editNoteData = note;
+    this.noteForm.controls.note.setValue(note.note_text);
+    this.ckeditor.editorInstance.setData(note.note_text);
+    this.editorFocused = true;
 
-    const modal = await this.modalCtrl.create({
-      component: CompanyNoteFormPage,
-      componentProps: {
-        company: this.company,
-        companyContacts: this.companyContacts,
-        note,
-      }
-    });
-    modal.present();
-    modal.onDidDismiss().then(e => {
+    this.noteForm.controls.type.setValue(note.note_type);
 
-      if (!e.data || e.data.from != 'native-back-btn') {
-        window['history-back-from'] = 'onDidDismiss';
-        window.history.back();
-      }
-    });
-
-    const { data } = await modal.onWillDismiss();
-
-    if (data && data.refresh) {
-      this.loadData(false);
+    if (note.contact_uuid) {
+      this.noteForm.controls.contact.setValue(note.contact_uuid);
+    }
+    if (note.request_uuid) {
+      this.noteForm.controls.request.setValue(note.request_uuid);
     }
   }
 
@@ -802,29 +786,6 @@ export class CompanyViewPage implements OnInit {
     });
   }
 
-  async onContactSelected(companyContact) {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
-
-    const modal = await this.modalCtrl.create({
-      component: CompanyContactFormPage,
-      componentProps: {
-        model: companyContact
-      }
-    });
-    modal.onDidDismiss().then(e => {
-
-      if (!e.data || e.data.from != 'native-back-btn') {
-        window['history-back-from'] = 'onDidDismiss';
-        window.history.back();
-      }
-
-      if (e && e.data && e.data.refresh) {
-        this.loadContacts();
-      }
-    });
-    modal.present();
-  }
-
   async addCompanyContact() {
     window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
 
@@ -853,48 +814,6 @@ export class CompanyViewPage implements OnInit {
 
   doNothing(event) {
     event.stopPropagation();
-  }
-
-  async deleteContact(event, companyContact) {
-
-    event.preventDefault();
-    event.stopPropagation();
-
-    const confirm = await this.alertCtrl.create({
-      header: 'Delete Contact',
-      message: 'Do you want to delete this contact?',
-      buttons: [
-        {
-          text: 'Yes',
-          handler: () => {
-
-            this.deleting = true;
-
-            this.companyContactService.delete(companyContact).subscribe(async response => {
-
-              this.deleting = false;
-
-              if (response.operation == 'success') {
-                this.companyContacts = this.companyContacts.filter(e => e.contact_uuid != companyContact.contact_uuid);
-              }
-              else {
-                const prompt = await this.alertCtrl.create({
-                  message: this.authService.errorMessage(response.message),
-                  buttons: ['Ok']
-                });
-                prompt.present();
-              }
-            }, () => {
-              this.deleting = false;
-            });
-          },
-        },
-        {
-          text: 'No',
-        }
-      ]
-    });
-    confirm.present();
   }
 
   segmentChanged($event) {
@@ -1504,5 +1423,17 @@ export class CompanyViewPage implements OnInit {
 
   logScrolling(e) {
     this.borderLimit = (e.detail.scrollTop > 20);
+  }
+
+  cancelAddNote() {
+    this.editNoteData = new Note();
+
+    this.ckeditor.editorInstance.setData('');
+    this.editorFocused = false;
+
+    this.noteForm.controls.note.reset();
+    this.noteForm.controls.type.reset();
+    this.noteForm.controls.contact.reset();
+    this.noteForm.controls.request.reset();
   }
 }

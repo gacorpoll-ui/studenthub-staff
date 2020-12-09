@@ -1,0 +1,26 @@
+
+
+<ion-card>
+  <ion-badge>
+    {{ note.note_type }}
+  </ion-badge>
+
+  <p class="note">
+    <b *ngIf="note.updatedBy">{{ note.updatedBy.staff_name }}:&nbsp;</b>
+    <span [innerHTML]="note.note_text"></span>
+  </p>
+
+  <p class="txt-time">
+    {{ note.note_updated_datetime | timeAgo }} on 
+    {{ toDate(note.note_created_datetime) | date: 'MMM d, y' }}
+  </p>
+</ion-card>
+
+<ion-button class="btn-accept" (click)="edit($event)">
+  Edit
+</ion-button>
+<ion-button class="btn-reject" (click)="delete($event)">
+  Delete
+</ion-button>
+
+<div class="clearfix"></div>

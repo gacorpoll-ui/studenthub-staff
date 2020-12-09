@@ -345,10 +345,24 @@ const routes: Routes = [
     path: 'fulltimer',
     loadChildren: () => import('./pages/logged-in/fulltimer/fulltimer-view/fulltimer-view.module').then( m => m.FulltimerViewPageModule)
   },
+
+  {
+    path: 'company-contact-view',
+    loadChildren: () => import('./pages/logged-in/company/company-contact/company-contact-view/company-contact-view.module').then( m => m.CompanyContactViewPageModule)
+  },
+  
+  {
+    path: 'note-view',
+    loadChildren: () => import('./pages/logged-in/note/note-view/note-view.module').then( m => m.NoteViewPageModule)
+  },
+  {
+    path: 'suggestion-view',
+    loadChildren: () => import('./pages/logged-in/suggestion/suggestion-view/suggestion-view.module').then( m => m.SuggestionViewPageModule)
+  },
   {
     path: '**',
     redirectTo: 'not-found'
-  },
+  }
 ];
 
 @NgModule({

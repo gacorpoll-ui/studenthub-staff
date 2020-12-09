@@ -29,7 +29,16 @@ export class CompanyContactService {
    * @param company_id 
    */
   companyContacts(company_id, query = '') : Observable<any>{
-    const url = `${this._companyContactEndpoint}?expand=companyContactEmails,companyContactPhones&company_id=${company_id}&query=${query}`;
+    const url = `${this._companyContactEndpoint}?expand=companyContactEmails,companyContactPhones,company&company_id=${company_id}&query=${query}`;
+    return this._authhttp.get(url);
+  }
+  
+  /**
+   * get company contact detail
+   * @param contact_uuid 
+   */
+  view(contact_uuid) : Observable<any>{
+    const url = `${this._companyContactEndpoint}/${contact_uuid}?expand=companyContactEmails,companyContactPhones,company`;
     return this._authhttp.get(url);
   }
 
@@ -45,7 +54,6 @@ export class CompanyContactService {
       "company_id": model.company_id,
       "name": model.contact_name,
       "position": model.contact_position,
-      "note": model.contact_note,
       "emails": model.companyContactEmails,
       "phones": model.companyContactPhones
     };
@@ -64,7 +72,6 @@ export class CompanyContactService {
       "company_id": model.company_id,
       "name": model.contact_name,
       "position": model.contact_position,
-      "note": model.contact_note,
       "emails": model.companyContactEmails,
       "phones": model.companyContactPhones
     };

@@ -1,6 +1,9 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+//services
 import { AuthService } from 'src/app/providers/auth.service';
-import {Request} from '../../models/request';
+//models
+import { Request } from '../../models/request';
+
 
 @Component({
   selector: 'request-listing',
@@ -13,10 +16,10 @@ export class RequestListingComponent implements OnInit {
   @Input() showStatus = true;
 
   public active = false;
-  
+
   constructor(public authService: AuthService) {
   }
-  
+
   ngOnInit() {
     if (this.request) {
       const time = this.getHours(this.request.request_updated_datetime);

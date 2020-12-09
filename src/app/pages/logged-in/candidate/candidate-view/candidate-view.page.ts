@@ -19,11 +19,10 @@ import { StoreService } from 'src/app/providers/logged-in/store.service';
 import { CandidateService } from 'src/app/providers/logged-in/candidate.service';
 import { AwsService } from 'src/app/providers/aws.service';
 import { EventService } from '../../../../providers/event.service';
-import { CandidateNoteService } from '../../../../providers/logged-in/candidate-note.service';
+import { NoteService } from '../../../../providers/logged-in/note.service';
 import { AuthService } from '../../../../providers/auth.service';
 // pages
 import { OptionPage } from '../option/option.page';
-import { CandidateNoteFormPage } from "../candidate-note-form/candidate-note-form.page";
 import { CandidateCommittedFormPage } from '../candidate-committed-form/candidate-committed-form.page';
 import { AllCompanyListPage } from "../../company/company-request-list/all-company-list/all-company-list.page";
 import { CompanyRequestListPopupPage } from "../../company/company-request-list/company-request-list-popup/company-request-list-popup.page";
@@ -36,6 +35,8 @@ import { SuggestPage } from '../../suggest/suggest.page';
   styleUrls: ['./candidate-view.page.scss'],
 })
 export class CandidateViewPage implements OnInit {
+
+  @ViewChild('ckeditor') ckeditor;
 
   public candidate: Candidate;
 
@@ -80,8 +81,6 @@ export class CandidateViewPage implements OnInit {
 
   public borderLimit = false;
 
-  @ViewChild('ckeditor') ckeditor;
-
   public company;
 
   constructor(
@@ -97,7 +96,7 @@ export class CandidateViewPage implements OnInit {
     public eventService: EventService,
     public authService: AuthService,
     public popoverCtrl: PopoverController,
-    public candidateNoteService: CandidateNoteService,
+    public noteService: NoteService,
     public modalCtrl: ModalController,
     private fb: FormBuilder,
   ) {
@@ -127,7 +126,7 @@ export class CandidateViewPage implements OnInit {
     // }
     this.loadCandidateDetail();
     this.loadWorkHistoryData();
-    this.loadCandidateNotes();
+    this.loadNotes();
 
     this.loadStoreData();
     this.loadTransfersData();
@@ -243,7 +242,7 @@ export class CandidateViewPage implements OnInit {
     this.loading = loading;
 
     this.candidateService.detail(this.candidate_id).subscribe(response => {
-    
+
       this.loading = false;
       this.candidate = response;
     });
@@ -362,7 +361,7 @@ export class CandidateViewPage implements OnInit {
       }
 
       if(e.data && e.data.refresh) {
-        this.loadCandidateNotes();
+        this.loadNotes();
       }
     });
     await modal.present();
@@ -432,7 +431,7 @@ export class CandidateViewPage implements OnInit {
     this.ckeditor.editorInstance.setData('');
     this.editorFocused = false;
 
-    this.noteForm.controls.type.setValue('');
+    this.noteForm.controls.type.setValue('Internal Note');
     this.noteForm.controls.company_name.setValue('');
     this.noteForm.controls.company_id.setValue('');
     this.noteForm.controls.request_name.setValue('');
@@ -464,7 +463,7 @@ export class CandidateViewPage implements OnInit {
     const { data } = await modal.onWillDismiss();
 
     if (data && data.refresh) {
-      this.loadCandidateNotes();
+      this.loadNotes();
       this.candidate.candidate_committed = data.candidate_committed;
     }
   }
@@ -512,12 +511,12 @@ export class CandidateViewPage implements OnInit {
 
             this.deletingNote = true;
 
-            this.candidateNoteService.delete(note).subscribe(async response => {
+            this.noteService.delete(note).subscribe(async response => {
 
               this.deletingNote = false;
 
               if (response.operation == 'success') {
-                this.loadCandidateNotes();
+                this.loadNotes();
               } else {
 
                 this.deletingNote = false;
@@ -551,10 +550,12 @@ export class CandidateViewPage implements OnInit {
   }
 
   /**
-   * load candidate notes
+   * load candidate notes without pagination
    */
-  loadCandidateNotes() {
-    this.candidateNoteService.listById(this.candidate_id).subscribe(async jsonResponse => {
+  loadNotes() {
+    const params = '&candidate_id=' + this.candidate_id;
+
+    this.noteService.list(params).subscribe(async jsonResponse => {
       this.notes = jsonResponse.body;
     });
   }
@@ -575,10 +576,11 @@ export class CandidateViewPage implements OnInit {
     let response = null;
     if (this.editNoteData && this.editNoteData.note_uuid) {
       model.note_uuid = this.editNoteData.note_uuid;
-      response = this.candidateNoteService.update(model);
+      response = this.noteService.update(model);
     } else {
-      response = this.candidateNoteService.create(model);
+      response = this.noteService.create(model);
     }
+
     response.subscribe(async jsonResponse => {
 
       this.addingNote = false;
@@ -587,7 +589,7 @@ export class CandidateViewPage implements OnInit {
       if (jsonResponse.operation == 'success') {
 
         this.cancelAddNote();
-        this.loadCandidateNotes();
+        this.loadNotes();
       }
 
       // On Failure
@@ -670,9 +672,8 @@ export class CandidateViewPage implements OnInit {
     let popover;
 
     if (this.company) {
-      popover = await this.popoverCtrl.create({
+      popover = await this.modalCtrl.create({
         component: CompanyRequestListPopupPage,
-        event: e,
         componentProps: {
           company: this.company
         }
@@ -684,14 +685,14 @@ export class CandidateViewPage implements OnInit {
     }
 
     popover.onDidDismiss().then((_) => {
-      if (_ && _.data && _.data.data) {
+      if (_ && _.data && _.data) {
 
         if (!this.company || !this.company.company_id) {
-          this.noteForm.controls.company_name.setValue(_.data.data.company.company_name);
-          this.noteForm.controls.company_id.setValue(_.data.data.company.company_id);
+          this.noteForm.controls.company_name.setValue(_.data.company.company_name);
+          this.noteForm.controls.company_id.setValue(_.data.company.company_id);
         }
-        this.noteForm.controls.request_name.setValue(_.data.data.request_position_title);
-        this.noteForm.controls.request_uuid.setValue(_.data.data.request_uuid);
+        this.noteForm.controls.request_name.setValue(_.data.request_position_title);
+        this.noteForm.controls.request_uuid.setValue(_.data.request_uuid);
       }
     });
     popover.present();

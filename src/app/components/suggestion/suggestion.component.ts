@@ -4,6 +4,7 @@ import { AlertController, ToastController } from '@ionic/angular';
 //models
 import { Suggestion } from 'src/app/models/suggestion';
 //services
+import { AwsService } from 'src/app/providers/aws.service';
 import { SuggestionService } from 'src/app/providers/logged-in/suggestion.service';
 
 
@@ -22,10 +23,17 @@ export class SuggestionComponent implements OnInit {
     public toastCtrl: ToastController,
     public alertCtrl: AlertController,
     public router: Router,
+    public aws: AwsService,
     public suggestionService: SuggestionService
   ) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
+
+  doNothing(event) {
+    //event.preventDefault();
+    event.stopPropagation();
+  }
 
   openCandidatePage() {
     if(this.model.candidate) {
@@ -37,12 +45,12 @@ export class SuggestionComponent implements OnInit {
 
   /**
    * accept suggestion
-   * @param event 
+   * @param event
    */
   acceptSuggestion(event) {
 
     event.preventDefault();
-    event.stopPropagation();;
+    event.stopPropagation();
 
     this.alertCtrl.create({
       header: 'Reason for acceptance',
@@ -95,12 +103,12 @@ export class SuggestionComponent implements OnInit {
 
   /**
    * reject suggestion
-   * @param event 
+   * @param event
    */
   rejectSuggestion(event) {
 
     event.preventDefault();
-    event.stopPropagation();;
+    event.stopPropagation();
 
     this.alertCtrl.create({
       header: 'Reason for rejection',
@@ -135,7 +143,7 @@ export class SuggestionComponent implements OnInit {
                 this.model.suggestion_status = 2;
 
                 this.onUpdate.emit();
-                
+
               } else {
                 this.toastCtrl.create({
                   message: response.message,

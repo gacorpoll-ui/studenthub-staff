@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Location } from "@angular/common";
+import { Location } from '@angular/common';
 import {
   AlertController,
   ToastController,
@@ -8,17 +8,19 @@ import {
   MenuController,
   ModalController,
   NavController,
-  Platform
+  Platform,
+  IonContent
 } from '@ionic/angular';
 // services
 import { AuthService } from 'src/app/providers/auth.service';
 import { RequestActivityService } from 'src/app/providers/logged-in/request.activity.service';
 import { TranslateLabelService } from 'src/app/providers/translate-label.service';
 import { CompanyRequestService } from 'src/app/providers/logged-in/company-request.service';
+import { SuggestionService } from 'src/app/providers/logged-in/suggestion.service';
 // models
 import { Request } from 'src/app/models/request';
 import { Note } from 'src/app/models/note';
-import { SuggestionService } from 'src/app/providers/logged-in/suggestion.service';
+// pages
 import { CompanyNoteFormPage } from '../company-note-form/company-note-form.page';
 
 
@@ -28,6 +30,8 @@ import { CompanyNoteFormPage } from '../company-note-form/company-note-form.page
   styleUrls: ['./company-request-view.page.scss'],
 })
 export class CompanyRequestViewPage implements OnInit {
+
+  @ViewChild(IonContent, { static: true }) content: IonContent;
 
   public request: Request;
   public requestActivities: Note[] = [];
@@ -45,6 +49,9 @@ export class CompanyRequestViewPage implements OnInit {
   public pickingUp = false;
 
   public borderLimit = false;
+  public backState = null;
+
+  public activityExpanded: boolean = false;
 
   constructor(
     public modalCtrl: ModalController,
@@ -66,6 +73,7 @@ export class CompanyRequestViewPage implements OnInit {
 
   ngOnInit() {
     this.request_uuid = this.route.snapshot.params.request_uuid;
+    this.backState = window.history.state;
     const model = window.history.state.model;
     this.loadDetail();
     // this.loadInvoice();
@@ -201,24 +209,15 @@ export class CompanyRequestViewPage implements OnInit {
   //   }, () => {
   //     loader.dismiss();
   //   });
+
   // }
   //
   /**
    * close this modal
    */
   dismiss() {
-    this.navCtrl.navigateBack('/company-request-dashboard');
-    const state = window.history.state;
-
-    if (state && state.from == 'company-request-dashboard') {
-      this.location.back();
-    } else if (state && state.from == 'company-request-list') {
-      this.location.back();
-    } else if (state && state.from == 'client') {
-      this.location.back();
-    } else {
-      this.navCtrl.navigateBack('/default');
-    }
+    console.log('dismiss');
+    this.location.back();
   }
 
   /**
@@ -238,12 +237,19 @@ export class CompanyRequestViewPage implements OnInit {
   }
 
   /**
+   * toggle activity visiblities
+   */
+  toggleActivityExpanded() {
+    this.activityExpanded = !this.activityExpanded;
+  }
+
+  /**
    * load request detail
    */
   loadRequestActivities() {
     this.loadingActivities = true;
-    this.requestActivityService.list(1, this.request_uuid).subscribe(data => {
-      this.requestActivities = data.body;
+    this.requestActivityService.list(this.request_uuid).subscribe(data => {
+      this.requestActivities = data;
     }, () => {
     }, () => {
       this.loadingActivities = false;
@@ -251,7 +257,7 @@ export class CompanyRequestViewPage implements OnInit {
   }
 
   /**
-   * load candidate suggestions for this request 
+   * load candidate suggestions for this request
    */
   loadSuggestions() {
 
@@ -266,11 +272,11 @@ export class CompanyRequestViewPage implements OnInit {
       this.rejectedSuggestions = [];
 
       data.forEach(element => {
-        if(element.suggestion_status == 1) {
+        if (element.suggestion_status == 1) {
           this.suggestedSuggestions.push(element);
-        } else if(element.suggestion_status == 2) {
+        } else if (element.suggestion_status == 2) {
           this.rejectedSuggestions.push(element);
-        } else if(element.suggestion_status == 3) {
+        } else if (element.suggestion_status == 3) {
           this.acceptedSuggestions.push(element);
         }
       });
@@ -279,23 +285,37 @@ export class CompanyRequestViewPage implements OnInit {
 
   onSuggestionUpdate() {
     this.loadSuggestions();
+    this.loadRequestActivities();
+    this.content.scrollToPoint(0, 0);
+  }
+
+  /**
+   * Make date readable by Safari
+   * @param date
+   */
+  toDate(date) {
+    if (date) {
+      return new Date(date.replace(/-/g, '/'));
+    }
   }
 
   /**
    * show alert to post update on request
    */
   async showUpdateAlert() {
-   
+
     window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
 
-    let note = new Note;
+    const note = new Note();
     note.request_uuid = this.request_uuid;
     note.company_id = this.request.company_id;
+    note.contact_uuid = this.request.contact_uuid;
 
     const modal = await this.modalCtrl.create({
       component: CompanyNoteFormPage,
       componentProps: {
         note: note,
+        from: 'post-update'
       }
     });
     modal.present();
@@ -317,7 +337,7 @@ export class CompanyRequestViewPage implements OnInit {
   }
 
   logScrolling(e) {
-    //   this.borderLimit = (e.detail.scrollTop > 0) ?  true : false;
+    this.borderLimit = (e.detail.scrollTop > 0) ?  true : false;
   }
 
   startRequest(event, request) {
@@ -329,6 +349,7 @@ export class CompanyRequestViewPage implements OnInit {
 
       if (response.operation == 'success') {
         request.request_status = 'started';
+        request.staff_id = this.authService.staff_id;
         this.loadRequestActivities();
       } else {
         this.toastCtrl.create({

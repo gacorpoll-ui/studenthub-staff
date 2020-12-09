@@ -17,13 +17,22 @@ export class SuggestionService {
    * @returns {Observable<any>}
    */
   list(params: string = ''): Observable<any> {
-    let url = this._endpoint + '?expand=note,candidate,fulltimer' + params;
+    let url = this._endpoint + '?expand=note,candidate,fulltimer,updatedBy' + params;
+    return this._authhttp.get(url);
+  }
+
+  /**
+   * get suggestion details
+   * @returns {Observable<any>}
+   */
+  view(suggestion_uuid): Observable<any> {
+    let url = this._endpoint + '/' + suggestion_uuid + '?expand=note,candidate,fulltimer,updatedBy';
     return this._authhttp.get(url);
   }
 
   /**
    * create new suggestion for request with note
-   * @param params 
+   * @param params
    */
   create(params) {
     return this._authhttp.post(this._endpoint, {
@@ -36,8 +45,8 @@ export class SuggestionService {
 
   /**
    * accept suggestion for request
-   * @param suggestion_id 
-   * @param reason 
+   * @param suggestion_id
+   * @param reason
    */
   accept(suggestion_id: string, reason: string = ''): Observable<any> {
     const url = `${this._endpoint}/accept/${suggestion_id}`;
@@ -49,8 +58,8 @@ export class SuggestionService {
 
   /**
    * reject suggestion for request
-   * @param suggestion_id 
-   * @param reason 
+   * @param suggestion_id
+   * @param reason
    */
   reject(suggestion_id: string, reason: string = ''): Observable<any> {
     const url = `${this._endpoint}/reject/${suggestion_id}`;

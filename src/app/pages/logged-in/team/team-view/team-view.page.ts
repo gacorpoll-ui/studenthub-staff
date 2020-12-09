@@ -47,7 +47,7 @@ export class TeamViewPage implements OnInit {
 
   ionViewWillEnter() {
     if (this.staffID) {
-      this.loadNoteData(1);
+      this.loadNotes();
     }
   }
 
@@ -66,18 +66,19 @@ export class TeamViewPage implements OnInit {
   /**
    * load store list
    * @param page
-   * @param loading
    */
-  async loadNoteData(page: number, loading = true) {
+  async loadNotes(loading = true) {
 
     this.loading = loading;
 
-    this.noteService.listByStaff(this.currentPage, this.staffID).subscribe(response => {
+    const params = '&staff_id=' + this.staffID;
 
-        this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
-        this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
-        this.notes = response.body;
-      },
+    this.noteService.list(params, 1).subscribe(response => {
+
+      this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
+      this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
+      this.notes = response.body;
+    },
       error => {
       },
       () => {
@@ -94,13 +95,16 @@ export class TeamViewPage implements OnInit {
     this.loadMore = true;
 
     this.currentPage++;
-    this.noteService.listByStaff(this.currentPage, this.staffID).subscribe(response => {
 
-        this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
-        this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
+    const params = '&staff_id=' + this.staffID;
 
-        this.notes = this.notes.concat(response.body);
-      },
+    this.noteService.list(params, this.currentPage).subscribe(response => {
+
+      this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
+      this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
+
+      this.notes = this.notes.concat(response.body);
+    },
       error => {
       },
       () => {

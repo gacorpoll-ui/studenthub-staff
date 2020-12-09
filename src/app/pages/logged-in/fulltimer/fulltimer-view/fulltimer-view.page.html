@@ -75,6 +75,23 @@
         </ion-label>
       </ion-item>
 
+      <ion-item>
+        <div tabindex="0"></div>
+        <ion-label>
+          <h5>Suggestion Acceptance Ratio</h5>
+          <p *ngIf="fulltimer.acceptanceRatio">{{fulltimer.acceptanceRatio}} %</p>
+          <p *ngIf="!fulltimer.acceptanceRatio">-</p>
+        </ion-label>
+      </ion-item>
+      <ion-item>
+        <div tabindex="0"></div>
+        <ion-label>
+          <h5>Suggestion Rejection Ratio</h5>
+          <p *ngIf="fulltimer.rejectionRatio">{{fulltimer.rejectionRatio}} %</p>
+          <p *ngIf="!fulltimer.rejectionRatio">-</p>
+        </ion-label>
+      </ion-item>
+
     </ion-list>
   </ng-container>
   <ng-container *ngIf="sections == 'notes'">
@@ -82,10 +99,10 @@
 
     <section>
 
-      <form [formGroup]="noteForm" *ngIf="noteForm">
-        <ion-item lines="none">
+      <form [class.editor-inactive]="!editorFocused" [class.editor-focused]="editorFocused" [formGroup]="noteForm" *ngIf="noteForm">
+        <ion-item *ngIf="['Suggested', 'Accepted', 'Rejected'].indexOf(noteForm.controls.type.value) == -1">
           <div tabindex="0"></div>
-          <ion-label position="stacked">Type</ion-label>
+          <ion-label position="floating">Type</ion-label>
           <ion-select formControlName="type">
             <ion-select-option>Internal Note</ion-select-option>
             <ion-select-option>Phone Call</ion-select-option>
@@ -96,18 +113,18 @@
           </ion-select>
         </ion-item>
 
-        <ion-list  lines="none">
+        <ion-list>
           <ion-item (click)="openClient($event)">
             <div tabindex="0"></div>
-            <ion-label position="stacked">Company Name</ion-label>
+            <ion-label position="floating">Company Name</ion-label>
             <ion-input type="text" formControlName="company_name" readonly></ion-input>
           </ion-item>
         </ion-list>
 
-        <ion-list  lines="none">
+        <ion-list>
           <ion-item (click)="openRequest($event)">
             <div tabindex="0"></div>
-            <ion-label position="stacked">Request</ion-label>
+            <ion-label position="floating">Request</ion-label>
             <ion-input type="text" formControlName="request_name" readonly></ion-input>
           </ion-item>
         </ion-list>
@@ -137,45 +154,7 @@
       </form>
 
       <ion-list *ngIf="this.editNoteData && !this.editNoteData.note_uuid">
-        <ion-item-sliding *ngFor="let note of notes" [disabled]="platform.width() > 768">
-          <ion-item tappable (click)="editNote(note)">
-            <div tabindex="0"></div>
-
-            <ion-label>
-              <p>{{ note.note_type }}</p>
-              <div [innerHTML]="note.note_text"></div>
-              <p><small>Created On : {{ toDate(note.note_created_datetime) | date}} | </small>
-                <small>Updated On : {{ toDate(note.note_updated_datetime) | date}} </small></p>
-              <p><small>Created By : {{note.createdBy.staff_name}} | </small>
-                <small>Updated By : {{note.updatedBy.staff_name}} </small></p>
-            </ion-label>
-
-            <ion-buttons slot="end" *ngIf="platform.width() > 768">
-              <ion-button color="default">
-                <ion-icon slot="start" name="pencil-outline"></ion-icon>
-                Edit
-              </ion-button>
-
-              <ion-button color="danger" (click)="removeNote($event, note)">
-                <ion-icon slot="start" name="trash-outline"></ion-icon>
-                Delete
-              </ion-button>
-            </ion-buttons>
-
-          </ion-item>
-          <ion-item-options side="end">
-            <ion-button (click)="editNote(note)">
-              <ion-icon slot="start" name="pencil-outline"></ion-icon>
-              Edit
-            </ion-button>
-
-            <ion-button color="danger" (click)="removeNote($event, note)">
-              <ion-icon slot="start" name="trash-outline"></ion-icon>
-              Delete
-            </ion-button>
-          </ion-item-options>
-        </ion-item-sliding>
-
+        <note *ngFor="let note of notes" [routerLink]="'/note-view/' + note.note_uuid" [note]="note" (onChange)="loadNotes()" (onDelete)="loadNotes()"></note>
       </ion-list>
     </section>
   </ng-container>

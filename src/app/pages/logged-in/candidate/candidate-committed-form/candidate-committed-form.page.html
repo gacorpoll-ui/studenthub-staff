@@ -7,7 +7,7 @@
     <ion-title>Please specify reason</ion-title>
 
     <ion-buttons slot="end">
-      <ion-button color="primary" [disabled]="form && !form.valid" (click)="save()">
+      <ion-button color="primary" [disabled]="!form || !form.valid" (click)="save()">
         <span *ngIf="!saving">Save</span>
         <ion-spinner *ngIf="saving"></ion-spinner>
       </ion-button>
@@ -18,7 +18,7 @@
 <ion-content scrollEvents="true" (ionScroll)="logScrolling($event)" class="ion-padding">
   <form [formGroup]="form" *ngIf="form">
 
-    <ion-item lines="none">
+    <ion-item lines="none" *ngIf="['Suggested', 'Accepted', 'Rejected'].indexOf(form.controls.type.value) == -1">
       <div tabindex="0"></div>
       <ion-select formControlName="type">
         <ion-select-option>Internal Note</ion-select-option>
@@ -30,6 +30,6 @@
       </ion-select>
     </ion-item>
 
-    <ckeditor [config]="editorConfig" #ckeditor [editor]="Editor" (change)="onChange($event)"></ckeditor>
+    <ckeditor [config]="editorConfig" #ckeditor [editor]="Editor" (ready)="onEditorReady()" (change)="onChange($event)"></ckeditor>
   </form>
 </ion-content>

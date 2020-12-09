@@ -5,6 +5,7 @@ import { AuthHttpService } from './authhttp.service';
 // model
 import { Candidate } from 'src/app/models/candidate';
 import { Country } from 'src/app/models/country';
+import { Note } from 'src/app/models/note';
 
 
 @Injectable({
@@ -30,11 +31,24 @@ export class CandidateService {
   }
 
   /**
+   * toggle committed
+   * @param model
+   */
+  toggleCommitted(model: Note): Observable<any>{
+    const url = `${this._candidateEndpoint}/toggle-committed`;
+    return this._authhttp.patch(url, {
+      candidate_id: model.candidate_id,
+      note: model.note_text,
+      type: model.note_type
+    });
+  }
+
+  /**
    * candidate detail
    * @returns {Observable<any>}
    */
   detail(id: number): Observable<any> {
-    return this._authhttp.get(this._candidateEndpoint + '/detail/' + id + '?expand=candidateIdCard,store,company,candidateSkills,candidateExperiences,bank,nationality,area,country,university');
+    return this._authhttp.get(this._candidateEndpoint + '/detail/' + id + '?expand=candidateIdCard,store,company,candidateSkills,candidateExperiences,bank,nationality,area,country,university,acceptanceRatio,rejectionRatio');
   }
 
   /**
@@ -201,17 +215,7 @@ export class CandidateService {
     const url = `${this._candidateEndpoint}/reset-password/${model.candidate_id}`;
     return this._authhttp.patch(url, {});
   }
-
-  /**
-   * Delete candidate
-   * @param {Candidate} model
-   * @returns {Observable<any>}
-   */
-  delete(model: Candidate): Observable<any> {
-    const url = `${this._candidateEndpoint}/${model.candidate_id}`;
-    return this._authhttp.delete(url);
-  }
-
+  
   /**
    * Removes Candidate from Assigned store
    * @param {any} candidate

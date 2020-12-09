@@ -27,7 +27,7 @@ import { SuggestPage } from "../../suggest/suggest.page";
 export class FulltimerViewPage implements OnInit {
 
   @ViewChild('ckeditor') ckeditor;
-  
+
   public borderLimit = false;
 
   public fulltimerUUID: string;
@@ -36,7 +36,7 @@ export class FulltimerViewPage implements OnInit {
   public sections = 'personal';
 
   public notes: Note[] = [];
-  
+
   public editorFocused = false;
   public deletingNote = false;
   public editNoteData: Note = new Note();
@@ -69,6 +69,7 @@ export class FulltimerViewPage implements OnInit {
   ngOnInit() {
     this.fulltimerUUID = this.activatedRoute.snapshot.paramMap.get('id');
     this.loadData();
+    this.loadNotes(false);
     this.initNoteForm();
   }
 
@@ -178,62 +179,13 @@ export class FulltimerViewPage implements OnInit {
   }
 
   /**
-  * removing note
-  * @param event
-  * @param note
-  */
-  async removeNote(event, note) {
-
-    event.preventDefault();
-    event.stopPropagation();
-
-    const confirm = await this.alertCtrl.create({
-      header: 'Delete Note',
-      message: 'Do you want to delete this note?',
-      buttons: [
-        {
-          text: 'Yes',
-          handler: () => {
-
-            this.deletingNote = true;
-
-            this.noteService.delete(note).subscribe(async response => {
-
-              this.deletingNote = false;
-
-              if (response.operation == 'success') {
-                this.loadNotes(true);
-              } else {
-
-                this.deletingNote = false;
-
-                // failer text
-                const prompt = await this.alertCtrl.create({
-                  header: 'Deletion Error!',
-                  message: response.message,
-                  buttons: ['Ok']
-                });
-                prompt.present();
-              }
-            }, () => {
-              this.deletingNote = false;
-            });
-          }
-        },
-        {
-          text: 'No'
-        }
-      ]
-    });
-    confirm.present();
-  }
-
-  /**
    * load notes
    * @param loading
    */
   loadNotes(loading = true) {
-    this.noteService.listByTypeAndId('fulltimer', this.fulltimer.fulltimer_uuid).subscribe(async jsonResponse => {
+    const params = '&fulltimer_uuid=' + this.fulltimerUUID;
+
+    this.noteService.list(params).subscribe(async jsonResponse => {
       this.notes = jsonResponse.body;
     });
   }
@@ -284,7 +236,7 @@ export class FulltimerViewPage implements OnInit {
     this.ckeditor.editorInstance.setData('');
     this.editorFocused = false;
 
-    this.noteForm.controls.type.setValue('');
+    this.noteForm.controls.type.setValue('Internal Note');
     this.noteForm.controls.company_name.setValue('');
     this.noteForm.controls.company_id.setValue('');
     this.noteForm.controls.request_name.setValue('');
@@ -355,21 +307,21 @@ export class FulltimerViewPage implements OnInit {
     }
 
     popover.onDidDismiss().then((_) => {
-      if (_ && _.data && _.data.data) {
+      if (_ && _.data && _.data) {
 
         if (!this.company || !this.company.company_id) {
-          this.noteForm.controls.company_name.setValue(_.data.data.company.company_name);
-          this.noteForm.controls.company_id.setValue(_.data.data.company.company_id);
+          this.noteForm.controls.company_name.setValue(_.data.company.company_name);
+          this.noteForm.controls.company_id.setValue(_.data.company.company_id);
         }
-        this.noteForm.controls.request_name.setValue(_.data.data.request_position_title);
-        this.noteForm.controls.request_uuid.setValue(_.data.data.request_uuid);
+        this.noteForm.controls.request_name.setValue(_.data.request_position_title);
+        this.noteForm.controls.request_uuid.setValue(_.data.request_uuid);
       }
     });
     popover.present();
   }
 
   /**
-   * suggess this candidate 
+   * suggess this candidate
    */
   async suggest() {
 
