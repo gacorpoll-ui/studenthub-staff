@@ -142,6 +142,10 @@ export class CompanyViewPage implements OnInit {
     }
 
     this.initNoteForm();
+    this.eventService.reloadBrand$.subscribe( res => {
+      console.log('reload');
+      this.loadBrand();
+    });
   }
 
   /**
@@ -242,6 +246,12 @@ export class CompanyViewPage implements OnInit {
   loadRequests() {
     this.requestService.list(this.company_id).subscribe(response => {
         this.requests = response;
+    });
+  }
+
+  loadBrand() {
+    this.brandService.listByCompany(this.company_id).subscribe(response => {
+        this.brands = response;
     });
   }
 
@@ -434,59 +444,6 @@ export class CompanyViewPage implements OnInit {
     confirm.present();
   }
 
-  async deleteBrand(event, brand) {
-
-    event.preventDefault();
-    event.stopPropagation();
-
-    const confirm = await this.alertCtrl.create({
-      header: 'Delete Brand',
-      message: 'Do you want to delete this brand?',
-      buttons: [
-        {
-          text: 'Yes',
-          handler: () => {
-
-            this.deleting = true;
-
-            this.brandService.delete(brand).subscribe(async jsonResp => {
-
-              // On Success
-              if (jsonResp.operation == 'success') {
-                const toast = await this.toastCtrl.create({
-                  message: jsonResp.message,
-                  duration: 3000
-                });
-                toast.present();
-
-                this.loadData(true);
-              }
-
-              // On Failure
-              if (jsonResp.operation == 'error') {
-
-                this.deleting = false;
-
-                // failer text
-                const prompt = await this.alertCtrl.create({
-                  header: 'Deletion Error!',
-                  message: jsonResp.message,
-                  buttons: ['Ok']
-                });
-                prompt.present();
-              }
-
-            });
-          }
-        },
-        {
-          text: 'No'
-        }
-      ]
-    });
-    confirm.present();
-  }
-
   /**
    * open brand edit page
    * @param brand
@@ -510,40 +467,13 @@ export class CompanyViewPage implements OnInit {
     });
   }
 
-  async editBrandSelected(event, brand) {
-
-    event.preventDefault();
-    event.stopPropagation();
-
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
-
-    const modal = await this.modalCtrl.create({
-      component: BrandFormPage,
-      componentProps: {
-        model: brand
-      }
-    });
-    modal.onDidDismiss().then(e => {
-
-      if (!e.data || e.data.from != 'native-back-btn') {
-        window['history-back-from'] = 'onDidDismiss';
-        window.history.back();
-      }
-
-      if (e && e.data && e.data.refresh) {
-        this.loadData(true);
-      }
-    });
-    modal.present();
-  }
-
   /**
    * form to add new brand
    */
   async addBrand() {
     window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
 
-    const brand = new Brand;
+    const brand = new Brand();
     brand.company_id = this.company_id;
 
     const modal = await this.modalCtrl.create({
@@ -647,7 +577,7 @@ export class CompanyViewPage implements OnInit {
    * @param note
    */
   async editNote(note: Note) {
-  
+
     this.editNoteData = note;
     this.noteForm.controls.note.setValue(note.note_text);
     this.ckeditor.editorInstance.setData(note.note_text);

@@ -385,8 +385,11 @@
         <div tabindex="0"></div>
         <ion-label>
           <h5>{{ mall.mall_name_en }}</h5>
-<!--          <p>{{ mall.mall_name_ar }}</p>-->
         </ion-label>
+
+        <ion-badge slot="end" color="light" *ngIf="mall.store_count > 0">
+          {{ mall.store_count }} stores
+        </ion-badge>
         <ion-badge slot="end" color="light" *ngIf="mall.candidate_count > 0">
           {{ mall.candidate_count }} staff
         </ion-badge>
@@ -397,48 +400,25 @@
 
   <!-- Brand List -->
 
-  <section *ngIf="segment == 'brands'" Class="brand">
+  <section *ngIf="segment == 'brands'" class="brand">
 
     <ion-list>
-      <ion-item-sliding *ngFor="let brand of brands" [disabled]="platform.width() > 768">
-        <ion-item tappable (click)="brandSelected(brand)" lines="none">
-          <div tabindex="0"></div>
-          <ion-thumbnail slot="start" *ngIf="brand.brand_logo">
-            <ion-img *ngIf="brand.brand_logo" [src]="awsService.cloudinaryUrl + 'company-brand/' + brand.brand_logo">
-            </ion-img>
-            <ion-img *ngIf="!brand.brand_logo" src="assets/images/placeholder.png"></ion-img>
-          </ion-thumbnail>
-          <ion-label>
-            <h2>{{ brand.brand_name_en }}</h2>
-          </ion-label>
-          <ion-badge slot="end" color="light" *ngIf="brand.candidate_count > 0">{{brand.candidate_count}} staff</ion-badge>
-          <ion-buttons slot="end" *ngIf="platform.width() > 768">
-            <ion-button color="primary" (click)="editBrandSelected($event, brand)">
-              <ion-icon slot="start" name="pencil-outline"></ion-icon>
-              Edit
-            </ion-button>
-            <ion-button color="danger" (click)="deleteBrand($event, brand)">
-              <ion-icon slot="start" name="trash-outline"></ion-icon>
-              Delete
-            </ion-button>
-          </ion-buttons>
-
-        </ion-item>
-
-        <ion-item-options side="end">
-          <ion-button color="primary" (click)="editBrandSelected($event, brand)">
-            <ion-icon slot="start" name="pencil-outline"></ion-icon>
-            Edit
-          </ion-button>
-          <ion-button color="danger" (click)="deleteBrand($event, brand)">
-            <ion-icon slot="start" name="trash-outline"></ion-icon>
-            Delete
-          </ion-button>
-        </ion-item-options>
-      </ion-item-sliding>
-        <ion-button (click)="addBrand()">
-          Add New Brand
-        </ion-button>
+      <ion-item tappable (click)="brandSelected(brand)" lines="none" class="ion-text-wrap" *ngFor="let brand of brands">
+        <div tabindex="0"></div>
+        <ion-thumbnail slot="start" *ngIf="brand.brand_logo">
+          <ion-img *ngIf="brand.brand_logo" [src]="awsService.cloudinaryUrl + 'company-brand/' + brand.brand_logo">
+          </ion-img>
+          <ion-img *ngIf="!brand.brand_logo" src="assets/images/placeholder.png"></ion-img>
+        </ion-thumbnail>
+        <ion-label  class="ion-text-wrap">
+          <h2>{{ brand.brand_name_en }}</h2>
+        </ion-label>
+        <ion-badge slot="end" color="light" *ngIf="brand.store_count > 0">{{brand.store_count}} stores</ion-badge>
+        <ion-badge slot="end" color="light" *ngIf="brand.candidate_count > 0">{{brand.candidate_count}} staff</ion-badge>
+      </ion-item>
+      <ion-button (click)="addBrand()">
+        Add New Brand
+      </ion-button>
     </ion-list>
   </section>
 
