@@ -34,7 +34,7 @@ export class SelectSearchPageComponent {
   /**
    * When an item is selected from list
    */
-  onSelect(selectedItem){
+  onSelect(selectedItem) {
     this._viewCtrl.dismiss(selectedItem);
   }
 
