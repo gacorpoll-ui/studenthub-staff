@@ -335,6 +335,45 @@ export class CompanyViewPage implements OnInit {
       return types[1];
   }
 
+  /**
+   * Loads form to initiate a new transfer
+   */
+  createNewTransfer() {
+    this.navCtrl.navigateForward('transfer-form/' + this.company_id);
+  }
+
+  /**
+   * Loads form to initiate a new transfer
+   */
+  importTransfer() {
+    this.navCtrl.navigateForward('import-transfer-form/' + this.company_id);
+  }
+
+  /**
+   * Present action sheet to create a new transfer
+   */
+  async presentActionSheetForNewTransfer() {
+    const actionSheet = await this.alertCtrl.create({
+      header: 'How do you wish to create your transfer?',
+      buttons: [
+        {
+          text: 'Manual input of hours',
+          handler: () => {
+            this.createNewTransfer();
+          }
+        },
+        {
+          text: 'Excel sheet upload',
+          handler: () => {
+            this.importTransfer();
+          }
+        }
+      ]
+    });
+
+    actionSheet.present();
+  }
+
   isFollowUpIntervalPassed() {
 
     if (this.company.company_followup_interval_weeks == 0 || !this.company.company_last_followup_datetime) {

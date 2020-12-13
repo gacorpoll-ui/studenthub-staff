@@ -591,7 +591,18 @@
 </ion-content>
 
 <ion-footer *ngIf="!loading && company">
-  <ion-button expand="full" *ngIf="!stores || stores.length == 0" (click)="create(company.company_id, true)">
-    Create Sub Company
-  </ion-button>
+  <ion-grid>
+    <ion-row>
+      <ion-col *ngIf="!stores || stores.length == 0" >
+        <ion-button (click)="create(company.company_id, true)">
+          Create Sub Company
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button (click)="presentActionSheetForNewTransfer()">
+          Create New <br/> Transfer
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-footer>
