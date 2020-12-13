@@ -188,7 +188,7 @@ export class CandidateViewPage implements OnInit {
    * Assign Candidate to Store
    * @param {number} store_id
    */
-  async assignCandidateToStore(store_id: number) {
+  async assignCandidateToStore(store_id) {
 
     this.assigning = true;
 

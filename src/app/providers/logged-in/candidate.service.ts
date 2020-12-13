@@ -234,7 +234,7 @@ export class CandidateService {
    */
   assignCandidateToStore(candidate: Candidate, store_id: number): Observable<any> {
     const params = {
-      store_id
+      store_id: store_id
     };
     const url = `${this._candidateEndpoint}/assign/${candidate.candidate_id}`;
     return this._authhttp.patch(url, params);
