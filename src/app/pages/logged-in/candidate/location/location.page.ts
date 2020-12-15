@@ -65,7 +65,6 @@ export class LocationPage implements OnInit {
 
   ngOnInit() {
     this._initForm();
-      console.log(this.candidate);
     if (
         this.candidate &&
         this.candidate.area &&
@@ -244,28 +243,29 @@ export class LocationPage implements OnInit {
 
   areaByLocation(latitude, longitude, area = null) {
 
-    this.isLoading = true;
-
-    this.accountService.areaByLocation(latitude, longitude, area).subscribe(result => {
-
-      this.isLoading = false;
-
-      if (result.operation == 'success' && result.area) {
-
-        this.setArea(result.country, result.area, latitude, longitude);
-
-      } else {
-
-        this.alertCtrl.create({
-          header: result.message,
-          buttons: [this.translateService.transform('Okay')]
-        }).then(alert => alert.present());
-      }
-    }, () => {
-
-      this.isLoading = false;
-    });
+    // this.isLoading = true;
+    //
+    // this.accountService.areaByLocation(latitude, longitude, area).subscribe(result => {
+    //
+    //   this.isLoading = false;
+    //
+    //   if (result.operation == 'success' && result.area) {
+    //
+    //     this.setArea(result.country, result.area, latitude, longitude);
+    //
+    //   } else {
+    //
+    //     this.alertCtrl.create({
+    //       header: result.message,
+    //       buttons: [this.translateService.transform('Okay')]
+    //     }).then(alert => alert.present());
+    //   }
+    // }, () => {
+    //
+    //   this.isLoading = false;
+    // });
   }
+
   setArea(country, area, latitude, longitude) {
 
     if(!country || !area) {
