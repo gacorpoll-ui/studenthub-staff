@@ -70,11 +70,20 @@
 
     <ion-item *ngIf="workHistory && workHistory.length > 0" lines="none">
       <div tabindex="0"></div>
-      <ion-label *ngIf="!assigning">
+      <ion-label *ngIf="!assigning"  class="ion-text-wrap">
         <p *ngFor="let history of workHistory">
-          <label tappable [routerLink]="['/store-view', history.store.store_id]">
-            {{ history.store.store_name }} @ {{ history.company.company_name }}:
-            {{ toDate(history.start_date) | date }} </label> to
+          <ng-container *ngIf="history.store && history.store.store_id">
+            <label tappable [routerLink]="['/store-view', history.store.store_id]">
+              {{ history.store.store_name }} @ {{ history.company.company_name }}:
+              {{ toDate(history.start_date) | date }} </label>
+          </ng-container>
+
+          <ng-container *ngIf="history.company && history.company.company_name && !history.store">
+            <label tappable >
+              - @ {{ history.company.company_name }}:
+              {{ toDate(history.start_date) | date }} </label>
+          </ng-container>
+            to
           <label *ngIf="history.end_date">{{ toDate(history.end_date) | date }}</label>
           <label *ngIf="!history.end_date">now</label>
         </p>
