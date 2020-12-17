@@ -242,34 +242,4 @@ export class CompanyFormPage implements OnInit {
   logScrolling(e) {
     this.borderLimit = (e.detail.scrollTop > 20);
   }
-
-  toggleFollowup($event) {
-    // if same value then do nothing
-    if (this.followup == $event.detail.checked) {
-      return;
-    }
-
-    this.followup = $event.detail.checked;
-    this.company.company_followup = $event.detail.checked;
-
-    this.updating = true;
-
-    this.companyService.updateFollowup(this.company).subscribe(async response => {
-
-      this.updating = false;
-
-      if (response && response.operation == 'success') {
-        const toast = await this.toastCtrl.create({
-          message: response.message,
-          duration: 3000
-        });
-        toast.present();
-
-        this.eventService.reloadFollowupList$.next();
-      }
-
-    }, () => {
-      this.updating = false;
-    });
-  }
 }
