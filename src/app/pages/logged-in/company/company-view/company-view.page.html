@@ -16,6 +16,11 @@
 <ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
 
   <div *ngIf="company">
+
+    <ion-thumbnail *ngIf="company.company_logo">
+      <img src="{{ aws.cloudinaryUrl + company.company_logo }}" (error)="imageError()">
+    </ion-thumbnail>
+    
     <h3 class="company-name">
       {{ company.company_name }}
     </h3>
@@ -45,17 +50,17 @@
     <p class="email" *ngIf="company.company_email">{{ company.company_email }}</p>
 
     <p class="hourly-rate" *ngIf="company.company_hourly_rate">
-      {{ company.company_hourly_rate | number:'1.3-3' }} KD per hour 
-      {{ company.company_bonus_commission }}% commission
+      {{ company.company_hourly_rate | number:'1.3-3' }} KD per hour <br />
+      {{ company.company_bonus_commission | number:'1.0-0' }}% commission
     </p>
 
     <p class="description" *ngIf="company.company_description_en"> {{ company.company_description_en }}</p>
     
     <p class="description arabic" *ngIf="company.company_description_ar">{{ company.company_description_ar }}</p>
 
-    <a class="website" *ngIf="company.company_website">{{ company.company_website }}</a>
+    <a class="website" href="{{ company.company_website }}" target="_blank" *ngIf="company.company_website">{{ company.company_website }}</a>
 
-    <h5>Last Activity</h5>
+    <h5 *ngIf="notes.length > 0">Last Activity</h5>
     
     <note *ngIf="notes.length > 0" [routerLink]="'/note-view/' + notes[0].note_uuid" from="company-view" [note]="notes[0]" 
       (onChange)="loadNotes()" (onDelete)="loadNotes()"></note>

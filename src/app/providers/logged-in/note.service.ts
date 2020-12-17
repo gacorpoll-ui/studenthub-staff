@@ -25,9 +25,10 @@ export class NoteService {
 
     if(page) {
       url += '&page=' + page;
+      return this.authhttp.getRaw(url);
     }
 
-    return this.authhttp.getRaw(url);
+    return this.authhttp.get(url);
   }
 
   /**

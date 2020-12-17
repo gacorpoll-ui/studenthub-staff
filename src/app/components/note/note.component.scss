@@ -37,13 +37,17 @@ ion-card {
     }
   
     .txt-time {
-      margin: 6px 0 5px 5px;
+      margin: 6px 0 5px 0px;
       font-size: 12px;
       font-weight: normal;
       font-stretch: normal;
       font-style: normal;
       line-height: normal;
       letter-spacing: normal;
+      color: #000;
+    }
+
+    p {
       color: #000;
     }
   }

@@ -12,6 +12,7 @@ import { Note } from 'src/app/models/note';
 import { CompanyFollowupNotePage } from '../company-followup-note/company-followup-note.page';
 import { CompanyFormPage } from 'src/app/pages/logged-in/company/company-form/company-form.page';
 import { TransferChartPage } from '../../transfer/transfer-chart/transfer-chart.page';
+import { AwsService } from 'src/app/providers/aws.service';
 
 
 @Component({
@@ -46,6 +47,7 @@ export class CompanyViewPage implements OnInit {
     public router: Router,
     public activatedRoute: ActivatedRoute,
     public companyService: CompanyService,
+    public aws: AwsService,
     public eventService: EventService,
     public noteService: NoteService
   ) {
@@ -363,8 +365,8 @@ export class CompanyViewPage implements OnInit {
     }
   }
 
-  imageError(company) {
-    company.company_logo = null;
+  imageError() {
+    this.company.company_logo = null;
   }
 
   /**
