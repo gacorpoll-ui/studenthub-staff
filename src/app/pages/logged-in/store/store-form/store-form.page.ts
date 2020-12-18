@@ -38,11 +38,13 @@ export class StoreFormPage implements OnInit {
     private _alertCtrl: AlertController,
     public mallService: MallService,
     private authService: AuthService
-  ){
-    this.store_id = this.activatedRoute.snapshot.paramMap.get('id');
+  ) {
   }
 
   ngOnInit() {
+
+    this.store_id = this.activatedRoute.snapshot.paramMap.get('id');
+
     // Load the passed model if available
     const state = window.history.state;
 
@@ -79,7 +81,7 @@ export class StoreFormPage implements OnInit {
   formInit() {
     // Init Form
  
-    if (!this.model.store_id){ // Show Create Form
+    if (!this.model || !this.model.store_id) { // Show Create Form
       this.operation = 'Create';
       this.form = this._fb.group({
         name: ['', Validators.required],
@@ -101,6 +103,10 @@ export class StoreFormPage implements OnInit {
    * Update Model Data based on Form Input
    */
   updateModelDataFromForm(){
+    if(!this.model) {
+      this.model = new Store;
+    }
+
     this.model.store_name = this.form.value.name;
     this.model.store_location = this.form.value.location;
     this.model.brand_uuid = this.form.value.brand || null;
@@ -124,12 +130,14 @@ export class StoreFormPage implements OnInit {
     this.updateModelDataFromForm();
 
     let action;
-    if (!this.model.store_id){
-      // Create
+  
+    if (!this.model.store_id) // Create
+    {
       action = this.storeService.create(this.model);
-    }else{
-      // Update
-      action = this.storeService.update(this.model);
+    }
+    else // Update
+    {
+      action = this.storeService.update(this.model); 
     }
 
     action.subscribe(async jsonResponse => {

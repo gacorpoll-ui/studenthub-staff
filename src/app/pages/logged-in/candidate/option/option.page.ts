@@ -129,7 +129,13 @@ export class OptionPage implements OnInit {
               // Dismiss the loader
               this.unassinging = false;
               if (response.operation == 'success') {
-                this.candidate.store_id = null;
+                
+                if(this.candidate) {
+                  this.candidate.store_id = null;
+                  this.candidate.store = null;
+                  this.candidate.company = null;
+                }
+
                 this.eventService.reloadCandidateHistory$.next();
               } else {
                 const prompt = await this.alertCtrl.create({
