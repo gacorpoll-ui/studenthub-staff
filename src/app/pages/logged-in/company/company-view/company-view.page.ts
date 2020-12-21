@@ -14,6 +14,7 @@ import { CompanyFollowupNotePage } from '../company-followup-note/company-follow
 import { CompanyFormPage } from 'src/app/pages/logged-in/company/company-form/company-form.page';
 import { TransferChartPage } from '../../transfer/transfer-chart/transfer-chart.page';
 import { TransferListPage } from '../../transfer/transfer-list/transfer-list.page';
+import { CompanyDocumentsPage } from '../company-documents/company-documents.page';
 
 
 @Component({
@@ -99,11 +100,22 @@ export class CompanyViewPage implements OnInit {
   }
 
   async openDocuments() {
-    this.router.navigate(['company-documents', this.company_id], {
-      state: {
-        company: this.company
+    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+
+    const modal = await this.modalCtrl.create({
+      component: CompanyDocumentsPage,
+      componentProps: {
+        company: this.company,
       }
     });
+    modal.onDidDismiss().then(e => {
+
+      if (!e.data || e.data.from != 'native-back-btn') {
+        window['history-back-from'] = 'onDidDismiss';
+        window.history.back();
+      }
+    });
+    modal.present();
   }
 
   async openContacts() {

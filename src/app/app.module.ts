@@ -54,6 +54,7 @@ import { TransferFormPageModule } from './pages/logged-in/transfer/transfer-form
 import { ImportTransferFormPageModule } from './pages/logged-in/transfer/import-transfer-form/import-transfer-form.module';
 import { TransferListPageModule } from './pages/logged-in/transfer/transfer-list/transfer-list.module';
 import { TransferViewPageModule } from './pages/logged-in/transfer/transfer-view/transfer-view.module';
+import { CompanyDocumentsPageModule } from './pages/logged-in/company/company-documents/company-documents.module';
 
 export function startupServiceFactory(authService) {
   return () => authService.load();
@@ -117,7 +118,8 @@ export function createTranslateLoader(http: HttpClient) {
         TransferFormPageModule,
         ImportTransferFormPageModule,
         TransferListPageModule,
-        TransferViewPageModule
+        TransferViewPageModule,
+        CompanyDocumentsPageModule
     ],
   providers: [
     {

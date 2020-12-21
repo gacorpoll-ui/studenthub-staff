@@ -17,8 +17,6 @@ import { UploadFilePage } from '../upload-file/upload-file.page';
 })
 export class CompanyDocumentsPage implements OnInit {
 
-  public company_id;
-
   public company: Company;
   
   public borderLimit: boolean = false;
@@ -31,20 +29,10 @@ export class CompanyDocumentsPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    
-    this.company_id = this.activatedRoute.snapshot.paramMap.get('company_id');
-    
-    const state = window.history.state;
-
-    if(state.company) {
-      this.company = state.company;
-    } 
-      
-    this.loadData();
   }
 
   loadData() {
-    this.companyService.view(this.company_id).subscribe(data => {
+    this.companyService.view(this.company.company_id).subscribe(data => {
       this.company = data;
     });
   }

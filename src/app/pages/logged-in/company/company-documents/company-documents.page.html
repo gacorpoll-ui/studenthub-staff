@@ -1,12 +1,25 @@
 <ion-header [class.add-border]="borderLimit" class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/company-view/{{ this.company_id }}"></ion-back-button>
+      <ion-back-button (click)="dismiss()"></ion-back-button>
     </ion-buttons>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="uploadDocument()">
+        <span>Add Document</span>
+      </ion-button>
+    </ion-buttons>
+
   </ion-toolbar>
 </ion-header>
 
 <ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
+
+  <h3>Documents</h3>
+
+  <h4 *ngIf="company">
+    {{ company.company_name }} 
+  </h4>
 
   <ion-card class="document" target="_blank" href="{{ awsService.permanentBucketUrl }}{{ file.file_s3_path }}" *ngFor="let file of company.files">
     <ion-card-content>
@@ -24,10 +37,4 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-item lines="none">
-    <div tabindex="0"></div>
-    <ion-button (click)="uploadDocument()">
-      <span>Upload Document</span>
-    </ion-button>
-  </ion-item>
 </ion-content>
