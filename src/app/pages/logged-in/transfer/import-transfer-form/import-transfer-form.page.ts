@@ -25,6 +25,7 @@ import {
   CalendarComponentOptions
 } from 'ion2-calendar';
 import { DefaultDate } from "ion2-calendar/dist/calendar.model";
+import { Company } from 'src/app/models/company';
 
 
 @Component({
@@ -43,11 +44,9 @@ export class ImportTransferFormPage implements OnInit {
   public browserUploadSubscription: Subscription;
 
   // The Transfer containing all records
-  public transfer_id;
+
   public transfer: Transfer;
   public scenario: string = 'create';
-
-  public company_id;
 
   // Page Title depends on Operation (Create vs Edit Transfer)
   public pageTitle: string = "Create Transfer via Excel";
@@ -75,25 +74,15 @@ export class ImportTransferFormPage implements OnInit {
 
   ngOnInit() {
 
-    this.transfer_id = this.activatedRoute.snapshot.paramMap.get('id');
-    this.company_id = this.activatedRoute.snapshot.paramMap.get('company_id');
-
     this.min = '1930/01/01';
 
     const d = new Date();
     this.max = (this.platform.is('mobile')) ? d.getFullYear() + '-12-12' : d;
 
-    const state = window.history.state;
-    // Load the passed model (required)
-    if (state['transfer']) {
-      this.transfer = state['transfer'];
-      // Update Page Title if Editing a Transfer that already exists in backend
-      if (this.transfer.transfer_id) 
-        this.pageTitle = "Edit Transfer via Excel";
+    if (this.transfer.transfer_id) {
+    
+      this.pageTitle = 'Edit Transfer'; 
 
-      this.scenario = 'update'
-    }
-    if (!this.transfer && this.transfer_id) {
       this.loadTransferData();
     }
   }
@@ -177,7 +166,7 @@ export class ImportTransferFormPage implements OnInit {
    */
   async newTransferUpload(file) {
 
-    this.transferService.uploadTransferExcel(file, this.start_date, this.end_date, this.company_id).subscribe(async data => {
+    this.transferService.uploadTransferExcel(file, this.start_date, this.end_date, this.transfer.company_id).subscribe(async data => {
 
       this.uploading = false;
 
@@ -189,10 +178,7 @@ export class ImportTransferFormPage implements OnInit {
         });
         prompt.present();
 
-        this.navCtrl.navigateBack('transfer-view/' + data.transfer_id);
-        // this.navCtrl.push(TransferViewPage, {
-        //   'model': data.transfer_id
-        // });
+        this.dismiss({ refresh: true });
       }
 
       // On Failure
@@ -229,11 +215,8 @@ export class ImportTransferFormPage implements OnInit {
           });
           prompt.present();
 
-          this.navCtrl.navigateForward('transfer-view/' + this.transfer.transfer_id, {
-            state: {
-              refresh: true
-            }
-          })
+          this.dismiss({ refresh: true });
+
           // this.navCtrl.push(TransferViewPage, {
           //   'model': this.transfer.transfer_id
           // });
@@ -258,7 +241,7 @@ export class ImportTransferFormPage implements OnInit {
   async downloadTemplate() {
     let loader = await this._loadingCtrl.create();
     loader.present();
-    this.transferService.downloadTransferTemplate(this.company_id).subscribe(response => {
+    this.transferService.downloadTransferTemplate(this.transfer.company_id).subscribe(response => {
       loader.dismiss();
     });
   }
@@ -268,7 +251,7 @@ export class ImportTransferFormPage implements OnInit {
     let loader = await this._loadingCtrl.create();
     loader.present();
 
-    this.transferService.transferIdDetails(this.transfer_id).subscribe(response => {
+    this.transferService.transferIdDetails(this.transfer.transfer_id).subscribe(response => {
       this.transfer = response;
       // Update Page Title if Editing a Transfer that already exists in backend
       this.pageTitle = "Edit Transfer via Excel";
@@ -309,5 +292,9 @@ export class ImportTransferFormPage implements OnInit {
         this.end_date = to.string;
       }
     }
+  }
+
+  dismiss(data = {}) {
+    this.modalCtrl.dismiss(data);
   }
 }

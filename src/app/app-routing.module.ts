@@ -382,40 +382,8 @@ const routes: Routes = [
     }
   },
   {
-    path: 'import-transfer-form',
-    loadChildren: () => import('./pages/logged-in/transfer/import-transfer-form/import-transfer-form.module').then(m => m.ImportTransferFormPageModule),
-    canActivate: [AuthService],
-    data: {
-      name: 'ImportTransferFormPage'
-    }
-  },
-  {
-    path: 'transfer-form',
-    loadChildren: () => import('./pages/logged-in/transfer/transfer-form/transfer-form.module').then(m => m.TransferFormPageModule),
-    canActivate: [AuthService],
-    data: {
-      name: 'TransferFormPage'
-    }
-  },
-  {
-    path: 'transfer-view',
-    loadChildren: () => import('./pages/logged-in/transfer/transfer-view/transfer-view.module').then(m => m.TransferViewPageModule),
-    canActivate: [AuthService],
-    data: {
-      name: 'TransferViewPage'
-    }
-  },
-  {
     path: 'transfer-chart',
     loadChildren: () => import('./pages/logged-in/transfer/transfer-chart/transfer-chart.module').then( m => m.TransferChartPageModule),
-    canActivate: [AuthService],
-    data: {
-      name: 'TransferViewPage'
-    }
-  },
-  {
-    path: 'transfer-list',
-    loadChildren: () => import('./pages/logged-in/transfer/transfer-list/transfer-list.module').then( m => m.TransferListPageModule),
     canActivate: [AuthService],
     data: {
       name: 'TransferViewPage'
