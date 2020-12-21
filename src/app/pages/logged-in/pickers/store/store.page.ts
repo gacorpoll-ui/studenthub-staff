@@ -10,8 +10,8 @@ import { StoreService } from 'src/app/providers/logged-in/store.service';
 
 @Component({
   selector: 'app-store',
-  templateUrl: './store-list.page.html',
-  styleUrls: ['./store-list.page.scss'],
+  templateUrl: './store.page.html',
+  styleUrls: ['./store.page.scss'],
 })
 export class StorePage implements OnInit {
 
