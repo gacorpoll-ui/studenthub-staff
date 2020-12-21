@@ -49,6 +49,11 @@ import {CompanyModule} from "./components/company/company.module";
 import {LocationPageModule} from "./pages/logged-in/candidate/location/location.module";
 import { CalendarModule } from 'ion2-calendar';
 import { TransferChartPageModule } from './pages/logged-in/transfer/transfer-chart/transfer-chart.module';
+import { TransferFormPage } from './pages/logged-in/transfer/transfer-form/transfer-form.page';
+import { TransferFormPageModule } from './pages/logged-in/transfer/transfer-form/transfer-form.module';
+import { ImportTransferFormPageModule } from './pages/logged-in/transfer/import-transfer-form/import-transfer-form.module';
+import { TransferListPageModule } from './pages/logged-in/transfer/transfer-list/transfer-list.module';
+import { TransferViewPageModule } from './pages/logged-in/transfer/transfer-view/transfer-view.module';
 
 export function startupServiceFactory(authService) {
   return () => authService.load();
@@ -108,7 +113,11 @@ export function createTranslateLoader(http: HttpClient) {
         SuggestPageModule,
         CompanyModule,
         CalendarModule,
-        LocationPageModule
+        LocationPageModule,
+        TransferFormPageModule,
+        ImportTransferFormPageModule,
+        TransferListPageModule,
+        TransferViewPageModule
     ],
   providers: [
     {

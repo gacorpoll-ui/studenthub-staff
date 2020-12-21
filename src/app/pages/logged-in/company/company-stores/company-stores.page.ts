@@ -61,7 +61,6 @@ export class CompanyStoresPage implements OnInit {
 
     this.companyService.view(this.company_id).subscribe(data => {
       this.company = data;
-      console.log(this.company);
       this.loading = false;
     });
   }

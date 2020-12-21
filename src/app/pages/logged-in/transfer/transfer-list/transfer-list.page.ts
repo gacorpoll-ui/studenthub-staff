@@ -1,10 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 //models
 import { Company } from 'src/app/models/company';
+import { Transfer } from 'src/app/models/transfer';
 //services
 import { CompanyService } from 'src/app/providers/logged-in/company.service';
+//pages
+import { ImportTransferFormPage } from '../import-transfer-form/import-transfer-form.page';
+import { TransferFormPage } from '../transfer-form/transfer-form.page';
+import { TransferViewPage } from '../transfer-view/transfer-view.page';
 
 
 @Component({
@@ -13,8 +18,6 @@ import { CompanyService } from 'src/app/providers/logged-in/company.service';
   styleUrls: ['./transfer-list.page.scss'],
 })
 export class TransferListPage implements OnInit {
-
-  public company_id;
 
   public company: Company;
   
@@ -26,18 +29,13 @@ export class TransferListPage implements OnInit {
     public router: Router,
     public activatedRoute: ActivatedRoute,
     public alertCtrl: AlertController,
+    public modalCtrl: ModalController,
     public companyService: CompanyService
   ) { }
 
   ngOnInit() {
-    
-    this.company_id = this.activatedRoute.snapshot.paramMap.get('company_id');
-    
-    const state = window.history.state;
 
-    if(state.company) {
-      this.company = state.company;
-    } else {
+    if(!this.company) {
       this.loadData();
     }
   }
@@ -45,13 +43,36 @@ export class TransferListPage implements OnInit {
   loadData() {
     this.loading = true;
 
-    this.companyService.view(this.company_id).subscribe(data => {
+    this.companyService.view(this.company.company_id).subscribe(data => {
       this.company = data;
 
       this.loading = false;
     });
   }
-  
+
+  async openTransferDetailPage(transfer) {
+    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+
+    const modal = await this.modalCtrl.create({
+      component: TransferViewPage,
+      componentProps: {
+        transfer: transfer,
+      }
+    });
+    modal.onDidDismiss().then(e => {
+
+      if (!e.data || e.data.from != 'native-back-btn') {
+        window['history-back-from'] = 'onDidDismiss';
+        window.history.back();
+      }
+
+      if(e.data && e.data.refresh) {
+        this.loadData();
+      }
+    });
+    modal.present();
+  }  
+
   /**
    * Present action sheet to create a new transfer
    */
@@ -80,15 +101,63 @@ export class TransferListPage implements OnInit {
   /**
    * Loads form to initiate a new transfer
    */
-  createNewTransfer() {
-    this.router.navigateByUrl('/transfer-form/' + this.company_id);
+  async createNewTransfer() {
+    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    
+    let transfer = new Transfer;
+    transfer.company_id = this.company.company_id;
+
+    const modal = await this.modalCtrl.create({
+      component: TransferFormPage,
+      componentProps: {
+        transfer: transfer
+      }
+    });
+    modal.onDidDismiss().then(e => {
+
+      if (!e.data || e.data.from != 'native-back-btn') {
+        window['history-back-from'] = 'onDidDismiss';
+        window.history.back();
+      }
+
+      if(e.data && e.data.refresh) {
+        this.loadData();
+      }
+    });
+    modal.present();
   }
 
   /**
    * Loads form to initiate a new transfer
    */
-  importTransfer() {
-    this.router.navigateByUrl('/import-transfer-form/' + this.company_id);
+  async importTransfer() {
+    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+
+    let transfer = new Transfer;
+    transfer.company_id = this.company.company_id;
+
+    const modal = await this.modalCtrl.create({
+      component: ImportTransferFormPage,
+      componentProps: {
+        transfer: transfer,
+      }
+    });
+    modal.onDidDismiss().then(e => {
+
+      if (!e.data || e.data.from != 'native-back-btn') {
+        window['history-back-from'] = 'onDidDismiss';
+        window.history.back();
+      }
+
+      if(e.data && e.data.refresh) {
+        this.loadData();
+      }
+    });
+    modal.present();
+  }
+  
+  dismiss() {
+    this.modalCtrl.dismiss();
   }
   
   logScrolling(e) {

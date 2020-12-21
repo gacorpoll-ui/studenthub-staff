@@ -5,6 +5,7 @@ import { ModalController, AlertController, ToastController, IonContent } from '@
 import { CompanyService } from 'src/app/providers/logged-in/company.service';
 import { NoteService } from 'src/app/providers/logged-in/note.service';
 import { EventService } from 'src/app/providers/event.service';
+import { AwsService } from 'src/app/providers/aws.service';
 // models
 import { Company } from 'src/app/models/company';
 import { Note } from 'src/app/models/note';
@@ -12,7 +13,7 @@ import { Note } from 'src/app/models/note';
 import { CompanyFollowupNotePage } from '../company-followup-note/company-followup-note.page';
 import { CompanyFormPage } from 'src/app/pages/logged-in/company/company-form/company-form.page';
 import { TransferChartPage } from '../../transfer/transfer-chart/transfer-chart.page';
-import { AwsService } from 'src/app/providers/aws.service';
+import { TransferListPage } from '../../transfer/transfer-list/transfer-list.page';
 
 
 @Component({
@@ -138,11 +139,22 @@ export class CompanyViewPage implements OnInit {
   }
 
   async openTransfers() {
-    this.router.navigate(['transfer-list', this.company_id], {
-      state: {
-        company: this.company
+    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+
+    const modal = await this.modalCtrl.create({
+      component: TransferListPage,
+      componentProps: {
+        company: this.company,
       }
     });
+    modal.onDidDismiss().then(e => {
+
+      if (!e.data || e.data.from != 'native-back-btn') {
+        window['history-back-from'] = 'onDidDismiss';
+        window.history.back();
+      }
+    });
+    modal.present();
   }
 
   async openChart() {

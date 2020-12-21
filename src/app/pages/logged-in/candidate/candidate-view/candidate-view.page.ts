@@ -833,7 +833,6 @@ export class CandidateViewPage implements OnInit {
 
   toggleFollowup($event) {
 
-    console.log($event.detail.checked);
     // if same value then do nothing
     if (this.job_search_status == $event.detail.checked) {
       return;
