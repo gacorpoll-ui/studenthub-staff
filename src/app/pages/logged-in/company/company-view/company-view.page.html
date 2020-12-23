@@ -105,7 +105,7 @@
               <ion-badge color="medium" slot="end">{{ stats.brands }}</ion-badge>
             </ion-item>
 
-            <ion-item tappable (click)="openMalls()">
+            <ion-item tappable *ngIf="stats.malls > 0" (click)="openMalls()">
               <ion-label>Malls present in</ion-label>
               <ion-badge color="medium" slot="end">{{ stats.malls }}</ion-badge>
             </ion-item>
