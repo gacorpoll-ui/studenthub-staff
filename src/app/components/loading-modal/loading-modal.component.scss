@@ -418,6 +418,8 @@
 
 /*---------------------- candidate-view --------------------*/
 
+
+.fulltimer-view,
 .candidate-view {
 
   ion-thumbnail {
@@ -427,6 +429,7 @@
     margin: 38px 0 32px 0;
   }
 
+  .fulltimer-name,
   h2.candidate-name {
     margin: 32px 0 3px 0;
     height: 58px;
@@ -461,6 +464,7 @@
     }
   }
 
+  .tag,
   .job-status {
     width: 165px;
     height: 25px;
@@ -841,6 +845,21 @@
   }
 
 }
+
+/*---------------------- candidate-view --------------------*/
+
+.fulltimer-view {
+  .area,
+  .nationality,
+  .created-at {
+    --padding-start: 55px;
+  }
+
+  .whatsapp {
+    --padding-start: 0 !important;
+  }
+}
+
 .company-list {
   //background: #fcfcfc;
   ion-skeleton-text {

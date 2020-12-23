@@ -398,11 +398,15 @@ const routes: Routes = [
     }
   },
   {
+    path: 'fulltimer-notes',
+    loadChildren: () => import('./pages/logged-in/fulltimer/fulltimer-notes/fulltimer-notes.module').then( m => m.FulltimerNotesPageModule)
+  },
+  {
     path: '**',
     redirectTo: 'not-found'
   }
 ];
-
+ 
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, { enableTracing: false, preloadingStrategy: SelectiveLoadingStrategy })
