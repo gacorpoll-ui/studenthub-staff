@@ -29,6 +29,7 @@ import {
   CalendarComponentOptions
 } from 'ion2-calendar';
 import { DefaultDate } from "ion2-calendar/dist/calendar.model";
+import {EventService} from "../../../../providers/event.service";
 
 
 @Component({
@@ -81,7 +82,8 @@ export class TransferFormPage implements OnInit {
     public _toastCtrl: ToastController,
     private _fb: FormBuilder,
     private _authService: AuthService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private eventService: EventService
   ) {
 
   }
@@ -94,12 +96,12 @@ export class TransferFormPage implements OnInit {
     this.max = (this.platform.is('mobile')) ? d.getFullYear() + '-12-12' : d;
 
     if (!this.transfer.transfer_id) {
-    
+
       // Load List of All Candidates Assigned to this Company
       this._loadCandidateListThenInitialize();
 
-    } else { 
-      this.pageTitle = 'Edit Transfer'; 
+    } else {
+      this.pageTitle = 'Edit Transfer';
 
       this.loadTransferDetail();
     }
@@ -110,7 +112,7 @@ export class TransferFormPage implements OnInit {
    * Initialise the form once loaded.
    */
   async _loadCandidateListThenInitialize() {
-    
+
     const loader = await this._loadingCtrl.create();
     loader.present();
 
@@ -258,12 +260,13 @@ export class TransferFormPage implements OnInit {
 
       // On Success. Show Toast with the response message and close the page
       if (jsonResponse.operation == 'success') {
+        this.eventService.reloadStats$.next();
         const toast = await this._toastCtrl.create({
           message: jsonResponse.message,
           duration: 3000
         });
         toast.present();
-        
+
         this.close({ refresh: true });
 
         // create mode

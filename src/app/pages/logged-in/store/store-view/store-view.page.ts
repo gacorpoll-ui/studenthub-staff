@@ -48,7 +48,7 @@ export class StoreViewPage implements OnInit {
   }
 
   ngOnInit() {
-    
+
     if(!this.store_id)
       this.store_id = this.activatedRoute.snapshot.paramMap.get('id');
 
@@ -58,10 +58,10 @@ export class StoreViewPage implements OnInit {
     //   this.store = state['model'];
     // } else {
     // }
-    
+
     this.loadData();
     this.loadMall();
-    
+
     this.eventService.reloadCandidateHistory$.subscribe(response => {
       this.loadData();
     });
@@ -258,6 +258,7 @@ export class StoreViewPage implements OnInit {
               }
 
               if (jsonResp.operation == 'success') {
+                this.eventService.reloadStats$.next();
                 const toast = await this.toastCtrl.create({
                   message: jsonResp.message,
                   duration: 3000

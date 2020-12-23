@@ -40,12 +40,13 @@ export class CompanyStoresPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.loadData();
   }
 
   loadData() {
     this.loading = true;
 
-    this.companyService.view(this.company.company_id).subscribe(data => {
+    this.companyService.view(this.company.company_id, 'stores,stores.brand,stores.mall').subscribe(data => {
       this.company = data;
       this.loading = false;
     });

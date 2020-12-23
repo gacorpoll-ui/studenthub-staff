@@ -27,13 +27,13 @@ export class CompanyMallsPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    
+    this.loadData();
   }
 
   loadData() {
     this.loading = true;
 
-    this.companyService.view(this.company.company_id).subscribe(data => {
+    this.companyService.view(this.company.company_id, 'stats,malls').subscribe(data => {
       this.loading = false;
       this.company = data;
     });
@@ -53,7 +53,7 @@ export class CompanyMallsPage implements OnInit {
         });
       }, 100);
     });
-    
+
     /*window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({

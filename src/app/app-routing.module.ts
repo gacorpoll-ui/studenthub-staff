@@ -19,14 +19,6 @@ const routes: Routes = [
     }
   },
   {
-    path: 'change-password',
-    loadChildren: () => import('./pages/logged-in/change-password/change-password.module').then(m => m.ChangePasswordPageModule),
-    canActivate: [AuthService],
-    data: {
-      name: 'ChangePasswordPage'
-    }
-  },
-  {
     path: 'candidate-form',
     loadChildren: () => import('./pages/logged-in/candidate/candidate-form/candidate-form.module').then(m => m.CandidateFormPageModule),
     canActivate: [AuthService],
@@ -398,11 +390,23 @@ const routes: Routes = [
     }
   },
   {
+    path: 'fulltimer-notes',
+    loadChildren: () => import('./pages/logged-in/fulltimer/fulltimer-notes/fulltimer-notes.module').then( m => m.FulltimerNotesPageModule)
+  },
+  {
+    path: 'report-list',
+    loadChildren: () => import('./pages/logged-in/report-list/report-list.module').then( m => m.ReportListPageModule),
+    canActivate: [AuthService],
+    data: {
+      name: 'ReportPageList'
+    }
+  },
+  {
     path: '**',
     redirectTo: 'not-found'
   }
 ];
-
+ 
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, { enableTracing: false, preloadingStrategy: SelectiveLoadingStrategy })

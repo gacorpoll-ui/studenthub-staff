@@ -38,12 +38,12 @@ export class CompanyBrandsPage implements OnInit {
 
   ngOnInit() {
 
-    if (this.company) {
-      this.brands = this.company.brands;
-    } else {
+    // if (this.company) {
+    //   this.brands = this.company.brands;
+    // } else {
       this.loadCompanyDetail();
       this.loadData();
-    }
+    // }
   }
 
   async brandSelected(brand) {
@@ -125,7 +125,7 @@ export class CompanyBrandsPage implements OnInit {
    * load company detail
    */
   loadCompanyDetail() {
-    this.companyService.view(this.company.company_id).subscribe(response => {
+    this.companyService.view(this.company.company_id, 'stats').subscribe(response => {
       this.company = response;
     }, () => {
     });

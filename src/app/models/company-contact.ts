@@ -11,6 +11,7 @@ export class CompanyContact {
     companyContactEmails: CompanyContactEmail[];
     companyContactPhones: CompanyContactPhone[];
     notes: Note[];
+    companyContactStats: any;
     requests: Request[];
 }
 

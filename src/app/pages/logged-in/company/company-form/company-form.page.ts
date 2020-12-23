@@ -9,6 +9,7 @@ import { AuthService } from 'src/app/providers/auth.service';
 import { CompanyService } from 'src/app/providers/logged-in/company.service';
 // models
 import { Company } from 'src/app/models/company';
+import {EventService} from "../../../../providers/event.service";
 
 
 @Component({
@@ -44,7 +45,8 @@ export class CompanyFormPage implements OnInit {
     private _fb: FormBuilder,
     private _alertCtrl: AlertController,
     public modalCtrl: ModalController,
-    private _toastCtrl: ToastController
+    private _toastCtrl: ToastController,
+    private eventService: EventService
   ) { }
 
   ngOnInit() {
@@ -202,7 +204,7 @@ export class CompanyFormPage implements OnInit {
 
       // On Success
       if (jsonResponse.operation == 'success') {
-
+        this.eventService.reloadStats$.next();
         // Close the page
         const data = { refresh: true };
         this.modalCtrl.dismiss(data);

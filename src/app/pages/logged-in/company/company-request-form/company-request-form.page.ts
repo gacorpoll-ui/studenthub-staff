@@ -8,6 +8,7 @@ import { Request } from 'src/app/models/request';
 import { AuthService } from "../../../../providers/auth.service";
 //pages
 import { CompanyContactListPage } from "../company-contact/company-contact-list/company-contact-list.page";
+import {EventService} from "../../../../providers/event.service";
 
 
 @Component({
@@ -35,7 +36,8 @@ export class CompanyRequestFormPage implements OnInit {
     private modalCtrl: ModalController,
     private alertCtrl: AlertController,
     private authService: AuthService,
-    private popoverCtrl: PopoverController
+    private popoverCtrl: PopoverController,
+    private eventService: EventService
   ) {
   }
 
@@ -102,6 +104,7 @@ export class CompanyRequestFormPage implements OnInit {
       // On Success
       if (jsonResponse.operation == 'success') {
         // Close the page
+        this.eventService.reloadStats$.next();
         const data = { refresh: true };
         this.modalCtrl.dismiss(data);
       }

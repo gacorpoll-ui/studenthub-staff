@@ -48,7 +48,17 @@ export class CompanyViewPage implements OnInit {
 
   public notes: Note[] = [];
 
-  public loadingNotes: boolean = false;
+  public loadingNotes = false;
+  public stats = {
+    requests : 0,
+    subCompanies : 0,
+    stores : 0,
+    contacts : 0,
+    brands : 0,
+    malls : 0,
+    documents : 0,
+    transfers : 0
+  };
 
   constructor(
     public modalCtrl: ModalController,
@@ -60,6 +70,9 @@ export class CompanyViewPage implements OnInit {
     public eventService: EventService,
     public noteService: NoteService
   ) {
+    this.eventService.reloadStats$.subscribe(response => {
+      this.loadStats();
+    });
   }
 
   ngOnInit() {
@@ -69,8 +82,9 @@ export class CompanyViewPage implements OnInit {
       this.company = window.history.state.model;
     }
 
-    if(!this.company_id)
+    if (!this.company_id) {
       this.company_id = this.activatedRoute.snapshot.paramMap.get('company_id');
+    }
 
     this.loadData();
 
@@ -300,12 +314,13 @@ export class CompanyViewPage implements OnInit {
       this.company.company_id = this.company_id;
     }
 
-    this.companyService.view(this.company_id).subscribe(response => {
+    this.companyService.view(this.company_id, 'stats').subscribe(response => {
 
       this.loading = false;
       this.deleting = false;
       this.updating = false;
       this.company = response;
+      this.stats = response.stats;
 
       setTimeout(_ => {
         this.followup = !!(this.company.company_followup);
@@ -358,14 +373,14 @@ export class CompanyViewPage implements OnInit {
       return true;
     }
 
-    let followup_datetime = new Date(this.company.company_last_followup_datetime.replace(/-/g, '/') + ' UTC');
+    const followup_datetime = new Date(this.company.company_last_followup_datetime.replace(/-/g, '/') + ' UTC');
 
-    //date to follow
+    // date to follow
 
     followup_datetime.setDate(followup_datetime.getDate() + this.company.company_followup_interval_weeks * 7);
     followup_datetime.setHours(0, 0, 0, 0);
 
-    //current date
+    // current date
 
     const currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0);
@@ -445,7 +460,7 @@ export class CompanyViewPage implements OnInit {
       if (e && e.data && e.data.company_last_followup_datetime && this.company) {
         this.company.company_last_followup_datetime = e.data.company_last_followup_datetime;
 
-        //to update view
+        // to update view
 
         this.content.scrollToPoint(0, 1);
 
@@ -518,5 +533,15 @@ export class CompanyViewPage implements OnInit {
 
   logScrolling(e) {
     this.borderLimit = (e.detail.scrollTop > 20);
+  }
+
+  /**
+   * load company stats
+   */
+  loadStats(silent = false) {
+    this.companyService.stats(this.company_id).subscribe(response => {
+      this.stats = response.stats;
+    }, () => {
+    });
   }
 }

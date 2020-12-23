@@ -51,7 +51,7 @@ export class CompanyContactViewPage implements OnInit {
   public noteForm: FormGroup;
 
   public pageCount: number;
-  
+
   public currentPage: number;
 
   public borderLimit;
@@ -151,6 +151,7 @@ export class CompanyContactViewPage implements OnInit {
               this.deleting = false;
 
               if (response.operation == 'success') {
+                this.eventService.reloadStats$.next();
                 this.location.back();
               }
               else {
@@ -312,9 +313,9 @@ export class CompanyContactViewPage implements OnInit {
     model.note_type = this.noteForm.controls.type.value;
     model.contact_uuid = this.contact_uuid;
     model.note_text = this.noteForm.controls.note.value;
-    
+
     let response = null;
-    
+
     if (this.editNoteData && this.editNoteData.note_uuid) {
       model.note_uuid = this.editNoteData.note_uuid;
       response = this.noteService.update(model);

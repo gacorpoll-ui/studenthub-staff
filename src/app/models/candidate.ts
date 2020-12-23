@@ -67,4 +67,5 @@ export class Candidate {
     candidateSkills: any;
     candidateIdCard: CandidateIdCard;
     notes: Note[];
+    pendingField: any[];
 }

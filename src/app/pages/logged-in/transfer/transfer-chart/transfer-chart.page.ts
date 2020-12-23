@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Chart } from 'chart.js';
 import { ModalController, Platform } from '@ionic/angular';
+import {CompanyService} from "../../../../providers/logged-in/company.service";
 
 @Component({
   selector: 'app-transfer-chart',
@@ -8,7 +9,7 @@ import { ModalController, Platform } from '@ionic/angular';
   styleUrls: ['./transfer-chart.page.scss'],
 })
 export class TransferChartPage implements OnInit {
-  
+
   @ViewChild('statsChart') statsChart;
 
   public company;
@@ -16,28 +17,29 @@ export class TransferChartPage implements OnInit {
   public statsData: any[];
 
   public legendDisplay = true;
+  public loading = false;
 
   public borderLimit: boolean = false;
 
   constructor(
     public platform: Platform,
-    public modalCtrl: ModalController
+    public modalCtrl: ModalController,
+    public companyService: CompanyService
   ) { }
 
   ngOnInit() {
-    
+
     if (this.platform.is('mobile')) {
       this.legendDisplay = false;
     }
-
-    this.statsData = this.company.parentTransfers.reverse();
   }
-   
+
   ionViewDidEnter() {
-    this.loadChartStats();
+    this.loadData();
   }
 
   loadChartStats() {
+    this.statsData = this.company.parentTransfers.reverse();
     const allTransfers = [];
     const complete = [];
     const paymentReceived = [];
@@ -135,7 +137,7 @@ export class TransferChartPage implements OnInit {
       );
     }
   }
-  
+
   /**
    * @param xAxis
    * @param complete
@@ -286,12 +288,22 @@ export class TransferChartPage implements OnInit {
       }
     });
   }
-  
+
   dismiss() {
     this.modalCtrl.dismiss();
   }
 
   logScrolling(e) {
     this.borderLimit = (e.detail.scrollTop > 20);
+  }
+
+  loadData() {
+    this.loading = true;
+    this.companyService.view(this.company.company_id, 'parentTransfers,parentTransfers.profit,parentTransfers.childTransfers,parentTransfers.childTransfers.company,parentTransfers.totalCandidateTransferTotal,parentTransfers.totalPaid,parentTransfers.paidTransferCandidates').subscribe(response => {
+      this.company = response;
+      this.loadChartStats();
+    }, () => {
+      this.loading = false;
+    });
   }
 }

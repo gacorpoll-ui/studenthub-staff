@@ -19,10 +19,10 @@ import { TransferFormPage } from '../transfer-form/transfer-form.page';
 export class TransferListPage implements OnInit {
 
   public company: Company;
-  
+
   public borderLimit: boolean = false;
 
-  public loading: boolean = false; 
+  public loading: boolean = false;
 
   constructor(
     public router: Router,
@@ -33,16 +33,13 @@ export class TransferListPage implements OnInit {
   ) { }
 
   ngOnInit() {
-
-    if(!this.company) {
-      this.loadData();
-    }
+    this.loadData();
   }
-  
+
   loadData() {
     this.loading = true;
 
-    this.companyService.view(this.company.company_id).subscribe(data => {
+    this.companyService.view(this.company.company_id, 'parentTransfers,parentTransfers.profit,parentTransfers.childTransfers,parentTransfers.childTransfers.company,parentTransfers.totalCandidateTransferTotal,parentTransfers.totalPaid,parentTransfers.paidTransferCandidates').subscribe(data => {
       this.company = data;
 
       this.loading = false;
@@ -80,7 +77,7 @@ export class TransferListPage implements OnInit {
       }
     });
     modal.present();*/
-  }  
+  }
 
   /**
    * Present action sheet to create a new transfer
@@ -112,7 +109,7 @@ export class TransferListPage implements OnInit {
    */
   async createNewTransfer() {
     window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
-    
+
     let transfer = new Transfer;
     transfer.company_id = this.company.company_id;
 
@@ -140,7 +137,7 @@ export class TransferListPage implements OnInit {
    * Loads form to initiate a new transfer
    */
   async importTransfer() {
-    
+
     window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
 
     let transfer = new Transfer;
@@ -165,11 +162,11 @@ export class TransferListPage implements OnInit {
     });
     modal.present();
   }
-  
+
   dismiss() {
     this.modalCtrl.dismiss();
   }
-  
+
   logScrolling(e) {
     this.borderLimit = (e.detail.scrollTop > 20);
   }

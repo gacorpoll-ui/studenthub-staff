@@ -84,6 +84,7 @@ export class CandidateViewPage implements OnInit {
   public borderLimit = false;
 
   public company;
+  public pendingData = null;
 
   constructor(
     public navCtrl: NavController,
@@ -103,7 +104,7 @@ export class CandidateViewPage implements OnInit {
     public modalCtrl: ModalController,
     private fb: FormBuilder,
   ) {
-    
+
   }
 
   ngOnInit() {
@@ -322,6 +323,9 @@ export class CandidateViewPage implements OnInit {
 
       this.loading = false;
       this.candidate = response;
+      if (this.candidate && this.candidate.pendingField && this.candidate.pendingField.length > 0) {
+        this.pendingData = 'Total ' + this.candidate.pendingField.length + ' pending fields\n ' + this.candidate.pendingField.join(',');
+      }
 
       setTimeout(_ => {
         this.job_search_status = !!(this.candidate.candidate_job_search_status);
@@ -432,7 +436,7 @@ export class CandidateViewPage implements OnInit {
       if (e.data && e.data.suggess) {
         this.suggest();
       }
-      
+
       if (e.data && e.data.toggleCommitted) {
         this.toggleCommitted();
       }
@@ -473,7 +477,7 @@ export class CandidateViewPage implements OnInit {
 
   /**
    * open popup to select store
-   * @param ev 
+   * @param ev
    */
   async assingToStore(ev) {
     const selectPage = await this.popoverCtrl.create({

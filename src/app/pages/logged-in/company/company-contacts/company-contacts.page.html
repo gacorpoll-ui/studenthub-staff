@@ -41,16 +41,16 @@
           </a>
         </p>
         <p>
-          <a *ngIf="companyContact.notes && companyContact.notes.length > 0">
-            <ion-icon name="time-outline"></ion-icon> Last note was {{ companyContact.notes[0].note_updated_datetime | timeAgo }}
+          <a *ngIf="companyContact.companyContactStats.lastNotes">
+            <ion-icon name="time-outline"></ion-icon> Last note was {{ companyContact.companyContactStats.lastNotes.note_updated_datetime | timeAgo }}
           </a>
         </p>
         <div class="counts">
           <ion-badge>
-            {{ companyContact.requests.length }} requests
+            {{ companyContact.companyContactStats.requests }} requests
           </ion-badge>
           <ion-badge>
-            {{ companyContact.notes.length }} notes
+            {{ companyContact.companyContactStats.notes }} notes
           </ion-badge>
         </div>
       </ion-label>

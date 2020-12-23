@@ -39,8 +39,8 @@ export class CompanyContactsPage implements OnInit {
   }
 
   /**
-   * open contact detail page 
-   * @param companyContact 
+   * open contact detail page
+   * @param companyContact
    */
   async openContactDetail(companyContact) {
     this.modalCtrl.dismiss().then(() => {
@@ -73,7 +73,7 @@ export class CompanyContactsPage implements OnInit {
   }
 
   loadContacts() {
-    this.companyContactService.companyContacts(this.company.company_id).subscribe(data => {
+    this.companyContactService.companyContacts(this.company.company_id,' ', 'companyContactEmails,companyContactPhones,companyContactStats').subscribe(data => {
       this.companyContacts = data;
     });
   }
@@ -120,7 +120,7 @@ export class CompanyContactsPage implements OnInit {
    * load company detail
    */
   loadCompanyDetail() {
-    this.companyService.view(this.company.company_id).subscribe(response => {
+    this.companyService.view(this.company.company_id, 'stats').subscribe(response => {
       this.company = response;
     }, () => {
     });

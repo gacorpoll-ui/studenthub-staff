@@ -82,42 +82,42 @@
 
             <ion-item tappable (click)="openRequests()">
               <ion-label>Requests</ion-label>
-              <ion-badge color="medium" slot="end">{{ company.requests?.length }}</ion-badge>
+              <ion-badge color="medium" slot="end">{{ stats.requests }}</ion-badge>
             </ion-item>
 
-            <ion-item tappable (click)="openStores()" *ngIf="company.subCompanies?.length == 0">
+            <ion-item tappable (click)="openStores()" *ngIf="stats.subCompanies == 0">
               <ion-label>Stores</ion-label>
-              <ion-badge color="medium" slot="end">{{ company.stores?.length }}</ion-badge>
+              <ion-badge color="medium" slot="end">{{ stats.stores }}</ion-badge>
             </ion-item>
 
-            <ion-item tappable (click)="openSubCompanies()" *ngIf="company.stores?.length == 0">
+            <ion-item tappable (click)="openSubCompanies()" *ngIf="stats.stores == 0">
               <ion-label>Subcompanies</ion-label>
-              <ion-badge color="medium" slot="end">{{ company.subCompanies?.length }}</ion-badge>
+              <ion-badge color="medium" slot="end">{{ stats.subCompanies }}</ion-badge>
             </ion-item>
 
             <ion-item tappable (click)="openContacts()">
               <ion-label>Contacts</ion-label>
-              <ion-badge color="medium" slot="end">{{ company.companyContacts?.length }}</ion-badge>
+              <ion-badge color="medium" slot="end">{{ stats.contacts }}</ion-badge>
             </ion-item>
 
             <ion-item tappable (click)="openBrands()">
               <ion-label>Brands</ion-label>
-              <ion-badge color="medium" slot="end">{{ company.brands?.length }}</ion-badge>
+              <ion-badge color="medium" slot="end">{{ stats.brands }}</ion-badge>
             </ion-item>
 
             <ion-item tappable (click)="openMalls()">
               <ion-label>Malls present in</ion-label>
-              <ion-badge color="medium" slot="end">{{ company.malls?.length }}</ion-badge>
+              <ion-badge color="medium" slot="end">{{ stats.malls }}</ion-badge>
             </ion-item>
 
             <ion-item tappable (click)="openDocuments()">
               <ion-label>Documents</ion-label>
-              <ion-badge color="medium" slot="end">{{ company.files?.length }}</ion-badge>
+              <ion-badge color="medium" slot="end">{{ stats.documents }}</ion-badge>
             </ion-item>
 
             <ion-item tappable (click)="openTransfers()">
               <ion-label>Transfers</ion-label>
-              <ion-badge color="medium" slot="end">{{ company.parentTransfers?.length }}</ion-badge>
+              <ion-badge color="medium" slot="end">{{ stats.transfers }}</ion-badge>
             </ion-item>
 
             <ion-item tappable (click)="openChart()">

@@ -28,8 +28,8 @@ export class CompanyContactService {
    * get given company contacts
    * @param companyID
    */
-  companyContacts(companyID, query = ''): Observable<any>{
-    const url = `${this._companyContactEndpoint}?expand=companyContactEmails,companyContactPhones,company,notes,requests&company_id=${companyID}&query=${query}`;
+  companyContacts(companyID, query = '', expands= 'companyContactEmails,companyContactPhones,company,notes,requests,companyContactStats'): Observable<any>{
+    const url = `${this._companyContactEndpoint}?company_id=${companyID}&query=${query}&expand=${expands}`;
     return this._authhttp.get(url);
   }
 

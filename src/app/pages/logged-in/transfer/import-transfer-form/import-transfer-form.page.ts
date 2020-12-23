@@ -26,6 +26,7 @@ import {
 } from 'ion2-calendar';
 import { DefaultDate } from "ion2-calendar/dist/calendar.model";
 import { Company } from 'src/app/models/company';
+import {EventService} from "../../../../providers/event.service";
 
 
 @Component({
@@ -69,6 +70,7 @@ export class ImportTransferFormPage implements OnInit {
     public _toastCtrl: ToastController,
     public platform: Platform,
     public modalCtrl: ModalController,
+    public eventService: EventService
   ) {
   }
 
@@ -80,8 +82,8 @@ export class ImportTransferFormPage implements OnInit {
     this.max = (this.platform.is('mobile')) ? d.getFullYear() + '-12-12' : d;
 
     if (this.transfer.transfer_id) {
-    
-      this.pageTitle = 'Edit Transfer'; 
+
+      this.pageTitle = 'Edit Transfer';
 
       this.loadTransferData();
     }
@@ -171,7 +173,7 @@ export class ImportTransferFormPage implements OnInit {
       this.uploading = false;
 
       if (data.operation == 'success') {
-
+        this.eventService.reloadStats$.next();
         let prompt = await this._alertCtrl.create({
           message: data.message,
           buttons: ["Ok"]
@@ -208,7 +210,7 @@ export class ImportTransferFormPage implements OnInit {
         this.uploading = false;
 
         if (data.operation == 'success') {
-
+          this.eventService.reloadStats$.next();
           let prompt = await this._alertCtrl.create({
             message: data.message,
             buttons: ["Ok"]

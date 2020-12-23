@@ -21,6 +21,7 @@ export class EventService {
   public reloadCandiate$ = new Subject();
   public reloadCompanyList$ = new Subject();
   public reloadBrand$ = new Subject();
+  public reloadStats$ = new Subject();
 
   public clearCandidateSelection$ = new Subject();
 

@@ -113,6 +113,7 @@ export class BrandViewPage implements OnInit {
 
             this.brandService.delete(brand).subscribe(async jsonResp => {
               this.eventService.reloadBrand$.next();
+              this.eventService.reloadStats$.next();
               // On Success
               if (jsonResp.operation == 'success') {
                 this.location.back();
