@@ -26,9 +26,9 @@
       <ion-row>
         <ion-col size-xs="12" size-sm="12" size-md="6" size-lg="6" size-xl="6">
           <div class="left-side">
-            <ion-thumbnail [title]=pendingData [class.no-logo]="!candidate.candidate_personal_photo">
-              <img *ngIf="!candidate.candidate_personal_photo" src="assets/images/avatar.jpg">
-              <img (error)="onPhotoError()" *ngIf="candidate.candidate_personal_photo"
+
+            <ion-thumbnail *ngIf="candidate.candidate_personal_photo">
+              <img (error)="onPhotoError()"
                    src="{{ awsService.cloudinaryUrl + 'candidate-photo/' + candidate.candidate_personal_photo }}" />
             </ion-thumbnail>
 

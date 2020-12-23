@@ -103,10 +103,12 @@ export class CompanyContactFormPage implements OnInit {
 
   removeEmail(index) {
     this.emails.removeAt(index);
+    this.emails.markAsDirty();
   }
 
   removePhone(index) {
     this.phones.removeAt(index);
+    this.phones.markAsDirty();
   }
 
   addEmail() {

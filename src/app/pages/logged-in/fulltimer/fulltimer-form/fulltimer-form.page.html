@@ -118,16 +118,26 @@
         </p>
       </div>
 
-      <ion-item>
-        <ion-label position="floating">Tags <small>(comma separated)</small></ion-label>
-        <ion-input formControlName="tags"></ion-input>
-      </ion-item>
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Tags </ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
 
-      <div class="error-wrapper" *ngIf="!form.controls.tags.pristine">
-        <p class="error" *ngIf="form.controls.tags.errors && form.controls.tags.errors.required">
-          * required
-        </p>
-      </div>
+          <div *ngFor="let fulltimerTag of fulltimerTags.controls; let i = index">
+            <ion-item [formGroup]="fulltimerTag">
+
+              <ion-input autocomplete="off1" (ionChange)="onTagChange($event, i)" formControlName="tag"
+                enterkeyhint="Next"></ion-input>
+
+              <ion-button fill="clear" slot="end" tabindex="-1" *ngIf="fulltimerTags.controls.length -1 != i" (click)="removeTag(i)">
+                <img src="assets/images/close.svg">
+              </ion-button>
+
+            </ion-item>
+          </div>
+        </ion-card-content>
+      </ion-card>
 
     </ion-list>
   </form>

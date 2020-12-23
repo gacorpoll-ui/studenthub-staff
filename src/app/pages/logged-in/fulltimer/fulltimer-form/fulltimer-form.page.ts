@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertController, ModalController, Platform } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 // service
@@ -75,7 +75,7 @@ export class FulltimerFormPage implements OnInit {
       this.model = state.model;
     }
 
-    this.formInit();
+    this.initForm();
   }
 
   ngOnDestroy() {
@@ -93,8 +93,22 @@ export class FulltimerFormPage implements OnInit {
     }
   }
 
-  formInit() {
-    // Init Form
+  initForm() {
+    
+    let tagCtrls = [];
+
+    for (let fulltimerTag of this.model.fulltimerTags) {
+      tagCtrls.push(this.fb.group({
+        tag: [fulltimerTag.tag]//, [Validators.required]
+      }));
+    }
+
+    //show atleast one input for tag 
+  
+    tagCtrls.push(this.fb.group({
+      tag: ['']//, [Validators.required]
+    }));
+
     if (!this.model.fulltimer_uuid) { // Show Create Form
 
       this.operation = 'Create';
@@ -110,7 +124,7 @@ export class FulltimerFormPage implements OnInit {
         phone: ['', [Validators.required, Validators.pattern('^[0-9-+\s()]*$')]],
         email: ['', [Validators.required, CustomValidator.emailValidator]],
         pdf_cv: [''],
-        tags: ['', Validators.required],
+        fulltimerTags: new FormArray(tagCtrls),
         location: ['', Validators.required],
         tempPdfCVLocation: [''],
       });
@@ -119,20 +133,16 @@ export class FulltimerFormPage implements OnInit {
 
       this.operation = 'Update';
 
-      let location, nationality, tags = [];
+      let location, nationality;
 
       if(this.model.area && this.model.country) {
         location = this.model.area.area_name_en + ', '+ this.model.country.country_name_en;
       }
 
-      this.model.fulltimerTags.forEach((fulltimerTag) => {
-        tags.push(fulltimerTag.tag);
-      });
-
       if(this.model.nationality) {
         nationality = this.model.nationality.country_name_en;
       }
-
+        
       this.form = this.fb.group({
         nationality_id: [this.model.nationality_id, Validators.required],
         nationality: [nationality, Validators.required],
@@ -144,10 +154,45 @@ export class FulltimerFormPage implements OnInit {
         phone: [this.model.fulltimer_phone, Validators.required],
         email: [this.model.fulltimer_email, Validators.required],
         pdf_cv: [this.model.fulltimer_pdf_cv, Validators.required],
-        tags: [tags.join(', '), Validators.required],
+        fulltimerTags: new FormArray(tagCtrls),
         location: [location, Validators.required],
         tempPdfCVLocation: [''],
       });
+    }
+  }
+
+  // convenience getters for easy access to form fields
+  get f() { return this.form.controls; }
+  get fulltimerTags() { return this.f.fulltimerTags as FormArray; }
+
+  removeTag(index) {
+    this.fulltimerTags.removeAt(index);
+    this.fulltimerTags.markAsDirty();
+  }
+
+  addTag() {
+    this.fulltimerTags.push(this.fb.group({
+      tag: ['']
+    }));
+  }
+
+  /**
+   * add new input
+   * @param event
+   * @param index
+   */
+  onTagChange(event, index) {
+
+    // remove field on clearing it out + have next empty field
+
+    if (this.fulltimerTags.length - index > 1 && event.target.value.length == 0) {
+      return this.removeTag(index);
+    }
+
+    // check if new field is not added && something is typed
+    if (((index - this.fulltimerTags.length) === -1) && event.target.value) {
+      // adding new field
+      this.addTag();
     }
   }
 
@@ -467,18 +512,7 @@ export class FulltimerFormPage implements OnInit {
     this.model.fulltimer_phone = this.form.value.phone;
     this.model.fulltimer_email = this.form.value.email;
     this.model.fulltimer_pdf_cv = this.form.value.pdf_cv;
-
-    this.model.fulltimerTags = [];
-
-    const tags = this.form.value.tags.split(',');
-
-    for(let tag of tags) {
-
-      let a = new FulltimerTag;
-      a.tag = tag.trim();
-
-      this.model.fulltimerTags.push(a);
-    }
+    this.model.fulltimerTags = this.form.value.fulltimerTags;
   }
 
   /**
