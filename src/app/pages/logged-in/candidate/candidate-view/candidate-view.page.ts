@@ -217,7 +217,7 @@ export class CandidateViewPage implements OnInit {
         {
           name: 'feedback',
           type: 'textarea',
-          placeholder: 'Feedback'
+          placeholder: 'Reason'
         }
       ],
       buttons: [
@@ -232,7 +232,7 @@ export class CandidateViewPage implements OnInit {
           handler: async (data) => {
             if (!data.feedback) {
               this.alertCtrl.create({
-                message: 'Please provide feedback',
+                message: 'Please provide reason',
                 buttons: ['Okay']
               }).then(alert => {
                 alert.present();
