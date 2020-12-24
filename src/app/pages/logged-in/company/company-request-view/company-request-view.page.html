@@ -2,10 +2,6 @@
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button icon="assets/images/ic_cancel.svg" defaultHref="/default"></ion-back-button>
-<!--      <ion-back-button icon="assets/images/ic_cancel.svg" defaultHref="/default" *ngIf="backState && !backState.from"></ion-back-button>-->
-<!--      <ion-button fill="clear" (click)="dismiss()" class="btn-close" *ngIf="backState && backState.from">-->
-<!--        <ion-icon src="assets/images/ic_cancel.svg"></ion-icon>-->
-<!--      </ion-button>-->
     </ion-buttons>
 
     <ion-button fill="clear" (click)="cancelledRequest($event, request)" slot="end" class="btn-cancel"
@@ -77,29 +73,20 @@
 
 </ion-content>
 
-<ion-footer *ngIf="request">
-    <ion-button  *ngIf="request.request_status == 'pending'" (click)="startRequest($event, request)">
-      Start working on this request
-    </ion-button>
-  <ng-container>
-    <ion-grid *ngIf="request.request_status == 'started'">
-      <ion-row>
-        <ion-col size-xs="6">
-          <ion-button (click)="showUpdateAlert()">
-            Post an update
-          </ion-button>
-        </ion-col>
-        <ion-col size-xs="6">
-          <ion-button *ngIf="request.request_status == 'started'" (click)="deliveredRequest($event, request)">
-            Mark delivered
-          </ion-button>
-        </ion-col>
-        <ion-col size-xs="6">
-          <ion-button *ngIf="request.request_status == 'started'" (click)="pickUpRequest($event, request)">
-            Pick up
-          </ion-button>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </ng-container>
+<ion-footer *ngIf="request && request.request_status == 'started'">
+    
+  <ion-grid>
+    <ion-row>
+      <ion-col size-xs="6">
+        <ion-button (click)="showUpdateAlert()">
+          Post an update
+        </ion-button>
+      </ion-col>
+      <ion-col size-xs="6">
+        <ion-button *ngIf="request.request_status == 'started'" (click)="deliveredRequest($event, request)">
+          Mark delivered
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid> 
 </ion-footer>

@@ -17,12 +17,12 @@ import { RequestActivityService } from 'src/app/providers/logged-in/request.acti
 import { TranslateLabelService } from 'src/app/providers/translate-label.service';
 import { CompanyRequestService } from 'src/app/providers/logged-in/company-request.service';
 import { SuggestionService } from 'src/app/providers/logged-in/suggestion.service';
+import { EventService } from 'src/app/providers/event.service';
 // models
 import { Request } from 'src/app/models/request';
 import { Note } from 'src/app/models/note';
 // pages
 import { CompanyNoteFormPage } from '../company-note-form/company-note-form.page';
-import { EventService } from 'src/app/providers/event.service';
 
 
 @Component({
@@ -82,7 +82,6 @@ export class CompanyRequestViewPage implements OnInit {
     const model = window.history.state.model;
 
     this.loadDetail();
-    // this.loadInvoice();
 
     this.eventService.companyRequestUpdate$.subscribe((data: any) => {
       if(data && data.request_uuid == this.request_uuid) {
@@ -102,134 +101,8 @@ export class CompanyRequestViewPage implements OnInit {
    */
   listInvoice() {
     this.loadRequestActivities();
-    // this.loadInvoice();
   }
 
-  async showMarkCompleteAlert() {
-    // if (this.checkUserPhoneVerified()) {
-    //   const alert = await this.alertCtrl.create({
-    //     header: 'Mark Complete',
-    //     message: 'How satisfied is the customer?',
-    //     inputs: [
-    //       {
-    //         name: 'reason',
-    //         type: 'text',
-    //       },
-    //     ],
-    //     buttons: [
-    //       {
-    //         text: 'Cancel',
-    //         role: 'cancel',
-    //         cssClass: 'secondary'
-    //       }, {
-    //         text: 'Okay',
-    //         handler: (data) => {
-    //           if (data.reason && data.reason.length > 0) {
-    //             this.markComplete(data.reason);
-    //           } else {
-    //             return false;
-    //           }
-    //         }
-    //       }
-    //     ]
-    //   });
-    //   await alert.present();
-    // }
-  }
-
-  /**
-   * mark request as complete
-   * @param reason
-   */
-  // async markComplete(reason) {
-  //
-  //   const loader = await this.loadingCtrl.create();
-  //   loader.present();
-  //
-  //   const params = {
-  //     request_uuid: this.request.request_uuid,
-  //     reason
-  //   };
-  //
-  //   this.requestService.markComplete(params).subscribe(jsonResponse => {
-  //
-  //     // On Success
-  //
-  //     if (jsonResponse.operation == 'success') {
-  //
-  //       this.loadRequestActivities();
-  //
-  //       this.request.request_status = 40;
-  //       this.request.request_updated_datetime = jsonResponse.request_updated_datetime;
-  //
-  //       this.toastCtrl.create({
-  //         message: jsonResponse.message,
-  //         duration: 3000,
-  //         position: 'top'
-  //       }).then(toast => toast.present());
-  //     }
-  //
-  //     // On Failure
-  //     if (jsonResponse.operation == 'error') {
-  //
-  //       this.alertCtrl.create({
-  //         message: this.translateLabelService.errorMessage(jsonResponse.message),
-  //         buttons: ['Ok']
-  //       }).then(prompt => prompt.present());
-  //     }
-  //   }, () => {
-  //   }, () => {
-  //     loader.dismiss();
-  //   });
-  // }
-  //
-  // /**
-  //  * mark request as cancel
-  //  * @param reason
-  //  */
-  // async markCancel(reason) {
-  //
-  //   const loader = await this.loadingCtrl.create();
-  //   loader.present();
-  //
-  //   const params = {
-  //     request_uuid: this.request.request_uuid,
-  //     reason
-  //   };
-  //
-  //   this.requestService.markCancel(params).subscribe(jsonResponse => {
-  //
-  //     // On Success
-  //
-  //     if (jsonResponse.operation == 'success') {
-  //
-  //       this.loadRequestActivities();
-  //
-  //       this.request.request_status = 30;
-  //       this.request.request_updated_datetime = jsonResponse.request_updated_datetime;
-  //
-  //       this.toastCtrl.create({
-  //         message: jsonResponse.message,
-  //         duration: 3000,
-  //         position: 'top'
-  //       }).then(toast => toast.present());
-  //     }
-  //
-  //     // On Failure
-  //     if (jsonResponse.operation == 'error') {
-  //
-  //       this.alertCtrl.create({
-  //         message: this.translateLabelService.errorMessage(jsonResponse.message),
-  //         buttons: ['Ok']
-  //       }).then(prompt => prompt.present());
-  //     }
-  //   }, () => {
-  //   }, () => {
-  //     loader.dismiss();
-  //   });
-
-  // }
-  //
   /**
    * close this modal
    */
@@ -350,33 +223,16 @@ export class CompanyRequestViewPage implements OnInit {
       this.loadRequestActivities();
 
       this.request.request_updated_datetime = data.request_updated_datetime;
+
+      this.eventService.companyRequestUpdate$.next({ 
+        request_updated_datetime: data.request_updated_datetime,
+        request_uuid: this.request_uuid 
+      });
     }
   }
 
   logScrolling(e) {
     this.borderLimit = (e.detail.scrollTop > 0);
-  }
-
-  startRequest(event, request) {
-
-    event.preventDefault();
-    event.stopPropagation();
-
-    this.requestService.start(request).subscribe(async response => {
-
-      if (response.operation == 'success') {
-        request.request_status = 'started';
-        this.loadRequestActivities();
-        this.eventService.reloadStats$.next();
-      } else {
-        this.toastCtrl.create({
-          message: response.message,
-          buttons: ['Ok']
-        }).then(prompt => {
-          prompt.present();
-        });
-      }
-    });
   }
 
   cancelledRequest(event, request) {
@@ -390,6 +246,7 @@ export class CompanyRequestViewPage implements OnInit {
       });
       return false;
     }
+
     this.alertCtrl.create({
       header: 'Please provide feedback',
       inputs: [
@@ -425,6 +282,12 @@ export class CompanyRequestViewPage implements OnInit {
                 request.request_status = 'cancelled';
                 this.loadRequestActivities();
                 this.eventService.reloadStats$.next();
+
+                this.eventService.companyRequestUpdate$.next({ 
+                  request_updated_datetime: response.request_updated_datetime,
+                  request_uuid: this.request_uuid 
+                });
+
               } else {
                 this.toastCtrl.create({
                   message: response.message,
@@ -491,6 +354,12 @@ export class CompanyRequestViewPage implements OnInit {
                 request.request_status = 'delivered';
                 this.loadRequestActivities();
                 this.eventService.reloadStats$.next();
+
+                this.eventService.companyRequestUpdate$.next({ 
+                  request_updated_datetime: response.request_updated_datetime,
+                  request_uuid: this.request_uuid 
+                });
+                
               } else {
                 this.toastCtrl.create({
                   message: response.message,
@@ -504,32 +373,5 @@ export class CompanyRequestViewPage implements OnInit {
         }
       ]
     }).then(alert => { alert.present(); });
-  }
-
-  /**
-   * pickup the request
-   * @param event
-   * @param request
-   */
-  pickUpRequest(event, request) {
-
-    event.preventDefault();
-    event.stopPropagation();
-
-    this.requestService.pickup(request).subscribe(async response => {
-
-      if (response.operation == 'success') {
-        this.loadDetail();
-        this.loadRequestActivities();
-        this.eventService.reloadStats$.next();
-      } else {
-        this.toastCtrl.create({
-          message: response.message,
-          buttons: ['Ok']
-        }).then(prompt => {
-          prompt.present();
-        });
-      }
-    });
   }
 }

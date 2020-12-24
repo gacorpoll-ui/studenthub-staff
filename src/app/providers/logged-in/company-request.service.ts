@@ -59,15 +59,6 @@ export class CompanyRequestService {
   }
 
   /**
-   * start request
-   * @param model
-   */
-  start(model: Request): Observable<any> {
-    const url = `${this.companyRequestEndpoint}/start/${model.request_uuid}`;
-    return this.authhttp.patch(url, {});
-  }
-
-  /**
    * cancel request
    * @param model
    */
@@ -87,15 +78,6 @@ export class CompanyRequestService {
     return this.authhttp.patch(url, {
       feedback: model.request_feedback
     });
-  }
-
-  /**
-   * deliver request
-   * @param model
-   */
-  pickup(model: Request): Observable<any> {
-    const url = `${this.companyRequestEndpoint}/pick-up/${model.request_uuid}`;
-    return this.authhttp.patch(url, {});
   }
 
   /**

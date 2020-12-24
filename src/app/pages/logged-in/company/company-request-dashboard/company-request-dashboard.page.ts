@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 //models
 import { Request } from 'src/app/models/request';
 //services
 import { CompanyRequestService } from 'src/app/providers/logged-in/company-request.service';
-import {NavController} from "@ionic/angular";
+import {IonContent, NavController} from "@ionic/angular";
+import { EventService } from 'src/app/providers/event.service';
 
 
 @Component({
@@ -13,29 +14,38 @@ import {NavController} from "@ionic/angular";
 })
 export class CompanyRequestDashboardPage implements OnInit {
 
+  @ViewChild(IonContent, { static: true }) content: IonContent;
+
   public loading: boolean = false;
 
   public borderLimit = false;
 
   public activeRequests: Request[] = [];
 
+  public scrollPosition = 0;
+
   constructor(
     public requestService: CompanyRequestService,
+    public eventService: EventService,
     public navCtrl: NavController
   ) { }
 
   ngOnInit() {
+    this.loadActiveRequests();
+
+    this.eventService.companyRequestUpdate$.subscribe(() => { 
+      this.loadActiveRequests();
+    });
   }
 
-  ionViewDidEnter() {
+  ionViewWillEnter() {
+    this.content.scrollToPoint(0, this.scrollPosition);
+  }
 
-    if(
-      this.activeRequests.length == 0
-    ) {
-      this.loading = true;
-    }
-
-    this.loadActiveRequests();
+  ionViewWillLeave() {
+    this.content.getScrollElement().then(ele => {
+      this.scrollPosition = ele.scrollTop;
+    });
   }
 
   /**
@@ -52,6 +62,10 @@ export class CompanyRequestDashboardPage implements OnInit {
     this.borderLimit = (e.detail.scrollTop > 20);
   }
 
+  /**
+   * open request detail page
+   * @param request 
+   */
   requestDetail(request) {
     this.navCtrl.navigateForward('/request-view/' + request.request_uuid, {
       state : {
