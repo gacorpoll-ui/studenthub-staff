@@ -117,4 +117,8 @@ export class DefaultPage implements OnInit {
       }
     );
   }
+
+  logout() {
+    this.authService.logout();
+  }
 }

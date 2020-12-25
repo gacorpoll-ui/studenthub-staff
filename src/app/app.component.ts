@@ -251,11 +251,6 @@ export class AppComponent implements OnInit {
     this.updatesAvailable = false;
   }
 
-
-  logout() {
-    this.authService.logout();
-  }
-
   /**
    * load current data
    */
