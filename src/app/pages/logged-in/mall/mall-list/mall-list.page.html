@@ -18,35 +18,11 @@
           <ion-badge slot="end" color="light" *ngIf="mall.candidate_count > 0">
             {{ mall.candidate_count }} staff
           </ion-badge>
-
-<!--          <ion-buttons slot="end" *ngIf="platform.width() > 768">-->
-<!--            <ion-button color="primary" (click)="create($event, mall)">-->
-<!--              <ion-icon slot="start" name="pencil-outline"></ion-icon>-->
-<!--              Edit-->
-<!--            </ion-button>-->
-<!--            <ion-button color="danger" (click)="delete($event, mall)">-->
-<!--              <ion-icon slot="start" name="trash-outline"></ion-icon>-->
-<!--              Delete-->
-<!--            </ion-button>-->
-<!--          </ion-buttons>-->
-
         </ion-item>
-
-<!--        <ion-item-options side="end">-->
-<!--          <ion-button color="primary" (click)="create($event, mall)">-->
-<!--            <ion-icon slot="start" name="pencil-outline"></ion-icon>-->
-<!--            Edit-->
-<!--          </ion-button>-->
-<!--          <ion-button color="danger" (click)="delete($event, mall)">-->
-<!--            <ion-icon name="trash"></ion-icon>-->
-<!--            Delete-->
-<!--          </ion-button>-->
-<!--        </ion-item-options>-->
-
       </ion-item-sliding>
     </section>
   </ion-list>
-  <loading-modal [loading]="loading || loadMore" type="text-list"></loading-modal>
+  <loading-modal [loading]="loading || loadMore" type="mall-list"></loading-modal>
   <ion-infinite-scroll *ngIf="currentPage < pageCount" (ionInfinite)="doInfinite($event)">
     <ion-infinite-scroll-content></ion-infinite-scroll-content>
   </ion-infinite-scroll>

@@ -726,7 +726,7 @@
   <ion-card>
     <ion-card-content>
       <h1><ion-skeleton-text animated class="title"></ion-skeleton-text></h1>
-      
+
       <h3>
         <ion-skeleton-text animated class="title"></ion-skeleton-text>
       </h3>
@@ -1089,84 +1089,104 @@
     </ion-item>
   </ion-card>
 </div>
-
-<div class="company-file-list" *ngIf="loading && type == 'company-file-list'">
-  <ion-card class="document">
-    <ion-card-content>
-      <img class="icon" src="assets/images/ic_save.svg" />
-      <span class="meta-data"><ion-skeleton-text animated></ion-skeleton-text></span>
-      <span class="meta-data"><ion-skeleton-text animated></ion-skeleton-text></span>
-      <h5><ion-skeleton-text animated></ion-skeleton-text></h5>
-      <p class="document-detail"><ion-skeleton-text animated></ion-skeleton-text></p>
-      <p class="date"><ion-skeleton-text animated></ion-skeleton-text></p>
-    </ion-card-content>
-  </ion-card>
-  <ion-card class="document">
-    <ion-card-content>
-      <img class="icon" src="assets/images/ic_save.svg" />
-      <span class="meta-data"><ion-skeleton-text animated></ion-skeleton-text></span>
-      <span class="meta-data"><ion-skeleton-text animated></ion-skeleton-text></span>
-      <h5><ion-skeleton-text animated></ion-skeleton-text></h5>
-      <p class="document-detail"><ion-skeleton-text animated></ion-skeleton-text></p>
-      <p class="date"><ion-skeleton-text animated></ion-skeleton-text></p>
-    </ion-card-content>
-  </ion-card>
-  <ion-card class="document">
-    <ion-card-content>
-      <img class="icon" src="assets/images/ic_save.svg" />
-      <span class="meta-data"><ion-skeleton-text animated></ion-skeleton-text></span>
-      <span class="meta-data"><ion-skeleton-text animated></ion-skeleton-text></span>
-      <h5><ion-skeleton-text animated></ion-skeleton-text></h5>
-      <p class="document-detail"><ion-skeleton-text animated></ion-skeleton-text></p>
-      <p class="date"><ion-skeleton-text animated></ion-skeleton-text></p>
-    </ion-card-content>
-  </ion-card>
-</div>
-<div class="transfer-list" *ngIf="loading && type=='transfer-list'">
-  <ion-list>
-    <ion-card>
-      <ion-card-content>
-        <h1><ion-skeleton-text animated></ion-skeleton-text></h1>
-        <h2><ion-skeleton-text animated></ion-skeleton-text></h2>
-        <h3><ion-skeleton-text animated></ion-skeleton-text></h3>
-        <h4><ion-skeleton-text animated></ion-skeleton-text></h4>
-      </ion-card-content>
-    </ion-card>
-    <ion-card>
-      <ion-card-content>
-        <h1><ion-skeleton-text animated></ion-skeleton-text></h1>
-        <h2><ion-skeleton-text animated></ion-skeleton-text></h2>
-        <h3><ion-skeleton-text animated></ion-skeleton-text></h3>
-        <h4><ion-skeleton-text animated></ion-skeleton-text></h4>
-      </ion-card-content>
-    </ion-card>
-    <ion-card>
-      <ion-card-content>
-        <h1><ion-skeleton-text animated></ion-skeleton-text></h1>
-        <h2><ion-skeleton-text animated></ion-skeleton-text></h2>
-        <h3><ion-skeleton-text animated></ion-skeleton-text></h3>
-        <h4><ion-skeleton-text animated></ion-skeleton-text></h4>
-      </ion-card-content>
-    </ion-card>
-  </ion-list>
-</div>
-
-<div class="chart" *ngIf="loading && type=='chart'">
+<div class="brand-list mall-list" *ngIf="loading && type == 'mall-list'">
   <ion-card>
-    <ion-card-content>
+    <ion-item>
       <h1><ion-skeleton-text animated></ion-skeleton-text></h1>
-      <h2><ion-skeleton-text animated></ion-skeleton-text></h2>
-      <h3><ion-skeleton-text animated></ion-skeleton-text></h3>
-      <p><ion-skeleton-text animated></ion-skeleton-text></p>
-
-      <small>
-        <ion-skeleton-text animated></ion-skeleton-text>
-        <ion-skeleton-text animated></ion-skeleton-text>
-        <ion-skeleton-text animated></ion-skeleton-text>
-        <ion-skeleton-text animated></ion-skeleton-text>
-        <ion-skeleton-text animated></ion-skeleton-text>
-         <ion-skeleton-text animated></ion-skeleton-text>
-      </small>
-    </ion-card-content>
+      <ion-badge slot="end"><ion-skeleton-text animated></ion-skeleton-text></ion-badge>
+    </ion-item>
   </ion-card>
-</div>
+  <ion-card>
+    <ion-item>
+      <h1><ion-skeleton-text animated></ion-skeleton-text></h1>
+      <ion-badge slot="end"><ion-skeleton-text animated></ion-skeleton-text></ion-badge>
+    </ion-item>
+  </ion-card>
+  <ion-card>
+    <ion-item>
+        <h1><ion-skeleton-text animated></ion-skeleton-text></h1>
+        <ion-badge slot="end"><ion-skeleton-text animated></ion-skeleton-text></ion-badge>
+      </ion-item>
+    </ion-card>
+  </div>
+
+  <div class="company-file-list" *ngIf="loading && type == 'company-file-list'">
+    <ion-card class="document">
+      <ion-card-content>
+        <img class="icon" src="assets/images/ic_save.svg" />
+        <span class="meta-data"><ion-skeleton-text animated></ion-skeleton-text></span>
+        <span class="meta-data"><ion-skeleton-text animated></ion-skeleton-text></span>
+        <h5><ion-skeleton-text animated></ion-skeleton-text></h5>
+        <p class="document-detail"><ion-skeleton-text animated></ion-skeleton-text></p>
+        <p class="date"><ion-skeleton-text animated></ion-skeleton-text></p>
+      </ion-card-content>
+    </ion-card>
+    <ion-card class="document">
+      <ion-card-content>
+        <img class="icon" src="assets/images/ic_save.svg" />
+        <span class="meta-data"><ion-skeleton-text animated></ion-skeleton-text></span>
+        <span class="meta-data"><ion-skeleton-text animated></ion-skeleton-text></span>
+        <h5><ion-skeleton-text animated></ion-skeleton-text></h5>
+        <p class="document-detail"><ion-skeleton-text animated></ion-skeleton-text></p>
+        <p class="date"><ion-skeleton-text animated></ion-skeleton-text></p>
+      </ion-card-content>
+    </ion-card>
+    <ion-card class="document">
+      <ion-card-content>
+        <img class="icon" src="assets/images/ic_save.svg" />
+        <span class="meta-data"><ion-skeleton-text animated></ion-skeleton-text></span>
+        <span class="meta-data"><ion-skeleton-text animated></ion-skeleton-text></span>
+        <h5><ion-skeleton-text animated></ion-skeleton-text></h5>
+        <p class="document-detail"><ion-skeleton-text animated></ion-skeleton-text></p>
+        <p class="date"><ion-skeleton-text animated></ion-skeleton-text></p>
+      </ion-card-content>
+    </ion-card>
+  </div>
+  <div class="transfer-list" *ngIf="loading && type=='transfer-list'">
+    <ion-list>
+      <ion-card>
+        <ion-card-content>
+          <h1><ion-skeleton-text animated></ion-skeleton-text></h1>
+          <h2><ion-skeleton-text animated></ion-skeleton-text></h2>
+          <h3><ion-skeleton-text animated></ion-skeleton-text></h3>
+          <h4><ion-skeleton-text animated></ion-skeleton-text></h4>
+        </ion-card-content>
+      </ion-card>
+      <ion-card>
+        <ion-card-content>
+          <h1><ion-skeleton-text animated></ion-skeleton-text></h1>
+          <h2><ion-skeleton-text animated></ion-skeleton-text></h2>
+          <h3><ion-skeleton-text animated></ion-skeleton-text></h3>
+          <h4><ion-skeleton-text animated></ion-skeleton-text></h4>
+        </ion-card-content>
+      </ion-card>
+      <ion-card>
+        <ion-card-content>
+          <h1><ion-skeleton-text animated></ion-skeleton-text></h1>
+          <h2><ion-skeleton-text animated></ion-skeleton-text></h2>
+          <h3><ion-skeleton-text animated></ion-skeleton-text></h3>
+          <h4><ion-skeleton-text animated></ion-skeleton-text></h4>
+        </ion-card-content>
+      </ion-card>
+    </ion-list>
+  </div>
+
+  <div class="chart" *ngIf="loading && type=='chart'">
+    <ion-card>
+      <ion-card-content>
+        <h1><ion-skeleton-text animated></ion-skeleton-text></h1>
+        <h2><ion-skeleton-text animated></ion-skeleton-text></h2>
+        <h3><ion-skeleton-text animated></ion-skeleton-text></h3>
+        <p><ion-skeleton-text animated></ion-skeleton-text></p>
+
+        <small>
+          <ion-skeleton-text animated></ion-skeleton-text>
+          <ion-skeleton-text animated></ion-skeleton-text>
+          <ion-skeleton-text animated></ion-skeleton-text>
+          <ion-skeleton-text animated></ion-skeleton-text>
+          <ion-skeleton-text animated></ion-skeleton-text>
+           <ion-skeleton-text animated></ion-skeleton-text>
+        </small>
+      </ion-card-content>
+    </ion-card>
+  </div>

@@ -1168,3 +1168,14 @@
     height: 17px;
   }
 }
+
+.mall-list {
+  h1 {
+    margin-left: 0;
+  }
+  ion-badge {
+    width: 52px;
+    background: gainsboro;
+    border-radius: 0;
+  }
+}
