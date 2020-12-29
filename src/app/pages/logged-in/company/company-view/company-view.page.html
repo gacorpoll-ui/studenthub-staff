@@ -15,7 +15,7 @@
 
 <ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
 
-  <loading-modal [loading]="true" type="company-view"></loading-modal>
+  <loading-modal [loading]="loading" type="company-view"></loading-modal>
 
   <div *ngIf="company && !loading">
     <ion-grid>
