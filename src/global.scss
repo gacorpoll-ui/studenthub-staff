@@ -74,6 +74,26 @@ body {
   .desktop-only {
     display: none;
   }
+
+  .filter-closed {
+    .col-filter {
+      display: none;
+    }
+    .col-listing {
+      display: block;
+    }
+  }
+
+  .filter-opened {
+    .col-filter {
+      display: block;
+    }
+
+    .col-listing {
+      display: none;
+    }
+  }
+
 }
 
 .select_search_store_id {

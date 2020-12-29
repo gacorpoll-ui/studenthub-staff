@@ -44,28 +44,16 @@
 
   <instant-search #instantSearch *ngIf="instantSearchConfig" [config]="instantSearchConfig" [searchParameters]="searchParameters">
     <ion-grid>
-      <ion-row>
+      <ion-row [class.filter-closed]="!showFilter" [class.filter-opened]="showFilter">
 
-        <ion-col [class.hidden]="!showFilter">
-<!--        <ion-col size-sm="12" size-md="12" size-lg="12" size-xs="12" [class.hidden]="!showFilter">-->
-          <div class="filter-wrapper mobile">
-            <candidate-filter [class.hidden]="loading && !nbHits"></candidate-filter>
-          </div>
-        </ion-col>
-        <ion-col size-sm="0" size-md="4" size-lg="4" class="desktop-only">
+        <ion-col size-sm="12" size-md="4" size-lg="4" class="col-filter">
           <div class="filter-wrapper">
             <candidate-filter [class.hidden]="loading && !nbHits"></candidate-filter>
             <loading-modal [loading]="loading && !nbHits" type="candidate-filter"></loading-modal>
           </div>
         </ion-col>
-
-<!--        <ion-col size-xs="0" size-sm="0" size-md="0" size-lg="4" size-xl="4" class="desktop-only">-->
-<!--          <div class="filter-wrapper">-->
-<!--            <candidate-filter [class.hidden]="loading && !nbHits"></candidate-filter>-->
-<!--            <loading-modal [loading]="loading && !nbHits" type="candidate-filter"></loading-modal>-->
-<!--          </div>-->
-<!--        </ion-col>-->
-        <ion-col  size-xs="12" size-sm="12" size-md="12" size-lg="8" size-xl="8" class="employer-list-wrapper"  [class.hidden]="showFilter">
+        
+        <ion-col size-xs="12" size-sm="12" size-md="8" size-lg="8" size-xl="8" class="col-listing employer-list-wrapper">
 
           <is-infinite-hits class="cv-list">
             <ng-template let-results="results" let-showMore="showMore" let-hits="hits">
@@ -115,6 +103,7 @@
 
 </ion-content>
 <ion-footer *ngIf="showFilter || candidateService.candidates.length > 0">
+  
   <ion-toolbar class="mobile-only ion-no-padding" *ngIf="showFilter">
     <ion-button [disabled]="loading || nbHits == 0" (click)="dismiss()" expands="full"
                 class="btn-view-candidates">

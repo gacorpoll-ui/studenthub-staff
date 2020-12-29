@@ -46,23 +46,16 @@
   <instant-search #instantSearch *ngIf="instantSearchConfig" [config]="instantSearchConfig"
     [searchParameters]="searchParameters">
     <ion-grid>
-      <ion-row>
+      <ion-row [class.filter-closed]="!showFilter" [class.filter-opened]="showFilter">
 
-        <ion-col size-sm="12" size-md="0" size-lg="0" size-xs="12" [class.hidden]="!showFilter">
+        <ion-col size-sm="12" size-md="4" size-lg="4" class="col-filter">
           <div class="filter-wrapper">
             <fulltimer-filter [class.hidden]="loading && !nbHits"></fulltimer-filter>
-            <loading-modal [loading]="loading && !nbHits" type="fulltimer-filter"></loading-modal>
+            <loading-modal [loading]="loading && !nbHits" type="candidate-filter"></loading-modal>
           </div>
         </ion-col>
 
-        <ion-col size-sm="0" size-md="4" size-lg="4" class="desktop-only">
-          <div class="filter-wrapper">
-            <fulltimer-filter [class.hidden]="loading && !nbHits"></fulltimer-filter>
-            <loading-modal [loading]="loading && !nbHits" type="fulltimer-filter"></loading-modal>
-          </div>
-        </ion-col>
-
-        <ion-col size-sm="12" size-md="8" size-lg="8" [class.hidden]="showFilter" class="employer-list-wrapper">
+        <ion-col size-xs="12" size-sm="12" size-md="8" size-lg="8" size-xl="8" class="col-listing employer-list-wrapper">
 
           <is-infinite-hits class="cv-list">
             <ng-template let-results="results" let-showMore="showMore" let-hits="hits">
@@ -170,7 +163,7 @@
   <ion-toolbar class="ion-no-padding">
 
     <ion-button [hidden]="!showFilter" [disabled]="loading || refreshingFulltimers || nbHits == 0" expand="full"
-      (click)="dismiss()" class="btn-view-fulltimers skip-hover">
+      (click)="dismiss()" class="btn-view-fulltimers mobile-only skip-hover">
       <span *ngIf="!loading || !refreshingFulltimers">
         <span *ngIf="nbHits == 0">No Job Found</span>
         <span *ngIf="nbHits > 0">View {{ nbHits }} fulltimers</span>
@@ -178,7 +171,7 @@
       <ion-spinner *ngIf="loading || refreshingFulltimers || nbHits == null"></ion-spinner>
     </ion-button>
 
-    <ion-button [hidden]="showFilter" (click)="create($event)">
+    <ion-button class="btn-add-filter" [class.hidden]="showFilter" (click)="create($event)">
       Add Fulltimer
     </ion-button>
 

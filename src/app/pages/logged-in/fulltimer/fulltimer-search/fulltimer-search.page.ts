@@ -86,6 +86,10 @@ export class FulltimerSearchPage implements OnInit {
         this.isMobile = true;
       }
     });
+
+    /*window.onresize = (e) => {
+      this.onResize();
+    };*/
   }
 
   ionViewWillEnter() {
@@ -154,6 +158,10 @@ export class FulltimerSearchPage implements OnInit {
         'aroundRadius': 'all'
       };*/
     }
+  }
+
+  onResize() {
+    this.showFilter = false;
   }
 
   /**
