@@ -303,7 +303,7 @@ ion-badge {
 
 ion-footer {
   ion-button {
-    width: calc(100% - 28px);
+    width: 100%;
     height: 53px;
     border-radius: 5px;
     font-size: 16px;
@@ -315,7 +315,7 @@ ion-footer {
     text-align: center;
     text-transform: none;
     display: block;
-    margin: 10px 14px;
+    margin: 0 14px 0 0;
     --box-shadow: none;
   }
 
@@ -336,4 +336,16 @@ ion-footer {
 
 .area ion-label {
   margin-top: 0;
+}
+
+ion-grid {
+  padding: 0;
+}
+
+ion-col {
+  padding: 0 7px;
+}
+
+ion-row {
+  padding: 10px 7px;
 }

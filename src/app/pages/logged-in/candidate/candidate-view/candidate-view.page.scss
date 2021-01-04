@@ -56,13 +56,13 @@ h4.candidate-name {
   color: black;
 
   b {
-      font-size: 18px;
-      line-height: 1.5;
+    font-size: 18px;
+    line-height: 1.5;
   }
 
   .txt-born-on {
-      line-height: 21px;
-      font-size: 14px;
+    line-height: 21px;
+    font-size: 14px;
   }
 }
 
@@ -108,44 +108,44 @@ h4.candidate-name {
   margin-bottom: 5px;
 
   ion-label {
-      white-space: normal;
-      margin-bottom: 5px;
-      font-size: 14px;
+    white-space: normal;
+    margin-bottom: 5px;
+    font-size: 14px;
   }
 
   h5 {
-      margin: 0 0 7px 0;
-      font-size: 16px;
-      font-weight: bold;
-      font-stretch: normal;
-      font-style: normal;
-      line-height: normal;
-      letter-spacing: normal;
-      color: black;
+    margin: 0 0 7px 0;
+    font-size: 16px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: black;
   }
 
   p {
-      margin: 3px 0 13px 0;
-      font-size: 14px;
-      font-weight: normal;
-      font-stretch: normal;
-      font-style: normal;
-      line-height: normal;
-      letter-spacing: normal;
-      color: black;
+    margin: 3px 0 13px 0;
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: black;
   }
 
   .hint {
-      font-family: EffraLight;
-      margin: 7px 0 11px 0;
-      font-size: 14px;
-      font-weight: normal;
-      font-stretch: normal;
-      font-style: normal;
-      line-height: normal;
-      letter-spacing: normal;
-      text-align: left;
-      color: var(--black);
+    font-family: EffraLight;
+    margin: 7px 0 11px 0;
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+    color: var(--black);
   }
 }
 
@@ -159,31 +159,31 @@ h4.candidate-name {
   margin-bottom: 5px;
 
   ion-label {
-      white-space: normal;
-      margin-bottom: 0;
-      font-size: 14px;
+    white-space: normal;
+    margin-bottom: 0;
+    font-size: 14px;
   }
 
   h5 {
-      margin: 0;
-      font-size: 16px;
-      font-weight: bold;
-      font-stretch: normal;
-      font-style: normal;
-      line-height: normal;
-      letter-spacing: normal;
-      color: black;
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: black;
   }
 
   p {
-      margin: 3px 0 0 0;
-      font-size: 14px;
-      font-weight: normal;
-      font-stretch: normal;
-      font-style: normal;
-      line-height: normal;
-      letter-spacing: normal;
-      color: black;
+    margin: 3px 0 0 0;
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: black;
   }
 }
 
@@ -260,25 +260,25 @@ h4.candidate-name {
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08), 2px 0 4px 0 rgba(0, 0, 0, 0.12);
 
     ion-label {
-        font-size: 14px;
-        font-weight: bold;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: 1.65;
-        letter-spacing: normal;
-        text-align: left;
-        color: #000;
+      font-size: 14px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.65;
+      letter-spacing: normal;
+      text-align: left;
+      color: #000;
     }
 
     ion-note {
-        font-weight: bold;
-        font-size: 12px;
-        text-align: center;
-        width: 34px;
-        height: 25px;
-        margin: 13px 0 0;
-        padding: 5px 9px 2px;
-        background-color: #f2f2f2;
+      font-weight: bold;
+      font-size: 12px;
+      text-align: center;
+      width: 34px;
+      height: 25px;
+      margin: 13px 0 0;
+      padding: 5px 9px 2px;
+      background-color: #f2f2f2;
     }
 
     ion-note.accepted {
@@ -304,12 +304,12 @@ h4.candidate-name {
 .skills,
 .experiences {
   p {
-      margin-top: 10px;
+    margin-top: 10px;
   }
 
   span {
-      clear: both;
-      display: block;
+    clear: both;
+    display: block;
   }
 }
 
@@ -321,8 +321,8 @@ h4.candidate-name {
   --background: url('src/assets/images/ic_video.svg') no-repeat 0px 11px;
 
   img {
-      width: 90px;
-      margin-top: 5px;
+    width: 90px;
+    margin-top: 5px;
   }
 }
 
@@ -388,14 +388,15 @@ h4.candidate-name {
   --background: url('src/assets/images/ic_profile_info.svg') no-repeat 0px 15px;
 
   p {
-      margin-bottom: 7px;
+    margin-bottom: 7px;
   }
 }
 
 .bank {
   --background: url('src/assets/images/ic_bank.svg') no-repeat 0px 15px;
 
-  h5, p {
+  h5,
+  p {
     margin-bottom: 0 !important
   }
 }
@@ -411,7 +412,8 @@ h4.candidate-name {
 .required {
   color: #eb5757 !important;
 
-  h5, p {
+  h5,
+  p {
     color: #eb5757 !important;
   }
 }
@@ -440,9 +442,47 @@ h4.candidate-name {
   opacity: 0.85;
 }
 
+ion-grid,
+ion-col,
+ion-row {
+  padding: 0;
+}
+
+.left-side {
+  padding-right: 60px;
+}
+
+.right-side {
+  padding-top: 165px;
+}
+
+@media only screen and (max-width:767px) {
+  .left-side {
+    padding-right: 0;
+  }
+
+  .right-side {
+    padding-top: 0;
+  }
+}
+
+
 ion-footer {
+
+  ion-grid {
+    padding: 0;
+  }
+
+  ion-col {
+    padding: 0 7px;
+  }
+
+  ion-row {
+    padding: 10px 7px;
+  }
+
   ion-button {
-    width: calc(100% - 28px);
+    width: 100%;
     height: 53px;
     border-radius: 5px;
     font-size: 16px;
@@ -454,7 +494,7 @@ ion-footer {
     text-align: center;
     text-transform: none;
     display: block;
-    margin: 5px 14px;
+    margin: 0;
     --box-shadow: none;
   }
 
@@ -472,25 +512,5 @@ ion-footer {
   .btn-unassign {
     --background: #eb5757;
     color: #ffffff;
-  }
-}
-
-
-ion-grid, ion-col, ion-row {
-  padding: 0;
-}
-.left-side {
-  padding-right: 60px;
-}
-.right-side {
-  padding-top: 165px;
-}
-@media only screen and (max-width:767px){
-  .left-side {
-    padding-right: 0;
-  }
-
-  .right-side {
-    padding-top: 0;
   }
 }
