@@ -128,12 +128,22 @@
   <loading-modal [loading]="loading" type="fulltimer-view"></loading-modal>
 
 </ion-content>
-<ion-footer>
-  <ion-button class="btn-export-cv" target="_blank" *ngIf="fulltimer && fulltimer.fulltimer_pdf_cv" href="{{ getResumeUrl() }}">
-    Download CV
-  </ion-button>
 
-  <ion-button class="btn-suggest" (click)="suggest()">
-    Suggest for client request
-  </ion-button>
+<ion-footer *ngIf="fulltimer">
+
+  <ion-grid>
+    <ion-row>
+      <ion-col *ngIf="fulltimer.fulltimer_pdf_cv">
+        <ion-button class="btn-export-cv" target="_blank" href="{{ getResumeUrl() }}">
+          Download CV
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button class="btn-suggest" (click)="suggest()">
+          Suggest for client request
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
 </ion-footer>
