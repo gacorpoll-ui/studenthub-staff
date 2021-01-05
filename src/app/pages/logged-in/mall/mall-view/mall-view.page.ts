@@ -118,7 +118,11 @@ export class MallViewPage implements OnInit {
               }
 
               if (jsonResp.operation == 'success') {
-                this.eventService.reloadStats$.next();
+
+                this.eventService.reloadStats$.next({
+                  company_id: this.mall.company_id
+                });
+
                 const toast = await this.toastCtrl.create({
                   message: jsonResp.message,
                   duration: 3000
