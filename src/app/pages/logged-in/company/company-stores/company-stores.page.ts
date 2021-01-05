@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AlertController, ModalController, Platform, ToastController } from '@ionic/angular';
 //models
 import { Company } from 'src/app/models/company';
 import { Store } from 'src/app/models/store';
 //services
+import { EventService } from 'src/app/providers/event.service';
 import { CompanyService } from 'src/app/providers/logged-in/company.service';
 import { StoreService } from 'src/app/providers/logged-in/store.service';
 //pages
 import { StoreFormPage } from '../../store/store-form/store-form.page';
-import { StoreViewPage } from '../../store/store-view/store-view.page';
 
 
 @Component({
@@ -35,6 +35,7 @@ export class CompanyStoresPage implements OnInit {
     public modalCtrl: ModalController,
     public alertCtrl: AlertController,
     public toastCtrl: ToastController,
+    public eventService: EventService,
     public companyService: CompanyService,
     public storeService: StoreService
   ) { }
@@ -93,6 +94,10 @@ export class CompanyStoresPage implements OnInit {
                 this.company.stores = this.company.stores.filter(e => {
                   return e.store_id != store.store_id;
                 });
+
+                this.eventService.reloadStats$.next({
+                  company_id: this.company.company_id
+                });
               }
             }, () => {
               this.updating = false;
@@ -131,6 +136,10 @@ export class CompanyStoresPage implements OnInit {
 
       if (e.data && e.data.refresh) {
         this.loadData();
+
+        this.eventService.reloadStats$.next({
+          company_id: this.company.company_id
+        });
       }
     });
     return await modal.present();

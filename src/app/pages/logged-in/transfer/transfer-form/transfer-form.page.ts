@@ -260,7 +260,11 @@ export class TransferFormPage implements OnInit {
 
       // On Success. Show Toast with the response message and close the page
       if (jsonResponse.operation == 'success') {
-        this.eventService.reloadStats$.next();
+        
+        this.eventService.reloadStats$.next({
+          company_id: this.transfer.company_id
+        });
+
         const toast = await this._toastCtrl.create({
           message: jsonResponse.message,
           duration: 3000

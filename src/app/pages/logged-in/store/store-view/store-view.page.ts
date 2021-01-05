@@ -258,7 +258,10 @@ export class StoreViewPage implements OnInit {
               }
 
               if (jsonResp.operation == 'success') {
-                this.eventService.reloadStats$.next();
+                
+                this.eventService.reloadStats$.next({
+                  company_id: this.company_id
+                });
                 const toast = await this.toastCtrl.create({
                   message: jsonResp.message,
                   duration: 3000

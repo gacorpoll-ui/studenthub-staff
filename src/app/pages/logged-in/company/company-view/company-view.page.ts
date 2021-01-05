@@ -49,6 +49,7 @@ export class CompanyViewPage implements OnInit {
   public notes: Note[] = [];
 
   public loadingNotes = false;
+
   public stats = {
     requests : 0,
     subCompanies : 0,
@@ -74,10 +75,6 @@ export class CompanyViewPage implements OnInit {
 
   ngOnInit() {
 
-    this.eventService.reloadStats$.subscribe(response => {
-      this.loadStats();
-    });
-    
     // Load the passed model if available
     if (window && window.history.state) {
       this.company = window.history.state.model;
@@ -91,6 +88,22 @@ export class CompanyViewPage implements OnInit {
 
     this.loadNotes();
 
+    this.eventService.companyRequestUpdate$.subscribe((data: any) => {
+      if (data && data.company_id == this.company_id) {
+        this.loadStats();
+
+        this.loadNotes();
+      }
+    });
+
+    this.eventService.reloadStats$.subscribe((data: any) => {
+      if (data && data.company_id == this.company_id) {
+        this.loadStats();
+        
+        this.loadNotes();
+      }
+    });
+    
     this.eventService.noteUpdated$.subscribe((data: any) => {
       if (data.company_id == this.company_id) {
         this.loadNotes();
