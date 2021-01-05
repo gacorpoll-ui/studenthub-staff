@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar class="container">
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/"></ion-back-button>
     </ion-buttons>
@@ -19,10 +19,10 @@
 </ion-header>
 
 <ion-content>
-  
-  <loading-modal [loading]="loading" type="transfer-view"></loading-modal>
+  <div class="container">
+    <loading-modal [loading]="loading" type="transfer-view"></loading-modal>
 
-  <ng-container *ngIf="!loading">
+    <ng-container *ngIf="!loading">
     <div class="ion-text-center" *ngIf="transfer">
       <h2 class="ion-text-center">
         {{transferStatus}}
@@ -153,4 +153,5 @@
       </ion-item-group>
     </ion-list>
   </ng-container>
+  </div>
 </ion-content>
