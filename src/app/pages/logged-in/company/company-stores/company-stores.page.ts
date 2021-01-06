@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Optional } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController, ModalController, Platform, ToastController } from '@ionic/angular';
+import {AlertController, IonNav, ModalController, Platform, ToastController} from '@ionic/angular';
 //models
 import { Company } from 'src/app/models/company';
 import { Store } from 'src/app/models/store';
@@ -10,6 +10,7 @@ import { CompanyService } from 'src/app/providers/logged-in/company.service';
 import { StoreService } from 'src/app/providers/logged-in/store.service';
 //pages
 import { StoreFormPage } from '../../store/store-form/store-form.page';
+import {StoreViewPage} from "../../store/store-view/store-view.page";
 
 
 @Component({
@@ -37,7 +38,8 @@ export class CompanyStoresPage implements OnInit {
     public toastCtrl: ToastController,
     public eventService: EventService,
     public companyService: CompanyService,
-    public storeService: StoreService
+    public storeService: StoreService,
+    @Optional() public nav: IonNav
   ) { }
 
   ngOnInit() {
@@ -150,15 +152,18 @@ export class CompanyStoresPage implements OnInit {
    * @param model
    */
   async storeSelected(model) {
-    this.modalCtrl.dismiss().then(() => {
-      setTimeout(() => {
-        this.router.navigate(['store-view', model.store_id], {
-          state: {
-            model: model
-          }
-        });
-      }, 100);
+    this.nav.push(StoreViewPage,{
+      store_id: model.store_id
     });
+    // this.modalCtrl.dismiss().then(() => {
+    //   setTimeout(() => {
+    //     this.router.navigate(['store-view', model.store_id], {
+    //       state: {
+    //         model: model
+    //       }
+    //     });
+    //   }, 100);
+    // });
     /*
     window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
 
