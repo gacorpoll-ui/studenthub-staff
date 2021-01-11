@@ -26,37 +26,37 @@
         <div tabindex="0"></div>
 
         <ion-label>
-          <h4>{{ companyContact.contact_name }}</h4>
+<!--          <h4>{{ companyContact.contact_name }}</h4>-->
 
           <h2>
-            {{ companyContact.contact_position }}
+<!--            {{ companyContact.contact_position }}-->
           </h2>
 
           <p>
-            <a href="mailto:{{ contactEmail.email_address }}" (click)="doNothing($event)"
-              *ngFor="let contactEmail of companyContact.contactEmails">
-              <ion-icon name="mail-outline"></ion-icon> {{ contactEmail.email_address }}
-            </a>
+<!--            <a href="mailto:{{ contactEmail.email_address }}" (click)="doNothing($event)"-->
+<!--              *ngFor="let contactEmail of companyContact.contactEmails">-->
+<!--              <ion-icon name="mail-outline"></ion-icon> {{ contactEmail.email_address }}-->
+<!--            </a>-->
           </p>
 
           <p>
-            <a href="tel:{{ contactPhone.phone_number }}" (click)="doNothing($event)"
-              *ngFor="let contactPhone of companyContact.contactPhones">
-              <ion-icon name="call-outline"></ion-icon> {{ contactPhone.phone_number }}
-            </a>
+<!--            <a href="tel:{{ contactPhone.phone_number }}" (click)="doNothing($event)"-->
+<!--              *ngFor="let contactPhone of companyContact.contactPhones">-->
+<!--              <ion-icon name="call-outline"></ion-icon> {{ contactPhone.phone_number }}-->
+<!--            </a>-->
           </p>
           <p>
-            <a *ngIf="companyContact.companyContactStats.lastNotes">
-              <ion-icon name="time-outline"></ion-icon> Last note was {{ companyContact.companyContactStats.lastNotes.note_updated_datetime | timeAgo }}
-            </a>
+<!--            <a *ngIf="companyContact.companyContactStats.lastNotes">-->
+<!--              <ion-icon name="time-outline"></ion-icon> Last note was {{ companyContact.companyContactStats.lastNotes.note_updated_datetime | timeAgo }}-->
+<!--            </a>-->
           </p>
           <div class="counts">
-            <ion-badge>
-              {{ companyContact.companyContactStats.requests }} requests
-            </ion-badge>
-            <ion-badge>
-              {{ companyContact.companyContactStats.notes }} notes
-            </ion-badge>
+<!--            <ion-badge>-->
+<!--              {{ companyContact.companyContactStats.requests }} requests-->
+<!--            </ion-badge>-->
+<!--            <ion-badge>-->
+<!--              {{ companyContact.companyContactStats.notes }} notes-->
+<!--            </ion-badge>-->
           </div>
         </ion-label>
       </ion-item>
