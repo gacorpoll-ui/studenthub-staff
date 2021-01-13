@@ -876,4 +876,12 @@ export class CandidateViewPage implements OnInit {
   onCivilFrontError() {
     this.candidate.candidate_civil_photo_front = null;
   }
+
+  suggestionListPage() {
+    this.router.navigate(['candidate-suggestions', this.candidate_id], {
+      state: {
+        candidate: this.candidate
+      }
+    });
+  }
 }

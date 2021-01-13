@@ -8,7 +8,7 @@ const routes: Routes = [
   {
     path: '',
     loadChildren: () => import('./pages/logged-in/tabs/tabs.module').then(m => m.TabsPageModule)
-  }, 
+  },
   {
     path: 'login',
     loadChildren: () => import('./pages/start-pages/login/login.module').then(m => m.LoginPageModule),
@@ -302,7 +302,7 @@ const routes: Routes = [
       navDisable: true,
     }
   },
-  
+
   {
     path: 'fulltimer-search',
     loadChildren: () => import('./pages/logged-in/fulltimer/fulltimer-search/fulltimer-search.module').then( m => m.FulltimerSearchPageModule),
@@ -362,11 +362,11 @@ const routes: Routes = [
     }
   },
   {
-    path: 'candidate-notes',
-    loadChildren: () => import('./pages/logged-in/candidate/candidate-notes/candidate-notes.module').then( m => m.CandidateNotesPageModule),
+    path: 'candidate-suggestions',
+    loadChildren: () => import('./pages/logged-in/candidate/candidate-suggestions/candidate-suggestions.module').then( m => m.CandidateSuggestionsPageModule),
     canActivate: [AuthService],
     data: {
-      name: 'CandidateNotesPage'
+      name: 'CandidateSuggestionsPage'
     }
   },
   {
@@ -378,7 +378,7 @@ const routes: Routes = [
     redirectTo: 'not-found'
   }
 ];
- 
+
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, { enableTracing: false, preloadingStrategy: SelectiveLoadingStrategy })
