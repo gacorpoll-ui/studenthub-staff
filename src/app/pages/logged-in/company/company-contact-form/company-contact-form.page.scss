@@ -6,8 +6,8 @@ ion-item.field-password {
     ion-input {
         --padding-end: 30px;
     }
-  
-    .btn-password { 
+
+    .btn-password {
         position: absolute;
         bottom: 0;
         z-index: 111;
@@ -15,12 +15,14 @@ ion-item.field-password {
         background: transparent;
         top: 15px;
         right: 0;
-  
+
         ion-icon {
             font-size: 22px;
             color: #000;
-        } 
+        }
     }
 }
-  
-  
+.selected {
+  background: gainsboro;
+}
+

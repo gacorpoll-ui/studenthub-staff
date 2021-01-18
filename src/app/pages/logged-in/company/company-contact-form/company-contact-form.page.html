@@ -12,7 +12,7 @@
         <ion-spinner *ngIf="saving"></ion-spinner>
       </ion-button>
 
-      <ion-button clear color="primary" *ngIf="contact" [disabled]="addingToTeam" (click)="addToTeam()">
+      <ion-button clear color="primary" *ngIf="contact" [disabled]="addingToTeam || !this.companyContact.role" (click)="addToTeam()">
         <span *ngIf="!addingToTeam">Add To Team</span>
         <ion-spinner *ngIf="addingToTeam"></ion-spinner>
       </ion-button>
@@ -26,22 +26,40 @@
     <ion-list>
 
       <ion-item>
-        <ion-label position="floating">Email</ion-label>
+        <ion-label position="floating">Emails</ion-label>
         <ion-input type="text" formControlName="email" (ionChange)="checkEmailAvailable($event)"></ion-input>
       </ion-item>
-
-      <h5 *ngIf="contact">Found contact with given email </h5>
-
       <ion-item *ngIf="contact">
         <div tabindex="0"></div>
 
         <ion-label>
+          <h2>Found contact with given email </h2>
           <h4>{{ contact.contact_name }}</h4>
 
           <h5 *ngIf="contact.company">
             {{ contact.company.company_common_name_en? contact.company.company_common_name_en: contact.company.company_name }}
           </h5>
 
+          <hr/>
+          <p>Please select Role</p>
+          <ion-buttons class="btn-wrapper">
+
+            <ion-button [class.selected]="this.companyContact.role == 'Owner'" (click)="onRoleSelected('Owner')">
+              Owner
+            </ion-button>
+
+            <ion-button [class.selected]="this.companyContact.role == 'HR'" (click)="onRoleSelected('HR')">
+              HR
+            </ion-button>
+
+            <ion-button [class.selected]="this.companyContact.role == 'Finance'" (click)="onRoleSelected('Finance')">
+              Finance
+            </ion-button>
+
+            <ion-button [class.selected]="this.companyContact.role == 'Other'"  (click)="onRoleSelected('Other')">
+              Other
+            </ion-button>
+          </ion-buttons>
         </ion-label>
       </ion-item>
 

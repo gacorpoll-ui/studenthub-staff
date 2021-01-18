@@ -214,8 +214,7 @@ export class CompanyContactFormPage implements OnInit {
    * edit will be without company/role details, so no need to check email
    */
   checkEmailAvailable(e) {
-
-    if (this.model.contact_uuid || !this.companyContact || !this.companyContact.role) {
+    if (this.model.contact_uuid || !this.companyContact) {
       return false;
     }
 
@@ -314,6 +313,9 @@ export class CompanyContactFormPage implements OnInit {
   }
 
   logScrolling(e) {
-    this.borderLimit = (e.detail.scrollTop > 20) ? true : false;
+    this.borderLimit = (e.detail.scrollTop > 20);
+  }
+  onRoleSelected(role) {
+    this.companyContact.role = role;
   }
 }
