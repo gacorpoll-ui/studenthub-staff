@@ -21,6 +21,7 @@ export class TransferCandidate {
     company_hourly_rate: number;
     hours: number;
     bonus: number;
+    base: number;
     candidate_bonus: number;
     transfer_cost: number;
     paid: number;

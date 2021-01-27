@@ -4,6 +4,7 @@ import { ModalController } from '@ionic/angular';
 import { CompanyContact } from 'src/app/models/company-contact';
 //services
 import { CompanyContactService } from 'src/app/providers/logged-in/company-contact.service';
+import {Contact} from "../../../../models/contact";
 
 
 @Component({
@@ -15,9 +16,9 @@ export class StoreManagerFormPage implements OnInit {
 
   public company;
 
-  public companyContacts: CompanyContact[] = [];
+  public companyContacts: Contact[] = [];
 
-  public parentCompanyContacts: CompanyContact[] = [];
+  public parentCompanyContacts: Contact[] = [];
 
   public loading: boolean = false;
 
@@ -26,7 +27,7 @@ export class StoreManagerFormPage implements OnInit {
     public comapnyContactService: CompanyContactService
   ) { }
 
-  ngOnInit() { 
+  ngOnInit() {
     this.loadData();
   }
 

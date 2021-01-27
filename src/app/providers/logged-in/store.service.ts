@@ -23,7 +23,7 @@ export class StoreService {
   list(fields: string = '', expand: string = ''): Observable<any>{
 
     let append = '';
-    
+
     if (fields) {
       append = `?fields=${fields}`;
     }
@@ -50,7 +50,7 @@ export class StoreService {
    * @param story_id
    */
   detail(story_id: number): Observable<any>{
-    return this._authhttp.get(`${this._storeEndpoint}/${story_id}?expand=storeManager,candidates,brand,company,company.brands,mall`);
+    return this._authhttp.get(`${this._storeEndpoint}/${story_id}?expand=storeManager,storeManager.contact,candidates,brand,company,company.brands,mall`);
   }
 
   /**
@@ -85,8 +85,8 @@ export class StoreService {
 
   /**
    * update store manager
-   * @param model 
-   * @param companyContact 
+   * @param model
+   * @param companyContact
    */
   updateStoreManager(model: Store, companyContact: CompanyContact): Observable<any>{
     const url = `${this._storeEndpoint}/update-manager/${model.store_id}`;
@@ -97,7 +97,7 @@ export class StoreService {
 
   /**
    * remove store manager from store
-   * @param model 
+   * @param model
    */
   removeStoreManager(model: Store): Observable<any>{
     const url = `${this._storeEndpoint}/remove-manager/${model.store_id}`;

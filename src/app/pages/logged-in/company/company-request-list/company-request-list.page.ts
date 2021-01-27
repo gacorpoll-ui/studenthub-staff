@@ -1,6 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AlertController, IonContent, ModalController, NavController, Platform, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import {
+  CalendarModal,
+  CalendarModalOptions,
+  DayConfig,
+  CalendarResult,
+  CalendarComponentOptions
+} from 'ion2-calendar';
+
 // models
 import { Company } from 'src/app/models/company';
 import { Request } from 'src/app/models/request';
@@ -39,8 +47,13 @@ export class CompanyRequestListPage implements OnInit {
       requestStatus: null,
       startDate: null,
       endDate: null
-    };
-
+  };
+  dateRange: { from: string; to: string; };
+  type: 'string'; // 'string' | 'js-date' | 'moment' | 'time' | 'object'
+  optionsRange: CalendarComponentOptions = {
+    pickMode: 'range'
+    // pickMode: 'multi'
+  };
   public min; // min date
   public max; // max date
 
@@ -69,7 +82,7 @@ export class CompanyRequestListPage implements OnInit {
 
     this.list();
 
-    this.eventService.companyRequestUpdate$.subscribe(() => { 
+    this.eventService.companyRequestUpdate$.subscribe(() => {
       this.list();
     });
   }
@@ -175,5 +188,54 @@ export class CompanyRequestListPage implements OnInit {
         from: 'company-request-list'
       }
     });
+  }
+
+  async selectDate(startDate = true) {
+    const options: CalendarModalOptions = {
+      title: 'Select Date',
+      canBackwardsSelected: true,
+    };
+
+    const myCalendar = await this.modalCtrl.create({
+      component: CalendarModal,
+      componentProps: { options }
+    });
+
+    myCalendar.present();
+
+    const event: any = await myCalendar.onDidDismiss();
+    const date: CalendarResult = event.data;
+    if (date) {
+      if (startDate) {
+        this.filters.startDate = event.data.string;
+        this.list(); // reload all result
+      } else {
+        this.filters.endDate = event.data.string;
+        this.list(); // reload all result
+      }
+    }
+    console.log(date);
+  }
+
+  filterByStatus($event, status) {
+    this.filters.requestStatus = status;
+    this.list(); // reload all result
+  }
+  searchByName($event) {
+    this.filters.companyName = $event.detail.value;
+    this.list(); // reload all result
+  }
+
+  /**
+   * clear selected date filter
+   * @param start
+   */
+  clearfilter(start = false) {
+    if (start){
+      this.filters.startDate = null;
+    } else  {
+      this.filters.endDate = null;
+    }
+    this.list(); // reload all result
   }
 }

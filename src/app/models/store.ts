@@ -3,6 +3,7 @@ import { Company } from './company';
 import {Brand} from './brand';
 import {Mall} from './mall';
 import { CompanyContact } from './company-contact';
+import {Contact} from "./contact";
 
 export class Store {
     store_id: number;
@@ -15,7 +16,7 @@ export class Store {
     store_status: number;
     store_total_candidates: any;
     candidatesCount: any;
-    storeManager: CompanyContact;
+    storeManager: Contact;
     candidates: Candidate[];
     company: Company;
     brand: Brand;

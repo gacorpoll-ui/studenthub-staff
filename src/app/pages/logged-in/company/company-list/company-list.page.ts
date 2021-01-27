@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavController, Platform } from '@ionic/angular';
+
 // model
 import { Company } from 'src/app/models/company';
 // service
