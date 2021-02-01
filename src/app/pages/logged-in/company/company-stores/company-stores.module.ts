@@ -8,6 +8,7 @@ import { CompanyStoresPageRoutingModule } from './company-stores-routing.module'
 
 import { CompanyStoresPage } from './company-stores.page';
 import { LoadingModalModule } from 'src/app/components/loading-modal/loading-modal.module';
+import { NoItemsModule } from 'src/app/components/no-items/no-items.module';
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import { LoadingModalModule } from 'src/app/components/loading-modal/loading-mod
     FormsModule,
     IonicModule,
     LoadingModalModule,
+    NoItemsModule,
     CompanyStoresPageRoutingModule
   ],
   declarations: [CompanyStoresPage]

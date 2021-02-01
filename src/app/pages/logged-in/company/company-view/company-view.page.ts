@@ -329,10 +329,8 @@ export class CompanyViewPage implements OnInit {
       this.followup = !!(this.company && this.company.company_followup);
     }, 500);
 
-    setTimeout(_ => {
-      this.loading = (!silent);
-    });
-
+    this.loading = (!silent);
+    
     if (!this.company) {
       this.company = new Company();
       this.company.company_id = this.company_id;

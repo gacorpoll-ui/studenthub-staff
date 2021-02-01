@@ -7,9 +7,9 @@ import { CustomValidator } from 'src/app/validators/custom.validator';
 // services
 import { AuthService } from 'src/app/providers/auth.service';
 import { CompanyService } from 'src/app/providers/logged-in/company.service';
+import { EventService } from "../../../../providers/event.service";
 // models
 import { Company } from 'src/app/models/company';
-import {EventService} from "../../../../providers/event.service";
 
 
 @Component({
@@ -80,14 +80,14 @@ export class CompanyFormPage implements OnInit {
    */
   _initForm() {
 
-    if (this.model.parent_company_id){
+    if (this.model.parent_company_id) {
       this.isSubCompany = 1;
     }
     // Init Form
 
-    if (!this.model.company_id){ // Show Create Form
+    if (!this.model.company_id) { // Show Create Form
 
-      this.operation  = (this.isSubCompany) ? 'Create Sub-company' : 'Create Company';
+      this.operation = (this.isSubCompany) ? 'Create Sub-company' : 'Create Company';
 
       if (this.isSubCompany) {
         this.form = this._fb.group({
@@ -106,46 +106,45 @@ export class CompanyFormPage implements OnInit {
           name: ['', Validators.required],
           common_name_ar: ['', Validators.required],
           common_name_en: ['', Validators.required],
-          description_en: [''],
-          description_ar: [''],
-          website: ['', Validators.required],
-          email: ['', [Validators.required, CustomValidator.emailValidator]],
-          password: ['', Validators.required],
           bonus_commission: ['', Validators.required],
           hourly_rate: ['', Validators.required],
+          description_en: [''],
+          description_ar: [''],
+          website: [''],
+          email: ['', [Validators.required, CustomValidator.emailValidator]],
           logo: [''],
           followup_interval_weeks: [''],
           followup: [0]
         });
       }
     } else { // Show Update Form
-      this.operation  = (this.isSubCompany) ? 'Update  Sub-company' : 'Update Company';
+      this.operation = (this.isSubCompany) ? 'Update  Sub-company' : 'Update Company';
       if (this.isSubCompany) {
         this.form = this._fb.group({
-            name: [this.model.company_name, Validators.required],
-            bonus_commission: [this.model.company_bonus_commission],
-            hourly_rate: [this.model.company_hourly_rate, Validators.required],
-            common_name_en: [this.model.company_common_name_en, Validators.required],
-            common_name_ar: [this.model.company_common_name_ar, Validators.required],
-            description_en: [this.model.company_description_en],
-            description_ar: [this.model.company_description_ar],
-            website: [this.model.company_website],
-            logo: [this.model.company_logo]
+          name: [this.model.company_name, Validators.required],
+          bonus_commission: [this.model.company_bonus_commission],
+          hourly_rate: [this.model.company_hourly_rate, Validators.required],
+          common_name_en: [this.model.company_common_name_en, Validators.required],
+          common_name_ar: [this.model.company_common_name_ar, Validators.required],
+          description_en: [this.model.company_description_en],
+          description_ar: [this.model.company_description_ar],
+          website: [this.model.company_website],
+          logo: [this.model.company_logo]
         });
       } else {
         this.form = this._fb.group({
-            name: [this.model.company_name, Validators.required],
-            email: [this.model.company_email, [Validators.required, CustomValidator.emailValidator]],
-            bonus_commission: [this.model.company_bonus_commission],
-            hourly_rate: [this.model.company_hourly_rate, Validators.required],
-            common_name_en: [this.model.company_common_name_en, Validators.required],
-            common_name_ar: [this.model.company_common_name_ar, Validators.required],
-            description_en: [this.model.company_description_en],
-            description_ar: [this.model.company_description_ar],
-            website: [this.model.company_website],
-            logo: [this.model.company_logo],
-            followup_interval_weeks: [this.model.company_followup_interval_weeks],
-            followup: [this.model.company_followup]
+          name: [this.model.company_name, Validators.required],
+          email: [this.model.company_email, [Validators.required, CustomValidator.emailValidator]],
+          bonus_commission: [this.model.company_bonus_commission],
+          hourly_rate: [this.model.company_hourly_rate, Validators.required],
+          common_name_en: [this.model.company_common_name_en, Validators.required],
+          common_name_ar: [this.model.company_common_name_ar, Validators.required],
+          description_en: [this.model.company_description_en],
+          description_ar: [this.model.company_description_ar],
+          website: [this.model.company_website],
+          logo: [this.model.company_logo],
+          followup_interval_weeks: [this.model.company_followup_interval_weeks],
+          followup: [this.model.company_followup]
         });
       }
     }
@@ -154,7 +153,7 @@ export class CompanyFormPage implements OnInit {
   /**
    * Update Model Data based on Form Input
    */
-  updateModelDataFromForm(){
+  updateModelDataFromForm() {
     this.model.company_name = this.form.value.name;
     this.model.company_email = this.form.value.email;
     this.model.company_bonus_commission = this.form.value.bonus_commission;
@@ -172,7 +171,7 @@ export class CompanyFormPage implements OnInit {
   /**
    * Close the page
    */
-  close(){
+  close() {
     this.modalCtrl.dismiss({ refresh: true });
   }
 
@@ -192,7 +191,7 @@ export class CompanyFormPage implements OnInit {
       action = this.companyService.create(this.model);
     } else {
       // Update
-      action =  this.companyService.update(this.model);
+      action = this.companyService.update(this.model);
     }
 
     action.subscribe(async jsonResponse => {
@@ -201,6 +200,7 @@ export class CompanyFormPage implements OnInit {
 
       // On Success
       if (jsonResponse.operation == 'success') {
+
         this.eventService.reloadStats$.next({
           company_id: this.model.company_id
         });
