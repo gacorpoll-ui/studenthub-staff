@@ -15,16 +15,30 @@
     <h3 class="request-title">
       Requests
     </h3>
-    
     <h4 class="company-name">
       {{ (company.company_common_name_en) ?  company.company_common_name_en:company.company_name }}
     </h4>
 
-    <request-listing *ngFor="let request of requests" tappable (click)="requestDetail(request)"
-                         [request]="request" [showStatus]="false"></request-listing>
+    <!-- Default Segment -->
+    <ion-segment [(ngModel)]="sections" [value]="sections">
+      <ion-segment-button value="part">
+        <ion-label>Part Time</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="full">
+        <ion-label>Full Time</ion-label>
+      </ion-segment-button>
+    </ion-segment>
 
+    <ng-container *ngIf="sections == 'part'">
+      <request-listing *ngFor="let request of partTimeRequests" tappable (click)="requestDetail(request)"
+                       [request]="request" [showStatus]="false"></request-listing>
+    </ng-container>
+    <ng-container *ngIf="sections == 'full'">
+      <request-listing *ngFor="let request of fullTimeRequests" tappable (click)="requestDetail(request)"
+                       [request]="request" [showStatus]="false"></request-listing>
+    </ng-container>
     <no-items *ngIf="!loading && requests.length ==0" message="~ No request data ~"></no-items>
-  
+
   </section>
 
   <loading-modal [loading]="loading" type="request-list"></loading-modal>

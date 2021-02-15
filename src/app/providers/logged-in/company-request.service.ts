@@ -43,6 +43,15 @@ export class CompanyRequestService {
     return this.authhttp.get(url);
   }
 
+ /**
+   * requests started/active but not by login user
+   */
+  listActiveWithPages(page: number, urlParams: string = ''): Observable<any> {
+    const url = this.companyRequestEndpoint + '/active?page=' + page + urlParams +
+      '&expand=staff,lastActivity,lastActivity.createdBy,company';
+    return this.authhttp.getRaw(url);
+  }
+
   /**
    * create request
    * @param model

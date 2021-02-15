@@ -8,7 +8,7 @@
       {{ request.request_position_title }}</b>
     </h3>
 
-    <p *ngIf="request.request_additional_info" class="txt-additional-info">{{ request.request_additional_info }} </p>
+    <p *ngIf="request.request_additional_info" [ngStyle]="{ 'white-space': 'pre-wrap' }" class="txt-additional-info" [innerHTML]="request.request_additional_info"></p>
     <small class="time">Request made {{ request.request_created_datetime | timeAgo }} </small>
 
     <div *ngIf="request" class="content-footer" [class.background-grey]="active" [class.background-red]="!active" [class.background-green]="request.request_status == 'delivered'">

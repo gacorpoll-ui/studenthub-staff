@@ -9,8 +9,28 @@
 
 <ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
   <div class="container">
-    <request-listing *ngFor="let request of activeRequests" tappable (click)="requestDetail(request)"
-                         [request]="request" [showStatus]="false" ></request-listing>
+    <!-- Default Segment -->
+    <ion-segment [(ngModel)]="section" [value]="section" (ionChange)="segmentChange($event)">
+      <ion-segment-button value="part">
+        <ion-label>Part Time</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="full">
+        <ion-label>Full Time</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <ng-container *ngIf="section == 'part'">
+      <request-listing *ngFor="let request of partTimeRequests" tappable (click)="requestDetail(request)"
+                       [request]="request" [showStatus]="false"></request-listing>
+    </ng-container>
+    <ng-container *ngIf="section == 'full'">
+      <request-listing *ngFor="let request of fullTimeRequests" tappable (click)="requestDetail(request)"
+                       [request]="request" [showStatus]="false"></request-listing>
+    </ng-container>
+
+    <ion-infinite-scroll *ngIf="currentPage < pageCount" (ionInfinite)="doInfinite($event)">
+      <ion-infinite-scroll-content></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
 
     <loading-modal [loading]="loading" type="request-list"></loading-modal>
   </div>

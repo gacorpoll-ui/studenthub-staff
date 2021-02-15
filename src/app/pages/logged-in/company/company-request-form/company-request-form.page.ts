@@ -145,6 +145,16 @@ export class CompanyRequestFormPage implements OnInit {
     }
 
     popover.onDidDismiss().then((_) => {
+      console.log(_);
+      if (_ && _.data && _.data.contact) {
+        this.form.controls.contact_name.setValue(_.data.contact.contact_name);
+        this.form.controls.contact_uuid.setValue(_.data.contact.contact_uuid);
+
+        if ((!this.company || !this.company.company_id) && _.data.contact.company) {
+          this.form.controls.company_id.setValue(_.data.contact.company.company_id);
+        }
+      }
+
       if (_ && _.data && _.data.companyContact) {
         this.form.controls.contact_name.setValue(_.data.companyContact.contact_name);
         this.form.controls.contact_uuid.setValue(_.data.companyContact.contact_uuid);

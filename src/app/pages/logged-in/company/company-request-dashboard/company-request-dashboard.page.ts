@@ -23,6 +23,19 @@ export class CompanyRequestDashboardPage implements OnInit {
   public activeRequests: Request[] = [];
 
   public scrollPosition = 0;
+  public partTimeRequests: Request[] = [];
+  public fullTimeRequests: Request[] = [];
+
+  public pageCount = 0;
+  public currentPage = 1;
+
+  public partPageCount = 0;
+  public partCurrentPage = 1;
+
+  public fullPageCount = 0;
+  public fullCurrentPage = 1;
+
+  public section = 'part';
 
   constructor(
     public requestService: CompanyRequestService,
@@ -31,10 +44,9 @@ export class CompanyRequestDashboardPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.loadActiveRequests();
-
-    this.eventService.companyRequestUpdate$.subscribe(() => { 
-      this.loadActiveRequests();
+    this.loadAllRequest();
+    this.eventService.companyRequestUpdate$.subscribe(() => {
+      this.loadAllRequest();
     });
   }
 
@@ -48,13 +60,34 @@ export class CompanyRequestDashboardPage implements OnInit {
     });
   }
 
+  loadAllRequest() {
+    this.loadPartTimeRequests();
+    this.loadFullTimeRequests();
+  }
+
   /**
-   * load active request I'm not handling
+   * load part time request
    */
-  loadActiveRequests() {
-    this.requestService.listActiveRequests().subscribe(data => {
-      this.activeRequests = data;
+  loadPartTimeRequests() {
+    this.requestService.listActiveWithPages(1, '&position_type=2').subscribe(response => {
+      this.partTimeRequests = response.body;
+      this.partPageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
+      this.partCurrentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
       this.loading = false;
+      this.segmentChange();
+    });
+  }
+
+  /**
+   * load Full time request
+   */
+  loadFullTimeRequests() {
+    this.requestService.listActiveWithPages(1, '&position_type=1').subscribe(response => {
+      this.fullPageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
+      this.fullCurrentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
+      this.fullTimeRequests = response.body;
+      this.loading = false;
+      this.segmentChange();
     });
   }
 
@@ -64,7 +97,7 @@ export class CompanyRequestDashboardPage implements OnInit {
 
   /**
    * open request detail page
-   * @param request 
+   * @param request
    */
   requestDetail(request) {
     this.navCtrl.navigateForward('/request-view/' + request.request_uuid, {
@@ -72,5 +105,49 @@ export class CompanyRequestDashboardPage implements OnInit {
         from: 'company-request-dashboard'
       }
     });
+  }
+
+  urlParams() {
+    return (this.section == 'full')  ? '&position_type=1' : '&position_type=2';
+  }
+
+  segmentChange($event = null) {
+    if (this.section == 'full') {
+      this.currentPage = this.fullCurrentPage;
+      this.pageCount = this.fullPageCount;
+    } else {
+      this.currentPage = this.partCurrentPage;
+      this.pageCount = this.partPageCount;
+    }
+  }
+
+  /**
+   * load more on scroll to bottom
+   * @param event
+   */
+  doInfinite(event) {
+
+    this.loading = true;
+
+    this.currentPage++;
+    this.requestService.listActiveWithPages(this.currentPage, this.urlParams()).subscribe(response => {
+
+        if (this.section == 'full') {
+          this.fullTimeRequests = this.fullTimeRequests.concat(response.body);
+          this.fullPageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
+          this.fullCurrentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
+        } else  {
+          this.partTimeRequests = this.partTimeRequests.concat(response.body);
+          this.partPageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
+          this.partCurrentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
+        }
+        this.segmentChange();
+      },
+      error => { },
+      () => {
+        this.loading = false;
+        event.target.complete();
+      }
+    );
   }
 }
