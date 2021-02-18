@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/view/tasks"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Bank</ion-title>
+    <ion-progress-bar type="indeterminate" *ngIf="deleting"></ion-progress-bar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item-sliding *ngFor="let bankMember of banks">
+      <ion-item tappable>
+        <div tabindex="0"></div>
+        <ion-label>
+          {{ bankMember.bank_name }}
+        </ion-label>
+        <ion-badge slot="end">{{bankMember.candidate.length}}</ion-badge>
+      </ion-item>
+    </ion-item-sliding>
+
+    <loading-modal [loading]="loading" type="text-list"></loading-modal>
+  </ion-list>
+
+  <ion-infinite-scroll *ngIf="currentPage < pageCount"
+    (ionInfinite)="doInfinite($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-title class="ion-text-center">Total Students : #{{this.totalStudents}}</ion-title>
+  </ion-toolbar>
+</ion-footer>

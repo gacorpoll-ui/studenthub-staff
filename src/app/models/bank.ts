@@ -1,3 +1,4 @@
+import {Candidate} from "./candidate";
 
 export class Bank {
 	bank_id: number;
@@ -6,4 +7,5 @@ export class Bank {
 	bank_address: string;
 	bank_transfer_type: string;
 	transfer_type_value: string;
-} 
+	candidate: Candidate[];
+}
