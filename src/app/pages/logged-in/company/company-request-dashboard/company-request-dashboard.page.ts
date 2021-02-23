@@ -29,9 +29,11 @@ export class CompanyRequestDashboardPage implements OnInit {
   public pageCount = 0;
   public currentPage = 1;
 
+  public partTotal = 0;
   public partPageCount = 0;
   public partCurrentPage = 1;
 
+  public fullTotal = 0;
   public fullPageCount = 0;
   public fullCurrentPage = 1;
 
@@ -73,6 +75,7 @@ export class CompanyRequestDashboardPage implements OnInit {
       this.partTimeRequests = response.body;
       this.partPageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
       this.partCurrentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
+      this.partTotal = parseInt(response.headers.get('X-Pagination-Total-Count'));
       this.loading = false;
       this.segmentChange();
     });
@@ -85,6 +88,7 @@ export class CompanyRequestDashboardPage implements OnInit {
     this.requestService.listActiveWithPages(1, '&position_type=1').subscribe(response => {
       this.fullPageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
       this.fullCurrentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
+      this.fullTotal = parseInt(response.headers.get('X-Pagination-Total-Count'));
       this.fullTimeRequests = response.body;
       this.loading = false;
       this.segmentChange();
