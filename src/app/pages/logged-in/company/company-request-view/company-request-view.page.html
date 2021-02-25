@@ -5,7 +5,7 @@
     </ion-buttons>
 
     <ion-button fill="clear" (click)="cancelledRequest($event, request)" slot="end" class="btn-cancel"
-      *ngIf="request && request.request_status == 'started' && request.request_created_by == authService.staff_id">
+      *ngIf="request && request.request_status == 'started'">
       Cancel Request
     </ion-button>
 
