@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import {
@@ -32,7 +32,7 @@ import { Invitation } from 'src/app/models/invitation';
   templateUrl: './company-request-view.page.html',
   styleUrls: ['./company-request-view.page.scss'],
 })
-export class CompanyRequestViewPage implements OnInit {
+export class CompanyRequestViewPage implements OnInit, OnDestroy {
 
   @ViewChild(IonContent, { static: true }) content: IonContent;
 
@@ -49,9 +49,9 @@ export class CompanyRequestViewPage implements OnInit {
 
   public rejectedCandidates: Invitation[] = [];
 
-  public acceptedStaffInvitations: Invitation[] = []; //created by staff + accepted by candidate 
+  public acceptedStaffInvitations: Invitation[] = []; // created by staff + accepted by candidate
 
-  public acceptedCompanyInvitations: Invitation[] = [];//created by company + accepted by candidate 
+  public acceptedCompanyInvitations: Invitation[] = []; // created by company + accepted by candidate
 
   public request_uuid;
   public loading = false;
@@ -63,6 +63,7 @@ export class CompanyRequestViewPage implements OnInit {
   public backState = null;
 
   public activityExpanded: boolean = false;
+  public internvalSubscribe;
 
   constructor(
     public modalCtrl: ModalController,
@@ -73,7 +74,6 @@ export class CompanyRequestViewPage implements OnInit {
     public authService: AuthService,
     public requestService: CompanyRequestService,
     public requestActivityService: RequestActivityService,
-    public menuCtrl: MenuController,
     public navCtrl: NavController,
     public location: Location,
     public suggestionService: SuggestionService,
@@ -105,6 +105,14 @@ export class CompanyRequestViewPage implements OnInit {
         this.loadRequestActivities();
       }
     });
+
+    this.internvalSubscribe = setInterval(  _ => {
+      this.loadInvitations(false);
+    }, 6000 );
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.internvalSubscribe);
   }
 
   /**
@@ -148,7 +156,7 @@ export class CompanyRequestViewPage implements OnInit {
   /**
    * load invitations for this request
    */
-  loadInvitations() 
+  loadInvitations(loading = true)
   {
     this.invitedCandidates = [];
 
@@ -159,28 +167,28 @@ export class CompanyRequestViewPage implements OnInit {
     this.acceptedCompanyInvitations = [];
 
     this.invitationService.list('&request_uuid=' + this.request_uuid).subscribe(invitations => {
-      
+
       invitations.forEach((invitation: Invitation) => {
-        
+
         if(invitation.is_suggested) {
           return null;
         }
 
-        if(invitation.invitation_status == 1) 
+        if(invitation.invitation_status == 1)
         {
           this.invitedCandidates.push(invitation);
-        } 
-        else if (invitation.invitation_status == 2) 
+        }
+        else if (invitation.invitation_status == 2)
         {
           this.rejectedCandidates.push(invitation);
-        } 
+        }
         /**
          * hide from staff invitations if moved to suggestion
          */
-        else if (invitation.invitation_status == 3 && invitation.invitation_created_by_staff) //created by staff + accepted by candidate  
+        else if (invitation.invitation_status == 3 && invitation.invitation_created_by_staff) //created by staff + accepted by candidate
         {
           this.acceptedStaffInvitations.push(invitation);
-        } 
+        }
         else if (invitation.invitation_status == 3 && invitation.invitation_created_by_company) //created by company + accepted by candidate
         {
           this.acceptedCompanyInvitations.push(invitation);
@@ -288,10 +296,10 @@ export class CompanyRequestViewPage implements OnInit {
 
       this.request.request_updated_datetime = data.request_updated_datetime;
 
-      this.eventService.companyRequestUpdate$.next({ 
+      this.eventService.companyRequestUpdate$.next({
         company_id: this.request.company_id,
         request_updated_datetime: data.request_updated_datetime,
-        request_uuid: this.request_uuid 
+        request_uuid: this.request_uuid
       });
     }
   }
@@ -302,8 +310,8 @@ export class CompanyRequestViewPage implements OnInit {
 
   /**
    * mark request as cancelled
-   * @param event 
-   * @param request 
+   * @param event
+   * @param request
    */
   cancelledRequest(event, request) {
 
@@ -349,7 +357,7 @@ export class CompanyRequestViewPage implements OnInit {
             this.requestService.cancel(request).subscribe(async response => {
 
               if (response.operation == 'success') {
-                
+
                 request.request_status = 'cancelled';
 
                 this.loadRequestActivities();
@@ -358,10 +366,10 @@ export class CompanyRequestViewPage implements OnInit {
                   company_id: this.request.company_id
                 });
 
-                this.eventService.companyRequestUpdate$.next({ 
+                this.eventService.companyRequestUpdate$.next({
                   company_id: this.request.company_id,
                   request_updated_datetime: response.request_updated_datetime,
-                  request_uuid: this.request_uuid 
+                  request_uuid: this.request_uuid
                 });
 
               } else {
@@ -382,9 +390,9 @@ export class CompanyRequestViewPage implements OnInit {
   }
 
   /**
-   * mark request as delivered 
-   * @param event 
-   * @param request 
+   * mark request as delivered
+   * @param event
+   * @param request
    */
   deliveredRequest(event, request) {
 
@@ -440,12 +448,12 @@ export class CompanyRequestViewPage implements OnInit {
                   company_id: this.request.company_id
                 });
 
-                this.eventService.companyRequestUpdate$.next({ 
+                this.eventService.companyRequestUpdate$.next({
                   company_id: this.request.company_id,
                   request_updated_datetime: response.request_updated_datetime,
-                  request_uuid: this.request_uuid 
+                  request_uuid: this.request_uuid
                 });
-                
+
               } else {
                 this.toastCtrl.create({
                   message: this.translateLabelService.errorMessage(response.message),
