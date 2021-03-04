@@ -17,7 +17,7 @@ import { Bank } from 'src/app/models/bank';
 export class BankListPage implements OnInit {
 
   public loading = false;
-
+  public borderLimit = false;
   public deleting = false;
 
   public pageCount = 0;
@@ -59,7 +59,7 @@ export class BankListPage implements OnInit {
 
       this.banks = response.body;
       for (const bank of this.banks) {
-        this.totalStudents += bank.candidate.length;
+        this.totalStudents += parseInt(bank.candidateCount);
       }
     }, () => {
       this.loading = false;
@@ -87,5 +87,9 @@ export class BankListPage implements OnInit {
     }, () => {
       this.loading = false;
     });
+  }
+
+  logScrolling(e) {
+    this.borderLimit = (e.detail.scrollTop > 20) ? true : false;
   }
 }

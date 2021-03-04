@@ -8,4 +8,5 @@ export class Bank {
 	bank_transfer_type: string;
 	transfer_type_value: string;
 	candidate: Candidate[];
+  candidateCount: any;
 }

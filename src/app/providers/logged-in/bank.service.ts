@@ -24,6 +24,6 @@ export class BankService {
    * @param page
    */
   list(page: number): Observable<any> {
-    return this._authhttp.getRaw(this._bankEndpoint + '?page=' + page + '&expand=candidate');
+    return this._authhttp.getRaw(this._bankEndpoint + '?page=' + page + '&expand=candidateCount');
   }
 }

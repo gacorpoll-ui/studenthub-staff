@@ -1,5 +1,5 @@
-<ion-header>
-  <ion-toolbar>
+<ion-header  [class.add-border]="borderLimit" class="ion-no-border">
+  <ion-toolbar class="container">
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/view/tasks"></ion-back-button>
     </ion-buttons>
@@ -8,21 +8,23 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-list>
-    <ion-item-sliding *ngFor="let bankMember of banks">
-      <ion-item tappable>
-        <div tabindex="0"></div>
-        <ion-label>
-          {{ bankMember.bank_name }}
-        </ion-label>
-        <ion-badge slot="end">{{bankMember.candidate.length}}</ion-badge>
-      </ion-item>
-    </ion-item-sliding>
+<ion-content  scrollEvents="true" class="ion-no-padding" (ionScroll)="logScrolling($event)">
+  <div class="container">
+    <ion-list>
+      <ion-item-sliding *ngFor="let bankMember of banks">
+        <ion-item tappable>
+          <div tabindex="0"></div>
+          <ion-label>
+            {{ bankMember.bank_name }}
+          </ion-label>
+          <ion-badge slot="end">{{bankMember.candidateCount}}</ion-badge>
+        </ion-item>
+      </ion-item-sliding>
 
-    <loading-modal [loading]="loading" type="text-list"></loading-modal>
-  </ion-list>
+      <loading-modal [loading]="loading" type="text-list"></loading-modal>
+    </ion-list>
 
+  </div>
   <ion-infinite-scroll *ngIf="currentPage < pageCount"
     (ionInfinite)="doInfinite($event)">
     <ion-infinite-scroll-content></ion-infinite-scroll-content>
