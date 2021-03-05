@@ -1,5 +1,6 @@
 import { Candidate } from './candidate';
 import { Request } from './request';
+import {Note} from "./note";
 
 export class Invitation {
     invitation_uuid: string;
@@ -15,4 +16,5 @@ export class Invitation {
     is_suggested: any;
     candidate: Candidate;
     request: Request;
+    note: Note;
 }

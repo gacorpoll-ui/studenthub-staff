@@ -20,7 +20,7 @@ export class InvitationService {
    * @returns {Observable<any>}
    */
   list(params: string = ''): Observable<any> {
-    let url = this._endpoint + '?expand=candidate,request,updatedBy' + params;
+    let url = this._endpoint + '?expand=candidate,request,note,updatedBy' + params;
     return this._authhttp.get(url);
   }
 

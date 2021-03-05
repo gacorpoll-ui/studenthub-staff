@@ -22,6 +22,7 @@
 
     <ion-label (click)="openCandidatePage($event)">
       <h5>{{ model.candidate.candidate_name ?model.candidate.candidate_name : model.candidate.candidate_name_ar }}</h5>
+      <p *ngIf="model.note">{{model.note.note_text}}</p>
     </ion-label>
   </ion-item>
 
