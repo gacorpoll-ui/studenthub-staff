@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavController, Platform } from '@ionic/angular';
-
 // model
 import { Company } from 'src/app/models/company';
 // service
@@ -31,10 +30,12 @@ export class CompanyListPage implements OnInit {
 
   public filters: {
     name: string
-    status: number
+    status: number,
+    approved_to_hire: number
   } = {
       name: null,
-      status: 4
+      status: 4,
+      approved_to_hire: null
     };
 
   constructor(
@@ -85,7 +86,21 @@ export class CompanyListPage implements OnInit {
       urlParams += '&status=' + this.filters.status;
     }
 
+    if ([0, 1].indexOf(this.filters.approved_to_hire) > -1) {
+      urlParams += '&approved_to_hire=' + this.filters.approved_to_hire;
+    }
+
     return urlParams;
+  }
+
+  resetStatus() {
+    this.filters = {
+      name: this.filters.name,
+      status: 5,
+      approved_to_hire: null
+    };
+
+    this.loadData(1); // reload all result
   }
 
   /**
@@ -93,8 +108,9 @@ export class CompanyListPage implements OnInit {
    */
   resetFilter() {
     this.filters = {
+      approved_to_hire: null,
       name: null,
-      status: 4
+      status: 5
     };
 
     this.loadData(1); // reload all result
@@ -214,9 +230,27 @@ export class CompanyListPage implements OnInit {
   }
 
   filterByStatus($event, status) {
-    this.filters.status = status;
+    
+    if(this.filters.status == status) {
+      this.filters.status = null;
+    } else {
+      this.filters.status = status;
+    }
+    
     this.loadData(1); // reload all result
   }
+
+  filterByApprovedToHire($event, status) {
+
+    if(this.filters.approved_to_hire == status) {
+      this.filters.approved_to_hire = null;
+    } else {
+      this.filters.approved_to_hire = status;
+    }
+
+    this.loadData(1); // reload all result
+  }
+
   searchByName($event) {
     this.filters.name = $event.detail.value;
     this.loadData(1); // reload all result

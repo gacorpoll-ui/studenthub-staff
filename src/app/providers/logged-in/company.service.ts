@@ -156,7 +156,8 @@ export class CompanyService {
       website: model.company_website,
       logo: model.company_logo,
       followup_interval_weeks: model.company_followup_interval_weeks,
-      followup: model.company_followup
+      followup: model.company_followup,
+      approved_to_hire: model.company_approved_to_hire
     };
 
     return this._authhttp.post(postUrl, params);
@@ -181,7 +182,8 @@ export class CompanyService {
       website: model.company_website,
       logo: model.company_logo,
       followup_interval_weeks: model.company_followup_interval_weeks,
-      followup: model.company_followup
+      followup: model.company_followup,
+      approved_to_hire: model.company_approved_to_hire
     };
 
     return this._authhttp.patch(`${this._companyEndpoint}/${model.company_id}`, params);

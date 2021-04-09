@@ -18,6 +18,14 @@
 
     <div *ngIf="request && !loading">
 
+      <ion-badge slot="end" color="success" *ngIf="request.company && request.company.company_approved_to_hire">
+        <ion-icon name="checkmark-outline"></ion-icon> Approved to hire
+      </ion-badge>
+      
+      <ion-badge slot="end" color="warning" *ngIf="request.company && !request.company.company_approved_to_hire">
+        <ion-icon name="close-outline"></ion-icon> Not approved to hire
+      </ion-badge>
+  
       <h4 class="company-name" tappable [routerLink]="'/company-view/' + request.company_id">
         {{ request.company.company_common_name_en? request.company.company_common_name_en: request.company.company_name }}
       </h4>
