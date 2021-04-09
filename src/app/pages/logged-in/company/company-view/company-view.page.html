@@ -29,8 +29,16 @@
                   <img src="{{ aws.cloudinaryUrl + company.company_logo }}" (error)="imageError()">
                 </ion-thumbnail>
 
-                {{ company.company_name }}
+                {{ company.company_name }} 
               </h3>
+
+              <ion-badge color="success" *ngIf="company.company_approved_to_hire">
+                <ion-icon name="checkmark-outline"></ion-icon> Approved to hire
+              </ion-badge>
+              
+              <ion-badge color="warning" *ngIf="!company.company_approved_to_hire">
+                <ion-icon name="close-outline"></ion-icon> Not approved to hire
+              </ion-badge>
 
               <h4 class="company-name-english">
                 {{ company.company_common_name_en }}
