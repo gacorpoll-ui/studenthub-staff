@@ -83,6 +83,11 @@
         <ion-input type="text" formControlName="email"></ion-input>
       </ion-item>
 
+      <ion-item *ngIf="!isSubCompany">
+        <ion-label>Approved to hire?</ion-label>
+        <ion-toggle slot="end" formControlName="approved_to_hire"></ion-toggle>
+      </ion-item>
+      
     </ion-list>
   </form>
 </ion-content>

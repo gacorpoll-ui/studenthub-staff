@@ -1,9 +1,19 @@
 <ion-card [class.pending]="request.request_status == 'pending'" tappable>
   <ion-card-content>
-    <h1 *ngIf="request.company">{{ request.company.company_common_name_en? request.company.company_common_name_en: request.company.company_name }}</h1>
+    <h1 *ngIf="request.company">
+      {{ request.company.company_common_name_en? request.company.company_common_name_en: request.company.company_name }}
+    </h1>
 
     <ion-badge slot="end" class="suggested" *ngIf="invitation && invitation.invitation_uuid && invitation.invitation_status == 3 && invitation.is_suggested">
       Already Suggested
+    </ion-badge>
+
+    <ion-badge slot="end" class="suggested" color="success" *ngIf="request.company && request.company.company_approved_to_hire">
+      <ion-icon name="checkmark-outline"></ion-icon> Approved to hire
+    </ion-badge>
+    
+    <ion-badge slot="end" class="suggested" color="warning" *ngIf="request.company && !request.company.company_approved_to_hire">
+      <ion-icon name="close-outline"></ion-icon> Not approved to hire
     </ion-badge>
 
     <h3>
@@ -14,7 +24,41 @@
     </h3>
 
     <p *ngIf="request.request_additional_info" [ngStyle]="{ 'white-space': 'pre-wrap' }" class="txt-additional-info" [innerHTML]="request.request_additional_info"></p>
+
     <small class="time">Request made {{ request.request_created_datetime | timeAgo }} </small><br/>
+
+    <p class="invitation-time" *ngIf="invitation">
+      
+      Invited at {{ toDate(invitation.invitation_created_at) | date: 'MMM d, y, h:mm:ss a' }}, first 
+      
+      <ng-container *ngIf="
+        invitation.invitation_app_seen_at && 
+        (
+          !invitation.invitation_email_seen_at ||
+          toDate(invitation.invitation_app_seen_at) > toDate(invitation.invitation_email_seen_at)
+        )
+        ">
+        saw the invitation via app at {{ toDate(invitation.invitation_app_seen_at) | date: 'MMM d, y, h:mm:ss a' }} 
+        (took her {{ invitation.invitation_created_at | duration : translateService.currentLang : invitation.invitation_app_seen_at }})
+      </ng-container>
+      
+      <ng-container *ngIf="
+        invitation.invitation_email_seen_at && 
+        (
+          !invitation.invitation_app_seen_at || 
+          toDate(invitation.invitation_email_seen_at) > toDate(invitation.invitation_app_seen_at)
+        )
+        "> 
+        saw the invitation via email at {{ toDate(invitation.invitation_email_seen_at) | date: 'MMM d, y, h:mm:ss a' }} 
+        (took her {{ invitation.invitation_created_at | duration : translateService.currentLang : invitation.invitation_email_seen_at }})
+      </ng-container>
+      
+      <ng-container *ngIf="!invitation.invitation_app_seen_at && !invitation.invitation_email_seen_at">
+        Not viewed yet    
+      </ng-container> 
+      
+    </p>
+    
     <ng-container *ngIf="showStatus && invitation">
       <ion-badge *ngIf="invitation && invitation.invitation_status == 1" color="warning">
         Invited
@@ -32,5 +76,6 @@
       <p *ngIf="request.request_status == 'cancelled'">Cancelled {{ request.request_updated_datetime | timeAgo }} </p>
       <p *ngIf="request.request_status == 'started'">Last updated {{ request.request_updated_datetime | timeAgo }} </p>
     </div>
+
   </ion-card-content>
 </ion-card>

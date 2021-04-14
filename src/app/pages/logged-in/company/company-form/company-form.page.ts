@@ -100,6 +100,7 @@ export class CompanyFormPage implements OnInit {
           description_en: [''],
           description_ar: [''],
           website: [''],
+          approved_to_hire: [true]
         });
       } else {
         this.form = this._fb.group({
@@ -114,7 +115,8 @@ export class CompanyFormPage implements OnInit {
           email: ['', [Validators.required, CustomValidator.emailValidator]],
           logo: [''],
           followup_interval_weeks: [''],
-          followup: [0]
+          followup: [0],
+          approved_to_hire: [true]
         });
       }
     } else { // Show Update Form
@@ -129,7 +131,8 @@ export class CompanyFormPage implements OnInit {
           description_en: [this.model.company_description_en],
           description_ar: [this.model.company_description_ar],
           website: [this.model.company_website],
-          logo: [this.model.company_logo]
+          logo: [this.model.company_logo],
+          approved_to_hire: [this.model.company_approved_to_hire]
         });
       } else {
         this.form = this._fb.group({
@@ -144,7 +147,8 @@ export class CompanyFormPage implements OnInit {
           website: [this.model.company_website],
           logo: [this.model.company_logo],
           followup_interval_weeks: [this.model.company_followup_interval_weeks],
-          followup: [this.model.company_followup]
+          followup: [this.model.company_followup],
+          approved_to_hire: [this.model.company_approved_to_hire]
         });
       }
     }
@@ -166,6 +170,7 @@ export class CompanyFormPage implements OnInit {
     this.model.company_followup_interval_weeks = this.form.value.followup_interval_weeks;
     this.model.company_followup = this.form.value.followup;
     this.model.company_logo = this.form.value.logo;
+    this.model.company_approved_to_hire = this.form.value.approved_to_hire;
   }
 
   /**

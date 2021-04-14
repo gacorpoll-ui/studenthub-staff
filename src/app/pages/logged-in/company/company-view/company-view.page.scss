@@ -17,6 +17,13 @@ ion-content {
         color: #000;
     }
 
+    ion-badge {
+        ion-icon {
+            position: relative;
+            top: 2px;
+        }
+    }
+
     .company-name-arabic,
     .company-name-english {
         font-size: 24px;

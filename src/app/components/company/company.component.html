@@ -37,5 +37,14 @@
     <ion-badge slot="start" color="light" *ngIf="company.total_candidate && !company.transferInLast40Days">
       40 days passed without payment
     </ion-badge>
+
+    <ion-badge slot="start" color="success" *ngIf="company.company_approved_to_hire">
+      <ion-icon name="checkmark-outline"></ion-icon> Approved to hire
+    </ion-badge>
+    
+    <ion-badge slot="start" color="warning" *ngIf="!company.company_approved_to_hire">
+      <ion-icon name="close-outline"></ion-icon> Not approved to hire
+    </ion-badge>
+
   </ion-label>
 </ion-item>
