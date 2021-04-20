@@ -27,8 +27,10 @@ export class InvitePage implements OnInit {
   public candidate: Candidate;
 
   public activeRequests: Request[] = [];
+  public activeRequestsData: Request[] = [];
 
   public form: FormGroup;
+  public query;
 
   constructor(
     private fb: FormBuilder,
@@ -70,8 +72,19 @@ export class InvitePage implements OnInit {
       this.loadingRequests = false;
 
       this.activeRequests = data;
+      this.activeRequestsData = data;
     }, () => {
       this.loadingRequests = false;
+    });
+  }
+
+  onSearchInput(ev: any) {
+    this.query = ev.target.value;
+    this.activeRequestsData = this.activeRequests.filter(item => {
+      return (
+        item.request_position_title.toLowerCase().indexOf(ev.target.value.toLowerCase()) > -1 ||
+        item.request_job_description.toLowerCase().indexOf(ev.target.value.toLowerCase()) > -1
+      );
     });
   }
 
