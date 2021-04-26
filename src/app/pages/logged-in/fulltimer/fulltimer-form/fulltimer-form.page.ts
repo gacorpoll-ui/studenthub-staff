@@ -101,14 +101,14 @@ export class FulltimerFormPage implements OnInit {
     if(!this.model.fulltimerTags) {
       this.model.fulltimerTags = [];
     }
-    
+
     for (let fulltimerTag of this.model.fulltimerTags) {
       tagCtrls.push(this.fb.group({
         tag: [fulltimerTag.tag]//, [Validators.required]
       }));
     }
 
-    //show atleast one input for tag 
+    //show atleast one input for tag
 
     tagCtrls.push(this.fb.group({
       tag: ['']//, [Validators.required]
@@ -131,6 +131,8 @@ export class FulltimerFormPage implements OnInit {
         pdf_cv: [''],
         fulltimerTags: new FormArray(tagCtrls),
         location: ['', Validators.required],
+        current_salary: ['', Validators.required],
+        expected_salary: ['', Validators.required],
         tempPdfCVLocation: [''],
       });
 
@@ -161,6 +163,8 @@ export class FulltimerFormPage implements OnInit {
         pdf_cv: [this.model.fulltimer_pdf_cv, Validators.required],
         fulltimerTags: new FormArray(tagCtrls),
         location: [location, Validators.required],
+        current_salary: [this.model.fulltimer_current_salary, Validators.required],
+        expected_salary: [this.model.fulltimer_expected_salary, Validators.required],
         tempPdfCVLocation: [''],
       });
     }
@@ -518,6 +522,8 @@ export class FulltimerFormPage implements OnInit {
     this.model.fulltimer_email = this.form.value.email;
     this.model.fulltimer_pdf_cv = this.form.value.pdf_cv;
     this.model.fulltimerTags = this.form.value.fulltimerTags;
+    this.model.fulltimer_current_salary = this.form.value.current_salary;
+    this.model.fulltimer_expected_salary = this.form.value.expected_salary;
   }
 
   /**
