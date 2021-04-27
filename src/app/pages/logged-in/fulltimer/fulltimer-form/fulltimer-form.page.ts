@@ -17,6 +17,7 @@ import { FulltimerLocationPage } from '../fulltimer-location/fulltimer-location.
 import { NationalityPage } from '../../pickers/nationality/nationality.page';
 //validator
 import { CustomValidator } from "../../../../validators/custom.validator";
+import {FulltimeLocationPage} from "../fulltime-location/fulltime-location.page";
 
 
 @Component({
@@ -472,7 +473,7 @@ export class FulltimerFormPage implements OnInit {
     window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
-      component: FulltimerLocationPage,
+      component: FulltimeLocationPage,
       componentProps: {
         fulltimer: this.model,
       }
