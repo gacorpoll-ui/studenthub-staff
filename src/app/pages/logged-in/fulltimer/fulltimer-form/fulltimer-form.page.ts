@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AlertController, ModalController, Platform } from '@ionic/angular';
+import {AlertController, ModalController, NavController, Platform} from '@ionic/angular';
 import { Subscription } from 'rxjs';
 // service
 import { AuthService } from "../../../../providers/auth.service";
@@ -62,7 +62,8 @@ export class FulltimerFormPage implements OnInit {
     public filepickerService: FilepickerService,
     public awsService: AwsService,
     public countryService: CountryService,
-    private authService: AuthService
+    private authService: AuthService,
+    private navCtrl: NavController
   ) {
   }
 
@@ -563,16 +564,47 @@ export class FulltimerFormPage implements OnInit {
 
       // On Failure
       if (jsonResponse.operation == 'error') {
-        const prompt = await this.alertCtrl.create({
-          message: this.authService.errorMessage(jsonResponse.message),
-          buttons: ['Ok']
-        });
-        prompt.present();
+        if (jsonResponse.data) {
+          this.confirmationBox(jsonResponse);
+        } else {
+          const prompt = await this.alertCtrl.create({
+            message: this.authService.errorMessage(jsonResponse.message),
+            buttons: ['Ok']
+          });
+          prompt.present();
+        }
       }
     });
   }
 
   logScrolling(e) {
-    this.borderLimit = (e.detail.scrollTop > 20) ? true : false;
+    this.borderLimit = (e.detail.scrollTop > 20);
+  }
+
+  async confirmationBox(jsonResponse) {
+      const alert = await this.alertCtrl.create({
+        header: this.authService.errorMessage(jsonResponse.message),
+        buttons: [
+          {
+            text: 'Cancel',
+            role: 'cancel',
+            handler: (blah) => {
+              console.log('Confirm Cancel: blah');
+            }
+          }, {
+            text: 'Show me that fulltimer account',
+            handler: () => {
+              this.modalCtrl.dismiss().then(() => {
+                setTimeout(() => {
+                  this.navCtrl.navigateForward(['fulltimer/' + jsonResponse.data.fulltimer_uuid]);
+                }, 100);
+              });
+              // this.close(false);
+            }
+          }
+        ]
+      });
+
+      await alert.present();
   }
 }
