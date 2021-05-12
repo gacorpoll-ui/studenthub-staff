@@ -486,6 +486,7 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
       component: FulltimeLocationPage,
       componentProps: {
         fulltimer: this.model,
+        from: 'sidebar',
       }
     });
     modal.present();

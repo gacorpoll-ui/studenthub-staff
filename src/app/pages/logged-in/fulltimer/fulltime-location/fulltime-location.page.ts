@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, NgZone } from '@angular/core';
+import {Component, OnInit, ViewChild, NgZone, OnDestroy} from '@angular/core';
 import { AlertController, ModalController, Platform, IonContent } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 // import { Storage } from '@ionic/storage';
@@ -29,7 +29,7 @@ const { Geolocation } = Plugins;
   templateUrl: './fulltime-location.page.html',
   styleUrls: ['./fulltime-location.page.scss'],
 })
-export class FulltimeLocationPage implements OnInit {
+export class FulltimeLocationPage implements OnInit, OnDestroy {
 
   public from = 'sign-up';
 
@@ -93,7 +93,6 @@ export class FulltimeLocationPage implements OnInit {
   }
 
   async ngOnInit() {
-
     if (!this.from) {
       this.from = this.activatedRoute.snapshot.paramMap.get('from');
     }
