@@ -41,7 +41,8 @@ export class CompanyContactListPage implements OnInit {
   ngOnInit() {
     if (this.company && this.company.companyContacts) {
       this.contactList = this.company.contacts;
-    } else if (this.company && this.company.company_id) {
+    } else 
+    if (this.company && this.company.company_id) {
       this.loadCompanyContacts();
     } else {
       this.loadData(); // load all contacts if no company given
