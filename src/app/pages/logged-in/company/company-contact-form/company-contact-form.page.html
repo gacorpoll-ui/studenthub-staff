@@ -69,12 +69,15 @@
       <div *ngIf="!contact">
 
         <ion-item>
-          <ion-label>Receives emails (invoices and notifications)</ion-label>
+          <ion-label>Send invoices and receipts</ion-label>
           <ion-toggle slot="end" formControlName="receive_email"></ion-toggle>
         </ion-item>
 
         <ion-item>
-          <ion-label>Receives suggested candidates</ion-label>
+          <ion-label>
+            Receives suggested candidates<br/>
+            <small>Receives suggested candidates via email (CC) even when they’re not the requester</small>
+          </ion-label>
           <ion-toggle slot="end" formControlName="receive_suggestions"></ion-toggle>
         </ion-item>
         <ion-item>
