@@ -14,6 +14,10 @@
         <ion-icon slot="start" name="trash-outline"></ion-icon>
         Delete
       </ion-button>
+      <ion-button *ngIf="contact" [routerLink]="'/view/company-request-dashboard/' + contact.contact_uuid">
+        <ion-icon slot="start" name="eye-outline"></ion-icon>
+        View Requests
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>

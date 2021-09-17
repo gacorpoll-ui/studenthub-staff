@@ -5,6 +5,7 @@ import { Request } from 'src/app/models/request';
 import { CompanyRequestService } from 'src/app/providers/logged-in/company-request.service';
 import {IonContent, NavController} from "@ionic/angular";
 import { EventService } from 'src/app/providers/event.service';
+import {ActivatedRoute} from "@angular/router";
 
 
 @Component({
@@ -25,17 +26,20 @@ export class CompanyRequestDashboardPage implements OnInit {
   public scrollPosition = 0;
 
   public total = 0;
+  public contact_uuid = null;
   public pageCount = 0;
   public currentPage = 1;
-
 
   public section = 'part';
 
   constructor(
     public requestService: CompanyRequestService,
     public eventService: EventService,
-    public navCtrl: NavController
-  ) { }
+    public navCtrl: NavController,
+    public activatedRoute: ActivatedRoute,
+  ) {
+    this.contact_uuid = this.activatedRoute.snapshot.paramMap.get('id');
+  }
 
   ngOnInit() {
     this.loadAllRequest();
@@ -62,7 +66,11 @@ export class CompanyRequestDashboardPage implements OnInit {
    * load part time request
    */
   loadRequests() {
-    this.requestService.listActiveWithPages(1, '&followup_interval=1').subscribe(response => {
+    let param = '&followup_interval=1';
+    if (this.contact_uuid) {
+      param += '&contact_uuid=' + this.contact_uuid;
+    }
+    this.requestService.listActiveWithPages(1, param).subscribe(response => {
       this.activeRequests = response.body;
       this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
       this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
@@ -92,11 +100,14 @@ export class CompanyRequestDashboardPage implements OnInit {
    * @param event
    */
   doInfinite(event) {
-
+    let param = '&followup_interval=1';
+    if (this.contact_uuid) {
+      param += '&contact_uuid=' + this.contact_uuid;
+    }
     this.loading = true;
 
     this.currentPage++;
-    this.requestService.listActiveWithPages(this.currentPage,'&followup_interval=1').subscribe(response => {
+    this.requestService.listActiveWithPages(this.currentPage,param).subscribe(response => {
         this.activeRequests = this.activeRequests.concat(response.body);
         this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
         this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
