@@ -36,7 +36,7 @@
               <h2 class="candidate-name" [title]=pendingData *ngIf="candidate.candidate_name">
                 {{ candidate.candidate_name }}
 
-                <ion-button size="small" class="btn-copy" (click)="copy(candidate.candidate_name)">
+                <ion-button size="small" class="btn-copy" (click)="copy($event, candidate.candidate_name)">
                   <ion-icon slot="icon-only" name="copy-outline"></ion-icon>
                 </ion-button>
               </h2>
@@ -44,7 +44,7 @@
               <h4 class="candidate-name" *ngIf="candidate.candidate_name_ar">
                 {{ candidate.candidate_name_ar }}
                 
-                <ion-button size="small" class="btn-copy" (click)="copy(candidate.candidate_name_ar)">
+                <ion-button size="small" class="btn-copy" (click)="copy($event, candidate.candidate_name_ar)">
                   <ion-icon slot="icon-only" name="copy-outline"></ion-icon>
                 </ion-button>
               </h4>
@@ -94,7 +94,7 @@
                   <p>Call (not set)</p>
                 </ion-label>
 
-                <ion-button slot="end" size="small" class="btn-copy" (click)="copy(candidate.candidate_phone)">
+                <ion-button slot="end" size="small" class="btn-copy" (click)="copy($event, candidate.candidate_phone)">
                   <ion-icon slot="icon-only" name="copy-outline"></ion-icon>
                 </ion-button>
 
@@ -113,7 +113,7 @@
                   <p>Whatsapp (not set)</p>
                 </ion-label>
 
-                <ion-button slot="end" size="small" class="btn-copy" (click)="copy(candidate.candidate_phone)">
+                <ion-button slot="end" size="small" class="btn-copy" (click)="copy($event, candidate.candidate_phone)">
                   <ion-icon slot="icon-only" name="copy-outline"></ion-icon>
                 </ion-button>
               </ion-item>
@@ -129,7 +129,7 @@
                   <p>Email (not set)</p>
                 </ion-label>
 
-                <ion-button slot="end" size="small" class="btn-copy" (click)="copy(candidate.candidate_email)">
+                <ion-button slot="end" size="small" class="btn-copy" (click)="copy($event, candidate.candidate_email)">
                   <ion-icon slot="icon-only" name="copy-outline"></ion-icon>
                 </ion-button>
               </ion-item>
