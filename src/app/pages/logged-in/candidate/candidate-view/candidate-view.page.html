@@ -43,7 +43,7 @@
 
               <h4 class="candidate-name" *ngIf="candidate.candidate_name_ar">
                 {{ candidate.candidate_name_ar }}
-                
+
                 <ion-button size="small" class="btn-copy" (click)="copy($event, candidate.candidate_name_ar)">
                   <ion-icon slot="icon-only" name="copy-outline"></ion-icon>
                 </ion-button>
@@ -465,7 +465,7 @@
         </ion-button>
       </ion-col>
 
-      <ion-col *ngIf="!candidate.candidate_hourly_rate">
+      <ion-col>
         <ion-button class="btn-hourly-rate" (click)="updateRate($event)">
           Set hourly rate
         </ion-button>
