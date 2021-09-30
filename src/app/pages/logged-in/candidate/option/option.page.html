@@ -1,5 +1,4 @@
 <ion-content [attr.dir]="translateService.direction()">
-
   <ion-item [disabled]="sendingPassword" (click)="resetPassword()" tappable>
     <div tabindex="0"></div>
     <span *ngIf="!sendingPassword">Send password reset email to candidate</span>
