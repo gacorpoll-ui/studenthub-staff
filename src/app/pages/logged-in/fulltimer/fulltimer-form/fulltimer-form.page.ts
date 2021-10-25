@@ -234,7 +234,7 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
   /**
    * Load list of universities available
    */
-   loadUniversityList() {
+  loadUniversityList() {
     this.universityService.listAll().subscribe(response => {
       this.universitylistData = response;
     });
