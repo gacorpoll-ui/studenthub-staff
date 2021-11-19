@@ -43,7 +43,7 @@ export class TeamListPage implements OnInit {
 
     this.loading = loading;
 
-    this.staffService.list(this.currentPage).subscribe(response => {
+    this.staffService.list(this.currentPage, '&expand=totalCompletedRequests').subscribe(response => {
 
       this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
       this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
@@ -77,7 +77,8 @@ export class TeamListPage implements OnInit {
     this.loadMore = true;
 
     this.currentPage++;
-    this.staffService.list(this.currentPage).subscribe(response => {
+
+    this.staffService.list(this.currentPage, '&expand=totalCompletedRequests').subscribe(response => {
 
       this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
       this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));

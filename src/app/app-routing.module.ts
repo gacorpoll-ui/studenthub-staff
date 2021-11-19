@@ -407,16 +407,28 @@ const routes: Routes = [
     }
   },
   {
+    path: 'staff',
+    canActivate: [AuthService],
+    loadChildren: () => import('./pages/logged-in/pickers/staff/staff.module').then( m => m.StaffPageModule),
+    data: {
+      name: 'StaffPage'
+    }
+  },
+  {
+    path: 'valocity',
+    canActivate: [AuthService],
+    loadChildren: () => import('./pages/logged-in/reports/valocity/valocity.module').then( m => m.ValocityPageModule),
+    data: {
+      name: 'ValocityPage'
+    }
+  },
+  {
     path: 'app-error',
     loadChildren: () => import('./pages/errors/app-error/app-error.module').then( m => m.AppErrorPageModule)
   },
   {
     path: '**',
     redirectTo: 'not-found'
-  },
-  {
-    path: 'staff',
-    loadChildren: () => import('./pages/logged-in/pickers/staff/staff.module').then( m => m.StaffPageModule)
   },
 ];
 
