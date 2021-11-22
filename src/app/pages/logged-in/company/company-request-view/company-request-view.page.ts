@@ -69,6 +69,8 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
 
   public internvalSubscribe;
 
+  public segment: string = 'activities';
+
   constructor(
     public modalCtrl: ModalController,
     public alertCtrl: AlertController,
@@ -727,5 +729,9 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
         loading.dismiss();
       }
     );
+  }
+
+  segmentChanged(event) {
+    this.segment = event.target.value;
   }
 }
