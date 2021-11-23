@@ -143,7 +143,8 @@ export class CandidateService {
       latitude: model.candidate_latitude,
       longitude: model.candidate_longitude,
       area_uuid: model.candidate_area_uuid,
-      mom_kuwait: model.candidate_mom_kuwaiti
+      mom_kuwait: model.candidate_mom_kuwaiti,
+      preferred_time: model.candidate_preferred_time
     };
     return this._authhttp.post(postUrl, params);
   }
@@ -185,6 +186,7 @@ export class CandidateService {
       longitude: model.candidate_longitude,
       area_uuid: model.candidate_area_uuid,
       mom_kuwait: model.candidate_mom_kuwaiti,
+      preferred_time: model.candidate_preferred_time
     };
 
     return this._authhttp.patch(url, params);
