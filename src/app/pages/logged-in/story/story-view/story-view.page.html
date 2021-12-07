@@ -10,7 +10,7 @@
 <ion-content [scrollEvents]="true" (ionScroll)="logScrolling($event)">
   <div class="container">
     <!-- <loading-modal [loading]="loading" type="request-detail"></loading-modal> -->
-    <div class="timer" *ngIf="story.story_status == 1">
+    <div class="timer" *ngIf="story && story.story_status == 1">
       <span id="days" *ngIf="daysToDday"> {{daysToDday}} </span>Day(s)
       <span id="hours" *ngIf="hoursToDday"> {{hoursToDday}} </span>Hrs
       <span id="minutes"> {{minutesToDday}} </span>Min

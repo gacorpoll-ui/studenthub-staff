@@ -449,6 +449,14 @@ const routes: Routes = [
     }
   },
   {
+    path: 'analytics',
+    loadChildren: () => import('./pages/logged-in/analytics/analytics.module').then( m => m.AnalyticsPageModule),
+    canActivate: [AuthService],
+    data: {
+      name: 'AnalyticsPage'
+    }
+  },
+  {
     path: 'app-error',
     loadChildren: () => import('./pages/errors/app-error/app-error.module').then( m => m.AppErrorPageModule)
   },

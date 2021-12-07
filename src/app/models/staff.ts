@@ -1,3 +1,5 @@
+import {StoryActivity} from './request';
+
 export class Staff {
     staff_id: number;
     staff_name: string;
@@ -5,4 +7,7 @@ export class Staff {
     staff_status: number;
     staff_created_at: string;
     staff_updated_at: string;
+    storyActivities: StoryActivity[];
+    groupStoryActivities: StoryActivity[];
 }
+

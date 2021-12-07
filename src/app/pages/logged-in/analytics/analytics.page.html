@@ -1,0 +1,34 @@
+<ion-header [class.add-border]="borderLimit" class="ion-no-border">
+  <ion-toolbar class="container">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Analytics</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="container">
+
+    <h1>Team Currently working on</h1>
+    <ng-container *ngIf="staffs && staffs.length > 0">
+      <div *ngFor="let staff of staffs">
+        <h1>{{staff.staff_name}}</h1>
+        <ng-container *ngIf="staff.groupStoryActivities.length > 0">
+          <ion-card *ngFor="let activity of staff.groupStoryActivities">
+            <ion-card-content>
+              <h2>{{activity.story.request.request_position_title}} for {{activity.story.request.company.company_name}}
+                time spent {{getTimeSpent(activity.story.story_time_spent)}}</h2>
+            </ion-card-content>
+          </ion-card>
+        </ng-container>
+        <ng-container *ngIf="staff.groupStoryActivities.length == 0">
+          <ion-card>
+            <ion-card-content>
+              <h2>No Work record found</h2>
+            </ion-card-content>
+          </ion-card>
+        </ng-container>
+      </div>
+    </ng-container>
+  </div>
+</ion-content>
