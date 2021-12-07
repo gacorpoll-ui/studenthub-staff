@@ -45,20 +45,10 @@ export class AnalyticsPage implements OnInit {
 
     this.loading = loading;
 
-    this.staffService.list(this.currentPage, '&role=2&expand=totalCompletedRequests,groupStoryActivities,groupStoryActivities.story,groupStoryActivities.story.request,groupStoryActivities.story.request,groupStoryActivities.story.request.company').subscribe(response => {
+    this.staffService.list(this.currentPage, '&role=2&expand=totalCompletedRequests,activeStory,activeStory.request,activeStory.request,activeStory.request.company').subscribe(response => {
         this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'), 10);
         this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'), 10);
         this.staffs = response.body;
-        // console.log(this.staffs);
-        if (this.staffs.length > 0) {
-          this.staffs.map((staff: any) => {
-            // console.log(staff.storyActivities.story);
-            if (staff && staff.storyActivities && staff.storyActivities.story && staff.storyActivities.story.request) {
-              this.records[staff?.storyActivities.story.request.request_uuid] = staff?.storyActivities;
-            }
-          });
-        }
-        console.log(this.records);
       },
       error => {
       },
