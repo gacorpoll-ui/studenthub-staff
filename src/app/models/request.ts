@@ -37,6 +37,7 @@ export class Request {
     staff: Staff;
     staffs: Staff[];
     storyOwners: Staff[];
+    stories: Story[];
 }
 /*
 enum Status {
@@ -56,6 +57,8 @@ export class Story {
   story_created_at: string;
   story_last_updated_at: string;
   request: Request;
+  staff: Staff;
+  storyActivities: StoryActivity[];
 }
 
 export class StoryActivity {
@@ -67,4 +70,5 @@ export class StoryActivity {
   activity_created_at: string;
   activity_last_updated_at: string;
   story: Story;
+  staff: Staff;
 }

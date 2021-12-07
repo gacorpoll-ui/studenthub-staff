@@ -76,16 +76,16 @@
 
       <p *ngIf="request.request_started_at && request.staff">
         Started {{ request.request_started_at | timeAgo }} By {{ request.staff.staff_name }}
-      </p>  
+      </p>
 
       <p *ngIf="request.request_started_at && request.request_cancelled_at">
-        Cancelled after {{ request.request_started_at | duration : translateService.currentLang : request.request_cancelled_at }} 
+        Cancelled after {{ request.request_started_at | duration : translateService.currentLang : request.request_cancelled_at }}
       </p>
 
       <p *ngIf="request.request_started_at && request.request_delivered_at">
         Took {{ request.request_started_at | duration : translateService.currentLang : request.request_delivered_at }} to complete
       </p>
-      
+
     </div>
 
     <ion-segment (ionChange)="segmentChanged($event)" value="activities">
@@ -93,7 +93,7 @@
       <ion-segment-button value="activities">
         <ion-label>Recent Activity</ion-label>
       </ion-segment-button>
-      
+
       <ion-segment-button *ngIf="invitedCandidates.length > 0 || rejectedCandidates.length > 0 || acceptedInvitations.length > 0" value="invitations">
         <ion-label>Invitations</ion-label>
       </ion-segment-button>
@@ -101,35 +101,54 @@
       <ion-segment-button *ngIf="suggestedSuggestions.length > 0 || rejectedSuggestions.length > 0 || acceptedSuggestions.length > 0" value="suggestions">
         <ion-label>Suggestions</ion-label>
       </ion-segment-button>
-      
+
       <ion-segment-button value="story-owners">
         <ion-label>Story Owners</ion-label>
       </ion-segment-button>
     </ion-segment>
 
     <div *ngIf="segment == 'story-owners'">
-      
-      <ion-list *ngIf="request.storyOwners && request.storyOwners.length > 0">
-        <ion-item tappable *ngFor="let staff of request.storyOwners" (click)="staffSelected(staff)">
-          <div tabindex="0"></div>
-          <ion-label>
-            {{ staff.staff_name }} 
-            <span *ngIf="authService.staff_id == staff.staff_id">&nbsp;•&nbsp;You</span>
-            <br/>
-            <small>{{ staff.staff_email }}</small><br/>
 
-            <ion-note>
-              {{ staff.totalCompletedRequests }} requests completed
-            </ion-note>
-          </ion-label>
-          <ion-badge class="company_status_badge" slot="end" color="danger" *ngIf="!staff.staff_status">
-            Inactive
-          </ion-badge>
-          <ion-badge class="company_status_badge" slot="end" color="success" *ngIf="staff.staff_status">
-            Active
-          </ion-badge>
+      <ion-list *ngIf="request.stories && request.stories.length > 0">
+        <div *ngFor="let story of request.stories" (click)="staffSelected(story.staff)">
+          <ion-item tappable class="story">
+            <ng-container *ngIf="story.staff">
+              <div tabindex="0"></div>
+              <ion-label>
+                {{ story.staff.staff_name }}
+                <span *ngIf="authService.staff_id == story.staff.staff_id">&nbsp;•&nbsp;You</span>
+                <br/>
+                <small>{{ story.staff.staff_email }}</small><br/>
+                <small *ngIf="story.story_status == 0">Status : Un started</small>
+                <small *ngIf="story.story_status == 1">Status : Started</small>
+                <small *ngIf="story.story_status == 2">Status : Finished</small>
+                <small *ngIf="story.story_status == 3">Status : Delivered</small>
+                <small *ngIf="story.story_status == 4">Status : Rejected</small>
+                <small *ngIf="story.story_status == 5">Status : Accepted</small>
+                <br/>
+                <ion-note>
+                  Time spent : {{ getTimeSpent(story.story_time_spent) }}
+                </ion-note>
+              </ion-label>
+              <ion-badge class="company_status_badge" slot="end" color="danger" *ngIf="!story.staff.staff_status">
+                Inactive
+              </ion-badge>
+              <ion-badge class="company_status_badge" slot="end" color="success" *ngIf="story.staff.staff_status">
+                Active
+              </ion-badge>
+              <br/>
+            </ng-container>
+            <ng-container *ngIf="!story.staff">
+              No one working on this story
+            </ng-container>
+          </ion-item>
+          <ng-container *ngIf="story.staff">
+            <ion-item class="activity" *ngFor="let activity of story.storyActivities">
+              <small>Started Working <span *ngIf="activity.staff">by <strong>{{activity.staff.staff_name}}</strong> </span> at {{activity.activity_created_at | date: 'medium'}} and stopped at {{activity.activity_last_updated_at | date : 'medium'}}</small>
+            </ion-item>
+          </ng-container>
+        </div>
 
-        </ion-item>  
       </ion-list>
     </div>
 
@@ -189,7 +208,7 @@
         <span *ngIf="!activityExpanded">View all {{ requestActivities.length }} notes</span>
         <span *ngIf="activityExpanded">Collapse</span>
       </ion-button>
-    </div> 
+    </div>
 
   </div>
 </ion-content>

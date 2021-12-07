@@ -146,6 +146,7 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
 
     this.requestService.view(this.request_uuid).subscribe(data => {
       this.request = data;
+      console.log(this.request);
       this.loadRequestActivities();
       this.loadSuggestions();
       this.loadInvitations();
@@ -261,16 +262,16 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
    * @param date
    */
   toDate(date) {
-    if (!date) 
+    if (!date)
       return null;
-      
+
     if (date) {
       return new Date(date.replace(/-/g, '/'));
     }
   }
 
   /**
-   * open popup to select consultants 
+   * open popup to select consultants
    */
   async assign() {
 
@@ -621,7 +622,7 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
   }
 
   /**
-   * select full timer 
+   * select full timer
    * @param $event
    * @param fulltimer
    */
@@ -660,7 +661,7 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
 
   /**
    * show dialog to get reason for suggestion
-   * @param fulltimer_uuid 
+   * @param fulltimer_uuid
    */
   async showSuggestionDialog(fulltimer_uuid) {
     const alert = await this.alertCtrl.create({
@@ -744,5 +745,43 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
 
   segmentChanged(event) {
     this.segment = event.target.value;
+  }
+
+  getTimeSpent(time) {
+    let seconds = 0;
+    let minutes = 0;
+    let hours = 0;
+    let days = 0;
+    let months = 0;
+    seconds = time;
+    if (seconds > 60) {
+      minutes = (time / 60);
+    }
+    if (minutes > 60) {
+      hours = (minutes / 60 );
+    }
+    if (hours > 24) {
+      days = (hours / 24 );
+    }
+    if (days > 31) {
+      months = (days / 31 );
+    }
+
+    if (months) {
+      return months.toFixed(2) + ' months';
+    }
+    if (days) {
+      return days.toFixed(2) + ' days';
+    }
+    if (hours) {
+      return hours.toFixed(2) + ' hours';
+    }
+    if (minutes) {
+      return minutes.toFixed(2) + ' minutes';
+    }
+    if (seconds) {
+      return seconds.toFixed(2) + ' seconds';
+    }
+
   }
 }
