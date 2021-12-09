@@ -14,7 +14,7 @@ import { InvitationService } from 'src/app/providers/logged-in/invitation.servic
 import { Invitation } from 'src/app/models/invitation';
 import { AuthService } from 'src/app/providers/auth.service';
 import { InvitationListPage } from '../../invitation-list/invitation-list.page';
-import { IonNav, ModalController, NavController } from '@ionic/angular';
+import {AlertController, IonNav, ModalController, NavController} from '@ionic/angular';
 import { SuggestionService } from 'src/app/providers/logged-in/suggestion.service';
 import { TranslateLabelService } from 'src/app/providers/translate-label.service';
 
@@ -85,7 +85,8 @@ export class StoryViewPage implements OnInit, OnDestroy {
     public authService: AuthService,
     private changeDetector: ChangeDetectorRef,
     public eventService: EventService,
-    public router: Router
+    public router: Router,
+    public alertCtrl: AlertController
   ) { }
 
   ngOnInit() {
@@ -188,8 +189,6 @@ export class StoryViewPage implements OnInit, OnDestroy {
   }
 
 
-
-
   /**
  * save suggestion
  */
@@ -206,14 +205,13 @@ export class StoryViewPage implements OnInit, OnDestroy {
         this.loadData();
       }
 
-      // // On Failure
-      // if (response.operation == 'error') {
-      //   const prompt = await this.alertCtrl.create({
-      //     message: this.authService.errorMessage(response.message),
-      //     buttons: ['Okay']
-      //   });
-      //   prompt.present();
-      // }
+      if (response.operation == 'error') {
+        const prompt = await this.alertCtrl.create({
+          message: this.authService.errorMessage(response.message),
+          buttons: ['Okay']
+        });
+        prompt.present();
+      }
     }, () => {
       this.loading = false;
     });
