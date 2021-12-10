@@ -125,8 +125,6 @@ export class StoryViewPage implements OnInit, OnDestroy {
     this.stopTimer();
   }
 
-
-
   loadData() {
     this.loading = true;
 
@@ -136,6 +134,7 @@ export class StoryViewPage implements OnInit, OnDestroy {
       this.story = res;
       this.request = this.story.request;
 
+      console.log(this.story);
       this.loadInvitations();
       this.loadSuggestions();
       if (this.story.story_status == 1) {
@@ -188,10 +187,10 @@ export class StoryViewPage implements OnInit, OnDestroy {
     });
   }
 
-
   /**
- * save suggestion
- */
+   * save suggestion
+   * @param status
+   */
   changeStoryStatus(status) {
     this.loading = true;
 
@@ -233,7 +232,6 @@ export class StoryViewPage implements OnInit, OnDestroy {
       });
     }
   }
-
 
     /**
    * Loads the create page

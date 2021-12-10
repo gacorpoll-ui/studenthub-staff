@@ -19,6 +19,10 @@ export class MyWorkPage implements OnInit {
   ) { }
 
   ngOnInit() {
+
+  }
+
+  ionViewWillEnter() {
     this.loadActiveStories();
     this.loadAllOtherStories();
   }
