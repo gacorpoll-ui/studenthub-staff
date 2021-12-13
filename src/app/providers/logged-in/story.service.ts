@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs';
-import {AuthHttpService} from "./authhttp.service";
+
+// services
+import {AuthHttpService} from './authhttp.service';
 
 
 @Injectable({
@@ -26,7 +28,7 @@ export class StoryService {
    * get the current story that staff is workin on
    * @param storyUuid
    */
-  getCurrentStory(urlParams='?expand=request,request.company'): Observable<any>{
+  getCurrentStory(urlParams= '?expand=request,request.company'): Observable<any>{
     return this._authhttp.get(`${this.storyEndpoint}/current-story${urlParams}`);
   }
 
@@ -34,7 +36,7 @@ export class StoryService {
    * detail
    * @param storyUuid
    */
-  detail(storyUuid: number,urlParams): Observable<any>{
+  detail(storyUuid: number, urlParams): Observable<any>{
     return this._authhttp.get(`${this.storyEndpoint}/${storyUuid}${urlParams}`);
   }
 
@@ -42,7 +44,7 @@ export class StoryService {
    * detail
    * @param storyUuid
    */
-  loadActiveStory(urlParams='?expand=request,request.company'): Observable<any>{
+  loadActiveStory(urlParams= '?expand=request,request.company'): Observable<any>{
     return this._authhttp.get(`${this.storyEndpoint}/active-story${urlParams}`);
   }
 
@@ -50,7 +52,7 @@ export class StoryService {
    * detail
    * @param storyUuid
    */
-  listAllOldHistory(urlParams='?expand=request,request.company'): Observable<any>{
+  listAllOldHistory(urlParams= '?expand=request,request.company'): Observable<any>{
     return this._authhttp.get(`${this.storyEndpoint}/all-old-stories${urlParams}`);
   }
 
@@ -61,8 +63,8 @@ export class StoryService {
   changeStoryStatus(status: number, story_uuid): Observable<any>{
     const url = `${this.storyEndpoint}/change-story-status`;
     return this._authhttp.post(url, {
-      story_uuid: story_uuid,
-      status: status,
+      story_uuid,
+      status,
     });
 
   }

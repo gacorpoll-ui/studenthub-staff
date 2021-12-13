@@ -54,6 +54,22 @@ const routes: Routes = [
         }
       },
       {
+        path: 'feedback-backlog',
+        loadChildren: () => import('../feedback-backlog/feedback-backlog.module').then( m => m.FeedbackBacklogPageModule),
+        canActivate: [AuthService],
+        data: {
+          name: 'FeedbackBacklogPage'
+        }
+      },
+      {
+        path: 'story-list',
+        loadChildren: () => import('../story/story-list/story-list.module').then( m => m.StoryListPageModule),
+        canActivate: [AuthService],
+        data: {
+          name: 'StoryPageList'
+        }
+      },
+      {
         path: 'my-work',
         loadChildren: () => import('../my-work/my-work.module').then( m => m.MyWorkPageModule),
         data: {

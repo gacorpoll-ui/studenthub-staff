@@ -283,7 +283,6 @@ const routes: Routes = [
       name: 'TeamViewPage'
     }
   },
-
   {
     path: 'fulltimer',
     loadChildren: () => import('./pages/logged-in/fulltimer/fulltimer-view/fulltimer-view.module').then( m => m.FulltimerViewPageModule),
@@ -352,6 +351,14 @@ const routes: Routes = [
     canActivate: [AuthService],
     data: {
       name: 'SuggestionViewPage'
+    }
+  },
+  {
+    path: 'story-view',
+    loadChildren: () => import('./pages/logged-in/story/story-view/story-view.module').then( m => m.StoryViewPageModule),
+    canActivate: [AuthService],
+    data: {
+      name: 'StoryViewPage'
     }
   },
   {
@@ -436,6 +443,14 @@ const routes: Routes = [
     loadChildren: () => import('./pages/logged-in/client-feedback-backlog/client-feedback-backlog.module').then( m => m.ClientFeedbackBacklogPageModule),
     data: {
       name: 'ClientFeedbackBacklogPage'
+    }
+  },
+  {
+    path: 'invitation-list',
+    loadChildren: () => import('./pages/logged-in/invitation-list/invitation-list.module').then( m => InvitationListPageModule),
+    canActivate: [AuthService],
+    data: {
+      name: 'invitationListPage'
     }
   },
   {

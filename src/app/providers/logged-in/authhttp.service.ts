@@ -64,13 +64,13 @@ export class AuthHttpService {
   getRaw(endpointUrl: string): Observable<any> {
     const url = environment.apiEndpoint + endpointUrl;
     const headers = this._buildAuthHeaders();
-    //https://www.techiediaries.com/angular-httpclient-headers-full-response/
-    return this._http.get(url, { headers: headers, observe: 'response' })
+    // https://www.techiediaries.com/angular-httpclient-headers-full-response/
+    return this._http.get(url, { headers, observe: 'response' })
       .pipe(
         retryWhen(genericRetryStrategy()),
         catchError((err) => this._handleError(err)),
         take(1),
-        map((res: HttpResponse<any>) => { return res })
+        map((res: HttpResponse<any>) => res)
       );
   }
 
@@ -83,12 +83,12 @@ export class AuthHttpService {
     const url = environment.apiEndpoint + endpointUrl;
     const headers = this._buildAuthHeaders();
 
-    return this._http.get(url, { headers: headers })
+    return this._http.get(url, { headers })
       .pipe(
         retryWhen(genericRetryStrategy()),
         catchError((err) => this._handleError(err)),
         take(1),
-        map((res: HttpResponse<any>) => { return res })
+        map((res: HttpResponse<any>) => res )
       );
   }
 
@@ -103,17 +103,16 @@ export class AuthHttpService {
     const bearerToken = this._auth.getAccessToken();
 
     return this._http.get(url, {
-      responseType: 'blob', //ResponseContentType.Blob,  https://github.com/angular/angular/issues/18654#issuecomment-321947661
+      responseType: 'blob', // ResponseContentType.Blob,  https://github.com/angular/angular/issues/18654#issuecomment-321947661
       headers: new HttpHeaders({
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Bearer ' + bearerToken
+        Authorization: 'Bearer ' + bearerToken
       })
     }).pipe(
       retryWhen(genericRetryStrategy()),
       map((response) => { // download file
-        var blob = new Blob([response], { type: 'application/pdf' });
-        //file name to dowanload/generate invoice
-        saveAs(blob, filename);
+        let blob = new Blob([response], { type: 'application/pdf' });
+        saveAs(blob, filename); // file name to dowanload/generate invoice
       })
     );
   }
@@ -129,10 +128,10 @@ export class AuthHttpService {
     const bearerToken = this._auth.getAccessToken();
 
     return this._http.get(url, {
-      responseType: 'blob', //ResponseContentType.Blob,  https://github.com/angular/angular/issues/18654#issuecomment-321947661
+      responseType: 'blob', // ResponseContentType.Blob,  https://github.com/angular/angular/issues/18654#issuecomment-321947661
       headers: new HttpHeaders({
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Bearer ' + bearerToken
+        Authorization: 'Bearer ' + bearerToken
       })
     }).pipe(
       // retryWhen(genericRetryStrategy()),
@@ -167,8 +166,7 @@ export class AuthHttpService {
   post(endpointUrl: string, params: any, withHeader: boolean = false): Observable<any> {
     const url = environment.apiEndpoint + endpointUrl;
     const headers = this._buildAuthHeaders();
-    let responseHeader = { headers: headers, observe: 'response' };
-    return this._http.post(url, JSON.stringify(params), { headers: headers, observe: 'response' })
+    return this._http.post(url, JSON.stringify(params), { headers, observe: 'response' })
       .pipe(
         retryWhen(genericRetryStrategy()),
         catchError((err) => this._handleError(err)),
@@ -189,12 +187,12 @@ export class AuthHttpService {
     const url = environment.apiEndpoint + endpointUrl;
     const headers = this._buildAuthHeaders();
 
-    return this._http.patch(url, JSON.stringify(params), { headers: headers })
+    return this._http.patch(url, JSON.stringify(params), { headers })
       .pipe(
         retryWhen(genericRetryStrategy()),
         catchError((err) => this._handleError(err)),
         take(1),
-        map((res: HttpResponse<any>) => { return res })
+        map((res: HttpResponse<any>) => res )
       );
   }
 
@@ -213,16 +211,16 @@ export class AuthHttpService {
     // Build Headers with Bearer Token
     // headers.append('Content-Type', 'multipart/form-data; charset=utf-8; boundary=' + Math.random().toString().substr(2));
     const headers = new HttpHeaders({
-      'Authorization': 'Bearer ' + bearerToken,
-      'Accept': 'application/json',
-      'enctype': 'multipart/form-data'
+      Authorization: 'Bearer ' + bearerToken,
+      Accept: 'application/json',
+      enctype: 'multipart/form-data'
     });
 
-    return this._http.post(url, formData, { headers: headers })
+    return this._http.post(url, formData, { headers })
       .pipe(
         retryWhen(genericRetryStrategy()),
         catchError((err) => this._handleError(err)),
-        map((res: HttpResponse<any>) => { return res })
+        map((res: HttpResponse<any>) => res)
       );
   }
 
@@ -236,12 +234,12 @@ export class AuthHttpService {
     const url = environment.apiEndpoint + endpointUrl;
     const headers = this._buildAuthHeaders();
 
-    return this._http.delete(url, { headers: headers })
+    return this._http.delete(url, { headers })
       .pipe(
         retryWhen(genericRetryStrategy()),
         catchError((err) => this._handleError(err)),
         take(1),
-        map((res: HttpResponse<any>) => { return res })
+        map((res: HttpResponse<any>) => res)
       );
   }
 
@@ -253,9 +251,9 @@ export class AuthHttpService {
     const bearerToken = this._auth.getAccessToken();
     // Build Headers with Bearer Token
     return new HttpHeaders({
-      'Authorization': 'Bearer ' + bearerToken,
+      Authorization: 'Bearer ' + bearerToken,
       'Content-Type': 'application/json',
-      'Language': 'en'
+      Language: 'en'
     });
   }
 
