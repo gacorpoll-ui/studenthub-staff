@@ -197,6 +197,7 @@ export class StoryViewPage implements OnInit, OnDestroy {
       if (response.operation == 'success') {
 
         this.story.story_status = status;
+
         // story work started
         if (status == 1) {
             this.authService.story = this.story;
@@ -308,7 +309,7 @@ export class StoryViewPage implements OnInit, OnDestroy {
    * show candidate to invite
    */
   showCandidates() {
-    console.log(this.request.request_position_type);
+    
     if ([2, '2'].indexOf(this.request.request_position_type) > -1) {
       this.navCtrl.navigateForward('candidate-list', {
         state: {

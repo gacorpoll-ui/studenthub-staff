@@ -174,7 +174,8 @@
   </div>
 
 </ion-content>
-<ion-footer class="ion-text-center">
+<!-- enable if my active story -->
+<ion-footer class="ion-text-center" *ngIf="authService.staff_id == story.staff_id && story.story_status == 1">
   <ion-button (click)="showCandidates()">
     Select applicant to invite
   </ion-button>

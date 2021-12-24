@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertController, ModalController } from '@ionic/angular';
 // models
 import { Candidate } from 'src/app/models/candidate';
-import { Request } from 'src/app/models/request';
+import { Request, Story } from 'src/app/models/request';
 import { AuthService } from 'src/app/providers/auth.service';
 import { EventService } from 'src/app/providers/event.service';
 import { InvitationService } from 'src/app/providers/logged-in/invitation.service';
@@ -30,7 +30,10 @@ export class InvitePage implements OnInit {
   public activeRequestsData: Request[] = [];
 
   public form: FormGroup;
+  
   public query;
+  
+  public story: Story;
 
   constructor(
     private fb: FormBuilder,
@@ -53,6 +56,7 @@ export class InvitePage implements OnInit {
       request_uuid: ['', Validators.required],
       candidate_id: [this.candidate ? this.candidate.candidate_id : null],
       reason: ['', Validators.required],
+      story_uuid: this.story?.story_uuid
     });
   }
 

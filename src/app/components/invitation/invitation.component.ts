@@ -23,8 +23,6 @@ export class InvitationComponent implements OnInit {
 
   @Input() model: Invitation;
 
-  @Input() story: Story; 
-
   public loading: boolean = false;
 
   constructor(
@@ -98,7 +96,7 @@ export class InvitationComponent implements OnInit {
             const param = {
               suggestion: data.feedback,
               request_uuid: this.model.request_uuid,
-              story_uuid: this.story?.story_uuid,
+              story_uuid: this.model.story_uuid,
               fulltimer_uuid: null,
               candidate_id: this.model.candidate_id
             };

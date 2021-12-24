@@ -70,13 +70,23 @@
 
 <!-- move to suggestion if not suggested and accepted -->
 
-<ion-button [disabled]="!story" *ngIf="!model.is_suggested && model.invitation_status == 3" class="btn-suggestion"
+<ion-button [disabled]="!model.invitation_created_by_company && (
+    !model.story || authService.staff_id != model.story.staff_id
+  )" 
+  *ngIf="(!model.story || model.story.story_status == 1) && 
+    !model.is_suggested && model.invitation_status == 3" class="btn-suggestion"
   (click)="suggest($event)">
   Move to suggestion
 </ion-button>
 
-<p class="txt-danger" *ngIf="!story && !model.is_suggested && model.invitation_status == 3">
-  You need to start story to move this invitation
+<!-- created by staff but missing story from invitation -->
+
+<p class="txt-danger" *ngIf="!model.invitation_created_by_company && !model.story">
+  Missing story for this invitation
 </p>
 
+<!-- <p class="txt-danger" *ngIf="model.story && authService.staff_id != model.story.staff_id">
+  You should be owner to move this invitation to suggestion
+</p>
+-->
 <div class="clearfix"></div>
