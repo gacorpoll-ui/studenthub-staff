@@ -155,7 +155,9 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
         if(story.staff_id == this.authService.staff_id) {
           this.activeStory = story;
         }
-      })
+      });
+
+      console.log(this.authService.staff_id, this.activeStory);
 
       this.loadRequestActivities();
       this.loadSuggestions();
@@ -195,6 +197,7 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
    * load invitations for this request
    */
   loadInvitations(loading = true) {
+    
     this.invitationService.list('&request_uuid=' + this.request_uuid).subscribe(invitations => {
 
       this.invitedCandidates = invitations.filter(invitation => invitation.invitation_status == 1);

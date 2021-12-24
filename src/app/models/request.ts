@@ -52,7 +52,7 @@ export class Story {
   request_uuid: string;
   suggestion_uuid: string;
   staff_id: number;
-  story_status: string;
+  story_status: number;
   story_time_spent: number;
   story_created_at: string;
   story_last_updated_at: string;
