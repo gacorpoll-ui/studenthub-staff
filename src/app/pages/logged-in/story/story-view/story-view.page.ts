@@ -91,11 +91,8 @@ export class StoryViewPage implements OnInit, OnDestroy {
     const state = window.history.state;
 
     if (state.model) {
-      this.story = state.model;
-      this.request = this.story.request;
       this.loadInvitations();
       this.loadSuggestions();
-
     }
 
     if (!this.story) {
@@ -281,15 +278,14 @@ export class StoryViewPage implements OnInit, OnDestroy {
 
   private getTimeDifference() {
     this.dDay = new Date(this.dDay);
-    this.timeDifference = this.dDay.getTime() - new Date().getTime();
+    this.timeDifference = new Date().getTime() - this.dDay.getTime();
     this.allocateTimeUnits(this.timeDifference);
   }
 
   private allocateTimeUnits(timeDifference) {
     this.secondsToDday = Math.floor((timeDifference) / (this.milliSecondsInASecond) % this.SecondsInAMinute);
     this.minutesToDday = Math.floor((timeDifference) / (this.milliSecondsInASecond * this.minutesInAnHour) % this.SecondsInAMinute);
-    // this.hoursToDday = Math.floor((timeDifference) / (this.milliSecondsInASecond * this.minutesInAnHour * this.SecondsInAMinute) % this.hoursInADay);
-    this.hoursToDday = Math.floor((timeDifference) / (this.milliSecondsInASecond * this.minutesInAnHour * this.SecondsInAMinute));
+    this.hoursToDday = Math.floor((timeDifference) / (this.milliSecondsInASecond * this.minutesInAnHour * this.SecondsInAMinute) % this.hoursInADay);
     this.daysToDday = Math.floor((timeDifference) / (this.milliSecondsInASecond * this.minutesInAnHour * this.SecondsInAMinute * this.hoursInADay));
   }
 
@@ -309,7 +305,7 @@ export class StoryViewPage implements OnInit, OnDestroy {
    * show candidate to invite
    */
   showCandidates() {
-    
+
     if ([2, '2'].indexOf(this.request.request_position_type) > -1) {
       this.navCtrl.navigateForward('candidate-list', {
         state: {
