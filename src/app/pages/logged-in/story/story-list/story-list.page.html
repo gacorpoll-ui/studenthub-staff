@@ -3,7 +3,12 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/view/tasks"></ion-back-button>
     </ion-buttons>
-    <ion-title>Suggestion Backlog</ion-title>
+    <ion-title>Suggestion Backlog <small *ngIf="total && !loading">(Total : {{total}})</small></ion-title>
+  </ion-toolbar>
+  <ion-toolbar class="container">
+    <ion-button (click)="filter('all')">All </ion-button>
+    <ion-button (click)="filter('rejected')">Rejected </ion-button>
+    <ion-button (click)="filter('unstarted')">Un Started </ion-button>
   </ion-toolbar>
 </ion-header>
 
@@ -18,10 +23,8 @@
 
           <ion-card-header>
             <ion-card-subtitle>
-
                 <span *ngIf="story.request.request_position_type == 1">Full-time -</span>
                 <span *ngIf="story.request.request_position_type == 2">Part-time -</span>
-
               {{story.request.request_position_title}}</ion-card-subtitle>
             <ion-card-title>for</ion-card-title>
           </ion-card-header>
@@ -29,7 +32,7 @@
             <p *ngIf="story.request.company">
               {{story.request.company.company_name}}
             </p>
-            
+
             <ion-badge color="primary" *ngIf="story">
               <span *ngIf="story.story_status == 0"> Unstarted </span>
               <span *ngIf="story.story_status == 1"> Started </span>

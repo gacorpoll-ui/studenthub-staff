@@ -14,9 +14,10 @@ import { StoryService } from '../../../../providers/logged-in/story.service';
 export class StoryListPage implements OnInit {
 
   public borderLimit = false;
-
+  public storyStatus = 'all';
   public pageCount = 0;
   public currentPage = 1;
+  public total;
   public loading = false;
   public loadMore = false;
   public deleting = false;
@@ -42,10 +43,15 @@ export class StoryListPage implements OnInit {
 
     this.loading = loading;
 
-    this.storyService.list(this.currentPage, '&expand=request,request.company').subscribe(response => {
+    let param = '&expand=request,request.company';
+    if (this.storyStatus) {
+      param += '&story_status=' + this.storyStatus;
+    }
+    this.storyService.list(this.currentPage, param).subscribe(response => {
 
       this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
       this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
+      this.total = parseInt(response.headers.get('X-Pagination-Total-Count'));
       this.stories = response.body;
     },
       error => {
@@ -77,7 +83,12 @@ export class StoryListPage implements OnInit {
 
     this.currentPage++;
 
-    this.storyService.list(this.currentPage, '&expand=request,request.company').subscribe(response => {
+    let param = '&expand=request,request.company';
+    if (this.storyStatus) {
+      param += '&story_status=' + this.storyStatus;
+    }
+
+    this.storyService.list(this.currentPage, param).subscribe(response => {
 
       this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
       this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
@@ -95,5 +106,10 @@ export class StoryListPage implements OnInit {
 
   logScrolling(e) {
     this.borderLimit = (e.detail.scrollTop > 20);
+  }
+
+  filter(status) {
+    this.storyStatus = status;
+    this.loadData(1);
   }
 }
