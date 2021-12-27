@@ -10,16 +10,67 @@
 <ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
   <div class="container">
 
-    <ng-container>
-      <request-listing *ngFor="let request of activeRequests" tappable (click)="requestDetail(request)"
-                       [request]="request" [showStatus]="false"></request-listing>
-    </ng-container>
+    <ion-segment (ionChange)="segmentChanged($event)" value="request">
 
-    <ion-infinite-scroll *ngIf="currentPage < pageCount" (ionInfinite)="doInfinite($event)">
-      <ion-infinite-scroll-content></ion-infinite-scroll-content>
-    </ion-infinite-scroll>
+      <ion-segment-button value="request">
+        <ion-label>All Requests</ion-label>
+      </ion-segment-button>
 
-    <loading-modal [loading]="loading" type="request-list"></loading-modal>
+      <ion-segment-button value="story">
+        <ion-label>Stories</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <div *ngIf="segment == 'request'">
+      <ng-container>
+        <request-listing *ngFor="let request of activeRequests" tappable (click)="requestDetail(request)"
+                         [request]="request" [showStatus]="false"></request-listing>
+      </ng-container>
+
+      <ion-infinite-scroll *ngIf="currentPage < pageCount" (ionInfinite)="doInfinite($event)">
+        <ion-infinite-scroll-content></ion-infinite-scroll-content>
+      </ion-infinite-scroll>
+
+      <loading-modal [loading]="loading" type="request-list"></loading-modal>
+    </div>
+
+    <div *ngIf="segment == 'story'">
+
+      <ion-list *ngIf="!loading">
+        <section>
+          <h2 *ngIf="stories && stories.length == 0" >No Story Available</h2>
+          <ion-card tappable *ngFor="let story of stories" (click)="rowSelected(story)">
+
+            <ion-card-header>
+              <ion-card-subtitle>
+                <span *ngIf="story.request.request_position_type == 1">Full-time -</span>
+                <span *ngIf="story.request.request_position_type == 2">Part-time -</span>
+                {{story.request.request_position_title}}</ion-card-subtitle>
+              <ion-card-title>for</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <p *ngIf="story.request.company">
+                {{story.request.company.company_name}}
+              </p>
+
+              <ion-badge color="primary" *ngIf="story">
+                <span *ngIf="story.story_status == 0"> Unstarted </span>
+                <span *ngIf="story.story_status == 1"> Started </span>
+                <span *ngIf="story.story_status == 3"> Delivered </span>
+                <span *ngIf="story.story_status == 4"> Rejected </span>
+                <span *ngIf="story.story_status == 5"> Accepted </span>
+              </ion-badge>
+            </ion-card-content>
+          </ion-card>
+
+        </section>
+      </ion-list>
+
+      <ion-infinite-scroll *ngIf="storyCurrentPage < storyPageCount" (ionInfinite)="doInfiniteStories($event)">
+        <ion-infinite-scroll-content></ion-infinite-scroll-content>
+      </ion-infinite-scroll>
+    </div>
+
   </div>
   <div class="add-request mobile-only" tappable routerLink="/request-form">
     <ion-icon name="add-outline"></ion-icon>

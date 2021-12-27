@@ -26,7 +26,7 @@
 
     <div *ngIf="story && request">
 
-      <ion-button *ngIf="((story.story_status == 0 && !story.staff_id) || story.story_status == 4 )" color="success"
+      <ion-button *ngIf="(story.story_status == 0 || story.story_status == 4 )" color="success"
         fill="solid" expand="block" (click)="changeStoryStatus(1)">
         <span>Start</span>
       </ion-button>
@@ -103,15 +103,11 @@
 
     <ion-segment *ngIf="story" (ionChange)="segmentChanged($event)" value="invitations">
 
-      <ion-segment-button
-        *ngIf="invitedCandidates.length > 0 || rejectedCandidates.length > 0 || acceptedInvitations.length > 0"
-        value="invitations">
+      <ion-segment-button value="invitations">
         <ion-label>Invitations</ion-label>
       </ion-segment-button>
 
-      <ion-segment-button
-        *ngIf="story.story_status == 1 && (suggestedSuggestions.length > 0 || rejectedSuggestions.length > 0 || acceptedSuggestions.length > 0)"
-        value="suggestions">
+      <ion-segment-button value="suggestions">
         <ion-label>Suggestions</ion-label>
       </ion-segment-button>
 
@@ -141,41 +137,38 @@
           </ion-col>
         </ion-row>
       </ion-grid>
-
-      <!-- <invitation *ngFor="let invitation of invitedCandidates" [model]="invitation"></invitation> -->
-      <!-- <h4 class="txt-suggested-candidates">Rejected Invitations by Candidates ({{ rejectedCandidates.length }})</h4> -->
-      <!-- <invitation *ngFor="let invitation of rejectedCandidates" [model]="invitation"></invitation> -->
-      <!-- - ability to move to suggestion -->
-      <!-- <invitation *ngFor="let invitation of acceptedInvitations" (onUpdate)="onInvitationUpdated()" [model]="invitation"></invitation> -->
-
     </div>
 
     <div *ngIf="story && story.story_status == 1 && segment == 'suggestions'">
 
-      <ion-button (click)="viewSuggestionList(suggestedSuggestions, 'Suggested Candidates')" color="primary"
-        fill="solid" expand="block">
-        <span>Suggested Candidates ({{ suggestedSuggestions.length }})</span>
-      </ion-button>
-
-
-      <ion-button (click)="viewSuggestionList(rejectedSuggestions, 'Rejected Suggestions')" color="danger" fill="solid"
-        expand="block">
-        <span>Rejected Suggestions ({{ rejectedSuggestions.length }})</span>
-      </ion-button>
-
-
-      <ion-button (click)="viewSuggestionList(acceptedSuggestions, 'Accepted Suggestions')" color="success" fill="solid"
-        expand="block">
-        <span>Accepted Suggestions ({{ acceptedSuggestions.length }})</span>
-      </ion-button>
-
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-button (click)="viewSuggestionList(suggestedSuggestions, 'Suggested Candidates')" color="primary"
+              fill="solid" expand="block">
+              <span>Suggested Candidates ({{ suggestedSuggestions.length }})</span>
+            </ion-button>
+          </ion-col>
+          <ion-col>
+            <ion-button (click)="viewSuggestionList(rejectedSuggestions, 'Rejected Suggestions')" color="danger" fill="solid"
+              expand="block">
+              <span>Rejected Suggestions ({{ rejectedSuggestions.length }})</span>
+            </ion-button>
+          </ion-col>
+          <ion-col>
+            <ion-button (click)="viewSuggestionList(acceptedSuggestions, 'Accepted Suggestions')" color="success" fill="solid"
+              expand="block">
+              <span>Accepted Suggestions ({{ acceptedSuggestions.length }})</span>
+            </ion-button>
+          </ion-col>
+          </ion-row>
+      </ion-grid>
     </div>
-
   </div>
 
 </ion-content>
 <!-- enable if my active story -->
-<ion-footer class="ion-text-center" *ngIf="authService.staff_id == story.staff_id && story.story_status == 1">
+<ion-footer class="ion-text-center" *ngIf="authService && story && authService.staff_id == story.staff_id && story.story_status == 1">
   <ion-button (click)="showCandidates()">
     Select applicant to invite
   </ion-button>

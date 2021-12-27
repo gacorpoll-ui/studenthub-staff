@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-//models
+// models
 import { Request } from 'src/app/models/request';
-//services
+// services
 import { CompanyRequestService } from 'src/app/providers/logged-in/company-request.service';
-import {IonContent, NavController} from "@ionic/angular";
+import {IonContent, NavController} from '@ionic/angular';
 import { EventService } from 'src/app/providers/event.service';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute} from '@angular/router';
+import {StoryService} from '../../../../providers/logged-in/story.service';
 
 
 @Component({
@@ -17,7 +18,7 @@ export class CompanyRequestDashboardPage implements OnInit {
 
   @ViewChild(IonContent, { static: true }) content: IonContent;
 
-  public loading: boolean = false;
+  public loading = false;
 
   public borderLimit = false;
 
@@ -29,14 +30,22 @@ export class CompanyRequestDashboardPage implements OnInit {
   public contact_uuid = null;
   public pageCount = 0;
   public currentPage = 1;
+  public stories: any[] = [];
+
+  storyPageCount  = 0;
+  storyCurrentPage = 0;
+  storyTotal = 0;
+  storyStatus = 'all';
 
   public section = 'part';
+  public segment = 'request';
 
   constructor(
     public requestService: CompanyRequestService,
     public eventService: EventService,
     public navCtrl: NavController,
     public activatedRoute: ActivatedRoute,
+    private storyService: StoryService,
   ) {
     this.contact_uuid = this.activatedRoute.snapshot.paramMap.get('id');
   }
@@ -60,6 +69,7 @@ export class CompanyRequestDashboardPage implements OnInit {
 
   loadAllRequest() {
     this.loadRequests();
+    this.loadStories(1);
   }
 
   /**
@@ -107,7 +117,7 @@ export class CompanyRequestDashboardPage implements OnInit {
     this.loading = true;
 
     this.currentPage++;
-    this.requestService.listActiveWithPages(this.currentPage,param).subscribe(response => {
+    this.requestService.listActiveWithPages(this.currentPage, param).subscribe(response => {
         this.activeRequests = this.activeRequests.concat(response.body);
         this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
         this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
@@ -119,5 +129,80 @@ export class CompanyRequestDashboardPage implements OnInit {
         event.target.complete();
       }
     );
+  }
+
+  segmentChanged(event) {
+    this.segment = event.target.value;
+  }
+
+  /**
+   * load store list
+   * @param page
+   * @param loading
+   */
+  async loadStories(page: number, loading = true) {
+
+    this.loading = loading;
+
+    let param = '&expand=request,request.company';
+
+    if (this.storyStatus) {
+      param += '&story_status=' + this.storyStatus;
+    }
+    this.storyService.list(this.currentPage, param).subscribe(response => {
+
+        this.storyPageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
+        this.storyCurrentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
+        this.storyTotal = parseInt(response.headers.get('X-Pagination-Total-Count'));
+        this.stories = response.body;
+      },
+      error => {
+      },
+      () => {
+        this.loading = false;
+      }
+    );
+  }
+
+  /**
+   * load more
+   * @param event
+   */
+  doInfiniteStories(event) {
+    // this.loadMore = true;
+
+    this.currentPage++;
+
+    let param = '&expand=request,request.company';
+    if (this.storyStatus) {
+      param += '&story_status=' + this.storyStatus;
+    }
+
+    this.storyService.list(this.currentPage, param).subscribe(response => {
+
+        this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
+        this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
+
+        this.stories = this.stories.concat(response.body);
+      },
+      error => {
+      },
+      () => {
+        // this.loadMore = false;
+        event.target.complete();
+      }
+    );
+  }
+
+  /**
+   * When its selected
+   */
+  rowSelected(model) {
+    // Load Detail Page
+    this.navCtrl.navigateForward('story-view/' + model.story_uuid, {
+      state: {
+        model
+      }
+    });
   }
 }

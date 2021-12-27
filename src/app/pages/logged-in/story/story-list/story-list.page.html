@@ -18,7 +18,7 @@
 
     <ion-list *ngIf="!loading">
       <section>
-
+        <h2 *ngIf="stories && stories.length == 0" >No Story Available</h2>
         <ion-card tappable *ngFor="let story of stories" (click)="rowSelected(story)">
 
           <ion-card-header>
