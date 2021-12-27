@@ -142,7 +142,7 @@ export class StoryViewPage implements OnInit, OnDestroy {
       this.rejectedCandidates = invitations.filter(invitation => invitation.invitation_status == 2);
 
       this.acceptedInvitations = invitations.filter(invitation => invitation.invitation_status == 3);
-    })
+    });
   }
 
   /**
