@@ -1,183 +1,257 @@
-
 ion-card {
-    margin-left: 0;
-    margin-right: 0;
-    margin-bottom: 16px;
-    border-radius: 5px;
-    background-color: #ffffff;
-    box-shadow: none;
+  margin:14px 0 0 0;
+  padding: 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  background-color: #fff;
 
-    ion-card-header {
-        margin: 0;
-        position: relative;
-        background-color: #f2c94c;
-        margin-bottom: 0;
-
-        ion-card-title {
-            font-size: 21px;
-            font-weight: bold;
-            font-stretch: normal;
-            font-style: normal;
-            line-height: 1.31;
-            letter-spacing: normal;
-            text-align: left;
-            color: #000000;
-        }
-
-        ion-card-subtitle {
-            font-size: 16px;
-            font-weight: bold;
-            font-stretch: normal;
-            font-style: normal;
-            line-height: 1.31;
-            letter-spacing: normal;
-            text-align: left;
-            color: #000000;
-        }
-
-        p {
-            font-size: 16px;
-            font-weight: normal;
-            font-stretch: normal;
-            font-style: normal;
-            line-height: 1.31;
-            letter-spacing: normal;
-            text-align: left;
-            color: #000;
-            margin: 10px 0 5px 0;
-        }
+  ion-card-content {
+    padding: 0;
+    .inner-card-content {
+      padding: 16px 12px;
     }
+  }
+  h1 {
+    font-family: Inter;
+    font-size: 18px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.33;
+    letter-spacing: normal;
+    text-align: left;
+    color: #23233d;
+  }
+  h3 {
+    font-family: Inter;
+    font-size: 16px;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-align: left;
+    color: #3f5dca;
+  }
+  ion-icon[name='checkmark-outline'] {
+    background: #2CB564;
+    color: #fff;
+    border-radius: 50%;
+  }
 
-    ion-card-content {
-        position: relative;
-        border-radius: 5px;
-        background-color: #ffffff;
-        border: solid 1px #bdbdbd;
-
-        font-size: 16px;
-        font-weight: normal;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: 1.65;
-        letter-spacing: normal;
-        text-align: left;
-        color: #000;
-        padding: 17px 24px 55px 24px;
-
-        .content-footer {
-          position: absolute;
-          bottom: 0;
-          width: 100%;
-          left: 0;
-          padding:9px;
-
-          p {
-            font-size: 12px;
-            font-weight: bold;
-            font-stretch: normal;
-            font-style: normal;
-            line-height: 1.43;
-            letter-spacing: normal;
-            text-align: center;
-            color: #ffffff;
-            margin: 0;
-            padding: 0;
-          }
-        }
-
-        ion-badge {
-          margin: 0 5px 0 0px;
-
-          ion-icon {
-            float: left;
-          }
-        }
-
-        .txt-additional-info {
-          margin: 8px 0 9px;
-          font-family: EffraLight;
-          font-size: 14px;
-          font-weight: normal;
-          font-stretch: normal;
-          font-style: normal;
-          line-height: 1.65;
-          letter-spacing: normal;
-          text-align: left;
-        }
-
-        h1 {
-          font-size: 18px;
-          font-weight: bold;
-          font-stretch: normal;
-          font-style: normal;
-          line-height: 1.65;
-          letter-spacing: normal;
-          text-align: left;
-          color: #000000;
-        }
-        h3 {
-          font-size: 16px;
-          font-weight: normal;
-          font-stretch: normal;
-          font-style: normal;
-          line-height: 1.65;
-          letter-spacing: normal;
-          text-align: left;
-        }
-        h5 {
-          font-size: 16px;
-          font-weight: bold;
-          font-stretch: normal;
-          font-style: normal;
-          line-height: 1.65;
-          letter-spacing: normal;
-          text-align: left;
-          color: #000;
-          margin-top: 40px;
-          margin-bottom: 10px;
-        }
-
-        .time {
-          font-size: 14px;
-          font-weight: normal;
-          font-stretch: normal;
-          font-style: normal;
-          line-height: 1.65;
-          letter-spacing: normal;
-          text-align: left;
-          color: #000;
-        }
-    }
-}
-
-.pending ion-card-header {
-    background-color: #f2994a;
-}
-
-.background-red {
-  background: #eb5757
-}
-
-.background-grey {
-  background: #f2f2f2;
-
-  p {
-    color: #000000 !important;
+  ion-icon[name='close-outline'] {
+    background: #2CB564;
+    color: #fff;
+    border-radius: 50%;
+  }
+  .time {
+    font-family: Inter;
+    font-size: 12px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.33;
+    letter-spacing: normal;
+    text-align: left;
+    color: #7d7d8d;
+  }
+  ion-badge {
+    justify-content: center;
+    align-items: center;
+    padding: 6px 12px;
+    margin-right: 10px;
+    border-radius: 8px;
+    background-color: #f5f5f7;
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.43;
+    letter-spacing: normal;
+    text-align: left;
+    color: #68687a;
+  }
+  .txt-additional-info {
+    padding: 16px 0;
+  }
+  .content-footer {
+    padding: 11px;
+    border-top: 2px solid #e2e2e6;
   }
 }
-
-.background-green {
-  background: #219653
-}
-
-.pending-request {
-  padding: 17px 24px 52px 24px!important;
-}
-
-.invitation-time {
-  border: solid 1px #bdbdbd;
-  border-radius: 4px;
-  padding: 5px 10px;
-  background: #eee;
-  margin: 10px 0;
-}
+//
+//    ion-card-header {
+//        margin: 0;
+//        position: relative;
+//        background-color: #f2c94c;
+//        margin-bottom: 0;
+//
+//        ion-card-title {
+//            font-size: 21px;
+//            font-weight: bold;
+//            font-stretch: normal;
+//            font-style: normal;
+//            line-height: 1.31;
+//            letter-spacing: normal;
+//            text-align: left;
+//            color: #000000;
+//        }
+//
+//        ion-card-subtitle {
+//            font-size: 16px;
+//            font-weight: bold;
+//            font-stretch: normal;
+//            font-style: normal;
+//            line-height: 1.31;
+//            letter-spacing: normal;
+//            text-align: left;
+//            color: #000000;
+//        }
+//
+//        p {
+//            font-size: 16px;
+//            font-weight: normal;
+//            font-stretch: normal;
+//            font-style: normal;
+//            line-height: 1.31;
+//            letter-spacing: normal;
+//            text-align: left;
+//            color: #000;
+//            margin: 10px 0 5px 0;
+//        }
+//    }
+//
+//    ion-card-content {
+//        position: relative;
+//        border-radius: 5px;
+//        background-color: #ffffff;
+//        border: solid 1px #bdbdbd;
+//
+//        font-size: 16px;
+//        font-weight: normal;
+//        font-stretch: normal;
+//        font-style: normal;
+//        line-height: 1.65;
+//        letter-spacing: normal;
+//        text-align: left;
+//        color: #000;
+//        padding: 17px 24px 55px 24px;
+//
+//        .content-footer {
+//          position: absolute;
+//          bottom: 0;
+//          width: 100%;
+//          left: 0;
+//          padding:9px;
+//
+//          p {
+//            font-size: 12px;
+//            font-weight: bold;
+//            font-stretch: normal;
+//            font-style: normal;
+//            line-height: 1.43;
+//            letter-spacing: normal;
+//            text-align: center;
+//            color: #ffffff;
+//            margin: 0;
+//            padding: 0;
+//          }
+//        }
+//
+//        ion-badge {
+//          margin: 0 5px 0 0px;
+//
+//          ion-icon {
+//            float: left;
+//          }
+//        }
+//
+//        .txt-additional-info {
+//          margin: 8px 0 9px;
+//          font-family: EffraLight;
+//          font-size: 14px;
+//          font-weight: normal;
+//          font-stretch: normal;
+//          font-style: normal;
+//          line-height: 1.65;
+//          letter-spacing: normal;
+//          text-align: left;
+//        }
+//
+//        h1 {
+//          font-size: 18px;
+//          font-weight: bold;
+//          font-stretch: normal;
+//          font-style: normal;
+//          line-height: 1.65;
+//          letter-spacing: normal;
+//          text-align: left;
+//          color: #000000;
+//        }
+//        h3 {
+//          font-size: 16px;
+//          font-weight: normal;
+//          font-stretch: normal;
+//          font-style: normal;
+//          line-height: 1.65;
+//          letter-spacing: normal;
+//          text-align: left;
+//        }
+//        h5 {
+//          font-size: 16px;
+//          font-weight: bold;
+//          font-stretch: normal;
+//          font-style: normal;
+//          line-height: 1.65;
+//          letter-spacing: normal;
+//          text-align: left;
+//          color: #000;
+//          margin-top: 40px;
+//          margin-bottom: 10px;
+//        }
+//
+//        .time {
+//          font-size: 14px;
+//          font-weight: normal;
+//          font-stretch: normal;
+//          font-style: normal;
+//          line-height: 1.65;
+//          letter-spacing: normal;
+//          text-align: left;
+//          color: #000;
+//        }
+//    }
+//}
+//
+//.pending ion-card-header {
+//    background-color: #f2994a;
+//}
+//
+//.background-red {
+//  background: #eb5757
+//}
+//
+//.background-grey {
+//  background: #f2f2f2;
+//
+//  p {
+//    color: #000000 !important;
+//  }
+//}
+//
+//.background-green {
+//  background: #219653
+//}
+//
+//.pending-request {
+//  padding: 17px 24px 52px 24px!important;
+//}
+//
+//.invitation-time {
+//  border: solid 1px #bdbdbd;
+//  border-radius: 4px;
+//  padding: 5px 10px;
+//  background: #eee;
+//  margin: 10px 0;
+//}

@@ -1,25 +1,32 @@
 <ion-header [class.add-border]="borderLimit" class="ion-no-border">
-  <ion-toolbar class="container">
-    <ion-title>Active Requests (<span *ngIf="activeRequests">{{activeRequests.length}}</span>)</ion-title>
+  <ion-toolbar class="container title">
+    <ion-title>Requests</ion-title>
+  </ion-toolbar>
+  <ion-toolbar  class="container">
+    <ion-searchbar type="tel"></ion-searchbar>
+
     <ion-buttons slot="end">
-      <ion-button routerLink="/company-request-list">View Older</ion-button>
+      <ion-button class="setting_btn">
+        <ion-icon name="options-outline"></ion-icon>
+      </ion-button>
     </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar  class="container">
+    <ion-segment mode="md" (ionChange)="segmentChanged($event)" value="request">
+
+      <ion-segment-button  mode="md" value="request">
+        <ion-label>All Requests</ion-label>
+      </ion-segment-button>
+
+      <ion-segment-button  mode="md" value="story">
+        <ion-label>Stories</ion-label>
+      </ion-segment-button>
+    </ion-segment>
   </ion-toolbar>
 </ion-header>
 
 <ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
   <div class="container">
-
-    <ion-segment (ionChange)="segmentChanged($event)" value="request">
-
-      <ion-segment-button value="request">
-        <ion-label>All Requests</ion-label>
-      </ion-segment-button>
-
-      <ion-segment-button value="story">
-        <ion-label>Stories</ion-label>
-      </ion-segment-button>
-    </ion-segment>
 
     <div *ngIf="segment == 'request'">
       <ng-container>

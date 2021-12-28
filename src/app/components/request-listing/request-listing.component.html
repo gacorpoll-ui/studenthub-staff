@@ -1,86 +1,78 @@
 <ion-card [class.pending]="request.request_status == 'pending'" tappable>
   <ion-card-content>
-    <h1 *ngIf="request.company">
-      {{ request.company.company_common_name_en? request.company.company_common_name_en: request.company.company_name }}
-    </h1>
+    <div class="inner-card-content">
+      <h1>({{ request.request_number_of_employees }}) {{request.request_position_title}}</h1>
+      <h3 *ngIf="request.company">
+        {{ request.company.company_common_name_en? request.company.company_common_name_en: request.company.company_name }}
+        <ion-icon name="checkmark-outline"  *ngIf="request.company && request.company.company_approved_to_hire"></ion-icon>
+        <ion-icon name="close-outline"  *ngIf="request.company && !request.company.company_approved_to_hire"></ion-icon>
+      </h3>
 
-    <ion-badge slot="end" class="suggested" *ngIf="invitation && invitation.invitation_uuid && invitation.invitation_status == 3 && invitation.is_suggested">
-      Already Suggested
-    </ion-badge>
+      <small class="time">{{ request.request_created_datetime | timeAgo }} </small>
 
-    <ion-badge slot="end" class="suggested" color="success" *ngIf="request.company && request.company.company_approved_to_hire">
-      <ion-icon name="checkmark-outline"></ion-icon> Approved to hire
-    </ion-badge>
 
-    <ion-badge slot="end" class="suggested" color="warning" *ngIf="request.company && !request.company.company_approved_to_hire">
-      <ion-icon name="close-outline"></ion-icon> Not approved to hire
-    </ion-badge>
+      <p *ngIf="request.request_additional_info" class="txt-additional-info">{{request.request_additional_info.substr(0,85)}}...</p>
 
-    <h3>
-      Looking for <b>{{ request.request_number_of_employees }}
-      <span *ngIf="request.request_position_type == 1">Full-time</span>
-      <span *ngIf="request.request_position_type == 2">Part-time</span>
-      {{ request.request_position_title }}</b>
-    </h3>
+  <!--    <p *ngIf="request.num_hours_followup_interval" class="txt-additional-info">Number of Hours to Followup Interval: <strong>{{request.num_hours_followup_interval}} hours</strong></p>-->
 
-    <p *ngIf="request.request_additional_info" [ngStyle]="{ 'white-space': 'pre-wrap' }" class="txt-additional-info" [innerHTML]="request.request_additional_info"></p>
-    <p *ngIf="request.num_hours_followup_interval" class="txt-additional-info">Number of Hours to Followup Interval: <strong>{{request.num_hours_followup_interval}} hours</strong></p>
+  <!--    <p class="invitation-time" *ngIf="invitation">-->
 
-    <small class="time">Request made {{ request.request_created_datetime | timeAgo }} </small><br/>
+  <!--      Invited at {{ toDate(invitation.invitation_created_at) | date: 'MMM d, y, h:mm:ss a' }}, first-->
 
-    <p class="invitation-time" *ngIf="invitation">
+  <!--      <ng-container *ngIf="-->
+  <!--        invitation.invitation_app_seen_at &&-->
+  <!--        (-->
+  <!--          !invitation.invitation_email_seen_at ||-->
+  <!--          toDate(invitation.invitation_app_seen_at) > toDate(invitation.invitation_email_seen_at)-->
+  <!--        )-->
+  <!--        ">-->
+  <!--        saw the invitation via app at {{ toDate(invitation.invitation_app_seen_at) | date: 'MMM d, y, h:mm:ss a' }}-->
+  <!--        (took her {{ invitation.invitation_created_at | duration : translateService.currentLang : invitation.invitation_app_seen_at }})-->
+  <!--      </ng-container>-->
 
-      Invited at {{ toDate(invitation.invitation_created_at) | date: 'MMM d, y, h:mm:ss a' }}, first
+  <!--      <ng-container *ngIf="-->
+  <!--        invitation.invitation_email_seen_at &&-->
+  <!--        (-->
+  <!--          !invitation.invitation_app_seen_at ||-->
+  <!--          toDate(invitation.invitation_email_seen_at) > toDate(invitation.invitation_app_seen_at)-->
+  <!--        )-->
+  <!--        ">-->
+  <!--        saw the invitation via email at {{ toDate(invitation.invitation_email_seen_at) | date: 'MMM d, y, h:mm:ss a' }}-->
+  <!--        (took her {{ invitation.invitation_created_at | duration : translateService.currentLang : invitation.invitation_email_seen_at }})-->
+  <!--      </ng-container>-->
 
-      <ng-container *ngIf="
-        invitation.invitation_app_seen_at &&
-        (
-          !invitation.invitation_email_seen_at ||
-          toDate(invitation.invitation_app_seen_at) > toDate(invitation.invitation_email_seen_at)
-        )
-        ">
-        saw the invitation via app at {{ toDate(invitation.invitation_app_seen_at) | date: 'MMM d, y, h:mm:ss a' }}
-        (took her {{ invitation.invitation_created_at | duration : translateService.currentLang : invitation.invitation_app_seen_at }})
-      </ng-container>
+  <!--      <ng-container *ngIf="!invitation.invitation_app_seen_at && !invitation.invitation_email_seen_at">-->
+  <!--        Not viewed yet-->
+  <!--      </ng-container>-->
 
-      <ng-container *ngIf="
-        invitation.invitation_email_seen_at &&
-        (
-          !invitation.invitation_app_seen_at ||
-          toDate(invitation.invitation_email_seen_at) > toDate(invitation.invitation_app_seen_at)
-        )
-        ">
-        saw the invitation via email at {{ toDate(invitation.invitation_email_seen_at) | date: 'MMM d, y, h:mm:ss a' }}
-        (took her {{ invitation.invitation_created_at | duration : translateService.currentLang : invitation.invitation_email_seen_at }})
-      </ng-container>
+  <!--    </p>-->
 
-      <ng-container *ngIf="!invitation.invitation_app_seen_at && !invitation.invitation_email_seen_at">
-        Not viewed yet
-      </ng-container>
+  <!--    <ng-container *ngIf="showStatus && invitation">-->
+  <!--      <ion-badge *ngIf="invitation && invitation.invitation_status == 1" color="warning">-->
+  <!--        Invited-->
+  <!--      </ion-badge>-->
+  <!--      <ion-badge *ngIf="invitation && invitation.invitation_status == 3" color="success">-->
+  <!--        Invitation Accepted-->
+  <!--      </ion-badge>-->
+  <!--      <ion-badge *ngIf="invitation && invitation.invitation_status == 2" color="danger">-->
+  <!--        Invitation Rejected-->
+  <!--      </ion-badge>-->
+  <!--    </ng-container>-->
 
-    </p>
+      <div>
+        <ion-badge *ngIf="request.request_position_type == 1">Full-time</ion-badge>
+        <ion-badge *ngIf="request.request_position_type == 2">Part-time</ion-badge>
+        <ion-badge *ngFor="let staff of request.staffs">
+          {{ staff.staff_name }}
+        </ion-badge>
+      </div>
+    </div>
 
-    <ng-container *ngIf="showStatus && invitation">
-      <ion-badge *ngIf="invitation && invitation.invitation_status == 1" color="warning">
-        Invited
-      </ion-badge>
-      <ion-badge *ngIf="invitation && invitation.invitation_status == 3" color="success">
-        Invitation Accepted
-      </ion-badge>
-      <ion-badge *ngIf="invitation && invitation.invitation_status == 2" color="danger">
-        Invitation Rejected
-      </ion-badge>
-    </ng-container>
+    <div *ngIf="request" class="content-footer ion-text-center" [class.background-grey]="active" [class.background-red]="!active" [class.background-green]="request.request_status == 'delivered'">
 
-    <ion-badge *ngFor="let staff of request.staffs">
-      {{ staff.staff_name }}
-    </ion-badge>
-    
-    <div *ngIf="request" class="content-footer" [class.background-grey]="active" [class.background-red]="!active" [class.background-green]="request.request_status == 'delivered'">
-      
       <p *ngIf="request.request_started_at && request.staff">
         Started {{ request.request_started_at | timeAgo }} By {{ request.staff.staff_name }}
-      </p>  
+      </p>
 
       <p *ngIf="request.request_status == 'delivered'">Delivered {{ request.request_updated_datetime | timeAgo }} </p>
       <p *ngIf="request.request_status == 'cancelled'">Cancelled {{ request.request_updated_datetime | timeAgo }} </p>
@@ -89,7 +81,7 @@
       <p *ngIf="!active && late">{{ getLateTime(late)}}</p>
 
       <p *ngIf="request.request_started_at && request.request_cancelled_at">
-        Cancelled after {{ request.request_started_at | duration : translateService.currentLang : request.request_cancelled_at }} 
+        Cancelled after {{ request.request_started_at | duration : translateService.currentLang : request.request_cancelled_at }}
       </p>
 
       <p *ngIf="request.request_started_at && request.request_delivered_at">
@@ -97,6 +89,5 @@
       </p>
 
     </div>
-
   </ion-card-content>
 </ion-card>
