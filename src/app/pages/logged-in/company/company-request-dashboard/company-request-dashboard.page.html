@@ -2,8 +2,8 @@
   <ion-toolbar class="container title">
     <ion-title>Requests</ion-title>
   </ion-toolbar>
-  <ion-toolbar  class="container">
-    <ion-searchbar type="tel"></ion-searchbar>
+  <ion-toolbar  class="container searchbar-wrapper">
+    <ion-searchbar mode="md" [(ngModel)]="query" (ionInput)="searchFilter($event)" debounce=250></ion-searchbar>
 
     <ion-buttons slot="end">
       <ion-button class="setting_btn" (click)="openFilter()">

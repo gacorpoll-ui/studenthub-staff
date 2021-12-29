@@ -8,7 +8,12 @@ import { ModalController } from '@ionic/angular';
 })
 export class RequestFilterComponent implements OnInit {
 
-  public filters;
+  public filters = {
+    requestStatus: null,
+    position_type: null,
+    startDate: null,
+    endDate: null,
+  };
 
   constructor(
     public modalCtrl: ModalController

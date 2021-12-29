@@ -361,7 +361,7 @@ ng5-slider {
 
   .modal-wrapper {
       width: 390px;
-      height: 455px;
+      height: 490px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -380,6 +380,7 @@ ng5-slider {
 @media only screen and (max-width: 768px) {
   .modal-request-filter {
       .modal-wrapper {
+          height: 456px;
           position: fixed;
           width: 100%;
           bottom: 0;

@@ -49,6 +49,8 @@ export class CompanyRequestDashboardPage implements OnInit {
     endDate: null,
   };
 
+  public query = '';
+
   constructor(
     public requestService: CompanyRequestService,
     public eventService: EventService,
@@ -80,6 +82,8 @@ export class CompanyRequestDashboardPage implements OnInit {
   }
 
   loadAllRequest() {
+
+
     this.loadRequests();
     this.loadStories(1);
   }
@@ -88,10 +92,9 @@ export class CompanyRequestDashboardPage implements OnInit {
    * load part time request
    */
   loadRequests() {
-    let param = '&followup_interval=1';
-    if (this.contact_uuid) {
-      param += '&contact_uuid=' + this.contact_uuid;
-    }
+
+    let param = this.urlParams();
+
     this.requestService.listActiveWithPages(1, param).subscribe(response => {
       this.activeRequests = response.body;
       this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
@@ -122,13 +125,13 @@ export class CompanyRequestDashboardPage implements OnInit {
    * @param event
    */
   doInfinite(event) {
-    let param = '&followup_interval=1';
-    if (this.contact_uuid) {
-      param += '&contact_uuid=' + this.contact_uuid;
-    }
+    
+    let param = this.urlParams();
+
     this.loading = true;
 
     this.currentPage++;
+
     this.requestService.listActiveWithPages(this.currentPage, param).subscribe(response => {
       this.activeRequests = this.activeRequests.concat(response.body);
       this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
@@ -141,6 +144,43 @@ export class CompanyRequestDashboardPage implements OnInit {
         event.target.complete();
       }
     );
+  }
+
+  /**
+   * Return url string to filter list
+   */
+  urlParams() {
+    let urlParams = '&followup_interval=1';
+    
+    if (this.contact_uuid) {
+      urlParams += '&contact_uuid=' + this.contact_uuid;
+    }
+
+    if (this.query) {
+      urlParams += '&query=' + this.query;
+    }
+
+    if (this.filters.requestStatus) {
+      urlParams += '&request_status=' + this.filters.requestStatus;
+    }
+
+    if (this.filters.startDate) {
+      const d = new Date(this.filters.startDate);
+      const month = d.getMonth() + 1;
+      urlParams += '&start_date=' + d.getFullYear() + '-' + month + '-' + d.getDate();
+    }
+
+    if (this.filters.endDate) {
+      const d = new Date(this.filters.endDate);
+      const month = d.getMonth() + 1;
+      urlParams += '&end_date=' + d.getFullYear() + '-' + month + '-' + d.getDate();
+    }
+
+    if (this.filters.position_type) {
+      urlParams += '&position_type=' + this.filters.position_type;
+    }
+
+    return urlParams;
   }
 
   segmentChanged(event) {
@@ -161,6 +201,7 @@ export class CompanyRequestDashboardPage implements OnInit {
     if (this.storyStatus) {
       param += '&story_status=' + this.storyStatus;
     }
+
     this.storyService.list(this.currentPage, param).subscribe(response => {
 
       this.storyPageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
@@ -229,7 +270,7 @@ export class CompanyRequestDashboardPage implements OnInit {
       component: RequestFilterComponent,
       cssClass: 'modal-request-filter',
       componentProps: {
-        filters: this.filters
+        filters: Object.assign({}, this.filters)
       }
     });
 
@@ -237,10 +278,24 @@ export class CompanyRequestDashboardPage implements OnInit {
 
     const { data } = await modal.onWillDismiss();
 
-    console.log(data);
+    if(data && (
+        data.requestStatus != this.filters.requestStatus || 
+        data.position_type != this.filters.position_type || 
+        data.startDate != this.filters.startDate || 
+        data.endDate != this.filters.endDate
+    )) {
+      this.filters = data;
 
-    /*if (data.tax <= 0) {
-      return false;
-    }*/
+      this.loadAllRequest();
+    }
+  }
+
+  searchFilter(event) {
+
+    this.query = event.target.value; 
+
+    //if(event.key.which == 13) {
+      this.loadAllRequest();
+    //}
   }
 }

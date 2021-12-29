@@ -77,9 +77,6 @@ ion-footer {
   }
 }
 
-ion-searchbar {
-  --background: #f5f5f7;
-}
 ion-toolbar ion-title {
   font-family: Inter;
   font-size: 32px;
@@ -92,10 +89,11 @@ ion-toolbar ion-title {
   padding: 20px;
   text-align: justify;
 }
+
 ion-toolbar.title {
   margin-top: 15px;
-  margin-bottom: 14px;
 }
+
 ion-segment-button {
   text-transform: inherit;
   font-family: Inter;
@@ -113,4 +111,39 @@ ion-segment-button.segment-button-checked {
   color: #263879;
   --indicator-color	:#263879;
   --border-color	:#263879;
+}
+
+.searchbar-wrapper {
+  padding: 0 20px;
+
+  ion-searchbar {
+    --background: #f5f5f7;
+    border-radius: 8px;
+    background-color: #f5f5f7;
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.43;
+    letter-spacing: normal;
+    --placeholder-color: #7d7d8d;
+    color: #333333;
+    --box-shadow: none;
+    --min-height: 40px;
+    --height: 40px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    --icon-color: rgba(125, 125, 141, 0.7);
+  }
+
+  ion-button {
+    width: 40px;
+    height: 40px;
+    flex-grow: 0;
+    margin: 0 0 0 16px;
+    border-radius: 8px;
+    background-color: #f5f5f7;
+  }
 }
