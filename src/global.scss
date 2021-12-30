@@ -355,6 +355,7 @@ ng5-slider {
   clear: both;
 }
 
+.modal-change-password,
 .modal-request-filter {
 
   --backdrop-opacity: 0.75;
@@ -377,7 +378,12 @@ ng5-slider {
   }
 }
 
+.modal-change-password .modal-wrapper {
+  height: 467px;
+}
+
 @media only screen and (max-width: 768px) {
+  .modal-change-password,
   .modal-request-filter {
       .modal-wrapper {
           height: 456px;
@@ -390,5 +396,9 @@ ng5-slider {
       .drager {
           display: block !important;
       }
+  }
+
+  .modal-change-password .modal-wrapper {
+    height: 490px;
   }
 }

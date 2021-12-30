@@ -1,12 +1,16 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 // services
 import { StaffService } from 'src/app/providers/logged-in/staff.service';
 import { NoteService } from 'src/app/providers/logged-in/note.service';
 import { EventService } from 'src/app/providers/event.service';
+import { AuthService } from 'src/app/providers/auth.service';
 // models
 import { Staff } from 'src/app/models/staff';
 import { Note } from 'src/app/models/note';
+//components
+import { ChangePasswordComponent } from 'src/app/components/change-password/change-password.component';
 
 
 @Component({
@@ -27,10 +31,14 @@ export class TeamViewPage implements OnInit {
   public currentPage = 1;
   public notes: Note[] = [];
 
+  public segment = 'details';
+
   constructor(
     private activatedRoute: ActivatedRoute,
+    public modalCtrl: ModalController,
     private staffService: StaffService,
     private noteService: NoteService,
+    public authService: AuthService,
     public eventService: EventService
   ) { }
 
@@ -122,4 +130,21 @@ export class TeamViewPage implements OnInit {
       }
     );
   }
+
+  segmentChanged(event) {
+    this.segment = event.target.value;
+  }
+
+  /**
+   * todo: ability to update password
+   */
+  async changePassword() {
+    
+    const modal = await this.modalCtrl.create({
+      component: ChangePasswordComponent,
+      cssClass: 'modal-change-password'
+    });
+
+    await modal.present();
+  } 
 }

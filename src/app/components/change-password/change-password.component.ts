@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController, ToastController } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AlertController, ToastController, ModalController } from '@ionic/angular';
 //services
 import { AuthService } from 'src/app/providers/auth.service';
 import { AccountService } from 'src/app/providers/logged-in/account.service';
@@ -8,29 +8,27 @@ import { AccountService } from 'src/app/providers/logged-in/account.service';
 
 @Component({
   selector: 'app-change-password',
-  templateUrl: './change-password.page.html',
-  styleUrls: ['./change-password.page.scss'],
+  templateUrl: './change-password.component.html',
+  styleUrls: ['./change-password.component.scss'],
 })
-export class ChangePasswordPage implements OnInit {
+export class ChangePasswordComponent implements OnInit {
+
+  public loading: boolean = false; 
 
   public form: FormGroup;
 
-  public oldType: string = 'password';
-
   public type: string = 'password';
-
-  public loading = false;
-
-  public borderLimit = false;
+  
+  public confirmType: string = 'password';
 
   constructor(
     private _toastCtrl: ToastController,
     private _alertCtrl: AlertController,
+    public modalCtrl: ModalController,
     private _fb: FormBuilder,
     public accountService: AccountService,
-    public authService: AuthService,
-  ) {
-  }
+    public authService: AuthService
+  ) { }
 
   ngOnInit() {
     this.form = this._fb.group({
@@ -40,11 +38,20 @@ export class ChangePasswordPage implements OnInit {
     });
   }
 
+  togglePasswordVisibility() {
+    this.type = this.type == 'password' ? 'text' : 'password';
+  }
+
+  toggleConfirmPasswordVisibility() {
+    this.confirmType = this.confirmType == 'password' ? 'text' : 'password';
+  }
+
   /**
-   * Save new password
+   * submit new password
    */
-  async save() {
-    this.loading = true;
+  submit() {
+
+    this.loading = true; 
 
     this.accountService.updatePassword(this.form.value).subscribe(async result => {
 
@@ -54,7 +61,10 @@ export class ChangePasswordPage implements OnInit {
           duration: 3000
         });
         toast.present();
-        this.authService.logout();
+        //this.authService.logout();
+
+        this.modalCtrl.dismiss(); 
+
       } else {
         const prompt = await this._alertCtrl.create({
           message: result.message,
@@ -72,17 +82,5 @@ export class ChangePasswordPage implements OnInit {
     }, () => {
       this.loading = false;
     });
-  }
-
-  toggleOldPasswordVisibility() {
-    this.oldType = this.oldType == 'password' ? 'text' : 'password';
-  }
-
-  togglePasswordVisibility() {
-    this.type = this.type == 'password' ? 'text' : 'password';
-  }
-
-  logScrolling(e) {
-    this.borderLimit = (e.detail.scrollTop > 20) ? true : false;
   }
 }

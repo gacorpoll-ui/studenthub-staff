@@ -1,10 +1,116 @@
-p {
-  color: #000;
-  font-size: 16px;
+ion-header {
+  box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.05);
 }
-.company_status_badge {
-  margin-right: 12px;
+
+ion-content {
+  --background: #f7f8fa;
+  --padding-start: 24px; 
+  --padding-end: 24px; 
+  --padding-top: 24px; 
 }
+
+ion-header {
+  padding-left: 24px; 
+  padding-right: 24px;  
+
+  ion-buttons {
+    margin-inline-start: 0;
+  }
+}
+
+ion-title {
+  margin: 0 auto 8px;
+  font-family: Inter;
+  font-size: 24px !important;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.33;
+  letter-spacing: normal;
+  color: #23233d !important;
+  padding-left: 0;
+  padding-right: 0;
+}
+
 ion-list {
   background: transparent;
+
+  ion-item {
+    --background: transparent;
+    margin-bottom: 16px;
+    --padding-start: 0;
+    --padding-end: 0;
+
+    ion-label {
+      font-family: Inter;
+      font-size: 16px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.5;
+      letter-spacing: normal;
+      text-align: left;
+      --color: #23233d;
+      opacity: 1;
+      transform: none;
+    }
+
+    ion-input {
+      height: 48px;
+      flex-grow: 0;
+      margin: 7px 0 0;
+      border-radius: 8px;
+      border: solid 1px #e2e2e6;
+      background: #eeeef0;
+      font-family: Inter;
+      font-size: 16px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.5;
+      letter-spacing: normal;
+      color: #68687a;
+      --padding-start: 16px;
+      --padding-top: 12px;
+    }
+  }
+}
+
+ion-segment-button {
+  text-transform: inherit;
+  font-family: Inter;
+  font-size: 16px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-align: center;
+  color: #68687a;
+}
+
+ion-segment-button.segment-button-checked {
+  font-weight: 600;
+  color: #263879;
+  --indicator-color	:#263879;
+  --border-color	:#263879;
+}
+
+.btn-change-pwd {
+  width: 123px;
+  height: 20px;
+  margin: 16px auto 0 auto;
+  font-family: Inter;
+  font-size: 14px;
+  font-weight: 600;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.43;
+  letter-spacing: normal;
+  text-align: center;
+  --color: #4c70f2;
+  --background: transparent;
+  --box-shadow: none;
+  text-transform: none;
+  display: block;
 }

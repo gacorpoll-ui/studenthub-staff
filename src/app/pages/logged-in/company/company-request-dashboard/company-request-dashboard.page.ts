@@ -83,7 +83,6 @@ export class CompanyRequestDashboardPage implements OnInit {
 
   loadAllRequest() {
 
-
     this.loadRequests();
     this.loadStories(1);
   }
