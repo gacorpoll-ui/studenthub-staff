@@ -5,10 +5,11 @@ import { ModalController } from '@ionic/angular';
 import { Suggestion } from 'src/app/models/suggestion';
 import { EventService } from 'src/app/providers/event.service';
 import { CandidateService } from 'src/app/providers/logged-in/candidate.service';
+import { Note } from 'src/app/models/note';
 // services
 import { SuggestionService } from 'src/app/providers/logged-in/suggestion.service';
-import {NoteService} from '../../../../providers/logged-in/note.service';
-import {Note} from 'src/app/models/note';
+import { NoteService } from '../../../../providers/logged-in/note.service';
+
 
 @Component({
   selector: 'app-candidate-suggestions',
@@ -24,7 +25,7 @@ export class CandidateSuggestionsPage implements OnInit {
   public notes: Note[] = [];
 
   public candidate;
-  
+
   public suggestions: Suggestion[] = [];
 
   constructor(
@@ -83,7 +84,7 @@ export class CandidateSuggestionsPage implements OnInit {
    */
   loadSuggestions() {
     this.suggestionService
-      .list('&candidate_id=' + this.candidate_id + '&status=' + this.status)
+      .listAll('&candidate_id=' + this.candidate_id + '&status=' + this.status)
       .subscribe(async jsonResponse => {
         this.suggestions = jsonResponse;
       });
