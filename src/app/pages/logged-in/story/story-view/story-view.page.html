@@ -26,7 +26,7 @@
         <ion-label>Details</ion-label>
       </ion-segment-button>
 
-      <ion-segment-button  mode="md" value="upadte">
+      <ion-segment-button  mode="md" value="update">
         <ion-label>Update</ion-label>
       </ion-segment-button>
     </ion-segment>
@@ -35,7 +35,7 @@
 </ion-header>
 
 <ion-content [scrollEvents]="true" (ionScroll)="logScrolling($event)">
-  <div class="container" *ngIf="request && story">
+  <div class="container" *ngIf="request && story && segment == 'detail'">
     <h2>Job Details</h2>
     <ion-badge *ngIf="request.request_position_type == 1">Full-time</ion-badge>
     <ion-badge *ngIf="request.request_location">{{story.request.request_location}}</ion-badge>
@@ -76,6 +76,21 @@
       on {{ request.request_created_datetime | timeAgo }}
       </ng-container>
     </div>
+  </div>
+  <div class="container" *ngIf="request && story && segment == 'update'">
+    <h2>Recent Updates ( {{story.storyActivities.length}})</h2>
+
+
+    <ng-container *ngIf="story.storyActivities && story.storyActivities.length > 0">
+
+      <ion-card *ngFor="let activity of story.storyActivities" class="activity-list">
+        <ion-card-content>
+          <p class="activity"><span *ngIf="activity.staff">{{activity.staff.staff_name}}</span> has worked on story <span>{{activity.activity_created_at | timeAgo}}</span> on <span>{{activity.activity_created_at | date}}</span></p>
+
+          <ion-badge>Time Spent : {{activity.activity_time_spent | timeSpent}}</ion-badge>
+        </ion-card-content>
+      </ion-card>
+    </ng-container>
   </div>
 
 </ion-content>

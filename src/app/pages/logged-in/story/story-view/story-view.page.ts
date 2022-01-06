@@ -10,7 +10,7 @@ import { AuthService } from 'src/app/providers/auth.service';
 import { SuggestionService } from 'src/app/providers/logged-in/suggestion.service';
 import { TranslateLabelService } from 'src/app/providers/translate-label.service';
 // models
-import { Request } from 'src/app/models/request';
+import {Request, Story} from 'src/app/models/request';
 import { Invitation } from 'src/app/models/invitation';
 import {StoryViewOptionPage} from './story-view-option.page';
 import {StoryCloseConfirmationComponent} from "./story-close-confirmation.component";
@@ -33,7 +33,7 @@ export class StoryViewPage implements OnInit, OnDestroy {
   public borderLimit = false;
 
   public story_uuid: any;
-  public story: any;
+  public story: Story;
   public request: Request;
   public loading = false;
   public loadMore = false;
@@ -109,7 +109,7 @@ export class StoryViewPage implements OnInit, OnDestroy {
   loadData() {
     this.loading = true;
 
-    this.storyService.detail(this.story_uuid, '?expand=storyActivities,request,request.contact,request.staffs,request.company').subscribe(res => {
+    this.storyService.detail(this.story_uuid, '?expand=storyActivities,storyActivities.staff,request,request.contact,request.staffs,request.company').subscribe(res => {
 
       this.loading = false;
       this.story = res;
