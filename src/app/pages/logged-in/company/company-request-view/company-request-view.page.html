@@ -61,13 +61,13 @@
         {{ request.request_position_title }}
       </b>
 
-      <p class="txt-additional-info">{{ request.request_additional_info }}</p>
+      <p class="txt-additional-info" [innerHtml]="request.request_additional_info"></p>
 
       <p class="txt-additional-info" *ngIf="request.request_location">
         {{ request.request_location }}
       </p>
 
-      <p class="txt-additional-info" [innerHTML]="request.request_job_description"></p>
+      <p class="txt-additional-info" [innerHtml]="request.request_job_description"></p>
       <p class="txt-additional-info">{{ request.request_compensation }}</p>
 
       <p *ngIf="updatingInterval" class="txt-additional-info">Number of Hours to Followup Interval: <ion-spinner></ion-spinner></p>
