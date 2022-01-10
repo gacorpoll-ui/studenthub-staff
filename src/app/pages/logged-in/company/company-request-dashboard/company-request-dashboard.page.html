@@ -1,6 +1,9 @@
 <ion-header [class.add-border]="borderLimit" class="ion-no-border">
   <ion-toolbar class="container title">
-    <ion-title>Requests</ion-title>
+    <ion-title>
+      <span *ngIf="segment == 'request'">Requests</span>
+      <span *ngIf="segment == 'story'">Stories</span>
+    </ion-title>
   </ion-toolbar>
   <ion-toolbar  class="container searchbar-wrapper">
     <ion-searchbar mode="md" [(ngModel)]="query" (ionInput)="searchFilter($event)" debounce=250></ion-searchbar>
@@ -45,7 +48,7 @@
     <div *ngIf="segment == 'story'">
 
       <ng-container *ngIf="!loading">
-          <h2 *ngIf="stories && stories.length == 0" >No Story Available</h2>
+          <h2 *ngIf="stories && stories.length == 0" class="ion-text-center">No Story Available</h2>
           <app-story-item *ngFor="let story of stories" [story]="story" (click)="rowSelected(story)"></app-story-item>
       </ng-container>
 

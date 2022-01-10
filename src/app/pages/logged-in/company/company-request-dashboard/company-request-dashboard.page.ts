@@ -43,6 +43,7 @@ export class CompanyRequestDashboardPage implements OnInit {
   public segment = 'request';
 
   public filters = {
+    storyStatus: '1',
     requestStatus: 'started',
     position_type: null,
     startDate: null,
@@ -82,7 +83,6 @@ export class CompanyRequestDashboardPage implements OnInit {
   }
 
   loadAllRequest() {
-
     this.loadRequests();
     this.loadStories(1);
   }
@@ -161,6 +161,9 @@ export class CompanyRequestDashboardPage implements OnInit {
 
     if (this.filters.requestStatus) {
       urlParams += '&request_status=' + this.filters.requestStatus;
+    }
+    if (this.filters.storyStatus) {
+      urlParams += '&story_status=' + this.filters.storyStatus;
     }
 
     if (this.filters.startDate) {
@@ -269,7 +272,8 @@ export class CompanyRequestDashboardPage implements OnInit {
       component: RequestFilterComponent,
       cssClass: 'modal-request-filter',
       componentProps: {
-        filters: Object.assign({}, this.filters)
+        filters: Object.assign({}, this.filters),
+        tab: this.segment
       }
     });
 
@@ -284,8 +288,12 @@ export class CompanyRequestDashboardPage implements OnInit {
         data.endDate != this.filters.endDate
     )) {
       this.filters = data;
-
-      this.loadAllRequest();
+      console.log(this.filters);
+      if (this.segment == 'request') {
+        this.loadRequests();
+      } else {
+        this.loadStories(1);
+      }
     }
   }
 

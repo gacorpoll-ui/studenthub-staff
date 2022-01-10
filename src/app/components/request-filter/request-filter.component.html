@@ -1,30 +1,38 @@
 <ion-content>
-  
   <div class="drager"></div>
-  
   <h3>
     Filter Results
-
     <ion-button (click)="reset()" class="btn-close">
       Reset
     </ion-button>
   </h3>
-
     <h5>Request Type</h5>
-
+  <ng-container *ngIf="tab== 'request'">
     <ion-button class="btn-option" (click)="filterByStatus($event, null)" [class.active]="filters.requestStatus == null">All</ion-button>
     <ion-button class="btn-option" (click)="filterByStatus($event, 'pending')" [class.active]="filters.requestStatus == 'pending'">Pending</ion-button>
     <ion-button class="btn-option" (click)="filterByStatus($event, 'started')" [class.active]="filters.requestStatus == 'started'">Started</ion-button>
     <ion-button class="btn-option" (click)="filterByStatus($event, 'delivered')" [class.active]="filters.requestStatus == 'delivered'">Delivered</ion-button>
-    <ion-button class="btn-option" (click)="filterByStatus($event, 'cancelled')" [class.active]="filters.requestStatus == 'cancelled'">Cancelled</ion-button>  
-  
+    <ion-button class="btn-option" (click)="filterByStatus($event, 'cancelled')" [class.active]="filters.requestStatus == 'cancelled'">Cancelled</ion-button>
+  </ng-container>
+  <ng-container *ngIf="tab== 'story'">
+    <ion-button class="btn-option" (click)="filterByStoryStatus($event, null)" [class.active]="filters.storyStatus == null">All</ion-button>
+    <ion-button class="btn-option" (click)="filterByStoryStatus($event, '0')" [class.active]="filters.storyStatus == '0'">Unstarted</ion-button>
+    <ion-button class="btn-option" (click)="filterByStoryStatus($event, '1')" [class.active]="filters.storyStatus == '1'">Started</ion-button>
+    <ion-button class="btn-option" (click)="filterByStoryStatus($event, '2')" [class.active]="filters.storyStatus == '2'">Finihsed</ion-button>
+    <ion-button class="btn-option" (click)="filterByStoryStatus($event, '3')" [class.active]="filters.storyStatus == '3'">Delivered</ion-button>
+    <ion-button class="btn-option" (click)="filterByStoryStatus($event, '4')" [class.active]="filters.storyStatus == '4'">Rejected</ion-button>
+    <ion-button class="btn-option" (click)="filterByStoryStatus($event, '5')" [class.active]="filters.storyStatus == '5'">Accepted</ion-button>
+    <ion-button class="btn-option" (click)="filterByStoryStatus($event, '6')" [class.active]="filters.storyStatus == '6'">Cancelled</ion-button>
+  </ng-container>
+
+
     <h5>Job Type</h5>
-    
+
     <ion-button class="btn-option" (click)="filterByType($event, null)" [class.active]="filters.position_type == null">All</ion-button>
     <ion-button class="btn-option" (click)="filterByType($event, 2)" [class.active]="filters.position_type == 2">Part-time</ion-button>
     <ion-button class="btn-option" (click)="filterByType($event, 1)" [class.active]="filters.position_type == 1">Full-time</ion-button>
-  
-  <ion-grid>
+
+  <ion-grid *ngIf="tab == 'request'">
     <ion-row>
       <ion-col size="6">
           <h5>From</h5>
@@ -32,7 +40,7 @@
       </ion-col>
       <ion-col size="6">
           <h5>To</h5>
-          <ion-datetime pickerFormat="DD MMMM YYYY" displayFormat="DDD, MMM D, YYYY" [(ngModel)]="filters.endDate"></ion-datetime>    
+          <ion-datetime pickerFormat="DD MMMM YYYY" displayFormat="DDD, MMM D, YYYY" [(ngModel)]="filters.endDate"></ion-datetime>
       </ion-col>
     </ion-row>
   </ion-grid>

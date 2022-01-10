@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 @Component({
@@ -8,8 +8,10 @@ import { ModalController } from '@ionic/angular';
 })
 export class RequestFilterComponent implements OnInit {
 
+  @Input() tab = null;
   public filters = {
     requestStatus: null,
+    storyStatus: null,
     position_type: null,
     startDate: null,
     endDate: null,
@@ -17,12 +19,18 @@ export class RequestFilterComponent implements OnInit {
 
   constructor(
     public modalCtrl: ModalController
-  ) { }
+  ) {
+  }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   filterByStatus($event, requestStatus) {
     this.filters.requestStatus = requestStatus;
+  }
+
+  filterByStoryStatus($event, requestStatus) {
+    this.filters.storyStatus = requestStatus;
   }
 
   filterByType($event, positionType) {
@@ -35,10 +43,11 @@ export class RequestFilterComponent implements OnInit {
 
   reset() {
     this.filters = {
+      storyStatus: null,
       requestStatus: null,
       position_type: null,
       startDate: null,
       endDate: null,
-    }
+    };
   }
 }
