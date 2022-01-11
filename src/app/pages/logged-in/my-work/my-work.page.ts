@@ -48,13 +48,15 @@ export class MyWorkPage implements OnInit {
 
   loadActiveStories() {
     this.storyService.loadActiveStory().subscribe(res => {
-      this.currentStory = res.body;
+      if(res.body)
+        this.currentStory = res.body;
     });
   }
 
   loadAllOtherStories() {
     this.storyService.listAllOldHistory().subscribe(res => {
-      this.oldStories = res.body;
+      if(res.body)
+        this.oldStories = res.body;
     });
   }
 
