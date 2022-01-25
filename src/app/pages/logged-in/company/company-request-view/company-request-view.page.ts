@@ -253,16 +253,16 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
    * @param date
    */
   toDate(date) {
-    if (!date) 
+    if (!date)
       return null;
-      
+
     if (date) {
       return new Date(date.replace(/-/g, '/'));
     }
   }
 
   /**
-   * open popup to select consultants 
+   * open popup to select consultants
    */
   async assign() {
 
@@ -486,46 +486,47 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
           text: 'Save',
           handler: (data) => {
 
-            if (!data.feedback || !data.hours) {
+            if (!(data.feedback.trim()) || !(data.hours.trim())) {
               this.alertCtrl.create({
                 message: 'Please provide hours & feedback',
                 buttons: ['Okay']
               }).then(alert => {
                 alert.present();
               });
+            } else {
+              this.updatingInterval = true;
+
+              const params = {
+                request_uuid: this.request_uuid,
+                num_hours_followup_interval: data.hours,
+                reason: data.feedback,
+              };
+
+              this.requestService.updateInterval(params).subscribe(async response => {
+                this.updatingInterval = false;
+                if (response.operation == 'success') {
+
+                  this.request.num_hours_followup_interval = data.hours;
+
+                  this.loadRequestActivities();
+
+                  this.eventService.companyRequestUpdate$.next({
+                    company_id: this.request.company_id,
+                    request_updated_datetime: response.request_updated_datetime,
+                    request_uuid: this.request_uuid
+                  });
+
+                } else {
+
+                  this.toastCtrl.create({
+                    message: this.translateService.errorMessage(response.message),
+                    buttons: ['Okay']
+                  }).then(prompt => {
+                    prompt.present();
+                  });
+                }
+              });
             }
-            this.updatingInterval = true;
-
-            const params = {
-              request_uuid: this.request_uuid,
-              num_hours_followup_interval: data.hours,
-              reason: data.feedback,
-            };
-
-            this.requestService.updateInterval(params).subscribe(async response => {
-              this.updatingInterval = false;
-              if (response.operation == 'success') {
-
-                this.request.num_hours_followup_interval = data.hours;
-
-                this.loadRequestActivities();
-
-                this.eventService.companyRequestUpdate$.next({
-                  company_id: this.request.company_id,
-                  request_updated_datetime: response.request_updated_datetime,
-                  request_uuid: this.request_uuid
-                });
-
-              } else {
-
-                this.toastCtrl.create({
-                  message: this.translateService.errorMessage(response.message),
-                  buttons: ['Okay']
-                }).then(prompt => {
-                  prompt.present();
-                });
-              }
-            });
           }
         }
       ]
@@ -613,7 +614,7 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
   }
 
   /**
-   * select full timer 
+   * select full timer
    * @param $event
    * @param fulltimer
    */
@@ -652,7 +653,7 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
 
   /**
    * show dialog to get reason for suggestion
-   * @param fulltimer_uuid 
+   * @param fulltimer_uuid
    */
   async showSuggestionDialog(fulltimer_uuid) {
     const alert = await this.alertCtrl.create({
