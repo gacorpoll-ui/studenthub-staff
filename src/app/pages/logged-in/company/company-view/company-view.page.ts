@@ -330,7 +330,7 @@ export class CompanyViewPage implements OnInit {
     }, 500);
 
     this.loading = (!silent);
-    
+
     if (!this.company) {
       this.company = new Company();
       this.company.company_id = this.company_id;
@@ -500,7 +500,7 @@ export class CompanyViewPage implements OnInit {
 
     const params = '&company_id=' + this.company_id;
 
-    this.noteService.list(params).subscribe(response => {
+    this.noteService.list(params,1).subscribe(response => {
 
       this.loadingNotes = false;
 

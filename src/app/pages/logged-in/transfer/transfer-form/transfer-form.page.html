@@ -26,20 +26,22 @@
           <ion-col size="6">
             <ion-item>
               <ion-label position="stacked">Start date</ion-label>
-              <ion-datetime pickerFormat="DD MMMM YYYY" displayFormat="DD MMMM YYYY" 
-                placeholder="DD/MM/YYYY" formControlName="start_date"></ion-datetime>
+              <ion-input formControlName="start_date" (click)="openCalendarPopup($event, 'start_date')"></ion-input>
+<!--              <ion-datetime pickerFormat="DD MMMM YYYY" displayFormat="DD MMMM YYYY"-->
+<!--                placeholder="DD/MM/YYYY" formControlName="start_date"></ion-datetime>-->
             </ion-item>
           </ion-col>
           <ion-col size="6">
             <ion-item>
               <ion-label position="stacked">End date</ion-label>
-              <ion-datetime pickerFormat="DD MMMM YYYY" displayFormat="DD MMMM YYYY" 
-              placeholder="DD/MM/YYYY" formControlName="end_date"></ion-datetime>    
+              <ion-input formControlName="end_date" (click)="openCalendarPopup($event, 'end_date')"></ion-input>
+<!--              <ion-datetime pickerFormat="DD MMMM YYYY" displayFormat="DD MMMM YYYY"-->
+<!--              placeholder="DD/MM/YYYY" formControlName="end_date"></ion-datetime>-->
             </ion-item>
           </ion-col>
           <!--
           <ion-col size="4" *ngIf="startDate || endDate">
-        
+
             <ion-button fill="clear" (click)="clearSelection()">
               <ion-icon name="close-outline"></ion-icon>
             </ion-button>

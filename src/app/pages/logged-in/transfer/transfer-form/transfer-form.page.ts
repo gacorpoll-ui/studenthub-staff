@@ -22,7 +22,7 @@ import { CompanyService } from 'src/app/providers/logged-in/company.service';
 import { AwsService } from 'src/app/providers/aws.service';
 import { AuthService } from '../../../../providers/auth.service';
 import { EventService } from '../../../../providers/event.service';
-
+import {CalendarModal, CalendarModalOptions, CalendarResult} from 'ion2-calendar';
 
 @Component({
   selector: 'app-transfer-form',
@@ -55,7 +55,7 @@ export class TransferFormPage implements OnInit {
   public selected; // max date
   dateRange: { from: string; to: string; };
   type: 'string'; // 'string' | 'js-date' | 'moment' | 'time' | 'object'
-  
+
   constructor(
     public activatedRoute: ActivatedRoute,
     public navCtrl: NavController,
@@ -355,7 +355,7 @@ export class TransferFormPage implements OnInit {
    * @param date
    */
   toDate(date) {
-    if (!date) 
+    if (!date)
       return null;
 
     if (date) {
@@ -378,5 +378,44 @@ export class TransferFormPage implements OnInit {
     this.transfer.transferCandidates = this.transfer.transferCandidates.filter((candidates, index) => {
       return (candidates.bonus > 0 || candidates.hours > 0);
     });
+  }
+
+  async openCalendarPopup(event, field) {
+
+    let fromDate = new Date();
+
+    // Set it to one month ago
+    fromDate.setMonth(fromDate.getMonth() - 1);
+
+    const options: CalendarModalOptions = {
+      canBackwardsSelected: true,
+      pickMode: 'single',
+      title: '',
+      defaultScrollTo: new Date(),
+      defaultDateRange: {
+        from: fromDate,
+        to: new Date()
+      }
+    };
+
+    const myCalendar = await this.modalCtrl.create({
+      component: CalendarModal,
+      cssClass: 'modal-calender',
+      componentProps: { options }
+    });
+
+    myCalendar.present();
+
+    const eventCloseData: any = await myCalendar.onDidDismiss();
+    const date = eventCloseData.data;
+
+    if (date) {
+      // this.form.value.start_date
+      if (field == 'start_date') {
+        this.form.controls.start_date.setValue(date.string);
+      } else {
+        this.form.controls.end_date.setValue(date.string);
+      }
+    }
   }
 }
