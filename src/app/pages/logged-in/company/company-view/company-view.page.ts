@@ -47,6 +47,7 @@ export class CompanyViewPage implements OnInit {
   public borderLimit = false;
 
   public notes: Note[] = [];
+  public notesTotal = 0;
 
   public loadingNotes = false;
 
@@ -500,11 +501,14 @@ export class CompanyViewPage implements OnInit {
 
     const params = '&company_id=' + this.company_id;
 
-    this.noteService.list(params,1).subscribe(response => {
+    this.noteService.list(params, 1).subscribe(response => {
 
       this.loadingNotes = false;
 
-      this.notes = response;
+      this.notes = response.body;
+
+      this.notesTotal = parseInt(response.headers.get('X-Pagination-Total-Count'));
+
     }, () => {
       this.loadingNotes = false;
     });

@@ -33,6 +33,7 @@ export class CompanyNotesPage implements OnInit {
   public companyContacts: any[] = [];
 
   public loadingNotes: boolean = false;
+  public loadingMoreNotes: boolean = false;
 
   public deleting: boolean = false;
 
@@ -49,6 +50,8 @@ export class CompanyNotesPage implements OnInit {
   public editorFocused: boolean = false;
 
   public Editor = ClassicEditor;
+  public pageCount = 0;
+  public currentPage = 1;
 
   public editorConfig = {
     placeholder: 'Click here to take notes...',
@@ -110,7 +113,6 @@ export class CompanyNotesPage implements OnInit {
   loadContacts() {
     this.companyContactService.companyContacts(this.company.company_id).subscribe(data => {
       this.companyContacts = data;
-      console.log(this.companyContacts);
     });
   }
 
@@ -128,11 +130,12 @@ export class CompanyNotesPage implements OnInit {
 
     const params = '&company_id=' + this.company.company_id;
 
-    this.noteService.list(params).subscribe(response => {
-
+    this.noteService.list(params, 1).subscribe(response => {
+      this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'), 10);
+      this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'), 10);
       this.loadingNotes = false;
 
-      this.notes = response;
+      this.notes = response.body;
     }, () => {
       this.loadingNotes = false;
     });
@@ -328,4 +331,27 @@ export class CompanyNotesPage implements OnInit {
     this.addNewNote = true;
     this.onEditorFocus();
   }
+
+  doInfinite(event) {
+    this.currentPage++;
+
+    this.loadingMoreNotes = true;
+    const searchParams = this.urlParams();
+    this.noteService.list(searchParams, this.currentPage).subscribe(response => {
+
+      this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
+      this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
+
+      const companies = response.body;
+      this.notes = this.notes.concat(companies);
+      this.loadingMoreNotes = false;
+      event.target.complete();
+    }, () => {
+    });
+  }
+
+  urlParams() {
+    return '&company_id=' + this.company.company_id;
+  }
+
 }
