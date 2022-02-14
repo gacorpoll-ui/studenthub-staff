@@ -46,7 +46,11 @@ export class OptionPage implements OnInit {
    * close popup
    */
   dismiss() {
-    this.popoverCtrl.dismiss();
+    this.popoverCtrl.getTop().then(o => {
+      if(o) {
+        o.dismiss();
+      }
+    });
   }
 
   /**
@@ -273,11 +277,19 @@ export class OptionPage implements OnInit {
    * suggess this candidate
    */
   async suggest() {
-    this.popoverCtrl.dismiss({ suggess: true });
+    this.popoverCtrl.getTop().then(o => {
+      if(o) {
+        o.dismiss({ suggess: true });
+      }
+    }); 
   }
 
   toggleCommitted() {
-    this.popoverCtrl.dismiss({ toggleCommitted: true });
+    this.popoverCtrl.getTop().then(o => {
+      if(o) {
+        o.dismiss({ toggleCommitted: true });
+      }
+    }); 
   }
 
   /**

@@ -607,7 +607,11 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
    */
   close(refresh = false) {
     const data = { refresh };
-    this.modalCtrl.dismiss(data);
+    this.modalCtrl.getTop().then(o => {
+      if(o) {
+        o.dismiss(data);
+      }
+    });
   }
 
   /**

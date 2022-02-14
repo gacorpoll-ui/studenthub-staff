@@ -175,9 +175,13 @@ export class InvitePage implements OnInit {
    * @param invitedCount
    */
   close(refresh = false, invitedCount = null) {
-    this.modalCtrl.dismiss({
-      refresh,
-      invitedCount
+    this.modalCtrl.getTop().then(o => {
+      if(o) {
+        o.dismiss({
+          refresh,
+          invitedCount
+        });
+      }
     });
   }
 

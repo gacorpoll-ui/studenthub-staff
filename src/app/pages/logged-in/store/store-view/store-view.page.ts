@@ -292,6 +292,10 @@ export class StoreViewPage implements OnInit {
   }
 
   close() {
-    this.modalCtrl.dismiss();
+    this.modalCtrl.getTop().then(o => {
+      if(o) {
+        this.modalCtrl.dismiss();
+      }
+    });
   }
 }

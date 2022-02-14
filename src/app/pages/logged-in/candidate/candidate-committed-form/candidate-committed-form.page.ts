@@ -72,8 +72,11 @@ export class CandidateCommittedFormPage implements OnInit {
    * Close the page
    */
   close() {
-    const data = { refresh: false };
-    this.modalCtrl.dismiss(data);
+    this.modalCtrl.getTop().then(o => {
+      if(o) {
+        o.dismiss({ refresh: false });
+      }
+    });
   }
 
   /**
@@ -96,6 +99,7 @@ export class CandidateCommittedFormPage implements OnInit {
           candidate_committed: jsonResponse.candidate_committed, 
           refresh: true 
         };
+        
         this.modalCtrl.dismiss(data);
       }
 

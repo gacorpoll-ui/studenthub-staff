@@ -212,8 +212,11 @@ export class CompanyContactFormPage implements OnInit {
    * Close the page
    */
   close() {
-    let data = { 'refresh': false };
-    this.modalCtrl.dismiss(data);
+    this.modalCtrl.getTop().then(o => {
+      if(o) {
+        o.dismiss({ 'refresh': false });
+      }
+    });
   }
 
   /**

@@ -39,6 +39,10 @@ export class StoryCloseConfirmationComponent  implements OnInit {
    * close popup
    */
   dismiss(click = false) {
-    this.popoverCtrl.dismiss({click});
+    this.popoverCtrl.getTop().then(o => {
+      if(o) {
+        this.popoverCtrl.dismiss({click});
+      }
+    });
   }
 }

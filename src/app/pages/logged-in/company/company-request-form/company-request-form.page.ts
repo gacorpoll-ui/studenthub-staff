@@ -123,8 +123,11 @@ export class CompanyRequestFormPage implements OnInit {
    * Close the page
    */
   close() {
-    const data = { refresh: false };
-    this.modalCtrl.dismiss(data);
+    this.modalCtrl.getTop().then(o => {
+      if(o) {
+        o.dismiss({ refresh: false });
+      }
+    });
   }
 
   /**

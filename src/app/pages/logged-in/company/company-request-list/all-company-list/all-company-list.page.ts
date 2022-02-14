@@ -146,7 +146,11 @@ export class AllCompanyListPage implements OnInit {
    * @param data
    */
   dismiss(data = null) {
-    this.modalCtrl.dismiss(data);
+    this.modalCtrl.getTop().then(o => {
+      if(o) {
+        o.dismiss(data);
+      }
+    });
   }
 
   logScrolling(e) {

@@ -84,6 +84,10 @@ export class CompanyFollowupNotePage implements OnInit {
    * dismiss popup 
    */
   close() {
-    this.modalCtrl.dismiss();
+    this.modalCtrl.getTop().then(o => {
+      if(o) {
+        o.dismiss();
+      }
+    })
   }
 }

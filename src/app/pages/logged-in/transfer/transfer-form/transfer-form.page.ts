@@ -331,7 +331,11 @@ export class TransferFormPage implements OnInit {
    * Close the Page
    */
   close(data = {}) {
-    this.modalCtrl.dismiss(data);
+    this.modalCtrl.getTop().then(o => {
+      if(o) {
+        o.dismiss(); 
+      }
+    });
   }
 
   /**

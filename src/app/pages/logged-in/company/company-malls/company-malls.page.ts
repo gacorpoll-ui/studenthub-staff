@@ -74,7 +74,11 @@ export class CompanyMallsPage implements OnInit {
   }
 
   dismiss() {
-    this.modalCtrl.dismiss();
+    this.modalCtrl.getTop().then(o => {
+      if(o) {
+        o.dismiss();
+      }
+    })
   }
 
   logScrolling(e) {

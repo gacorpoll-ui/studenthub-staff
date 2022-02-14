@@ -319,7 +319,11 @@ export class CompanyNotesPage implements OnInit {
     if(this.addNewNote && this.notes.length > 0) {
       this.addNewNote = false;
     } else {
-      this.modalCtrl.dismiss();
+      this.modalCtrl.getTop().then(o => {
+        if(o) {
+          o.dismiss();
+        }
+      }); 
     }
   }
 

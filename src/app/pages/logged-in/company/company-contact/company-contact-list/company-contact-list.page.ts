@@ -132,7 +132,11 @@ export class CompanyContactListPage implements OnInit {
      * dismiss on back button clicked
      */
     if (!companyContact) {
-      this.modalCtrl.dismiss();
+      this.modalCtrl.getTop().then(o => {
+        if(o) {
+          o.dismiss();
+        }
+      });
     }
 
     /**

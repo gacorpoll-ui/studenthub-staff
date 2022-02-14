@@ -62,11 +62,23 @@ export class StaffPage implements OnInit {
    * When its selected
    */
   rowSelected(model) {
-    this.modalCtrl.dismiss(model);
+    this.modalCtrl.getTop().then(o => {
+      if(o) {
+        o.dismiss(model);
+      }
+    });
   }
 
+  /**
+   * close page
+   * @param data 
+   */
   dismiss(data = {}) {
-    this.modalCtrl.dismiss(data);
+    this.modalCtrl.getTop().then(o => {
+      if(o) {
+        o.dismiss(data);
+      }
+    });
   }
 
   /**

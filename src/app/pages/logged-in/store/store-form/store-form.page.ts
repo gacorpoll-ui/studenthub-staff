@@ -119,9 +119,12 @@ export class StoreFormPage implements OnInit {
   /**
    * Close the page
    */
-  close(){
-    const data = { refresh: false };
-    this._modelCtrl.dismiss(data);
+  close() {    
+    this._modelCtrl.getTop().then(o => {
+      if(o) {
+        o.dismiss({ refresh: false });
+      }
+    })
   }
 
   /**

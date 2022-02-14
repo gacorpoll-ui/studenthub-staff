@@ -48,13 +48,18 @@ export class StoreManagerFormPage implements OnInit {
   }
 
   rowSelected(companyContact) {
-    this.modalCtrl.dismiss({
-      refresh: true,
-      storeManager: companyContact
+    this.modalCtrl.getTop().then(o => {
+      if(o) {
+        o.dismiss({ refresh: true, storeManager: companyContact });
+      }
     });
   }
 
   dismiss() {
-    this.modalCtrl.dismiss();
+    this.modalCtrl.getTop().then(o => {
+      if(o) {
+        this.modalCtrl.dismiss();
+      }
+    });
   }
 }

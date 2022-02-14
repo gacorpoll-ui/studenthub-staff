@@ -3,8 +3,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ModalController, AlertController, PopoverController } from '@ionic/angular';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 // models
-import {Candidate} from 'src/app/models/candidate';
-import {Fulltimer} from 'src/app/models/fulltimer';
+import { Candidate } from 'src/app/models/candidate';
+import { Fulltimer } from 'src/app/models/fulltimer';
 import { Note } from 'src/app/models/note';
 import { Company } from 'src/app/models/company';
 // services
@@ -40,7 +40,7 @@ export class CompanyNoteFormPage implements OnInit {
   public fulltimer: Fulltimer;
 
   public checklist: RequestChecklist[] = [];
-  
+
   public editorConfig = {
     placeholder: 'Click here to take notes...',
     startupFocus: true,
@@ -92,7 +92,7 @@ export class CompanyNoteFormPage implements OnInit {
       company_id: [this.note.company_id],
       company_name: [this.note.company ? this.note.company.company_name : ''],
     });
-    
+
     // https://www.pivotaltracker.com/story/show/175926516
     if (this.from == 'post-update') {
       this.form.controls.type.setValue('Internal Note');
@@ -150,8 +150,11 @@ export class CompanyNoteFormPage implements OnInit {
    * Close the page
    */
   close() {
-    const data = { refresh: false };
-    this.modalCtrl.dismiss(data);
+    this.modalCtrl.getTop().then(o => {
+      if(o) {
+        o.dismiss({ refresh: false });
+      }
+    }); 
   }
 
   /**

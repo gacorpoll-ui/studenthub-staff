@@ -23,6 +23,10 @@ export class CandidateMergeSelectPage implements OnInit {
     event.stopPropagation();
     event.preventDefault();
     
-    this.popoverCtrl.dismiss({ candidate: candidate });
+    this.popoverCtrl.getTop().then(o => {
+      if(o) {
+        o.dismiss({ candidate: candidate });
+      }
+    });
   }
 }

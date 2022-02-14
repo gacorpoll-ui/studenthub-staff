@@ -121,8 +121,12 @@ export class SuggestPage implements OnInit {
    * @param suggestionCount
    */
   close(refresh = false, suggestionCount = null) {
-    this.modalCtrl.dismiss({
-      refresh, suggestionCount
+    this.modalCtrl.getTop().then(o => {
+      if(o) {
+        o.dismiss({
+          refresh, suggestionCount
+        }); 
+      }
     });
   }
 
