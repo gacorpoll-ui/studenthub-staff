@@ -571,6 +571,13 @@ export class CandidateViewPage implements OnInit {
               // On Success
               if (response.operation == 'success') {
                 this.candidate.invited = response.invitedCount;
+
+                this.toastCtrl.create({
+                  message: this.authService.errorMessage(response.message),
+                  duration: 3000
+                }).then(toast => {
+                  toast.present();
+                });
               }
 
               // On Failure
