@@ -8,6 +8,18 @@
       Already Suggested
     </ion-badge>
 
+    <ion-badge slot="end" class="suggested"  *ngIf="request.company && request.company.company_approved_to_hire">
+      <section *ngIf="request.request_status == 'pending'">Pending </section>
+      <section *ngIf="request.request_status == 'started'">Started </section>
+      <section *ngIf="request.request_status == 'delivered'">Delivered </section>
+      <section *ngIf="request.request_status == 'finished_by_recruitment'">Finished By Recruitment</section>
+      <section *ngIf="request.request_status == 're_work'">Re work </section>
+    </ion-badge>
+
+
+
+
+
     <ion-badge slot="end" class="suggested" color="success" *ngIf="request.company && request.company.company_approved_to_hire">
       <ion-icon name="checkmark-outline"></ion-icon> Approved to hire
     </ion-badge>
