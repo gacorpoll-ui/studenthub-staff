@@ -91,6 +91,17 @@ export class CompanyRequestService {
   }
 
   /**
+   * update request status
+   * @param model
+   */
+  statusUpdate(model: Request): Observable<any> {
+    const url = `${this.companyRequestEndpoint}/update-status/${model.request_uuid}`;
+    return this._authhttp.patch(url, {
+      status: model.request_status
+    });
+  }
+
+  /**
    * cancel request
    * @param param
    */
