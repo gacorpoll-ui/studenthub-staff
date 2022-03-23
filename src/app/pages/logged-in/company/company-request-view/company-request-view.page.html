@@ -177,12 +177,12 @@
           Post an update
         </ion-button>
       </ion-col>
-      <ion-col size-xs="3" *ngIf="(request.request_status == 'started' || request.request_status == 'pending'  || request.request_status == 're_work') && suggestedSuggestions.length > 0" >
+      <ion-col size-xs="3" *ngIf="(request.request_status == 'started' || request.request_status == 'pending'  || request.request_status == 're_work' || request.request_status == 'finished_by_recruitment') && acceptedSuggestions.length > 0" >
         <ion-button (click)="deliveredRequest($event, request)">
           Mark delivered
         </ion-button>
       </ion-col>
-      <ion-col size-xs="3" *ngIf="(request.request_status == 'started' && request.request_status != 'delivered')" >
+      <ion-col size-xs="3" *ngIf="((request.request_status == 'started' || request.request_status == 're_work' ) && request.request_status != 'delivered')" >
         <ion-button (click)="statusUpdate($event, 'finished_by_recruitment')">
           Finished by recruitment
         </ion-button>
@@ -200,12 +200,12 @@
           Post an update
         </ion-button>
       </ion-col>
-      <ion-col size-xs="4" *ngIf="(request.request_status == 'started' || request.request_status == 'pending' || request.request_status == 're_work' ) &&  suggestedSuggestions.length > 0" >
+      <ion-col size-xs="4" *ngIf="(request.request_status == 'started' || request.request_status == 'pending'  || request.request_status == 're_work' || request.request_status == 'finished_by_recruitment') && acceptedSuggestions.length > 0" >
         <ion-button (click)="deliveredRequest($event, request)">
           Mark delivered
         </ion-button>
       </ion-col>
-      <ion-col size-xs="4" *ngIf="(request.request_status == 'started' && request.request_status != 'delivered')" >
+      <ion-col size-xs="4" *ngIf="((request.request_status == 'started' || request.request_status == 're_work' ) && request.request_status != 'delivered')">
         <ion-button (click)="statusUpdate($event, 'finished_by_recruitment')">
           Finished by recruitment
         </ion-button>
