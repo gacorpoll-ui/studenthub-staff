@@ -122,8 +122,10 @@ export class CompanyRequestListPage implements OnInit {
 
       this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
       this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
-
+      this.total = parseInt(response.headers.get('X-Pagination-Total-Count'));
+      
       this.requests = response.body;
+      
     },
       error => { },
       () => { this.loading = false; }

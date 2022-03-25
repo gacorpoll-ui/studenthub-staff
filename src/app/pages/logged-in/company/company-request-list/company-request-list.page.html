@@ -63,7 +63,7 @@
     </ion-grid>
 
     <ion-list>
-
+      <h4>Total: {{total}}</h4>
       <request-listing *ngFor="let request of requests" tappable (click)="requestDetail(request)"
                        [request]="request" [showStatus]="false"></request-listing>
 
