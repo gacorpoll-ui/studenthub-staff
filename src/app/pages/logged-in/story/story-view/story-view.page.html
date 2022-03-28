@@ -90,7 +90,7 @@
     </div>
   </div>
   <div class="container" *ngIf="request && story && segment == 'update'">
-    <h2>Recent Updates ({{story.storyActivities.length}})</h2>
+    <h2>Recent Updates <span class="count">({{story.storyActivities.length}})</span></h2>
 
     <ng-container *ngIf="story.storyActivities && story.storyActivities.length > 0">
 
@@ -114,7 +114,7 @@
     <invitation *ngFor="let invitation of allInvitedCandidates" (onUpdate)="loadData()" [model]="invitation"></invitation>
   </div>
   <div class="container" *ngIf="request && story && segment == 'suggestion'">
-    <h2>Suggested Candidates</h2>
+    <h2>Suggested Candidates <span class="count">({{allSuggestions.length}})</span></h2>
     <no-items message="~ No suggestion ~" *ngIf="allSuggestions.length == 0"></no-items>
     <suggestion *ngFor="let suggestion of allSuggestions" [model]="suggestion" [showBadge]="false"></suggestion>
   </div>

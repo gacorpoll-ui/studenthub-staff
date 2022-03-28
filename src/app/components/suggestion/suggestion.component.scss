@@ -46,7 +46,7 @@ ion-card {
     font-style: normal;
     line-height: normal;
     letter-spacing: normal;
-    color: #000;
+    color: #7d7d8d;
     position: absolute;
     right: 16px;
     top: 25px;
@@ -98,7 +98,7 @@ ion-button {
 }
 
 .btn-accept {
-  width: 155px;
+  width: 196px;
   height: 40px;
   border-radius: 8px;
   background-color: #29b564;
@@ -138,4 +138,7 @@ ion-button {
 .candidate_name {
   font-weight: 600;
   color: #4b4b61;
+}
+.count {
+  color: #7d7d8d;
 }
