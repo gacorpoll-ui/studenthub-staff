@@ -56,6 +56,10 @@ export class TransferFormPage implements OnInit {
   dateRange: { from: string; to: string; };
   type: 'string'; // 'string' | 'js-date' | 'moment' | 'time' | 'object'
 
+  public borderLimit: boolean = false;
+
+  public segment = 'manual';
+
   constructor(
     public activatedRoute: ActivatedRoute,
     public navCtrl: NavController,
@@ -421,5 +425,9 @@ export class TransferFormPage implements OnInit {
         this.form.controls.end_date.setValue(date.string);
       }
     }
+  }
+  
+  logScrolling(e) {
+    this.borderLimit = (e.detail.scrollTop > 20);
   }
 }

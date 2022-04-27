@@ -1,49 +1,58 @@
-<ion-header [class.add-border]="borderLimit" class="ion-no-border">
+<ion-header [class.add-border]="borderLimit" mode="md">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button (click)="dismiss()"></ion-back-button>
     </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button><ion-icon class="setting-icon" name="ellipsis-vertical-outline"></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-title class="main" size="large"> 
+      Transfers <ng-container *ngIf="company && company.parentTransfers">({{ company.parentTransfers.length }})</ng-container>
+      </ion-title>
+    <ion-title class="secondary" size="small" *ngIf="company">
+      {{ (company.company_common_name_en) ?  company.company_common_name_en:company.company_name }}
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
+  
+  <ng-container *ngIf="company && company.parentTransfers">
 
-  <h3>Transfers</h3>
+    <ion-item tappable (click)="openTransferDetailPage(transfer)" *ngFor="let transfer of company.parentTransfers">
+      <ion-label>
+        <h5>KWD {{ transfer.company_total | number:'1.3-3' }}</h5>
+        <p>Transfer #{{ transfer.transfer_id}}</p>
+      </ion-label>
 
-  <h4 *ngIf="company">
-    {{ company.company_name }}
-  </h4>
+      <ion-badge slot="end" class="status status_{{transfer.transfer_status}}" *ngIf="transfer.transfer_status==10"> Draft </ion-badge>
+      
+      <ion-badge slot="end" class="status status_{{transfer.transfer_status}}" *ngIf="transfer.transfer_status==5"> Locked,
+        Pending Payment </ion-badge>
 
-  <ion-list *ngIf="company && company.parentTransfers">
+      <ion-badge slot="end" class="status status_{{transfer.transfer_status}}" *ngIf="transfer.transfer_status==1"> Payment Sent,
+        Confirm Received </ion-badge>
+      
+      <ion-badge slot="end" class="status status_{{transfer.transfer_status}}" *ngIf="transfer.transfer_status==3"> Received &
+        Distribution in Progress </ion-badge>
+      
+      <ion-badge slot="end" class="status badge-paid status_{{transfer.transfer_status}}" *ngIf="transfer.transfer_status==4"> Completed
+      </ion-badge>
 
-    <ion-card *ngFor="let transfer of company.parentTransfers" tappable (click)="openTransferDetailPage(transfer)">
-      <ion-card-content>
-        <p><strong>Transfer #{{ transfer.transfer_id}}</strong></p>
-        <h2><strong>KWD {{ transfer.company_total | number:'1.3-3' }}</strong></h2>
-        <p>
-          <strong>Status: </strong>
-          <span class="status status_{{transfer.transfer_status}}" *ngIf="transfer.transfer_status==10"> Draft </span>
-          <span class="status status_{{transfer.transfer_status}}" *ngIf="transfer.transfer_status==5"> Locked,
-            Pending Payment </span>
-          <span class="status status_{{transfer.transfer_status}}" *ngIf="transfer.transfer_status==1"> Payment Sent,
-            Confirm Received </span>
-          <span class="status status_{{transfer.transfer_status}}" *ngIf="transfer.transfer_status==3"> Received &
-            Distribution in Progress </span>
-          <span class="status status_{{transfer.transfer_status}}" *ngIf="transfer.transfer_status==4"> Completed
-          </span>
-        </p>
-        <p><strong>Created on: </strong> {{transfer.transfer_created_at}}</p>
-      </ion-card-content>
-    </ion-card>
-  </ion-list>
+    </ion-item>
+  
+  </ng-container>
 
   <loading-modal type="transfer-list" [loading]="loading"></loading-modal>
 
   <no-items *ngIf="!loading && company && company.parentTransfers.length == 0" message="~ No transfer Data ~"></no-items>
+  
+  <ion-fab *ngIf="company && !company.parent_company_id" slot="fixed">
+    <ion-fab-button (click)="createNewTransfer()">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
-</ion-content>
-<ion-footer *ngIf="company && !company.parent_company_id">
-  <ion-button (click)="presentActionSheetForNewTransfer()">
-    Create New Transfer
-  </ion-button>
-</ion-footer>
+</ion-content> 

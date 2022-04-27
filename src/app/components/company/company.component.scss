@@ -1,8 +1,10 @@
 
 ion-card {
-  margin: 7px 0 12px;
-  border-radius: 5px;
-  box-shadow: inset 0 -1px 0 0 #e2e2e6;
+  margin: 7px 4px 16px 5px;
+  border-radius: 8px;
+  position: relative;
+  box-shadow: 0 2px 4px 0 rgb(0 0 0 / 10%);
+    
   position: relative;
   ion-card-content {
     padding-bottom: 16px!important;
@@ -57,7 +59,7 @@ p {
   line-height: 1.34;
   letter-spacing: normal;
   text-align: left;
-  color: var(--black);
+  color: #23233d;
 }
 .small-detail {
   margin-bottom: 8px;

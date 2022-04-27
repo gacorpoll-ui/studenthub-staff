@@ -1,21 +1,37 @@
-<ion-header>
+<ion-header mode="md">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button (click)="close()"></ion-back-button>
     </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar>
     <ion-title>{{ pageTitle }}</ion-title>
+
     <ion-buttons slot="end">
-      <ion-button
-              color="primary"
-              [disabled]="!form.valid || (total <= 0)"
-              (click)="validate()">
-        Save
+      <ion-button clear class="cancel" color="primary" (click)="close()">
+        Cancel
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
+
+  <ion-toolbar class="container" >
+    <!--(ionChange)="segmentChanged($event)"-->
+    <ion-segment mode="md" [(ngModel)]="segment">
+
+      <ion-segment-button mode="md" value="manual">
+        <ion-label>Manual Transfer</ion-label>
+      </ion-segment-button>
+
+      <ion-segment-button mode="md" value="excel-sheet-upload">
+        <ion-label>Excel Sheet Upload</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+
 </ion-header>
 
-<ion-content>
+<ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
+ 
   <form [formGroup]="form" *ngIf="ready">
 
     <ion-card class="ion-padding card-date-range">
@@ -117,7 +133,13 @@
 <ion-footer>
   <ion-toolbar class="ion-text-center">
     <ion-title>
-      Total KWD {{ total | number:'1.0-3' }}
+      <p></p>Total Amount 
+      <h4></h4>KWD {{ total | number:'1.0-3' }}
     </ion-title>
+
+    <ion-button class="btn-save" [disabled]="!form.valid || (total <= 0)" (click)="validate()">
+      Save
+    </ion-button>
+
   </ion-toolbar>
 </ion-footer>

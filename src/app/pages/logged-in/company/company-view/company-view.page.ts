@@ -62,6 +62,8 @@ export class CompanyViewPage implements OnInit {
     transfers : 0
   };
 
+  segment = 'details';
+
   constructor(
     public modalCtrl: ModalController,
     public toastCtrl: ToastController,

@@ -5,6 +5,9 @@ ion-back-button {
 ion-content {
   background: #f7f8fa;
   --background: #f7f8fa;
+  --padding-start: 20px;
+  --padding-end: 20px;
+  --padding-top: 12px;
 }
 
 .request-title {
@@ -34,6 +37,11 @@ ion-content {
 
 ion-list {
   background: transparent;
+}
+
+ion-title {
+  padding-left: 24px;
+  padding-right: 24px;
 }
 
 .main {

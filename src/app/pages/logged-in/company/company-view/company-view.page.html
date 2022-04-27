@@ -16,147 +16,227 @@
       </ion-button>
     </ion-buttons> -->
   </ion-toolbar>
+
+  <ion-toolbar *ngIf="company">
+    <ion-title>
+      {{ (company.company_common_name_en) ? company.company_common_name_en:company.company_name }}
+    </ion-title>
+  </ion-toolbar>
+
+  <ion-toolbar class="container">
+    <!--(ionChange)="segmentChanged($event)"-->
+    <ion-segment mode="md" [(ngModel)]="segment">
+
+      <ion-segment-button mode="md" value="details">
+        <ion-label>Details</ion-label>
+      </ion-segment-button>
+
+      <ion-segment-button mode="md" value="activity">
+        <ion-label>Activity</ion-label>
+      </ion-segment-button>
+
+      <ion-segment-button mode="md" value="manage">
+        <ion-label>Manage</ion-label>
+      </ion-segment-button>
+
+    </ion-segment>
+  </ion-toolbar>
+
 </ion-header>
 
 <ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
-  <div  class="container">
 
+  <div *ngIf="loading" class="container">
     <loading-modal [loading]="loading" type="company-view"></loading-modal>
+  </div>
 
-    <div *ngIf="company && !loading">
+  <div *ngIf="company && !loading" class="container">
+
+    <div class="tab-manage" *ngIf="segment == 'manage'">
       <ion-grid>
-        <ion-row>
-          <ion-col size-xs="12" size-sm="12" size-md="6" size-lg="6" size-xl="6">
-            <div class="left-side">
-              <h3 class="company-name">
-
-                <ion-thumbnail *ngIf="company.company_logo">
-                  <img src="{{ aws.cloudinaryUrl + company.company_logo }}" (error)="imageError()">
-                </ion-thumbnail>
-
-                {{ company.company_name }}
-              </h3>
-
-              <ion-badge color="success" *ngIf="company.company_approved_to_hire">
-                <ion-icon name="checkmark-outline"></ion-icon> Approved to hire
-              </ion-badge>
-
-              <ion-badge color="warning" *ngIf="!company.company_approved_to_hire">
-                <ion-icon name="close-outline"></ion-icon> Not approved to hire
-              </ion-badge>
-
-              <h4 class="company-name-english">
-                {{ company.company_common_name_en }}
-              </h4>
-
-              <h4 class="company-name-arabic arabic">
-                {{ company.company_common_name_ar }}
-              </h4>
-
-              <div class="last-activity">
-                <p class="followup">
-                  <ng-container *ngIf="company.company_status && !company.parent_company_id">Active.</ng-container>
-                  <ng-container *ngIf="!company.company_status && !company.parent_company_id">Inactive.</ng-container>
-
-                  <span *ngIf="company.company_followup">
-                  Follow up every {{ company.company_followup_interval_weeks }} weeks
-                </span>
-                </p>
-
-                <p class="last-followup" *ngIf="company.company_last_followup_datetime">
-                  Last follow-up was {{ company.company_last_followup_datetime | timeAgo }} on {{ toDate(company.company_last_followup_datetime) | date: 'MMM d, y' }}
-                </p>
-              </div>
-
-              <p class="email" *ngIf="company.company_email">{{ company.company_email }}</p>
-
-              <p class="hourly-rate" *ngIf="company.company_hourly_rate">
-                {{ company.company_hourly_rate | number:'1.0-3' }} KD per hour <br />
-                {{ company.company_bonus_commission | number:'1.0-2' }}% commission
-              </p>
-
-              <p class="description" *ngIf="company.company_description_en" [innerHtml]="company.company_description_en"></p>
-
-              <p class="description arabic" *ngIf="company.company_description_ar" [innerHtml]="company.company_description_ar"></p>
-
-              <a class="website" href="{{ company.company_website }}" target="_blank" *ngIf="company.company_website">{{ company.company_website }}</a>
-
-              <h5>Last Activity</h5>
-
-              <note tappable *ngIf="notes.length > 0" [routerLink]="'/note-view/' + notes[0].note_uuid" from="company-view" [note]="notes[0]"
-                    (onChange)="loadNotes()" (onDelete)="loadNotes()"></note>
-
-              <ion-button class="btn-view-notes" *ngIf="notesTotal > 0" (click)="openNotes()">
-                <span *ngIf="notes.length > 1">View all {{ notesTotal }} notes</span>
-                <span *ngIf="notes.length == 1">Manage notes</span>
-              </ion-button>
-
-              <ion-button class="btn-add-note" *ngIf="notes.length == 0" (click)="addNote()">
-                Add note
-              </ion-button>
-
-            </div>
+        <ion-row> 
+          <ion-col size-xs="12" size-sm="12" size-md="4" size-lg="4" size-xl="4">
+            <ion-item tappable (click)="openRequests()">
+              <div tabindex="0"></div>
+              <ion-label>
+                <h5>Requests</h5>
+                <p>{{ stats.requests }}</p>
+              </ion-label>
+              <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+            </ion-item>
           </ion-col>
-          <ion-col size-xs="12" size-sm="12" size-md="6" size-lg="6" size-xl="6">
-            <div class="right-side">
-              <h5>Manage</h5>
 
-              <ion-item tappable (click)="openRequests()">
-                <div tabindex="0"></div>
-                <ion-label>Requests</ion-label>
-                <ion-badge color="medium" slot="end">{{ stats.requests }}</ion-badge>
-              </ion-item>
+          <ion-col *ngIf="stats.subCompanies == 0" size-xs="12" size-sm="12" size-md="4" size-lg="4" size-xl="4">
 
-              <ion-item tappable (click)="openStores()" *ngIf="stats.subCompanies == 0">
-                <div tabindex="0"></div>
-                <ion-label>Stores</ion-label>
-                <ion-badge color="medium" slot="end">{{ stats.stores }}</ion-badge>
-              </ion-item>
+            <ion-item tappable (click)="openStores()" >
+              <div tabindex="0"></div>
+              <ion-label>
+                <h5>Stores</h5>
+                <p>{{ stats.stores }}</p>
+              </ion-label>
+              <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+            </ion-item>
+          </ion-col>
 
-              <ion-item tappable (click)="openSubCompanies()" *ngIf="stats.stores == 0">
-                <div tabindex="0"></div>
-                <ion-label>Subcompanies</ion-label>
-                <ion-badge color="medium" slot="end">{{ stats.subCompanies }}</ion-badge>
-              </ion-item>
+          <ion-col size-xs="12" size-sm="12" size-md="4" size-lg="4" size-xl="4" *ngIf="stats.stores == 0">
+            <ion-item tappable (click)="openSubCompanies()" >
+              <div tabindex="0"></div>
+              <ion-label>
+                <h5>Subcompanies</h5>
+                <p>{{ stats.subCompanies }}</p>
+              </ion-label>
+              <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+            </ion-item>
+          </ion-col>
 
-              <ion-item tappable (click)="openContacts()">
-                <div tabindex="0"></div>
-                <ion-label>Contacts</ion-label>
-                <ion-badge color="medium" slot="end">{{ stats.contacts }}</ion-badge>
-              </ion-item>
+          <ion-col size-xs="12" size-sm="12" size-md="4" size-lg="4" size-xl="4">
+            <ion-item tappable (click)="openContacts()">
+              <div tabindex="0"></div>
+              <ion-label>
+                <h5>Contacts</h5>
+                <p>{{ stats.contacts }}</p>
+              </ion-label>
+              <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+            </ion-item>
+          </ion-col>
 
-              <ion-item tappable (click)="openBrands()">
-                <div tabindex="0"></div>
-                <ion-label>Brands</ion-label>
-                <ion-badge color="medium" slot="end">{{ stats.brands }}</ion-badge>
-              </ion-item>
+          <ion-col size-xs="12" size-sm="12" size-md="4" size-lg="4" size-xl="4">
+            <ion-item tappable (click)="openBrands()">
+              <div tabindex="0"></div>
+              <ion-label>
+                <h5>Brands</h5>
+                <p>{{ stats.brands }}</p>
+              </ion-label>
+              <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+            </ion-item>
+          </ion-col>
 
-              <ion-item tappable *ngIf="stats.malls > 0" (click)="openMalls()">
-                <ion-label>Malls present in</ion-label>
-                <ion-badge color="medium" slot="end">{{ stats.malls }}</ion-badge>
-              </ion-item>
+          <ion-col *ngIf="stats.malls > 0"  size-xs="12" size-sm="12" size-md="4" size-lg="4" size-xl="4">
+            <ion-item tappable (click)="openMalls()">
+              <ion-label>
+                <h5>Malls present in</h5>
+                <p>{{ stats.malls }}</p>
+              </ion-label>
+              <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+            </ion-item>
+          </ion-col>
 
-              <ion-item tappable (click)="openDocuments()">
-                <div tabindex="0"></div>
-                <ion-label>Documents</ion-label>
-                <ion-badge color="medium" slot="end">{{ stats.documents }}</ion-badge>
-              </ion-item>
+          <ion-col size-xs="12" size-sm="12" size-md="4" size-lg="4" size-xl="4">
+            <ion-item tappable (click)="openDocuments()">
+              <div tabindex="0"></div>
+              <ion-label>
+                <h5>Documents</h5>
+                <p>{{ stats.documents }}</p>
+              </ion-label>
+              <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+            </ion-item>
+          </ion-col>
 
-              <ion-item tappable (click)="openTransfers()" *ngIf="!company.parent_company_id">
-                <div tabindex="0"></div>
-                <ion-label>Transfers</ion-label>
-                <ion-badge color="medium" slot="end">{{ stats.transfers }}</ion-badge>
-              </ion-item>
+          <ion-col *ngIf="!company.parent_company_id" size-xs="12" size-sm="12" size-md="4" size-lg="4" size-xl="4">
+            <ion-item tappable (click)="openTransfers()" >
+              <div tabindex="0"></div>
+              <ion-label>
+                <h5>Transfers</h5>
+                <p>{{ stats.transfers }}</p>
+              </ion-label>
+              <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+            </ion-item>
+          </ion-col>
 
-              <ion-item tappable (click)="openChart()"  *ngIf="!company.parent_company_id">
-                <div tabindex="0"></div>
-                <ion-label>Transfer Chart</ion-label>
-              </ion-item>
-            </div>
+          <ion-col *ngIf="!company.parent_company_id" size-xs="12" size-sm="12" size-md="4" size-lg="4" size-xl="4">
+            <ion-item tappable (click)="openChart()" >
+              <div tabindex="0"></div>
+              <ion-label>
+                <h5>Transfer Chart</h5>
+              </ion-label>
+              <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+            </ion-item>
           </ion-col>
         </ion-row>
       </ion-grid>
-    </div>
+      
+    </div><!-- END .tab-manage -->
+
+    <ion-grid>
+      <ion-row>
+        <ion-col size-xs="12" size-sm="12" size-md="6" size-lg="6" size-xl="6">
+          <div class="left-side">
+            <h3 class="company-name">
+
+              <ion-thumbnail *ngIf="company.company_logo">
+                <img src="{{ aws.cloudinaryUrl + company.company_logo }}" (error)="imageError()">
+              </ion-thumbnail>
+
+              {{ company.company_name }}
+            </h3>
+
+            <ion-badge color="success" *ngIf="company.company_approved_to_hire">
+              <ion-icon name="checkmark-outline"></ion-icon> Approved to hire
+            </ion-badge>
+
+            <ion-badge color="warning" *ngIf="!company.company_approved_to_hire">
+              <ion-icon name="close-outline"></ion-icon> Not approved to hire
+            </ion-badge>
+
+            <h4 class="company-name-english">
+              {{ company.company_common_name_en }}
+            </h4>
+
+            <h4 class="company-name-arabic arabic">
+              {{ company.company_common_name_ar }}
+            </h4>
+
+            <div class="last-activity">
+              <p class="followup">
+                <ng-container *ngIf="company.company_status && !company.parent_company_id">Active.</ng-container>
+                <ng-container *ngIf="!company.company_status && !company.parent_company_id">Inactive.</ng-container>
+
+                <span *ngIf="company.company_followup">
+                  Follow up every {{ company.company_followup_interval_weeks }} weeks
+                </span>
+              </p>
+
+              <p class="last-followup" *ngIf="company.company_last_followup_datetime">
+                Last follow-up was {{ company.company_last_followup_datetime | timeAgo }} on {{
+                toDate(company.company_last_followup_datetime) | date: 'MMM d, y' }}
+              </p>
+            </div>
+
+            <p class="email" *ngIf="company.company_email">{{ company.company_email }}</p>
+
+            <p class="hourly-rate" *ngIf="company.company_hourly_rate">
+              {{ company.company_hourly_rate | number:'1.0-3' }} KD per hour <br />
+              {{ company.company_bonus_commission | number:'1.0-2' }}% commission
+            </p>
+
+            <p class="description" *ngIf="company.company_description_en" [innerHtml]="company.company_description_en">
+            </p>
+
+            <p class="description arabic" *ngIf="company.company_description_ar"
+              [innerHtml]="company.company_description_ar"></p>
+
+            <a class="website" href="{{ company.company_website }}" target="_blank" *ngIf="company.company_website">{{
+              company.company_website }}</a>
+
+            <h5>Last Activity</h5>
+
+            <note tappable *ngIf="notes.length > 0" [routerLink]="'/note-view/' + notes[0].note_uuid"
+              from="company-view" [note]="notes[0]" (onChange)="loadNotes()" (onDelete)="loadNotes()"></note>
+
+            <ion-button class="btn-view-notes" *ngIf="notesTotal > 0" (click)="openNotes()">
+              <span *ngIf="notes.length > 1">View all {{ notesTotal }} notes</span>
+              <span *ngIf="notes.length == 1">Manage notes</span>
+            </ion-button>
+
+            <ion-button class="btn-add-note" *ngIf="notes.length == 0" (click)="addNote()">
+              Add note
+            </ion-button>
+
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
   </div>
 </ion-content>
 <!-- if followup enabled and followup interval passed -->

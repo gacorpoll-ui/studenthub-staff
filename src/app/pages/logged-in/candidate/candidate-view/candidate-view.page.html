@@ -255,7 +255,7 @@
       <ion-item class="item-salary" *ngFor="let salary of salaryTransfers | slice:0:3">
         <ion-label>
           <h5>KWD {{salary.total | number:'1.3-3' }}</h5>
-          <p>{{ salary.tc_id }}</p>
+          <p>#{{ salary.tc_id }}</p>
         </ion-label>
 
         <ion-badge slot="end" *ngIf="salary.status == 'Paid'">Paid</ion-badge>
