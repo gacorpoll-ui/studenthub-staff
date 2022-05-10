@@ -220,7 +220,7 @@ export class StoryViewPage implements OnInit, OnDestroy {
         }
 
         // story work stopped
-        if (status == 0) {
+        if (status == 0 || status == 3) {
             this.authService.story = null;
             this.authService.saveInStorage();
         }
