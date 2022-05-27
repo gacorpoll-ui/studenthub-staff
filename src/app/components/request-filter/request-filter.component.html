@@ -1,5 +1,6 @@
 <ion-content>
   <div class="drager"></div>
+
   <h3>
     Filter Results
     <ion-button (click)="reset()" class="btn-close">
@@ -14,7 +15,9 @@
     <ion-button class="btn-option" (click)="filterByStatus($event, 'started')" [class.active]="filters.requestStatus == 'started'">Started</ion-button>
     <ion-button class="btn-option" (click)="filterByStatus($event, 'delivered')" [class.active]="filters.requestStatus == 'delivered'">Delivered</ion-button>
     <ion-button class="btn-option" (click)="filterByStatus($event, 'cancelled')" [class.active]="filters.requestStatus == 'cancelled'">Cancelled</ion-button>
+    <ion-button class="btn-option" (click)="filterByStatus($event, 'need-update')" [class.active]="filters.requestStatus == 'need-update'">Need update</ion-button>
   </ng-container>
+
   <ng-container *ngIf="tab== 'story'">
     <h5>Story Status</h5>
     <ion-button class="btn-option" (click)="filterByStoryStatus($event, null)" [class.active]="filters.storyStatus == null">All</ion-button>
