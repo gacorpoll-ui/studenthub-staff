@@ -15,8 +15,13 @@ export class UniversityService {
    * List of all universities
    * @returns {Observable<any>}
    */
-  list(page: number): Observable<any> {
-    let url = this._universityEndpoint + '?page=' + page;
+  list(page: number, keyword): Observable<any> {
+    let url;
+    if (keyword) {
+      url = this._universityEndpoint + '?page=' + page + '&keyword=' + keyword;
+    } else {
+      url = this._universityEndpoint + '?page=' + page;
+    }
     return this._authhttp.getRaw(url);
   }
 

@@ -1,25 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-import {LoadingController, NavController} from "@ionic/angular";
+import {ModalController} from "@ionic/angular";
 import {UniversityService} from "src/app/providers/logged-in/university.service";
 import {University} from "src/app/models/university";
 
 @Component({
-  selector: 'app-university-list',
-  templateUrl: './university-list.page.html',
-  styleUrls: ['./university-list.page.scss'],
+  selector: 'app-university',
+  templateUrl: './university.page.html',
+  styleUrls: ['./university.page.scss'],
 })
-export class UniversityListPage implements OnInit {
+export class UniversityPage implements OnInit {
 
   public pageCount = 0;
   public currentPage = 1;
-
+  public searchBar;
   public loading = false;
   public universities: University[];
 
   public borderLimit = false;
 
   constructor(
-    public navCtrl: NavController,
+    public modalCtrl: ModalController,
     public universityService: UniversityService
   ) {}
 
@@ -37,7 +37,7 @@ export class UniversityListPage implements OnInit {
     // Load list of university
     this.loading = true;
 
-    this.universityService.list(page, null).subscribe(response => {
+    this.universityService.list(page, this.searchBar).subscribe(response => {
 
         this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
         this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
@@ -51,14 +51,23 @@ export class UniversityListPage implements OnInit {
   }
 
   /**
-   * When its selected
+   * close modal
+   * @param data
    */
-  rowSelected(model){
-    // Load Detail Page
-    this.navCtrl.navigateForward('university-view/'+model.university_id, {
-      state :{
-        model: model
-      }
+  dismiss(data = {}) {
+    this.modalCtrl.getTop().then(overlay => {
+      if (overlay)
+        this.modalCtrl.dismiss(data);
+    });
+  }
+
+  /**
+   * on university selection
+   * @param university
+   */
+  async rowSelected(university) {
+    this.dismiss({
+      university
     });
   }
 
@@ -69,7 +78,7 @@ export class UniversityListPage implements OnInit {
   doInfinite(event) {
     this.loading = true;
     this.currentPage++;
-    this.universityService.list(this.currentPage, null).subscribe(response => {
+    this.universityService.list(this.currentPage,this.searchBar).subscribe(response => {
 
           this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
           this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
@@ -85,6 +94,6 @@ export class UniversityListPage implements OnInit {
   }
 
   logScrolling(e) {
-    this.borderLimit = (e.detail.scrollTop > 20) ? true : false;
+    this.borderLimit = (e.detail.scrollTop > 20);
   }
 }

@@ -140,24 +140,29 @@
         </p>
       </div>
 
-      <app-select-search-input
-        *ngIf="universitylistData"
-        formControlName="university_id"
-        placeholder="Select University"
-        [collection]="universitylistData"
-        title="University"
-        valueAttr="university_id"
-        labelAttr="university_name_en"
-        altLabelAttr="university_name_ar"
-        >
-      </app-select-search-input>
+      <ion-item (click)="selectUniversity()">
+        <ion-label position="floating">Select University</ion-label>
+        <ion-input readonly formControlName="university"></ion-input>
+      </ion-item>
+
+<!--      <app-select-search-input-->
+<!--        *ngIf="universitylistData"-->
+<!--        formControlName="university_id"-->
+<!--        placeholder="Select University"-->
+<!--        [collection]="universitylistData"-->
+<!--        title="University"-->
+<!--        valueAttr="university_id"-->
+<!--        labelAttr="university_name_en"-->
+<!--        altLabelAttr="university_name_ar"-->
+<!--        >-->
+<!--      </app-select-search-input>-->
 
       <div class="error-wrapper" *ngIf="!form.controls.university_id.pristine">
         <p class="error" *ngIf="form.controls.university_id.errors && form.controls.university_id.errors.required">
           * required
         </p>
       </div>
-      
+
       <ion-item [class.ion-invalid]="!model.fulltimer_gender">
         <div tabindex="0"></div>
         <ion-label>Gender</ion-label>
@@ -204,7 +209,7 @@
           * required
         </p>
       </div>
-      
+
       <ion-card>
         <ion-card-header>
           <ion-card-title>Tags </ion-card-title>
