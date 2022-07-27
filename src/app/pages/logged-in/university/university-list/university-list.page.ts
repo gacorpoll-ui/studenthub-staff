@@ -12,12 +12,12 @@ export class UniversityListPage implements OnInit {
 
   public pageCount = 0;
   public currentPage = 1;
- 
+
   public loading = false;
   public universities: University[];
 
-  public borderLimit = false; 
-  
+  public borderLimit = false;
+
   constructor(
     public navCtrl: NavController,
     public universityService: UniversityService
@@ -37,7 +37,7 @@ export class UniversityListPage implements OnInit {
     // Load list of university
     this.loading = true;
 
-    this.universityService.list(page).subscribe(response => {
+    this.universityService.list(page, null).subscribe(response => {
 
         this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
         this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
@@ -46,7 +46,7 @@ export class UniversityListPage implements OnInit {
 
       },
       error => {},
-      () => {this.loading = false;}
+      () => {this.loading = false; }
     );
   }
 
@@ -64,12 +64,12 @@ export class UniversityListPage implements OnInit {
 
   /**
    * load more on scroll to bottom
-   * @param event 
+   * @param event
    */
   doInfinite(event) {
     this.loading = true;
     this.currentPage++;
-    this.universityService.list(this.currentPage).subscribe(response => {
+    this.universityService.list(this.currentPage, null).subscribe(response => {
 
           this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
           this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
@@ -83,7 +83,7 @@ export class UniversityListPage implements OnInit {
         }
     );
   }
-  
+
   logScrolling(e) {
     this.borderLimit = (e.detail.scrollTop > 20) ? true : false;
   }
