@@ -7,7 +7,19 @@
   </ion-toolbar>
 
   <ion-toolbar class="container"  [class.hidden]="borderLimit">
-    <ion-title *ngIf="staff">{{ staff.staff_name }}</ion-title>
+    <ion-title *ngIf="staff">
+      <ion-row>
+        <ion-col>
+          {{ staff.staff_name }}
+        </ion-col>
+        <ion-col class="ion-text-right">
+          <a tappable class="logout_btn" *ngIf="authService.staff_id == staff_id" (click)="authService.logout()">
+            Logout
+          </a>
+        </ion-col>
+      </ion-row>
+
+    </ion-title>
   </ion-toolbar>
 
   <ion-toolbar  class="container"  [class.hidden]="borderLimit">

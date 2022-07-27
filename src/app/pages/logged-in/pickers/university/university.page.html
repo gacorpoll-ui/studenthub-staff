@@ -1,0 +1,31 @@
+<ion-header mode="md" [class.add-border]="borderLimit" class="ion-no-border">
+  <ion-toolbar class="container">
+    <ion-buttons slot="start">
+      <ion-back-button (click)="dismiss()"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Universities</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
+  <ion-searchbar [(ngModel)]="searchBar" (ionChange)="loadData(1)" debounce="200" animated></ion-searchbar>
+  <div class="container">
+    <loading-modal [loading]="loading" type="text-list"></loading-modal>
+    <ion-list>
+      <ion-item tappable *ngFor="let university of universities" (click)="rowSelected(university)">
+        <div tabindex="0"></div>
+        <ion-label>
+          <h5>{{ university.university_name_en }}</h5>
+          <p>{{ university.university_name_ar }}</p>
+        </ion-label>
+        <ion-badge slot="end" *ngIf="university.total_candidates > 0">
+          {{ university.total_candidates }} candidates
+        </ion-badge>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <ion-infinite-scroll *ngIf="currentPage < pageCount" (ionInfinite)="doInfinite($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

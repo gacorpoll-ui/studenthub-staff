@@ -73,6 +73,7 @@ import { StoreOptionPageModule } from './pages/logged-in/store/store-option/stor
 import { StoreModule } from './components/store/store.module';
 import { ActionComponent } from './components/action/action.component';
 import { ActionComponentModule } from './components/action/action.module';
+import {UniversityPageModule} from './pages/logged-in/pickers/university/university.module';
 
 export function startupServiceFactory(authService) {
   return () => authService.load();
@@ -160,6 +161,7 @@ declare global {
     StaffPageModule,
     StoreOptionPageModule,
     StoreModule,
+    UniversityPageModule,
     CompanyFilterPageModule,
     ActionComponentModule
   ],
