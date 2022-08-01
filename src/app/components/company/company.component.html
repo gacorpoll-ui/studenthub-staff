@@ -6,7 +6,7 @@
       </ion-avatar>
 
       <ion-label class="ion-text-wrap">
-        <h2 *ngIf="company.company_common_name_en">{{ company.company_common_name_en }} 
+        <h2 *ngIf="company.company_common_name_en">{{ company.company_common_name_en }}
           <ion-icon class="active" name="checkmark-circle"  *ngIf="company.company_approved_to_hire"></ion-icon></h2>
         <h2 *ngIf="!company.company_common_name_en">{{ company.company_name }}</h2>
         <div class="small-detail">
@@ -38,6 +38,12 @@
         </ion-badge>
         <ion-badge slot="start" color="light" *ngIf="company.total_candidate && !company.transferInLast40Days">
           40 days passed without payment
+        </ion-badge>
+        <ion-badge slot="start" color="light" *ngIf="totalCandidates > 0">
+          {{ totalCandidates }} Assigned Candidate
+        </ion-badge>
+        <ion-badge slot="start" color="light" *ngIf="company.total_suggestions > 0">
+          {{ company.total_suggestions }} total Suggestions
         </ion-badge>
         <ion-badge slot="start" color="warning" *ngIf="!company.company_approved_to_hire">
           <ion-icon name="close-outline"></ion-icon> Not approved to hire
