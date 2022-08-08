@@ -15,9 +15,12 @@
 <ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
   <div class="container">
     <div class="content">
-      <h1>Clients <span *ngIf="totalCount">({{totalCount}})</span></h1>
+      <h1>Clients
+        <span *ngIf="totalCount && !this.loading">({{totalCount}})</span>
+        <ion-spinner name="crescent" *ngIf="this.loading" color="primary"></ion-spinner>
+      </h1>
 
-      <ion-badge tappable color="primary" (click)="resetStatus()" [class.active]="filters.status == 6 && [1, 0].indexOf(filters.approved_to_hire) == -1">
+      <ion-badge tappable color="primary" (click)="resetStatus()" [class.active]="filters.status == 100 && [1, 0].indexOf(filters.approved_to_hire) == -1">
         All clients
       </ion-badge>
 
