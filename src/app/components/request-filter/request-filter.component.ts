@@ -13,6 +13,7 @@ export class RequestFilterComponent implements OnInit {
     requestStatus: null,
     storyStatus: null,
     position_type: null,
+    story_position_type: null,
     startDate: null,
     endDate: null,
   };
@@ -33,8 +34,12 @@ export class RequestFilterComponent implements OnInit {
     this.filters.storyStatus = requestStatus;
   }
 
-  filterByType($event, positionType) {
-    this.filters.position_type = positionType;
+  filterByType($event, positionType, type = 'request') {
+    if (type == 'request') {
+      this.filters.position_type = positionType;
+    } else {
+      this.filters.story_position_type = positionType;
+    }
   }
 
   filter() {
@@ -42,12 +47,24 @@ export class RequestFilterComponent implements OnInit {
   }
 
   reset() {
-    this.filters = {
-      storyStatus: null,
-      requestStatus: null,
-      position_type: null,
-      startDate: null,
-      endDate: null,
-    };
+    if (this.tab == 'request') {
+      this.filters = {
+        storyStatus: this.filters.storyStatus,
+        requestStatus: null,
+        position_type: null,
+        story_position_type: this.filters.story_position_type,
+        startDate: null,
+        endDate: null,
+      };
+    } else {
+      this.filters = {
+        storyStatus: null,
+        requestStatus: this.filters.requestStatus,
+        position_type: this.filters.position_type,
+        story_position_type: null,
+        startDate: this.filters.startDate,
+        endDate: this.filters.endDate,
+      };
+    }
   }
 }

@@ -152,3 +152,10 @@ ion-segment-button.segment-button-checked {
 .update-alert {
   bottom: 80px;
 }
+.filter-tag {
+  padding: 12px 0 0;
+  ion-badge {
+    text-transform: capitalize;
+    margin-right:12px;
+  }
+}

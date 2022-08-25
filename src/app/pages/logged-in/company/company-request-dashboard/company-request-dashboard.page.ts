@@ -46,6 +46,7 @@ export class CompanyRequestDashboardPage implements OnInit {
     storyStatus: null,//'9' for unstarted
     requestStatus: null,//'started',
     position_type: null,
+    story_position_type: null,
     startDate: null,
     endDate: null,
   };
@@ -226,10 +227,6 @@ export class CompanyRequestDashboardPage implements OnInit {
       urlParams += '&request_status=' + this.filters.requestStatus;
     }
 
-    if (this.filters.storyStatus) {
-      urlParams += '&story_status=' + this.filters.storyStatus;
-    }
-
     if (this.filters.startDate) {
       const d = new Date(this.filters.startDate);
       const month = d.getMonth() + 1;
@@ -242,9 +239,18 @@ export class CompanyRequestDashboardPage implements OnInit {
       urlParams += '&end_date=' + d.getFullYear() + '-' + month + '-' + d.getDate();
     }
 
-    if (this.filters.position_type) {
+    if (this.filters.position_type && this.segment == 'request') {
       urlParams += '&position_type=' + this.filters.position_type;
     }
+
+    if (this.filters.story_position_type && this.segment == 'story') {
+      urlParams += '&position_type=' + this.filters.story_position_type;
+    }
+
+    if (this.filters.storyStatus) {
+      urlParams += '&story_status=' + this.filters.storyStatus;
+    }
+
 
     return urlParams;
   }
@@ -265,7 +271,7 @@ export class CompanyRequestDashboardPage implements OnInit {
     let param = this.urlParams();
     param += '&expand=staff,request,request.company,latestStoryActivity';
     param += '&query=' + this.query;
-
+    console.log(param);
     this.storyService.list(this.currentPage, param).subscribe(response => {
 
       this.storyPageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
@@ -338,11 +344,12 @@ export class CompanyRequestDashboardPage implements OnInit {
     await modal.present();
 
     const { data } = await modal.onWillDismiss();
-
+    console.log(data);
     if(data && (
         data.storyStatus != this.filters.storyStatus ||
         data.requestStatus != this.filters.requestStatus ||
         data.position_type != this.filters.position_type ||
+        data.story_position_type != this.filters.story_position_type ||
         data.startDate != this.filters.startDate ||
         data.endDate != this.filters.endDate
     )) {
@@ -360,6 +367,63 @@ export class CompanyRequestDashboardPage implements OnInit {
     if (this.segment == 'request') {
       this.loadAllRequest();
     } else {
+      this.loadStories(1);
+    }
+  }
+  getPosition(pos) {
+    if (pos == 2) {
+      return 'Part-time';
+    } else if (pos == 1) {
+      return 'Full-time';
+    }
+  }
+
+  getStoryStatus(status) {
+    switch(status) {
+      case '1':
+        return 'Started';
+      case '2':
+        return 'Finished';
+      case '3':
+        return 'Delivered';
+      case '4':
+        return 'Rejected';
+      case '5':
+        return 'Accepted';
+      case '6':
+        return 'Cancelled';
+      case '9':
+        return 'Unstarted';
+      case '10':
+        return 'Latest';
+    }
+  }
+
+  getDate(date) {
+    const d = new Date(date);
+    const month = d.getMonth() + 1;
+    return d.getFullYear() + '-' + month + '-' + d.getDate();
+  }
+  resetFilter(tab) {
+    if (tab == 'request') {
+      this.filters = {
+        storyStatus: this.filters.storyStatus,
+        requestStatus: null,
+        position_type: null,
+        story_position_type: this.filters.story_position_type,
+        startDate: null,
+        endDate: null,
+      };
+      this.loadRequests();
+    } else {
+      this.filters = {
+        storyStatus: null,
+        requestStatus: this.filters.requestStatus,
+        position_type: this.filters.position_type,
+        story_position_type: null,
+        startDate: this.filters.startDate,
+        endDate: this.filters.endDate,
+      };
       this.loadStories(1);
     }
   }
