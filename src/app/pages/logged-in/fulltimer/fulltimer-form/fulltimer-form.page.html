@@ -191,7 +191,7 @@
           <div tabindex="0"></div>
           <ion-label>Driving License Available?</ion-label>
           <ion-chip (click)="setLicenseOption(1)" [class.active]="model.fulltimer_driving_license == 1">Yes</ion-chip>
-          <ion-chip (click)="setLicenseOption(2)" [class.active]="model.fulltimer_driving_license == 2">No</ion-chip>
+          <ion-chip (click)="setLicenseOption(0)" [class.active]="model.fulltimer_driving_license == 0">No</ion-chip>
         </ion-item>
 
         <div class="error-wrapper" *ngIf="!form.controls.driving_license.pristine">
@@ -231,7 +231,7 @@
             <div *ngFor="let fulltimerTag of fulltimerTags.controls; let i = index">
               <ion-item [formGroup]="fulltimerTag">
                 <div tabindex="0"></div>
-                
+
                 <ion-input autocomplete="off1" (ionChange)="onTagChange($event, i)" formControlName="tag"
                   enterkeyhint="Next"></ion-input>
 

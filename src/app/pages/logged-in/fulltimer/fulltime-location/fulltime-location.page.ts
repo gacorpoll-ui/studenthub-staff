@@ -1,24 +1,13 @@
 import {Component, OnInit, ViewChild, NgZone, OnDestroy} from '@angular/core';
 import { AlertController, ModalController, Platform, IonContent } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
-// import { Storage } from '@ionic/storage';
+
 import { Subscription } from 'rxjs';
 import { Plugins } from '@capacitor/core';
-// services
-// import { JobService } from 'src/app/services/logged-in/job.service';
-// import { CvBuilderService } from 'src/app/services/logged-in/cvbuilder.service';
-// import { CityService } from 'src/app/services/logged-in/city.service';
-// import { AuthService } from 'src/app/services/auth.service';
-// import { TranslateLabelService } from 'src/app/services/translate-label.service';
-// import { GoogleMapService } from 'src/app/services/logged-in/google-map.service';
 // models
-// import { City } from 'src/app/models/city';
-import { Area } from 'src/app/models/area';
-import { Candidate } from 'src/app/models/candidate';
 import {GoogleMapService} from '../../../../providers/logged-in/google-map.service';
 import {AuthService} from '../../../../providers/auth.service';
 import {TranslateLabelService} from '../../../../providers/translate-label.service';
-import {Country} from '../../../../models/country';
 import {Fulltimer} from "../../../../models/fulltimer";
 
 

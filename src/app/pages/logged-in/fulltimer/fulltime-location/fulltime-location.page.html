@@ -1,9 +1,9 @@
 <ion-header mode="md" [class.add-border]="borderLimit" class="clear-header" [attr.dir]="translateService.direction()">
     <ion-toolbar class="container">
         <ion-buttons slot="start">
-            <ion-back-button icon="assets/images/icon-back.svg" text="{{ 'Back' | translate }}" defaultHref="view/profile" *ngIf="from != 'sidebar'">
+            <ion-back-button icon="assets/images/ic_cancel.svg" defaultHref="view/profile" *ngIf="from != 'sidebar'">
             </ion-back-button>
-            <ion-back-button icon="assets/images/icon-back.svg" text="{{ 'Back' | translate }}" (click)="dismiss()"
+            <ion-back-button icon="assets/images/ic_cancel.svg" (click)="dismiss()"
                 *ngIf="from == 'sidebar'"></ion-back-button>
         </ion-buttons>
     </ion-toolbar>
