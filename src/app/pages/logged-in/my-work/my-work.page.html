@@ -25,18 +25,20 @@
       <ion-card tappable *ngFor="let story of currentStory" (click)="rowSelected(story)" >
 
         <ion-card-header *ngIf="story && story.request">
+          <ion-card-title>
+            <b>({{story.request.request_number_of_employees}})&nbsp;
+              {{story.request.request_position_title}} &nbsp;
+              <span *ngIf="story.request.request_position_type == 1">Full-time</span>
+              <span *ngIf="story.request.request_position_type == 2">Part-time</span>
+            </b>
+          </ion-card-title>
           <ion-card-subtitle>
-
-            <span *ngIf="story.request.request_position_type == 1">Full-time -</span>
-            <span *ngIf="story.request.request_position_type == 2">Part-time -</span>
-
-            {{story.request.request_position_title}}
+            <p *ngIf="story.request.request_additional_info" class="txt-additional-info">{{story.request.request_additional_info.substr(0,85)}}...</p>
           </ion-card-subtitle>
-
-          <ion-card-title>for</ion-card-title>
         </ion-card-header>
-        <ion-card-content *ngIf="story.company">
-          {{story.company.company_name}}
+        <ion-card-content *ngIf="story.request.company" class="company-name">
+          {{story.request.company.company_common_name_en}} <br/>
+          <small>{{story.request.company.company_common_name_ar}}</small>
         </ion-card-content>
       </ion-card>
       </ng-container>
@@ -48,12 +50,12 @@
 
         <ion-card-header *ngIf="story.request">
           <ion-card-subtitle>
-
-            <span *ngIf="story.request.request_position_type == 1">Full-time -</span>
-            <span *ngIf="story.request.request_position_type == 2">Part-time -</span>
-
-            {{story.request.request_position_title}}</ion-card-subtitle>
-          <ion-card-title>for</ion-card-title>
+            <b>({{story.request.request_number_of_employees}})&nbsp;
+              {{story.request.request_position_title}} &nbsp;
+              <span *ngIf="story.request.request_position_type == 1">Full-time</span>
+              <span *ngIf="story.request.request_position_type == 2">Part-time</span>
+            </b>
+          </ion-card-subtitle>
         </ion-card-header>
         <ion-card-content>
           <p *ngIf="story.request && story.request.company">{{story.request.company.company_name}}</p>
