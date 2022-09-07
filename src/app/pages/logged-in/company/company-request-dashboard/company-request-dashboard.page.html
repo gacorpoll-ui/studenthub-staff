@@ -60,9 +60,10 @@
 
     <div *ngIf="segment == 'story'">
 
-        <ng-container *ngIf="!loading">
-          <app-story-item *ngFor="let story of stories" [story]="story" (click)="rowSelected(story)"></app-story-item>
+      <ng-container *ngIf="!loading">
+        <app-story-item *ngFor="let story of stories" [story]="story" (click)="rowSelected(story)"></app-story-item>
       </ng-container>
+
       <no-items message="~ No Story Found ~" *ngIf="!loading && stories.length == 0"></no-items>
       <ion-infinite-scroll *ngIf="storyCurrentPage < storyPageCount" (ionInfinite)="doInfiniteStories($event)">
         <ion-infinite-scroll-content></ion-infinite-scroll-content>

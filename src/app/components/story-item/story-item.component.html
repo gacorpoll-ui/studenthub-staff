@@ -2,7 +2,7 @@
   <ion-card-content>
     <div class="inner-card-content">
 
-      <h1>({{ request.request_number_of_employees }}) {{request.request_position_title}}</h1>
+      <h1>({{ story.number_of_employees }}) {{request.request_position_title}}</h1>
 
       <h3 *ngIf="request.company">
         {{ request.company.company_common_name_en? request.company.company_common_name_en: request.company.company_name }}
