@@ -110,6 +110,9 @@
         <h2>Job Description</h2>
         <p [innerHtml]="request.request_job_description"></p>
 
+        <h2>Additional Info</h2>
+        <p [innerHtml]="request.request_additional_info"></p>
+
         <p class="txt-additional-info">
           {{ request.no_of_employees_per_story }} no of employees per story
         </p>
@@ -163,7 +166,7 @@
 
           <invitation *ngFor="let invitation of acceptedInvitations" (onUpdate)="onInvitationUpdated()" [model]="invitation"></invitation>
         </div>
-        
+
     </div>
 
     <div *ngIf="segment == 'suggested'">
