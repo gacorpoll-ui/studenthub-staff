@@ -54,6 +54,7 @@ export class Story {
   request_uuid: string;
   suggestion_uuid: string;
   staff_id: number;
+  number_of_employees: number;
   story_status: number;
   story_time_spent: number;
   story_created_at: string;

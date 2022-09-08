@@ -11,8 +11,8 @@
     </ion-buttons>
   </ion-toolbar>
 
-  <ion-toolbar *ngIf="request" class="container title-name" >
-    <h1>{{request.request_number_of_employees +" "+request.request_position_title}}</h1>
+  <ion-toolbar *ngIf="request && story" class="container title-name" >
+    <h1>{{ story.number_of_employees +" "+request.request_position_title}}</h1>
     <p tappable [routerLink]="['/request-view/' +  request.request_uuid]">View main request</p>
   </ion-toolbar>
 
@@ -49,10 +49,6 @@
       <ion-badge *ngIf="request.request_location">{{story.request.request_location}}</ion-badge>
       <ion-badge *ngIf="request.request_position_type == 2">Part-time</ion-badge>
 
-      <ion-badge *ngIf="story.staff">
-        {{ story.staff.staff_name }}
-      </ion-badge>
-
       <ion-grid>
         <ion-row>
           <ion-col class="lbl">
@@ -85,9 +81,10 @@
         <h2>Job Description</h2>
         <p [innerHtml]="request.request_job_description"></p>
 
+        <!--
         <p class="txt-additional-info">
           {{ request.no_of_employees_per_story }} no of employees per story
-        </p>
+        </p>-->
 
       </div>
 
@@ -97,6 +94,11 @@
           on {{ request.request_created_datetime | timeAgo }}
         </ng-container>
       </div>
+      <p *ngIf="story.staff" class="working">
+        {{ story.staff.staff_name }}
+        <span *ngIf="story.story_status == 1"> working on it </span>
+        <span *ngIf="story.story_status > 1"> worked on it </span>
+      </p>
     </ng-container>
   </div>
   <div class="container" *ngIf="request && story && segment == 'update'">
@@ -208,6 +210,12 @@
         </ion-button>
       </ion-col>
 
+      <ion-col *ngIf="authService.role == 1 && story && !story.staff">
+        <ion-button (click)="assign()" fill="outline" class="btn-assign">
+          Assign staff
+        </ion-button>
+      </ion-col>
+
       <ion-col *ngIf="story.request && ['cancelled', 'delivered'].indexOf(story.request.request_status) == -1 &&
         (
           story.story_status == 0 ||
@@ -221,27 +229,30 @@
           Start Work
         </ion-button>
 
-        <ion-button *ngIf="story.story_status == 1 && story.staff_id == authService.staff_id && allSuggestions.length == 0"
+        <ion-button *ngIf="story.story_status == 1 && story.staff_id == authService.staff_id"
                     class="stop-btn" fill="outline" (click)="closeStoryConfirmation()">
           <ion-label>
             Stop Work &nbsp;&nbsp;
-            <span class="timer ion-text-center">
+            <span class="timer ion-text-center" *ngIf="allSuggestions.length == 0">
                 {{ story.story_last_updated_at | timer }}
             </span>
           </ion-label>
         </ion-button>
 
-        <ion-button *ngIf="story.story_status < 3 && allSuggestions.length > 0"
+
+        <ion-button *ngIf="story.story_status < 3 && allSuggestions.length > 0 && story.staff_id == authService.staff_id"
                     class="stop-btn delivery" fill="outline" (click)="changeStoryStatus(3)">
           <ion-label>
             Mark Story as Delivered
-            <span class="timer ion-text-center">
+            <span class="timer ion-text-center" *ngIf="story.story_status == 1">
                 {{ story.story_last_updated_at | timer }}
             </span>
           </ion-label>
         </ion-button>
 
       </ion-col>
+
+
     </ion-row>
   </ion-grid>
   <div  class="container">

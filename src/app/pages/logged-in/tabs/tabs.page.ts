@@ -134,12 +134,12 @@ export class TabsPage implements OnInit, OnDestroy {
       buttons: [{
         text: 'Part-timers',
         handler: () => {
-          this.router.navigate(['/candidate-search']);
+          return this.router.navigate(['/candidate-search']);
         }
       }, {
         text: 'Full-timers',
         handler: () => {
-          this.router.navigate(['/fulltimer-search']);
+          return this.router.navigate(['/fulltimer-search']);
         }
       }]
     });

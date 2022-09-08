@@ -307,7 +307,7 @@ const routes: Routes = [
   {
     path: 'candidate-search',
     loadChildren: () => import('./pages/logged-in/candidate/candidate-search/candidate-search.module').then(m => m.CandidateSearchPageModule),
-    canActivate: [StoryGuard, AuthService],
+    canActivate: [AuthService],
     data: {
       name: 'CandidateSearchPage',
       navDisable: true,
@@ -317,7 +317,7 @@ const routes: Routes = [
   {
     path: 'fulltimer-search',
     loadChildren: () => import('./pages/logged-in/fulltimer/fulltimer-search/fulltimer-search.module').then( m => m.FulltimerSearchPageModule),
-    canActivate: [AuthService, StoryGuard],
+    canActivate: [AuthService],
     data: {
       name: 'FulltimerSearchPage',
       navDisable: true

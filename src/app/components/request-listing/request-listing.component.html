@@ -31,8 +31,10 @@
             <span *ngIf="request.request_status == 'cancelled'">Cancelled</span>
             <span *ngIf="request.request_status == 're_work'">Re Work</span>
             <span *ngIf="request.request_status == 'pending'">Pending</span>
+            <span *ngIf="request.request_status == 'finished_by_recruitment'">Finished by recruitment</span>
           </ion-badge>
         </div>
+
 
         <p *ngFor="let staff of request.storyOwners" class="working">{{ staff.staff_name }} is working on it</p>
       </div>
