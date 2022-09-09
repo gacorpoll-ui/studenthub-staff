@@ -29,7 +29,7 @@ export class Candidate {
     candidate_civil_expiry_date: string;
     candidate_civil_photo_front: string;
     candidate_civil_photo_back: string;
-    candidate_hourly_rate: string;
+    candidate_hourly_rate: number;
     candidate_status: string;
     approved: number;
     isProfileCompleted: any;

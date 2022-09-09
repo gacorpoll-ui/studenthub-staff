@@ -22,6 +22,17 @@
           <ion-badge *ngIf="request.request_position_type == 1">Full-time</ion-badge>
           <ion-badge *ngIf="request.request_location">{{request.request_location.length > 30 ? request.request_location.substr(0,30)+'...' : request.request_location }}</ion-badge>
           <ion-badge *ngIf="request.request_position_type == 2">Part-time</ion-badge>
+
+          <ion-badge>
+            Required : {{story.number_of_employees}}
+          </ion-badge>
+          <ion-badge>
+            Invited : {{story.invited}}
+          </ion-badge>
+          <ion-badge>
+            Suggested : {{story.suggestion}}
+          </ion-badge>
+
           <p *ngIf="story.staff" class="working">{{ story.staff.staff_name }} is working on it</p>
         </ng-container>
       </div>

@@ -33,6 +33,18 @@
             <span *ngIf="request.request_status == 'pending'">Pending</span>
             <span *ngIf="request.request_status == 'finished_by_recruitment'">Finished by recruitment</span>
           </ion-badge>
+          <ion-badge>
+            Stories : {{request.story_count}}
+          </ion-badge>
+          <ion-badge>
+            Required : {{request.request_number_of_employees}}
+          </ion-badge>
+          <ion-badge>
+            Invited : {{request.invited}}
+          </ion-badge>
+          <ion-badge>
+            Suggested : {{request.suggestion}}
+          </ion-badge>
         </div>
 
 

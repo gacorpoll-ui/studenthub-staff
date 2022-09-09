@@ -25,6 +25,9 @@ export class Request {
     request_feedback: string;
     num_hours_followup_interval: number;
     is_old: number;
+    invited: number;
+    suggestion: number;
+    story_count: number;
     request_cancelled_at: string;
     request_delivered_at: string;
     request_assigned_at: string;
@@ -59,6 +62,8 @@ export class Story {
   story_time_spent: number;
   story_created_at: string;
   story_last_updated_at: string;
+  invited: number;
+  suggestion: number;
   request: Request;
   staff: Staff;
   company: Company;

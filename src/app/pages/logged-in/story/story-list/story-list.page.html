@@ -19,7 +19,7 @@
     <ion-list *ngIf="!loading">
       <section>
         <h2 *ngIf="stories && stories.length == 0" >No Story Available</h2>
-        
+
         <ion-card tappable *ngFor="let story of stories" (click)="rowSelected(story)">
 
           <ion-card-header *ngIf="story.request">
@@ -42,6 +42,16 @@
               <span *ngIf="story.story_status == 4"> Rejected </span>
               <span *ngIf="story.story_status == 5"> Accepted </span>
               <span *ngIf="story.story_status == 6">Cancelled </span>
+            </ion-badge>
+
+            <ion-badge>
+              Requested : {{story.request_number_of_employees}}
+            </ion-badge>
+            <ion-badge>
+              Invited : {{story.invited}}
+            </ion-badge>
+            <ion-badge>
+              Suggested : {{story.suggestion}}
             </ion-badge>
           </ion-card-content>
         </ion-card>
