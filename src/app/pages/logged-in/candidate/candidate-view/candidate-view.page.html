@@ -131,10 +131,10 @@
       <p class="id-number" *ngIf="candidate.candidate_civil_expiry_date"
         [class.required]="!candidate.candidate_civil_id">
         {{ candidate.candidate_civil_id | translate }}<br />
-        <span class="txt-expiring-on"> {{ "Expiring on" | translate }} {{
+        <span class="txt-expiring-on"  tappable (click)="updateCivilExpiry($event)"> {{ "Expiring on" | translate }} {{
           toDate(candidate.candidate_civil_expiry_date) | date :'MMMM d, y': undefined: translateService.currentLang
-          }}</span>
-
+          }}
+        </span>
         <ion-button class="btn-copy" (click)="copy($event, candidate.candidate_civil_id)">
           <ion-icon slot="icon-only" name="copy-outline"></ion-icon>
         </ion-button>

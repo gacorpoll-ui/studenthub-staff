@@ -386,4 +386,11 @@ export class CandidateService {
       email
     });
   }
+
+  updateCivilExpiry(civil, id): Observable<any> {
+    const url = `${this._candidateEndpoint}/update-civil-expiry/${id}`;
+    return this._authhttp.patch(url, {
+      date: civil
+    });
+  }
 }

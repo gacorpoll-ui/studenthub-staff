@@ -11,6 +11,13 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  CalendarModal,
+  CalendarModalOptions,
+  CalendarResult,
+  CalendarComponentOptions
+} from 'ion2-calendar';
+
 // models
 import { Store } from 'src/app/models/store';
 import { Candidate } from 'src/app/models/candidate';
@@ -36,7 +43,7 @@ import { CompanyNoteFormPage } from '../../company/company-note-form/company-not
 import { ModalPopPage } from "../../modal-pop/modal-pop.page";
 import { StoreViewPage } from "../../store/store-view/store-view.page";
 import { InvitePage } from '../../invite/invite.page';
-import {Invitation} from "../../../../models/invitation";
+
 
 
 @Component({
@@ -183,7 +190,7 @@ export class CandidateViewPage implements OnInit {
       this.loadingSalaryTransfers = false;
 
       this.salaryTransfers = response;
-      
+
     }, () => {
       this.loadingSalaryTransfers = false;
     });
@@ -1269,6 +1276,60 @@ export class CandidateViewPage implements OnInit {
     selBox.select();
     document.execCommand('copy');
     document.body.removeChild(selBox);
+  }
+
+  async updateCivilExpiry(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const confirm = await this.alertCtrl.create({
+      header: 'Are you sure you want to update expiry date',
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: () => {}
+        },
+        {
+          text: 'Ok',
+          handler: async (data) => {
+              const options: CalendarModalOptions = {
+                title: 'Select Date',
+                canBackwardsSelected: false,
+              };
+
+              const myCalendar = await this.modalCtrl.create({
+                component: CalendarModal,
+                componentProps: { options }
+              });
+
+              myCalendar.present();
+
+              const event: any = await myCalendar.onDidDismiss();
+              const date: CalendarResult = event.data;
+              if (date) {
+                const loading = await this.loadingCtrl.create();
+                loading.present();
+
+                this.candidateService.updateCivilExpiry(date.string, this.candidate_id).subscribe(res => {
+                    if (res.operation == 'success') {
+                      this.candidate.candidate_civil_expiry_date = date.string;
+                    }
+                    this.toastCtrl.create({
+                      message: this.authService.errorMessage(res.message),
+                      duration: 3000
+                    }).then(toast => {
+                      toast.present();
+                    });
+                  },
+                  err => loading.dismiss(),
+                  () => loading.dismiss()
+                );
+              }
+          }
+        }
+      ]
+    });
+    confirm.present();
   }
 
   /**
