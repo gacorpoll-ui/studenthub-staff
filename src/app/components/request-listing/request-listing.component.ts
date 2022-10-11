@@ -5,6 +5,8 @@ import { TranslateLabelService } from 'src/app/providers/translate-label.service
 //models
 import { Request } from '../../models/request';
 import { Invitation } from "../../models/invitation";
+import {EventService} from "../../providers/event.service";
+import {AlertController} from "@ionic/angular";
 
 
 @Component({
@@ -23,7 +25,9 @@ export class RequestListingComponent implements OnInit {
 
   constructor(
     public authService: AuthService,
-    public translateService: TranslateLabelService
+    public translateService: TranslateLabelService,
+    public alertCtrl: AlertController,
+    public eventService: EventService
   ) {
   }
 
@@ -43,6 +47,12 @@ export class RequestListingComponent implements OnInit {
 
       // this.active = time < 24;
     }
+
+    this.eventService.companyRequestUpdate$.subscribe((request: any) => {
+      if (this.request.request_uuid == request.request.request_uuid) {
+        this.request = request.request;
+      }
+    });
   }
 
   /**
@@ -119,5 +129,103 @@ export class RequestListingComponent implements OnInit {
     } else { // (days > 545)
       return years + ' years late';
     }
+  }
+
+  async deliverRequest(event, request: Request) {
+    event.preventDefault();
+    event.stopPropagation();
+    const alert = await this.alertCtrl.create({
+      header: 'Deliver this request!',
+      message: 'Are you sure you want to deliver this request?',
+      buttons: [
+        {
+          text: 'Yes',
+          handler:  () => {
+            this.eventService.changeRequestStatus$.next({status: 'delivered', request});
+          }
+        },
+        {
+          text: 'No',
+          handler:  () => {
+            console.log('Cancelled clicked');
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  async finishRequest(event, request: Request) {
+    event.preventDefault();
+    event.stopPropagation();
+    const alert = await this.alertCtrl.create({
+      header: 'Finish this request!',
+      message: 'Are you sure you want to finish this request work?',
+      buttons: [
+        {
+          text: 'Yes',
+          handler:  () => {
+            request.request_status = 'finished_by_recruitment';
+            this.eventService.changeRequestStatus$.next({status: 'finished_by_recruitment', request});
+          }
+        },
+        {
+          text: 'No',
+          handler:  () => {
+            console.log('Cancelled clicked');
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  async reworkRequest(event, request: Request) {
+    event.preventDefault();
+    event.stopPropagation();
+    const alert = await this.alertCtrl.create({
+      header: 'Rework this request!',
+      message: 'Are you sure you want to rework on this request?',
+      buttons: [
+        {
+          text: 'Yes',
+          handler:  () => {
+            request.request_status = 're_work';
+            this.eventService.changeRequestStatus$.next({status: 're_work', request});
+          }
+        },
+        {
+          text: 'No',
+          handler:  () => {
+            console.log('Cancelled clicked');
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  async createStory(event, request: Request) {
+    event.preventDefault();
+    event.stopPropagation();
+    const alert = await this.alertCtrl.create({
+      header: 'Create story for this request!',
+      message: 'Are you sure you want to create story for this request?',
+      buttons: [
+        {
+          text: 'Yes',
+          handler:  () => {
+            this.eventService.createStory$.next({request});
+          }
+        },
+        {
+          text: 'No',
+          handler:  () => {
+            console.log('Cancelled clicked');
+          }
+        }
+      ]
+    });
+    alert.present();
   }
 }

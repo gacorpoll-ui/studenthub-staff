@@ -1,5 +1,12 @@
 import { Component, OnInit, ApplicationRef } from '@angular/core';
-import { AlertController, NavController, Platform, PopoverController, ModalController } from '@ionic/angular';
+import {
+  AlertController,
+  NavController,
+  Platform,
+  PopoverController,
+  ModalController,
+  ToastController
+} from '@ionic/angular';
 import { Plugins } from '@capacitor/core';
 import { SwUpdate } from '@angular/service-worker';
 import { concat, interval } from 'rxjs';
@@ -9,8 +16,8 @@ import { environment } from 'src/environments/environment';
 import { EventService } from './providers/event.service';
 import { AuthService } from './providers/auth.service';
 import { TranslateLabelService } from './providers/translate-label.service';
-import {StoryService} from "./providers/logged-in/story.service";
-
+import {StoryService} from './providers/logged-in/story.service';
+import {CompanyRequestService} from './providers/logged-in/company-request.service';
 
 const { SplashScreen } = Plugins;
 
@@ -34,7 +41,9 @@ export class AppComponent implements OnInit {
     public modalCtrl: ModalController,
     public authService: AuthService,
     public storyService: StoryService,
+    public requestService: CompanyRequestService,
     public translateService: TranslateLabelService,
+    public toastCtrl: ToastController,
   ) {
     this.initializeApp();
   }
@@ -77,18 +86,6 @@ export class AppComponent implements OnInit {
       }
 
       this.setServiceWorker();
-    });
-
-    this.eventService.startStory$.subscribe(async ({status, story}) => {
-      await this.changeStoryStatus(status, story);
-    });
-
-    this.eventService.stopStory$.subscribe(async ({status, story}) => {
-      await this.changeStoryStatus(status, story);
-    });
-
-    this.eventService.deliverStory$.subscribe(async ({status, story}) => {
-      await this.changeStoryStatus(status, story);
     });
   }
 
@@ -135,6 +132,17 @@ export class AppComponent implements OnInit {
       if (logoutReason) {
         console.log(logoutReason);
       }
+    });
+
+    this.eventService.changeStoryStatus$.subscribe(async ({status, story}) => {
+      await this.changeStoryStatus(status, story);
+    });
+
+    this.eventService.changeRequestStatus$.subscribe(async ({status, request}) => {
+      await this.changeRequestStatus(status, request);
+    });
+    this.eventService.createStory$.subscribe(async ({request}) => {
+      await this.createStory(request);
     });
   }
 
@@ -263,5 +271,104 @@ export class AppComponent implements OnInit {
         story: res
       });
     });
+  }
+
+  async changeRequestStatus(status, request) {
+    this.requestService.statusUpdate(request).subscribe(async response => {
+      // On Success
+      if (response.operation == 'success') {
+        this.loadRequestData(request);
+      }
+
+      if (response.operation == 'error') {
+        const prompt = await this._alertCtrl.create({
+          message: this.authService.errorMessage(response.message),
+          buttons: ['Okay']
+        });
+        prompt.present();
+      }
+    }, () => {
+
+    });
+  }
+
+  loadRequestData(request) {
+    this.requestService.view(request.request_uuid).subscribe(data => {
+      this.eventService.companyRequestUpdate$.next({
+        request: data
+      });
+    }, () => {
+    }, () => {
+    });
+  }
+
+  async createStory(request) {
+    const alert = await this._alertCtrl.create({
+      header: 'Provide number of employee for this story',
+      inputs: [
+        {
+          placeholder: 'number of employers',
+          name: 'employee',
+          type: 'number',
+          min: 1,
+          max: 15,
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+        },
+        {
+          text: 'Submit',
+          handler: async (data) => {
+            if (!data.employee) {
+              this.toastCtrl.create({
+                message: this.authService.errorMessage('Please provide employee'),
+                duration: 3000
+              }).then(toast => {
+                toast.present();
+              });
+              return false;
+            }
+
+            this.createStoryForRequest(data.employee, request);
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  /**
+   * @param employee
+   * @param request
+   */
+  async createStoryForRequest(employee, request: any) {
+
+    const params = {
+      request_uuid: request.request_uuid,
+      employee
+    };
+
+    this.storyService.create(params).subscribe(async response => {
+
+        // On Success
+        if (response.operation == 'success') {
+          this.loadRequestData(request);
+        }
+
+        // On Failure
+        if (response.operation == 'error') {
+          const prompt = await this._alertCtrl.create({
+            message: this.authService.errorMessage(response.message),
+            buttons: ['Okay']
+          });
+          prompt.present();
+        }
+      }, () => {
+      },
+      () => {
+      }
+    );
   }
 }

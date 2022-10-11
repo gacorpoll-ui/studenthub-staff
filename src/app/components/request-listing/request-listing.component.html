@@ -49,6 +49,12 @@
 
 
         <p *ngFor="let staff of request.storyOwners" class="working">{{ staff.staff_name }} is working on it</p>
+
+<!--        <ion-button (click)="deliverRequest($event,request)" *ngIf="request.request_status == 'finished_by_recruitment'">Deliver</ion-button>-->
+        <ion-button (click)="finishRequest($event,request)"  *ngIf="(request.request_status != 'delivered' && request.request_status != 'finished_by_recruitment')">Finished By Recruiter</ion-button>
+        <ion-button (click)="reworkRequest($event,request)" *ngIf="request.request_status == 'finished_by_recruitment' || request.request_status == 'delivered'">Rework</ion-button>
+        <ion-button (click)="createStory($event,request)" *ngIf="(request.request_status != 'finished_by_recruitment' && request.request_status != 'delivered')">Create Story</ion-button>
+
       </div>
 
       <div *ngIf="request" class="content-footer ion-text-center" [class.background-grey]="active" [class.background-red]="!active" [class.background-green]="request.request_status == 'delivered'">

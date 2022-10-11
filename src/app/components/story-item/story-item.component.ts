@@ -70,7 +70,7 @@ export class StoryItemComponent implements OnInit {
           {
             text: 'Yes',
             handler:  () => {
-              this.eventService.startStory$.next({status: this.status.STARTED, story});
+              this.eventService.changeStoryStatus$.next({status: this.status.STARTED, story});
             }
           },
           {
@@ -93,12 +93,12 @@ export class StoryItemComponent implements OnInit {
     event.stopPropagation();
     const alert = await this.alertCtrl.create({
       header: 'Stop working on story!',
-      message: 'Are you sure you want to start work on this story?',
+      message: 'Are you sure you want to stop work on this story?',
       buttons: [
         {
           text: 'Yes',
           handler:  () => {
-            this.eventService.stopStory$.next({status: this.status.STOPPED, story});
+            this.eventService.changeStoryStatus$.next({status: this.status.STOPPED, story});
           }
         },
         {
@@ -121,12 +121,40 @@ export class StoryItemComponent implements OnInit {
     event.stopPropagation();
     const alert = await this.alertCtrl.create({
       header: 'Deliver this story!',
-      message: 'Are you sure you want to start work on this story?',
+      message: 'Are you sure you want to deliver this story?',
       buttons: [
         {
           text: 'Yes',
           handler:  () => {
-            this.eventService.deliverStory$.next({status: this.status.DELIVERED, story});
+            this.eventService.changeStoryStatus$.next({status: this.status.DELIVERED, story});
+          }
+        },
+        {
+          text: 'No',
+          handler:  () => {
+            console.log('Cancelled clicked');
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  /**
+   * @param event
+   * @param story
+   */
+  async reworkStory(event, story) {
+    event.preventDefault();
+    event.stopPropagation();
+    const alert = await this.alertCtrl.create({
+      header: 'Rework on this story!',
+      message: 'Are you sure you want to rework on this story?',
+      buttons: [
+        {
+          text: 'Yes',
+          handler:  () => {
+            this.eventService.changeStoryStatus$.next({status: this.status.REWORK, story});
           }
         },
         {
