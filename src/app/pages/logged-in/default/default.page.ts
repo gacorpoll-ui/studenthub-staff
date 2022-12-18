@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { AlertController, NavController } from '@ionic/angular';
 // services
 import { AuthService } from 'src/app/providers/auth.service';
 import { EventService } from 'src/app/providers/event.service';
+import { DailyStandupService } from 'src/app/providers/logged-in/daily-standup.service';
 import { StatisticService } from 'src/app/providers/logged-in/statistic.service';
 import {AccountService} from "../../../providers/logged-in/account.service";
 
@@ -14,7 +15,15 @@ import {AccountService} from "../../../providers/logged-in/account.service";
 })
 export class DefaultPage implements OnInit {
 
+  public loadingSession: boolean = false; 
+
+  public savingAnswer = false; 
+
   public borderLimit = false;
+
+  public dailyStandupQuestion; 
+
+  public staff_work_session;
 
   public statistics: {
     id_need_generated: any;
@@ -34,8 +43,10 @@ export class DefaultPage implements OnInit {
 
   constructor(
     public navCtrl: NavController,
+    public _alertCtrl: AlertController,
     public authService: AuthService,
     public accountService: AccountService,
+    public dailyStandupService: DailyStandupService,
     public statisticService: StatisticService,
     private _events: EventService,
   ) { }
@@ -58,7 +69,12 @@ export class DefaultPage implements OnInit {
     }) => {
       this.statistics = response;
     });
+
     this.getAccountInfo();
+
+    //check session 
+
+    this.getSession();
   }
 
   /**
@@ -84,19 +100,94 @@ export class DefaultPage implements OnInit {
       () => { this.loading = false; }
     );
   }
+  
+  getSession() {
+    this.loadingSession = true; 
 
-  async saveAnswer( ) {
+    this.dailyStandupService.getSession().subscribe(async session => {
+
+      this.loadingSession = false; 
+    
+      if(session) {
+        this.staff_work_session = session;
+
+        this.getStandupQuestion();
+      }
+    });
+  }
+
+  startSession() {
+    this.loadingSession = true; 
+
+    this.dailyStandupService.startSession().subscribe(async response => {
+      
+      if(response.operation == 'success') {
+
+        this.staff_work_session = response.model;
+
+        this.getStandupQuestion();
+
+      } else {
+        this.loadingSession = false; 
+
+        let prompt = await this._alertCtrl.create({
+          message: this.authService.errorMessage(response.message),
+          buttons: ["Ok"]
+        });
+        prompt.present();
+      }
+    });
+  }
+
+  endSession() {
+    this.loadingSession = true; 
+
+    this.dailyStandupService.endSession().subscribe(async response => {
+
+      this.loadingSession = false; 
+
+      if(response.operation == 'success') {
+        this.staff_work_session = null;// response.model;
+      }
+    });
+  }
+
+  /*leaveRequest(model): Observable<any>{
+    const url = `${this._endpoint}/leave-request`;
+    return this._authhttp.post(url, {
+      from_date: model.from_date,
+      to_date: model.to_date,
+      note: model.note,
+    });
+  }*/
+
+  getStandupQuestion() {
+    this.dailyStandupService.question().subscribe(async question => {
+      this.dailyStandupQuestion = question;
+      this.loadingSession = false; 
+    });
+  }
+
+  async saveAnswer() {
  
-    this.statisticService.get().subscribe(response => {
+    const question_uuid = this.dailyStandupQuestion.question_uuid;
+    const answer = this.dailyStandupQuestion.answer;
 
-      this.statistics = response;
+    this.savingAnswer = true;
 
-      this._events.expiredIdCard$.next({
-        assignedExpiredCivilID: response.assignedExpiredCivilID,
-        expiredIdCount: response.totalExpiredCards
-      });
+    this.dailyStandupService.answer(question_uuid, answer).subscribe(async response => {
+      this.savingAnswer = false;
 
-      this._events.reviewRequired$.next(this.statistics.profileApprovalRequire);
+      if(response.operation == 'success')
+        this.getStandupQuestion();
+      else {
+        let prompt = await this._alertCtrl.create({
+          message: this.authService.errorMessage(response.message),
+          buttons: ["Ok"]
+        });
+        prompt.present();
+      }
+
     },
       error => { },
       () => { this.loading = false; }
