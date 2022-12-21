@@ -270,7 +270,7 @@ export class AuthHttpService {
     // This error usually appears when agent attempts to handle an
     // account that he's been removed from assigning
     if (error.status === 400) {
-      this.eventService.accountAssignmentRemoved$.next();
+      this.eventService.accountAssignmentRemoved$.next({});
       return EMPTY;
     }
 
@@ -278,7 +278,7 @@ export class AuthHttpService {
 
     if (error.status === 0 || error.status === 504) {
       // if(!navigator.onLine)
-      this.eventService.internetOffline$.next();
+      this.eventService.internetOffline$.next({});
       return EMPTY;
     }
 
@@ -290,13 +290,13 @@ export class AuthHttpService {
 
     // Handle internal server error - 500
     if (error.status === 500) {
-      this.eventService.error500$.next();
+      this.eventService.error500$.next({});
       return EMPTY;
     }
 
     // Handle page not found - 404 error
     if (error.status === 404) {
-      this.eventService.error404$.next();
+      this.eventService.error404$.next({});
       return EMPTY;
     }
 

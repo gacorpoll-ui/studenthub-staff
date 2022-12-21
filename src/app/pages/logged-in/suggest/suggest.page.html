@@ -21,14 +21,14 @@
     <form [formGroup]="form" *ngIf="form">
       <ion-list>
 
-        <div [class.hidden]="form.controls.request_uuid.value">
+        <div [class.hidden]="form.controls['request_uuid'].value">
           <h5>Select Request </h5>
 
           <request-listing (click)="selectRequest(request)" *ngFor="let request of activeRequests" tappable 
             [request]="request" [showStatus]="false"></request-listing>
         </div>
 
-        <ion-item class="flip-in-hor-bottom" [class.hidden]="!form.controls.request_uuid.value">
+        <ion-item class="flip-in-hor-bottom" [class.hidden]="!form.controls['request_uuid'].value">
           <div tabindex="0"></div>
           <ion-label position="floating">
             Reason for suggestion

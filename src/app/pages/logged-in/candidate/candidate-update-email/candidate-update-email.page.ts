@@ -85,21 +85,21 @@ export class CandidateUpdateEmailPage implements OnInit {
     //
     //   if (res.operation == 'success') {
     //
-    //     const { value } = await Storage.get({ key: 'loggedInUser' });
+    //     const { value } = await this.storageService.get('loggedInUser');
     //
-    //     Storage.set({
+    //     this.storageService.set({
     //       key: 'unVerifiedToken',
     //       value
     //     }).catch(r => {
-    //       this.eventService.errorStorage$.next();
+    //       this.eventService.errorStorage$.next({});
     //     });
     //
     //     /*this.eventService.verifyEmail$.next({
-    //       email: this.form.controls.email.value,
+    //       email: this.form.controls['email'].value,
     //       candidate_uuid: res.candidate_uuid
     //     });*/
     //
-    //     this.dismiss({ email: this.form.controls.email.value });
+    //     this.dismiss({ email: this.form.controls['email'].value });
     //
     //   }
     //   else if (res.operation == 'error') {

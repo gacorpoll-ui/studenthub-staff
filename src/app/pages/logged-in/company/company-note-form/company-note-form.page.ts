@@ -98,7 +98,7 @@ export class CompanyNoteFormPage implements OnInit {
 
     // https://www.pivotaltracker.com/story/show/175926516
     if (this.from == 'post-update') {
-      this.form.controls.type.setValue('Internal Note');
+      this.form.controls['type'].setValue('Internal Note');
     }
 
     this.operation = (this.note && this.note.note_uuid) ? 'Update' : 'Post an update';
@@ -190,13 +190,13 @@ export class CompanyNoteFormPage implements OnInit {
         return null;
       }
 
-      if (!this.form.controls.company_id.value) {
-        this.form.controls.company_name.setValue(e.data.contact.company.company_name);
-        this.form.controls.company_id.setValue(e.data.contact.company.company_id);
+      if (!this.form.controls['company_id'].value) {
+        this.form.controls['company_name'].setValue(e.data.contact.company.company_name);
+        this.form.controls['company_id'].setValue(e.data.contact.company.company_id);
       }
 
-      this.form.controls.contact_uuid.setValue(e.data.contact.contact_uuid);
-      this.form.controls.contact_name.setValue(e.data.contact.contact_name);
+      this.form.controls['contact_uuid'].setValue(e.data.contact.contact_uuid);
+      this.form.controls['contact_name'].setValue(e.data.contact.contact_name);
 
     });
     popover.present();
@@ -213,21 +213,21 @@ export class CompanyNoteFormPage implements OnInit {
     });
     popover.onDidDismiss().then(e => {
 
-      if (!e.data || this.form.controls.company_id.value == e.data.company_id) {
+      if (!e.data || this.form.controls['company_id'].value == e.data.company_id) {
         return null;
       }
 
       if (e.data && e.data.company_id) {
         this.company = e.data;
       }
-      this.form.controls.company_name.setValue(e.data.company_name);
-      this.form.controls.company_id.setValue(e.data.company_id);
+      this.form.controls['company_name'].setValue(e.data.company_name);
+      this.form.controls['company_id'].setValue(e.data.company_id);
 
-      this.form.controls.request_uuid.setValue(null);
-      this.form.controls.request_name.setValue(null);
+      this.form.controls['request_uuid'].setValue(null);
+      this.form.controls['request_name'].setValue(null);
 
-      this.form.controls.contact_uuid.setValue(null);
-      this.form.controls.contact_name.setValue(null);
+      this.form.controls['contact_uuid'].setValue(null);
+      this.form.controls['contact_name'].setValue(null);
 
     });
     popover.present();
@@ -241,8 +241,8 @@ export class CompanyNoteFormPage implements OnInit {
 
     const company = new Company();
 
-    if (this.form.controls.company_id.value) {
-      company.company_id = this.form.controls.company_id.value;
+    if (this.form.controls['company_id'].value) {
+      company.company_id = this.form.controls['company_id'].value;
     }
 
     const popover = await this.modalCtrl.create({
@@ -256,13 +256,13 @@ export class CompanyNoteFormPage implements OnInit {
         return null;
       }
 
-      if (!this.form.controls.company_id.value && e.data && e.data.company) {
-        this.form.controls.company_name.setValue(e.data.company.company_name);
-        this.form.controls.company_id.setValue(e.data.company.company_id);
+      if (!this.form.controls['company_id'].value && e.data && e.data.company) {
+        this.form.controls['company_name'].setValue(e.data.company.company_name);
+        this.form.controls['company_id'].setValue(e.data.company.company_id);
       }
 
-      this.form.controls.request_name.setValue(e.data.request_position_title);
-      this.form.controls.request_uuid.setValue(e.data.request_uuid);
+      this.form.controls['request_name'].setValue(e.data.request_position_title);
+      this.form.controls['request_uuid'].setValue(e.data.request_uuid);
 
     });
     popover.present();
@@ -327,7 +327,7 @@ export class CompanyNoteFormPage implements OnInit {
 
     const data = event.editor.getData();
 
-    this.form.controls.note.setValue(data);
+    this.form.controls['note'].setValue(data);
     this.form.markAsDirty();
     this.form.updateValueAndValidity();
   }

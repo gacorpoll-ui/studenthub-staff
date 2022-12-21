@@ -25,8 +25,8 @@
           <ion-input type="text" formControlName="company_name" readonly></ion-input>
         </ion-item>
       
-        <!-- [disabled]="!form.controls.company_name.value"  -->
-        <ion-item class="input-wrapper" (click)="form.controls.company_name.value && openContact($event)">
+        <!-- [disabled]="!form.controls['company_name'].value"  -->
+        <ion-item class="input-wrapper" (click)="form.controls['company_name'].value && openContact($event)">
           <div tabindex="0"></div>
           <ion-label position="floating">Contact</ion-label>
           <ion-input type="text" formControlName="contact_name" readonly></ion-input>

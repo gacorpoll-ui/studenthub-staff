@@ -19,7 +19,7 @@ import { AuthModule } from '@auth0/auth0-angular';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { IOSFilePicker } from '@ionic-native/file-picker/ngx';
-import { File } from '@ionic-native/file/ngx';
+
 import { SkillFormPageModule } from './pages/logged-in/candidate/skill-form/skill-form.module';
 import { ExperienceFormPageModule } from './pages/logged-in/candidate/experience-form/experience-form.module';
 import { UploadCvPageModule } from './pages/logged-in/candidate/upload-cv/upload-cv.module';
@@ -77,6 +77,10 @@ import {UniversityPageModule} from './pages/logged-in/pickers/university/univers
 import { CandidateAssignFormPageModule } from './pages/logged-in/candidate-assign-form/candidate-assign-form.module';
 import { LeaveRequestPageModule } from './pages/logged-in/leave-request/leave-request.module';
 
+import { File } from '@awesome-cordova-plugins/file/ngx';
+import { NativeStorage } from '@awesome-cordova-plugins/native-storage/ngx';
+import { IonicStorageModule } from '@ionic/storage-angular';
+
 export function startupServiceFactory(authService) {
   return () => authService.load();
 }
@@ -101,11 +105,11 @@ declare global {
     HttpClientModule,
     CalendarModule,
     BrowserTransferStateModule,
-    // IonicStorageModule.forRoot({
-    //     name: '__payroll_staff',
+    IonicStorageModule.forRoot({
+      name: '__payroll_staff',
     //     version: 3
     //     // driverOrder: ['sqlite', 'indexeddb', 'websql', 'localstorage']
-    // }),
+    }),
     AuthModule.forRoot({
       domain: 'bawes.us.auth0.com',
       clientId: 'sDIOpy1be7Y59ocKoXxHVL5euFNdJN3e'

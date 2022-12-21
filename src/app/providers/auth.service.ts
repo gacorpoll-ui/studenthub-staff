@@ -8,11 +8,9 @@ import {genericRetryStrategy} from '../util/genericRetryStrategy';
 import {EventService} from './event.service';
 import {environment} from '../../environments/environment';
 import { AuthService as Auth0Service } from '@auth0/auth0-angular';
-
-import { Plugins } from '@capacitor/core';
 import { AlertController, LoadingController } from '@ionic/angular';
+import { StorageService } from './storage.service';
 
-const { Storage } = Plugins;
 
 @Injectable({
   providedIn: 'root'
@@ -50,6 +48,7 @@ export class AuthService {
     public alertCtrl: AlertController,
     public loadingCtrl: LoadingController,
     public eventService: EventService,
+    public storageService: StorageService,
     public rendererFactory: RendererFactory2
   ) {
     this.renderer = this.rendererFactory.createRenderer(null, null);
@@ -68,7 +67,7 @@ export class AuthService {
 
       this.navEnable = true;
 
-      if (route.data.navDisable) {
+      if (route.data['navDisable']) {
         this.navEnable = false;
       }
 
@@ -76,9 +75,7 @@ export class AuthService {
         resolve(true);
       }
 
-      Storage.get({ key: 'loggedInStaff' }).then(ret => {
-
-        const user = JSON.parse(ret.value);
+      this.storageService.get('loggedInStaff').then(user => {
 
         if (user) {
           this.isLogged = true;
@@ -96,7 +93,7 @@ export class AuthService {
           this.logout('invalid access');
         }
       }).catch(r => {
-        this.eventService.errorStorage$.next();
+        this.eventService.errorStorage$.next({});
       });
     });
   }
@@ -106,11 +103,8 @@ export class AuthService {
    * @param theme
    */
   setTheme(theme) {
-    Storage.set({
-      key: 'theme',
-      value: theme
-    }).catch(r => {
-      this.eventService.errorStorage$.next();
+    this.storageService.set('theme', theme).catch(r => {
+      this.eventService.errorStorage$.next({});
     });
 
     this.theme = theme;
@@ -128,18 +122,18 @@ export class AuthService {
    * Save user data in storage
    */
   saveInStorage() {
-    Storage.set({
-      key: 'loggedInStaff',
-      value: JSON.stringify({
+    this.storageService.set(
+      'loggedInStaff',
+      {
         token: this._accessToken,
         staff_id: this.staff_id,
         name: this.name,
         email: this.email,
         role: this.role,
         story: this.story
-      })
-    }).catch(r => {
-      this.eventService.errorStorage$.next();
+      }
+    ).catch(r => {
+      this.eventService.errorStorage$.next({});
     });
   }
 
@@ -161,19 +155,18 @@ export class AuthService {
     this.email = null;
     this.story = null;
 
-    Storage.clear().catch(r => {
-      this.eventService.errorStorage$.next();
+    this.storageService.clear().catch(r => {
+      this.eventService.errorStorage$.next({});
     });
 
     if (!silent) {
       this.eventService.userLoggedOut$.next(reason ? reason : false);
     }
 
-    Storage.set({
-      key: 'cookieMessageWasApproved',
-      value : (this.displayCookieMessage == '0') ? '1' : '0'
-    }).catch(r => {
-      this.eventService.errorStorage$.next();
+    this.storageService.set('cookieMessageWasApproved',
+     (this.displayCookieMessage == '0') ? '1' : '0'
+    ).catch(r => {
+      this.eventService.errorStorage$.next({});
     });
   }
 
@@ -206,9 +199,7 @@ export class AuthService {
   // This is the method you want to call at bootstrap
   async load(): Promise<any> {
 
-    Storage.get({ key: 'loggedInStaff' }).then(ret => {
-
-      const staff = JSON.parse(ret.value);
+    this.storageService.get('loggedInStaff').then(staff => {
 
       if (staff && staff.token) {
         return this.setAccessToken(staff);
@@ -216,16 +207,16 @@ export class AuthService {
         // return this.logout('error with store variables',true);
       }
     }).catch(r => {
-      this.eventService.errorStorage$.next();
+      this.eventService.errorStorage$.next({});
     });
 
-    Storage.get({ key: 'theme' }).then(ret => {
+    this.storageService.get('theme').then(ret => {
 
       if (ret.value) {
         this.setTheme(ret.value);
       }
     }).catch(r => {
-      this.eventService.errorStorage$.next();
+      this.eventService.errorStorage$.next({});
     });
   }
 
@@ -240,15 +231,14 @@ export class AuthService {
       return this._accessToken;
     }
 
-    Storage.get({ key: 'loggedInStaff' }).then(ret => {
-      const user = JSON.parse(ret.value);
+    this.storageService.get('loggedInStaff').then(user => {
 
       if (user) {
         this.setAccessToken(user, redirect);
         this._accessToken = user.token;
       }
     }).catch(r => {
-      this.eventService.errorStorage$.next();
+      this.eventService.errorStorage$.next({});
     });
 
     return this._accessToken;
@@ -425,19 +415,19 @@ export class AuthService {
     // This error usually appears when agent attempts to handle an
     // account that he's been removed from assigning
     if (error.status === 400) {
-      this.eventService.accountAssignmentRemoved$.next();
+      this.eventService.accountAssignmentRemoved$.next({});
       return EMPTY;
     }
 
     // Handle No Internet Connection Error /service worker timeout
 
     if (error.status === 0 || error.status === 504) {
-      this.eventService.internetOffline$.next();
+      this.eventService.internetOffline$.next({});
       return EMPTY;
     }
 
     if (!navigator.onLine) {
-      this.eventService.internetOffline$.next();
+      this.eventService.internetOffline$.next({});
       return EMPTY;
     }
 
@@ -449,13 +439,13 @@ export class AuthService {
 
     // Handle internal server error - 500
     if (error.status === 500) {
-      this.eventService.error500$.next();
+      this.eventService.error500$.next({});
       return EMPTY;
     }
 
     // Handle page not found - 404 error
     if (error.status === 404) {
-      this.eventService.error404$.next();
+      this.eventService.error404$.next({});
       return EMPTY;
     }
     console.log('Error: ' + errMsg);

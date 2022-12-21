@@ -8,7 +8,6 @@ import { AuthService } from '../../../../providers/auth.service';
 import { CountryService } from 'src/app/providers/logged-in/country.service';
 import { FulltimerService } from 'src/app/providers/logged-in/fulltimer.service';
 import { AwsService } from 'src/app/providers/aws.service';
-import { FilepickerService } from 'src/app/providers/logged-in/filepicker.service';
 import { SentryErrorhandlerService } from 'src/app/providers/sentry.errorhandler.service';
 // model
 import { Fulltimer } from 'src/app/models/fulltimer';
@@ -71,7 +70,6 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
     private alertCtrl: AlertController,
     public universityService: UniversityService,
     public sentryService: SentryErrorhandlerService,
-    public filepickerService: FilepickerService,
     public awsService: AwsService,
     public countryService: CountryService,
     private authService: AuthService,
@@ -129,14 +127,14 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
   }
 
   setGenderOption(value) {
-    this.form.controls.gender.setValue(value);
-    this.form.controls.gender.markAsDirty();
+    this.form.controls['gender'].setValue(value);
+    this.form.controls['gender'].markAsDirty();
     this.model.fulltimer_gender = value;
   }
 
   setLicenseOption(value) {
-    this.form.controls.driving_license.setValue(value);
-    this.form.controls.driving_license.markAsDirty();
+    this.form.controls['start_date'].setValue(value);
+    this.form.controls['start_date'].markAsDirty();
     this.model.fulltimer_driving_license = value;
   }
 
@@ -245,7 +243,7 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
 
   // convenience getters for easy access to form fields
   get f() { return this.form.controls; }
-  get fulltimerTags() { return this.f.fulltimerTags as FormArray; }
+  get fulltimerTags() { return this.f['fulltimerTags'] as FormArray; }
 
   removeTag(index) {
     this.fulltimerTags.removeAt(index);
@@ -282,8 +280,8 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
     event.preventDefault();
     event.stopPropagation();
 
-    this.form.controls.pdf_cv.setValue(null);
-    this.form.controls.pdf_cv.updateValueAndValidity();
+    this.form.controls['pdf_cv'].setValue(null);
+    this.form.controls['pdf_cv'].updateValueAndValidity();
   }
 
   /**
@@ -303,99 +301,15 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
     return allowedExtensions.indexOf(extension) > -1;
   }
 
-  /**
-   * Upload file in mobile device
-   */
-  mobileUpload() {
-    this.filePickSubscription = this.filepickerService.pick().subscribe(async uri => {
-
-      // validate extension
-
-      /*let extension = uri.split('.').pop();
-
-      if(!this.isValidExtension(extension)) {
-
-          const alert = await this._alertCtrl.create({
-              header: this.translateService.transform('Invalid file'),
-              message: this.translateService.transform('txt_invalid_file_format', { value: this.allwedFormats() }),
-              buttons: [this.translateService.transform('Okay')]
-          });
-
-          return alert.present();
-      }*/
-
-      this.progress = 1; // show loader
-
-      this.awsService.uploadNativePath(uri).then(o => {
-        o.subscribe(event => {
-          this._handleFileSuccess(event);
-        }, async err => {
-
-          this.progress = null;
-
-          const ignoreErrors = [
-            'No image picked',
-            'User cancelled photos app',
-          ];
-
-          if (
-            err && (
-              ignoreErrors.indexOf(err.message) > -1 ||
-              err.message.includes('aborted')
-            )
-          ) {
-            return null;
-          }
-
-          // log to slack/sentry to know how many user getting file upload error
-
-          this.sentryService.handleError(err);
-
-          // always show abstract error message
-
-          let message;
-
-          const networkErrors = [
-            '504:null',
-            'NetworkingError: Network Failure'
-          ];
-
-          // networking errors
-          if (err && networkErrors.indexOf(err.message) > -1) {
-            message = 'Error uploading file';
-            // system errors
-          } else if (err.message && err.message.indexOf(':') > -1) {
-            message = 'Error getting file from Library';
-            // plugin errors
-          } else if (err.message) {
-            message = err.message;
-            // custom file validation errors
-          } else {
-            message = err;
-          }
-
-          const alert = await this.alertCtrl.create({
-            header: 'Error',
-            message,
-            buttons: ['Okay']
-          });
-
-          await alert.present();
-        });
-      });
-    });
-  }
-
   uploadCv(event) {
 
     event.preventDefault();
     event.stopPropagation();
 
-    if (this.platform.is('hybrid')) {
+    /*if (this.platform.is('hybrid')) {
       this.mobileUpload();
-    } else {
-      this.fileInput.nativeElement.click();
-    }
+    } else {*/
+    this.fileInput.nativeElement.click();
   }
 
   /**
@@ -470,11 +384,11 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
         this.fileInput.nativeElement.value = null;
       }
 
-      this.form.controls.pdf_cv.setValue(event.Key);
-      this.form.controls.pdf_cv.markAsDirty();
+      this.form.controls['pdf_cv'].setValue(event.Key);
+      this.form.controls['pdf_cv'].markAsDirty();
 
-      this.form.controls.tempPdfCVLocation.setValue(event.Location);
-      this.form.controls.tempPdfCVLocation.markAsDirty();
+      this.form.controls['tempPdfCVLocation'].setValue(event.Location);
+      this.form.controls['tempPdfCVLocation'].markAsDirty();
 
       this.form.updateValueAndValidity();
 
@@ -489,7 +403,7 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
    * return extension of uploaded file
    */
   get uploadedFileExtension() {
-    const a = this.form.controls.pdf_cv.value.split('.');
+    const a = this.form.controls['pdf_cv'].value.split('.');
 
     if (a) {
       return a[a.length - 1];
@@ -498,12 +412,12 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
 
   getResumeUrl() {
 
-    if (this.form.controls.tempPdfCVLocation.value) {
-      return decodeURIComponent(this.form.controls.tempPdfCVLocation.value);
+    if (this.form.controls['tempPdfCVLocation'].value) {
+      return decodeURIComponent(this.form.controls['tempPdfCVLocation'].value);
     }
 
-    if (this.form.controls.pdf_cv.value) {
-      return this.awsService.permanentBucketUrl + 'fulltimer-resume/' + encodeURIComponent(this.form.controls.pdf_cv.value);
+    if (this.form.controls['pdf_cv'].value) {
+      return this.awsService.permanentBucketUrl + 'fulltimer-resume/' + encodeURIComponent(this.form.controls['pdf_cv'].value);
     }
   }
 
@@ -528,11 +442,11 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
     const { data } = await modal.onWillDismiss();
 
     if (data && data.country) {
-      this.form.controls.nationality_id.setValue(data.country.country_id);
-      this.form.controls.nationality_id.markAsDirty();
+      this.form.controls['nationality_id'].setValue(data.country.country_id);
+      this.form.controls['nationality_id'].markAsDirty();
 
-      this.form.controls.nationality.setValue(data.country.country_name_en);
-      this.form.controls.nationality.markAsDirty();
+      this.form.controls['nationality'].setValue(data.country.country_name_en);
+      this.form.controls['nationality'].markAsDirty();
 
       this.form.updateValueAndValidity();
     }
@@ -559,11 +473,11 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
     const { data } = await modal.onWillDismiss();
 
     if (data && data.university) {
-      this.form.controls.university_id.setValue(data.university.university_id);
-      this.form.controls.university_id.markAsDirty();
+      this.form.controls['university_id'].setValue(data.university.university_id);
+      this.form.controls['university_id'].markAsDirty();
 
-      this.form.controls.university.setValue(data.university.university_name_en);
-      this.form.controls.university.markAsDirty();
+      this.form.controls['university'].setValue(data.university.university_name_en);
+      this.form.controls['university'].markAsDirty();
 
       this.form.updateValueAndValidity();
     }
@@ -594,20 +508,20 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
     const { data } = await modal.onWillDismiss();
 
     if (data && data.area_uuid) {
-      this.form.controls.area_uuid.setValue(data.area_uuid);
-      this.form.controls.area_uuid.markAsDirty();
+      this.form.controls['area_uuid'].setValue(data.area_uuid);
+      this.form.controls['area_uuid'].markAsDirty();
 
-      this.form.controls.country_id.setValue(data.country_id);
-      this.form.controls.country_id.markAsDirty();
+      this.form.controls['country_id'].setValue(data.country_id);
+      this.form.controls['country_id'].markAsDirty();
 
-      this.form.controls.latitude.setValue(data.latitude);
-      this.form.controls.latitude.markAsDirty();
+      this.form.controls['latitude'].setValue(data.latitude);
+      this.form.controls['latitude'].markAsDirty();
 
-      this.form.controls.longitude.setValue(data.longitude);
-      this.form.controls.longitude.markAsDirty();
+      this.form.controls['longitude'].setValue(data.longitude);
+      this.form.controls['longitude'].markAsDirty();
 
-      this.form.controls.location.setValue(data.area.area_name_en + ', ' + data.country.country_name_en);
-      this.form.controls.location.markAsDirty();
+      this.form.controls['location'].setValue(data.area.area_name_en + ', ' + data.country.country_name_en);
+      this.form.controls['location'].markAsDirty();
 
       this.form.updateValueAndValidity();
     }

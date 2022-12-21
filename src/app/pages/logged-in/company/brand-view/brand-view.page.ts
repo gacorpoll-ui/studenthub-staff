@@ -116,7 +116,7 @@ export class BrandViewPage implements OnInit {
             this.deleting = true;
 
             this.brandService.delete(brand).subscribe(async jsonResp => {
-              this.eventService.reloadBrand$.next();
+              this.eventService.reloadBrand$.next({});
 
               this.eventService.reloadStats$.next({
                 company_id: this.brand.company_id

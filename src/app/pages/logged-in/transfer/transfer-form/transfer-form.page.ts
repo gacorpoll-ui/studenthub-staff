@@ -184,10 +184,11 @@ export class TransferFormPage implements OnInit {
       ]];
     });
 
-    formControls.start_date = [(this.transfer && this.transfer.start_date) ? this.transfer.start_date : '', [
+    formControls['start_date'] = [(this.transfer && this.transfer.start_date) ? this.transfer.start_date : '', [
       Validators.required
     ]];
-    formControls.end_date = [(this.transfer && this.transfer.end_date) ? this.transfer.end_date : '', [
+
+    formControls['end_date'] = [(this.transfer && this.transfer.end_date) ? this.transfer.end_date : '', [
       Validators.required
     ]];
 
@@ -455,8 +456,8 @@ export class TransferFormPage implements OnInit {
 
     if (date) {
       // this.form.value.start_date
-      this.form.controls.start_date.setValue(date.from.string);
-      this.form.controls.end_date.setValue(date.to.string);
+      this.form.controls['start_date'].setValue(date.from.string);
+      this.form.controls['end_date'].setValue(date.to.string);
 
       this.range = date.from.string + '-' + date.to.string;
     }

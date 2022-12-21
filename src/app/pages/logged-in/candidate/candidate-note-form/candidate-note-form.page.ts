@@ -161,7 +161,7 @@ export class CandidateNoteFormPage implements OnInit {
 
     const data = event.editor.getData();
 
-    this.form.controls.note.setValue(data);
+    this.form.controls['note'].setValue(data);
     this.form.markAsDirty();
     this.form.updateValueAndValidity();
   }
@@ -184,10 +184,10 @@ export class CandidateNoteFormPage implements OnInit {
       if (_ && _.data) {
 
         this.company = _.data;
-        this.form.controls.company_name.setValue(_.data.company_name);
-        this.form.controls.company_id.setValue(_.data.company_id);
-        this.form.controls.request_name.setValue(null);
-        this.form.controls.request_uuid.setValue(null);
+        this.form.controls['company_name'].setValue(_.data.company_name);
+        this.form.controls['company_id'].setValue(_.data.company_id);
+        this.form.controls['request_name'].setValue(null);
+        this.form.controls['request_uuid'].setValue(null);
       }
     });
     popover.present();
@@ -219,11 +219,11 @@ export class CandidateNoteFormPage implements OnInit {
       if (_ && _.data && _.data) {
 
         if (!this.company || !this.company.company_id) {
-          this.form.controls.company_name.setValue(_.data.company.company_name);
-          this.form.controls.company_id.setValue(_.data.company.company_id);
+          this.form.controls['company_name'].setValue(_.data.company.company_name);
+          this.form.controls['company_id'].setValue(_.data.company.company_id);
         }
-        this.form.controls.request_name.setValue(_.data.request_position_title);
-        this.form.controls.request_uuid.setValue(_.data.request_uuid);
+        this.form.controls['request_name'].setValue(_.data.request_position_title);
+        this.form.controls['request_uuid'].setValue(_.data.request_uuid);
       }
     });
     popover.present();

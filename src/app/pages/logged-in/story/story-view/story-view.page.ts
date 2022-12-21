@@ -182,7 +182,7 @@ export class StoryViewPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.destroyed$.next();
+    this.destroyed$.next({});
     this.destroyed$.complete();
     this.stopTimer();
     if (this.internvalSubscribe) {

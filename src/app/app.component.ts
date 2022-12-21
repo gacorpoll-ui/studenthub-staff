@@ -7,13 +7,14 @@ import {
   ModalController,
   ToastController
 } from '@ionic/angular';
-import { Plugins } from '@capacitor/core';
 import { SwUpdate } from '@angular/service-worker';
 import { concat, interval } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { DOCUMENT } from '@angular/common';
-//import { App, URLOpenListenerEvent } from '@capacitor/app';
+import { App, URLOpenListenerEvent } from '@capacitor/app';
+import { SplashScreen } from '@capacitor/splash-screen';
+import { Router } from '@angular/router';
 // services
 import { EventService } from './providers/event.service';
 import { AuthService } from './providers/auth.service';
@@ -21,9 +22,7 @@ import { TranslateLabelService } from './providers/translate-label.service';
 import {StoryService} from './providers/logged-in/story.service';
 import {CompanyRequestService} from './providers/logged-in/company-request.service';
 import { AuthService as Auth0Service } from '@auth0/auth0-angular';
-import { Router } from '@angular/router';
 
-const { App, SplashScreen } = Plugins;
 
 @Component({
   selector: 'app-root',

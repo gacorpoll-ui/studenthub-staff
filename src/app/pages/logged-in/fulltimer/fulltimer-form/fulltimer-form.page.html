@@ -30,8 +30,8 @@
           <ion-input type="telephone" formControlName="name"></ion-input>
         </ion-item>
 
-        <div class="error-wrapper" *ngIf="!form.controls.name.pristine">
-          <p class="error" *ngIf="form.controls.name.errors && form.controls.name.errors.required">
+        <div class="error-wrapper" *ngIf="!form.controls['name'].pristine">
+          <p class="error" *ngIf="form.controls['name'].errors && form.controls['name'].errors.required">
             * required
           </p>
         </div>
@@ -42,8 +42,8 @@
           <ion-input type="telephone" formControlName="phone"></ion-input>
         </ion-item>
 
-        <div class="error-wrapper" *ngIf="!form.controls.phone.pristine">
-          <p class="error" *ngIf="form.controls.phone.errors && form.controls.phone.errors.required">
+        <div class="error-wrapper" *ngIf="!form.controls['phone'].pristine">
+          <p class="error" *ngIf="form.controls['phone'].errors && form.controls['phone'].errors.required">
             * required
           </p>
         </div>
@@ -54,8 +54,8 @@
           <ion-input type="email" formControlName="email"></ion-input>
         </ion-item>
 
-        <div class="error-wrapper" *ngIf="!form.controls.email.pristine">
-          <p class="error" *ngIf="form.controls.email.errors && form.controls.email.errors.required">
+        <div class="error-wrapper" *ngIf="!form.controls['email'].pristine">
+          <p class="error" *ngIf="form.controls['email'].errors && form.controls['email'].errors.required">
             * required
           </p>
         </div>
@@ -66,8 +66,8 @@
           <ion-input readonly formControlName="nationality"></ion-input>
         </ion-item>
 
-        <div class="error-wrapper" *ngIf="!form.controls.nationality_id.pristine">
-          <p class="error" *ngIf="form.controls.nationality_id.errors && form.controls.nationality_id.errors.required">
+        <div class="error-wrapper" *ngIf="!form.controls['nationality_id'].pristine">
+          <p class="error" *ngIf="form.controls['nationality_id'].errors && form.controls['nationality_id'].errors.required">
             * required
           </p>
         </div>
@@ -80,33 +80,29 @@
 
             <!-- download -->
 
-            <ion-button *ngIf="form.controls.pdf_cv.value || form.controls.tempPdfCVLocation.value"
+            <ion-button *ngIf="form.controls['pdf_cv'].value || form.controls['tempPdfCVLocation'].value"
               [href]="getResumeUrl()" target="_blank">
               <ion-icon name="cloud-download-outline"></ion-icon>
             </ion-button>
 
             <!-- change/ upload -->
 
-            <ion-button (click)="mobileUpload();" *ngIf="platform.is('hybrid')">
-              <ion-icon name="cloud-upload-outline"></ion-icon>
-            </ion-button>
-
-            <ion-button *ngIf="!platform.is('hybrid')">
+            <ion-button>
               <ion-icon name="cloud-upload-outline"></ion-icon>
               <input class="upload" accept=".pdf,.doc,.docx" type='file' #fileInput (change)="browserUpload($event)">
             </ion-button>
 
             <!-- remove -->
 
-            <ion-button *ngIf="form.controls.pdf_cv.value || form.controls.tempPdfCVLocation.value"
+            <ion-button *ngIf="form.controls['pdf_cv'].value || form.controls['tempPdfCVLocation'].value"
               (click)="removeResume($event)">
               <ion-icon name="trash-outline"></ion-icon>
             </ion-button>
           </ion-buttons>
         </ion-item>
 
-        <div class="error-wrapper" *ngIf="!form.controls.pdf_cv.pristine">
-          <p class="error" *ngIf="form.controls.pdf_cv.errors && form.controls.pdf_cv.errors.required">
+        <div class="error-wrapper" *ngIf="!form.controls['pdf_cv'].pristine">
+          <p class="error" *ngIf="form.controls['pdf_cv'].errors && form.controls['pdf_cv'].errors.required">
             * required
           </p>
         </div>
@@ -117,8 +113,8 @@
           <ion-input readonly formControlName="location"></ion-input>
         </ion-item>
 
-        <div class="error-wrapper" *ngIf="!form.controls.location.pristine">
-          <p class="error" *ngIf="form.controls.location.errors && form.controls.location.errors.required">
+        <div class="error-wrapper" *ngIf="!form.controls['location'].pristine">
+          <p class="error" *ngIf="form.controls['location'].errors && form.controls['location'].errors.required">
             * required
           </p>
         </div>
@@ -129,8 +125,8 @@
           <ion-input type="email" formControlName="current_salary"></ion-input>
         </ion-item>
 
-        <div class="error-wrapper" *ngIf="!form.controls.current_salary.pristine">
-          <p class="error" *ngIf="form.controls.current_salary.errors && form.controls.current_salary.errors.required">
+        <div class="error-wrapper" *ngIf="!form.controls['current_salary'].pristine">
+          <p class="error" *ngIf="form.controls['current_salary'].errors && form.controls['current_salary'].errors.required">
             * required
           </p>
         </div>
@@ -141,8 +137,8 @@
           <ion-input type="email" formControlName="expected_salary"></ion-input>
         </ion-item>
 
-        <div class="error-wrapper" *ngIf="!form.controls.expected_salary.pristine">
-          <p class="error" *ngIf="form.controls.expected_salary.errors && form.controls.expected_salary.errors.required">
+        <div class="error-wrapper" *ngIf="!form.controls['expected_salary'].pristine">
+          <p class="error" *ngIf="form.controls['expected_salary'].errors && form.controls['expected_salary'].errors.required">
             * required
           </p>
         </div>
@@ -165,8 +161,8 @@
   <!--        >-->
   <!--      </app-select-search-input>-->
 
-        <div class="error-wrapper" *ngIf="!form.controls.university_id.pristine">
-          <p class="error" *ngIf="form.controls.university_id.errors && form.controls.university_id.errors.required">
+        <div class="error-wrapper" *ngIf="!form.controls['university_id'].pristine">
+          <p class="error" *ngIf="form.controls['university_id'].errors && form.controls['university_id'].errors.required">
             * required
           </p>
         </div>
@@ -179,8 +175,8 @@
           <ion-chip (click)="setGenderOption(3)" [class.active]="model.fulltimer_gender == 3">Other</ion-chip>
         </ion-item>
 
-        <div class="error-wrapper" *ngIf="!form.controls.gender.pristine">
-          <p class="error" *ngIf="form.controls.gender.errors && form.controls.gender.errors.required">
+        <div class="error-wrapper" *ngIf="!form.controls['gender'].pristine">
+          <p class="error" *ngIf="form.controls['gender'].errors && form.controls['gender'].errors.required">
             * required
           </p>
         </div>
@@ -192,8 +188,8 @@
           <ion-chip (click)="setLicenseOption(0)" [class.active]="model.fulltimer_driving_license == 0">No</ion-chip>
         </ion-item>
 
-        <div class="error-wrapper" *ngIf="!form.controls.driving_license.pristine">
-          <p class="error" *ngIf="form.controls.driving_license.errors && form.controls.driving_license.errors.required">
+        <div class="error-wrapper" *ngIf="!form.controls['driving_license'].pristine">
+          <p class="error" *ngIf="form.controls['driving_license'].errors && form.controls['driving_license'].errors.required">
             * required
           </p>
         </div>
@@ -203,8 +199,8 @@
           <ion-label position="floating">Birth Date</ion-label>
           <ion-datetime displayFormat="YYYY-MM-DD" pickerFormat="YYYY-MM-DD" [min]="minBirthDate" [max]="maxBirthDate" formControlName="birth_date"></ion-datetime>
         </ion-item>
-        <div class="error-wrapper" *ngIf="!form.controls.birth_date.pristine">
-          <p class="error" *ngIf="form.controls.birth_date.errors && form.controls.birth_date.errors.required">
+        <div class="error-wrapper" *ngIf="!form.controls['birth_date'].pristine">
+          <p class="error" *ngIf="form.controls['birth_date'].errors && form.controls['birth_date'].errors.required">
             * required
           </p>
         </div>
@@ -214,8 +210,8 @@
           <ion-label>Employed?</ion-label>
           <ion-toggle slot="end" formControlName="employed"></ion-toggle>
         </ion-item>
-        <div class="error-wrapper" *ngIf="!form.controls.employed.pristine">
-          <p class="error" *ngIf="form.controls.employed.errors && form.controls.employed.errors.required">
+        <div class="error-wrapper" *ngIf="!form.controls['employed'].pristine">
+          <p class="error" *ngIf="form.controls['employed'].errors && form.controls['employed'].errors.required">
             * required
           </p>
         </div>

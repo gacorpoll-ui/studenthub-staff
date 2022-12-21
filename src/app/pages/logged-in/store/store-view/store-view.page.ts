@@ -347,7 +347,7 @@ export class StoreViewPage implements OnInit {
       if (e.data && e.data.refresh) {
         this.loadData(); 
 
-        this.eventService.storeUpdated$.next();
+        this.eventService.storeUpdated$.next({});
 
       }
     });
@@ -394,7 +394,7 @@ export class StoreViewPage implements OnInit {
               
               this.navCtrl.back();
 
-              this.eventService.storeDeleted$.next();
+              this.eventService.storeDeleted$.next({});
             });
           }
         },

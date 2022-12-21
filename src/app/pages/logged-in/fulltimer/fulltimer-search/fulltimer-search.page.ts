@@ -1,12 +1,10 @@
 import {Component, ViewChild, OnInit, ChangeDetectorRef, ViewRef} from '@angular/core';
 import { NavController, Platform, MenuController, PopoverController, IonContent, ModalController } from '@ionic/angular';
-import { Plugins } from '@capacitor/core';
-// import { Storage } from '@ionic/storage';
 import { environment } from '../../../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { TransferState, makeStateKey } from '@angular/platform-browser';
-import * as algoliasearchProxy from 'algoliasearch/index';
-import * as VERSION from 'algoliasearch/src/version';
+import algoliasearch from 'algoliasearch';
+import * as VERSION from 'algoliasearch-helper/src/version';
 import * as encodeProxy from 'querystring-es3/encode';
 // service
 import { AuthService } from '../../../../providers/auth.service';
@@ -20,8 +18,6 @@ import { Fulltimer } from 'src/app/models/fulltimer';
 import { FulltimerFormPage } from '../fulltimer-form/fulltimer-form.page';
 
 
-const { Storage } = Plugins;
-const algoliasearch = algoliasearchProxy.default || algoliasearchProxy;
 const encode = encodeProxy.default || encodeProxy;
 
 @Component({
@@ -260,7 +256,7 @@ export class FulltimerSearchPage implements OnInit {
     const client = algoliasearch(appId, apiKey, {});
 
     client.addAlgoliaAgent('angular-instantsearch ' + VERSION);
-
+    //client.transporter.requester.send()
     client._request = (rawUrl, opts, fromResetKey = false) => {
 
       if (this.instantSearchConfig.searchClient) {
@@ -448,16 +444,16 @@ export class FulltimerSearchPage implements OnInit {
 
     // Handle No Internet Connection Error
     if (error.status == 0 || !navigator.onLine) {
-      return this.eventService.internetOffline$.next();
+      return this.eventService.internetOffline$.next({});
     }
 
     // Handle internal server error - 500 or 400
     if (error.status === 500) {
-      return this.eventService.error500$.next();
+      return this.eventService.error500$.next({});
     }
 
     if (error.status === 404) {
-      return this.eventService.error404$.next();
+      return this.eventService.error404$.next({});
     }
 
     alert('Error: ' + errMsg);

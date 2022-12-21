@@ -5,7 +5,6 @@ import { AlertController, ModalController, Platform } from '@ionic/angular';
 import { SentryErrorhandlerService } from 'src/app/providers/sentry.errorhandler.service';
 import { TranslateLabelService } from 'src/app/providers/translate-label.service';
 import { AccountService } from 'src/app/providers/logged-in/account.service';
-import { FilepickerService } from 'src/app/providers/logged-in/filepicker.service';
 import { AwsService } from 'src/app/providers/aws.service';
 
 
@@ -41,7 +40,6 @@ export class UploadCvPage implements OnInit, OnDestroy {
     public accountService: AccountService,
     public translateService: TranslateLabelService,
     public sentryService: SentryErrorhandlerService,
-    public filepickerService: FilepickerService,
     public awsService: AwsService
   ) { }
 
@@ -79,89 +77,6 @@ export class UploadCvPage implements OnInit, OnDestroy {
     }
 
     return allowedExtensions.indexOf(extension) > -1;
-  }
-
-  /**
-   * Upload file in mobile device
-   */
-  mobileUpload() {
-    this.filePickSubscription = this.filepickerService.pick().subscribe(async uri => {
-
-      // validate extension
-
-      /*let extension = uri.split('.').pop();
-
-      if(!this.isValidExtension(extension)) {
-
-          const alert = await this._alertCtrl.create({
-              header: this.translateService.transform('Invalid file'),
-              message: this.translateService.transform('txt_invalid_file_format', { value: this.allwedFormats() }),
-              buttons: [this.translateService.transform('Okay')]
-          });
-
-          return alert.present();
-      }*/
-
-      this.progress = 1; // show loader
-
-      this.awsService.uploadNativePath(uri).then(o => {
-        o.subscribe(event => {
-          this._handleFileSuccess(event);
-        }, async err => {
-
-          this.progress = null;
-
-          const ignoreErrors = [
-            'No image picked',
-            'User cancelled photos app',
-          ];
-
-          if (
-            err && (
-              ignoreErrors.indexOf(err.message) > -1 ||
-              err.message.includes('aborted')
-            ) 
-          ) {
-            return null;
-          }
-
-          // log to slack/sentry to know how many user getting file upload error
-
-          this.sentryService.handleError(err);
-
-          // always show abstract error message
-
-          let message;
-
-          const networkErrors = [
-            '504:null',
-            'NetworkingError: Network Failure'
-          ];
-
-          // networking errors
-          if (err && networkErrors.indexOf(err.message) > -1) {
-            message = this.translateService.transform('Error uploading file');
-            // system errors
-          } else if (err.message && err.message.indexOf(':') > -1) {
-            message = this.translateService.transform('Error getting file from Library');
-            // plugin errors
-          } else if (err.message) {
-            message = err.message;
-            // custom file validation errors
-          } else {
-            message = err;
-          }
-
-          const alert = await this.alertCtrl.create({
-            header: this.translateService.transform('Error'),
-            message,
-            buttons: [this.translateService.transform('Okay')]
-          });
-
-          await alert.present();
-        });
-      });
-    });
   }
 
   /**

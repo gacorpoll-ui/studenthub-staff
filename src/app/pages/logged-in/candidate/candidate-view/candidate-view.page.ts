@@ -322,7 +322,7 @@ export class CandidateViewPage implements OnInit {
                 }
                 this.loadNotes();
 
-                this.eventService.reloadCandidateHistory$.next();
+                this.eventService.reloadCandidateHistory$.next({});
               } else {
                 const prompt = await this.alertCtrl.create({
                   message: this._processResponseMessage(response),
@@ -779,15 +779,15 @@ export class CandidateViewPage implements OnInit {
   cancelAddNote() {
     this.editNoteData = new Note();
 
-    this.noteForm.controls.note.setValue('');
+    this.noteForm.controls['note'].setValue('');
     this.ckeditor.editorInstance.setData('');
     this.editorFocused = false;
 
-    this.noteForm.controls.type.setValue('Internal Note');
-    this.noteForm.controls.company_name.setValue('');
-    this.noteForm.controls.company_id.setValue('');
-    this.noteForm.controls.request_name.setValue('');
-    this.noteForm.controls.request_uuid.setValue('');
+    this.noteForm.controls['type'].setValue('Internal Note');
+    this.noteForm.controls['company_name'].setValue('');
+    this.noteForm.controls['company_id'].setValue('');
+    this.noteForm.controls['request_name'].setValue('');
+    this.noteForm.controls['request_uuid'].setValue('');
   }
 
   /**
@@ -826,20 +826,20 @@ export class CandidateViewPage implements OnInit {
    */
   async editNote(note: Note) {
     this.editNoteData = note;
-    this.noteForm.controls.note.setValue(note.note_text);
+    this.noteForm.controls['note'].setValue(note.note_text);
     this.ckeditor.editorInstance.setData(note.note_text);
     this.editorFocused = true;
 
-    this.noteForm.controls.type.setValue(note.note_type);
+    this.noteForm.controls['type'].setValue(note.note_type);
 
     if (note.company) {
-      this.noteForm.controls.company_name.setValue(note.company.company_name);
-      this.noteForm.controls.company_id.setValue(note.company.company_id);
+      this.noteForm.controls['company_name'].setValue(note.company.company_name);
+      this.noteForm.controls['company_id'].setValue(note.company.company_id);
     }
 
     if (note.request) {
-      this.noteForm.controls.request_name.setValue(note.request.request_position_title);
-      this.noteForm.controls.request_uuid.setValue(note.request.request_uuid);
+      this.noteForm.controls['request_name'].setValue(note.request.request_position_title);
+      this.noteForm.controls['request_uuid'].setValue(note.request.request_uuid);
     }
   }
 
@@ -963,10 +963,10 @@ export class CandidateViewPage implements OnInit {
 
     const model = new Note();
     model.candidate_id = this.candidate_id;
-    model.note_text = this.noteForm.controls.note.value;
-    model.note_type = this.noteForm.controls.type.value;
-    model.request_uuid = this.noteForm.controls.request_uuid.value;
-    model.company_id = this.noteForm.controls.company_id.value;
+    model.note_text = this.noteForm.controls['note'].value;
+    model.note_type = this.noteForm.controls['type'].value;
+    model.request_uuid = this.noteForm.controls['request_uuid'].value;
+    model.company_id = this.noteForm.controls['company_id'].value;
 
     let response = null;
     if (this.editNoteData && this.editNoteData.note_uuid) {
@@ -1013,7 +1013,7 @@ export class CandidateViewPage implements OnInit {
 
     const data = event.editor.getData();
 
-    this.noteForm.controls.note.setValue(data);
+    this.noteForm.controls['note'].setValue(data);
     this.noteForm.markAsDirty();
     this.noteForm.updateValueAndValidity();
   }
@@ -1065,10 +1065,10 @@ export class CandidateViewPage implements OnInit {
       if (_ && _.data) {
 
         this.company = _.data;
-        this.noteForm.controls.company_name.setValue(_.data.company_name);
-        this.noteForm.controls.company_id.setValue(_.data.company_id);
-        this.noteForm.controls.request_name.setValue(null);
-        this.noteForm.controls.request_uuid.setValue(null);
+        this.noteForm.controls['company_name'].setValue(_.data.company_name);
+        this.noteForm.controls['company_id'].setValue(_.data.company_id);
+        this.noteForm.controls['request_name'].setValue(null);
+        this.noteForm.controls['request_uuid'].setValue(null);
       }
     });
     popover.present();
@@ -1099,11 +1099,11 @@ export class CandidateViewPage implements OnInit {
       if (_ && _.data && _.data) {
 
         if (!this.company || !this.company.company_id) {
-          this.noteForm.controls.company_name.setValue(_.data.company.company_name);
-          this.noteForm.controls.company_id.setValue(_.data.company.company_id);
+          this.noteForm.controls['company_name'].setValue(_.data.company.company_name);
+          this.noteForm.controls['company_id'].setValue(_.data.company.company_id);
         }
-        this.noteForm.controls.request_name.setValue(_.data.request_position_title);
-        this.noteForm.controls.request_uuid.setValue(_.data.request_uuid);
+        this.noteForm.controls['request_name'].setValue(_.data.request_position_title);
+        this.noteForm.controls['request_uuid'].setValue(_.data.request_uuid);
       }
     });
     popover.present();
@@ -1126,7 +1126,7 @@ export class CandidateViewPage implements OnInit {
     }).subscribe(async response => {
 
       // if (response && response.operation == 'success') {
-      //   this.eventService.reloadFollowupList$.next();
+      //   this.eventService.reloadFollowupList$.next({});
       // }
 
     }, () => {

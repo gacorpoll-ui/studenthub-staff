@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable, Observer, throwError } from 'rxjs';
-import * as algoliasearchProxy from 'algoliasearch';
+import algoliasearch from 'algoliasearch';
 // Services
 import { AuthHttpService } from "./authhttp.service";
 
 
-const algoliasearch = algoliasearchProxy.default || algoliasearchProxy;
+//const algoliasearch = algoliasearchProxy.default || algoliasearchProxy;
 
 @Injectable({ 
   providedIn: 'root' 
@@ -80,29 +80,31 @@ export class AlgoliaService {
 
         let index = client.initIndex(indexName);
 
-        index.search(searchParameters, (err, content) => {
+        index.search('', searchParameters).then(content => {
 
           if (content) {
             observer.next(content);
             observer.complete();
-          } else if (err && err.statusCode == 400) {
+          }
+        }).catch(err => {
 
+          if(err.statusCode == 400) {
             this.getKey(true).then(keyData => {
 
               const client = algoliasearch(keyData.appId, keyData.securedApiKey, {});
 
               let index = client.initIndex(indexName);
 
-              index.search(searchParameters, (err, content) => {
+              index.search('', searchParameters).then(content => {
 
                 if (content) {
                   observer.next(content);
-                } else {
-                  return throwError(err);
                 }
-
-                observer.complete();
+              }).catch(err => {
+                  return throwError(err);
               });
+
+              observer.complete();
             });
           } else {
             return throwError(err);

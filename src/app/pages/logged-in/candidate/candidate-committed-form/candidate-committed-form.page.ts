@@ -132,7 +132,7 @@ export class CandidateCommittedFormPage implements OnInit {
 
     const data = event.editor.getData();
 
-    this.form.controls.note.setValue(data);
+    this.form.controls['note'].setValue(data);
     this.form.markAsDirty();
     this.form.updateValueAndValidity();
   }

@@ -214,14 +214,14 @@ export class RequestFormPage implements OnInit {
         let contact = _.data.contact.contact_name;
 
         if (!this.company || !this.company.company_id && _.data.contact.company) {
-          this.form.controls.company_name.setValue(_.data.contact.company.company_name);
-          this.form.controls.company_id.setValue(_.data.contact.company.company_id);
+          this.form.controls['company_name'].setValue(_.data.contact.company.company_name);
+          this.form.controls['company_id'].setValue(_.data.contact.company.company_id);
 
           contact += ' @ ' + _.data.contact.company.company_name;
         }
 
-        this.form.controls.contact_name.setValue(contact);
-        this.form.controls.contact_uuid.setValue(_.data.contact.contact_uuid);
+        this.form.controls['contact_name'].setValue(contact);
+        this.form.controls['contact_uuid'].setValue(_.data.contact.contact_uuid);
 
       }
     });
@@ -240,13 +240,13 @@ export class RequestFormPage implements OnInit {
       if (_ && _.data) {
 
         this.company = _.data;
-        this.form.controls.company_name.setValue(_.data.company_name);
-        this.form.controls.company_id.setValue(_.data.company_id);
+        this.form.controls['company_name'].setValue(_.data.company_name);
+        this.form.controls['company_id'].setValue(_.data.company_id);
 
-        this.form.controls.contact_name.setValue(null);
-        this.form.controls.contact_uuid.setValue(null);
+        this.form.controls['contact_name'].setValue(null);
+        this.form.controls['contact_uuid'].setValue(null);
 
-        this.form.controls.contact_name.enable();
+        this.form.controls['contact_name'].enable();
       }
     });
     popover.present();
@@ -269,16 +269,16 @@ export class RequestFormPage implements OnInit {
 
   resetForm() {
     this.company = null;
-    this.form.controls.company_id.setValue(null);
-    this.form.controls.contact_name.setValue(null);
-    this.form.controls.contact_uuid.setValue(null);
-    this.form.controls.position_type.setValue(null);
-    this.form.controls.position_title.setValue(null);
-    this.form.controls.number_of_employees.setValue(null);
-    this.form.controls.additional_info.setValue(null);
-    this.form.controls.company_name.setValue(null);
-    this.form.controls.location.setValue(null);
-    this.form.controls.no_of_employees_per_story.setValue(null);
+    this.form.controls['company_id'].setValue(null);
+    this.form.controls['contact_name'].setValue(null);
+    this.form.controls['contact_uuid'].setValue(null);
+    this.form.controls['position_type'].setValue(null);
+    this.form.controls['position_title'].setValue(null);
+    this.form.controls['number_of_employees'].setValue(null);
+    this.form.controls['additional_info'].setValue(null);
+    this.form.controls['company_name'].setValue(null);
+    this.form.controls['location'].setValue(null);
+    this.form.controls['no_of_employees_per_story'].setValue(null);
   }
 
   onEditorReady() {
@@ -303,7 +303,7 @@ export class RequestFormPage implements OnInit {
 
     const data = event.editor.getData();
 
-    this.form.controls.job_description.setValue(data);
+    this.form.controls['job_description'].setValue(data);
     this.form.markAsDirty();
     this.form.updateValueAndValidity();
   }

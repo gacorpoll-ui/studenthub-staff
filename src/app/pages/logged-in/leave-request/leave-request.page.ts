@@ -126,8 +126,8 @@ export class LeaveRequestPage implements OnInit {
 
     if (date) {
       // this.form.value.from_date
-      this.form.controls.from_date.setValue(date.from.string);
-      this.form.controls.to_date.setValue(date.to.string);
+      this.form.controls['from_date'].setValue(date.from.string);
+      this.form.controls['to_date'].setValue(date.to.string);
 
       this.range = date.from.string + '-' + date.to.string;
     }

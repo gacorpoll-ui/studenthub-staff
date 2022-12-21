@@ -5,8 +5,8 @@ import { Plugins } from '@capacitor/core';
 import { environment } from '../../../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { TransferState, makeStateKey } from '@angular/platform-browser';
-import * as algoliasearchProxy from 'algoliasearch/index';
-import * as VERSION from 'algoliasearch/src/version';
+import algoliasearch from 'algoliasearch/index';
+import * as VERSION from 'algoliasearch-helper/src/version';
 import * as encodeProxy from 'querystring-es3/encode';
 // service
 import { AuthService } from '../../../../providers/auth.service';
@@ -19,8 +19,6 @@ import { CandidateIdCardService } from 'src/app/providers/logged-in/candidate.id
 import { CandidateMergeSelectPage } from '../candidate-merge-select/candidate-merge-select.page';
 
 
-const { Storage } = Plugins;
-const algoliasearch = algoliasearchProxy.default || algoliasearchProxy;
 const encode = encodeProxy.default || encodeProxy;
 
 @Component({
@@ -216,7 +214,7 @@ export class CandidateSearchPage implements OnInit {
     this.candidateService.candidates = [];
     this.candidateIdCardService.candidates = [];
 
-    this.eventService.clearCandidateSelection$.next();
+    this.eventService.clearCandidateSelection$.next({});
   }
 
   /**
@@ -509,16 +507,16 @@ export class CandidateSearchPage implements OnInit {
 
     // Handle No Internet Connection Error
     if (error.status == 0 || !navigator.onLine) {
-      return this.eventService.internetOffline$.next();
+      return this.eventService.internetOffline$.next({});
     }
 
     // Handle internal server error - 500 or 400
     if (error.status === 500) {
-      return this.eventService.error500$.next();
+      return this.eventService.error500$.next({});
     }
 
     if (error.status === 404) {
-      return this.eventService.error404$.next();
+      return this.eventService.error404$.next({});
     }
 
     alert('Error: ' + errMsg);

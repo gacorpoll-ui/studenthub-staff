@@ -390,7 +390,7 @@ export class CompanyViewPage implements OnInit {
         });
         toast.present();
 
-        this.eventService.reloadFollowupList$.next();
+        this.eventService.reloadFollowupList$.next({});
       }
 
     }, () => {
