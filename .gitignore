@@ -36,3 +36,7 @@ $RECYCLE.BIN/
 .DS_Store
 Thumbs.db
 UserInterfaceState.xcuserstate
+*.angular
+.angular
+.angular/
+.angular/*
