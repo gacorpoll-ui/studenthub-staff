@@ -284,9 +284,10 @@ export class DefaultPage implements OnInit {
   }
 
   getTime() {
-    if (new Date(this.staff_work_session.session.created_at).toString() !== 'Invalid Date') {
+    if (this.staff_work_session.session && new Date(this.staff_work_session.session.created_at).toString() !== 'Invalid Date') {
       return this.staff_work_session.session.created_at;
     } else {
+      this.staff_work_session.session.created_at = this.staff_work_session.time;
       return this.staff_work_session.time;
     }
   }
