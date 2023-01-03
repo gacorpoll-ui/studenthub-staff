@@ -118,8 +118,9 @@ export class DefaultPage implements OnInit {
       this.loadingSession = false;
 
       if(session) {
-        this.staff_work_session = session;
-
+        this.staff_work_session.session = session.session;
+        this.staff_work_session.leave = session.leave;
+        console.log(this.staff_work_session);
         this.getStandupQuestion();
       }
     });
