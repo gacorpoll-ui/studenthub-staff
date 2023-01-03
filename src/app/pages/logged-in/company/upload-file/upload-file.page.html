@@ -26,19 +26,19 @@
                     <ion-thumbnail slot="start">
                         
                         <img tappable (click)="triggerUpdatePhoto($event)"
-                            *ngIf="form.controls.file_s3_path.value && form.controls.file_s3_path.value.length > 0"
-                            src="{{ form.controls.file_url.value }}">
+                            *ngIf="form.controls['file_s3_path'].value && form.controls['file_s3_path'].value.length > 0"
+                            src="{{ form.controls['file_url'].value }}">
 
                         <div tappable (click)="triggerUpdatePhoto($event)" class="no-logo"
-                            *ngIf="!form.controls.file_s3_path.value || form.controls.file_s3_path.value.length == 0">
+                            *ngIf="!form.controls['file_s3_path'].value || form.controls['file_s3_path'].value.length == 0">
                             <ion-icon src="assets/images/brand-no-image.svg"></ion-icon>
                         </div>
                         
                     </ion-thumbnail>
                     <ion-label>
-                        <h5 *ngIf="form.value.file_s3_path">{{ form.controls.file_s3_path.value }}</h5>
+                        <h5 *ngIf="form.value.file_s3_path">{{ form.controls['file_s3_path'].value }}</h5>
 
-                        <a id="btn-download" *ngIf="form.value.file_s3_path" target="_blank" [href]="form.controls.file_url.value">
+                        <a id="btn-download" *ngIf="form.value.file_s3_path" target="_blank" [href]="form.controls['file_url'].value">
                             <span >Download</span> 
                         </a> 
                         

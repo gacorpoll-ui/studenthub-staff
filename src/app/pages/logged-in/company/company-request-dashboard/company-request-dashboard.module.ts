@@ -14,19 +14,21 @@ import {StoryItemModule} from 'src/app/components/story-item/story-item.module';
 import { RequestFilterComponent } from 'src/app/components/request-filter/request-filter.component';
 import { StoryFilterComponent } from 'src/app/components/story-filter/story-filter.component';
 import {NoItemsModule} from 'src/app/components/no-items/no-items.module';
+import {DatePopupModule} from "../../../../components/date-popup/date-popup.module";
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    LoadingModalModule,
-    PipesModule,
-    RequestListingModule,
-    StoryItemModule,
-    NoItemsModule,
-    CompanyRequestDashboardPageRoutingModule
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        LoadingModalModule,
+        PipesModule,
+        RequestListingModule,
+        StoryItemModule,
+        NoItemsModule,
+        CompanyRequestDashboardPageRoutingModule,
+        DatePopupModule
+    ],
   declarations: [
     CompanyRequestDashboardPage,
     RequestFilterComponent,

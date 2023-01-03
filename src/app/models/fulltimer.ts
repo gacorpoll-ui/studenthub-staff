@@ -1,6 +1,7 @@
 import { Area } from './area';
 import { Country } from './country';
 import { Note } from './note';
+import {University} from "./university";
 
 export class FulltimerTag {
     fulltimer_tags_id: number;
@@ -30,12 +31,13 @@ export class Fulltimer {
     fulltimer_updated_datetime: string;
     rejectionRatio: any;
     acceptanceRatio: any;
-    suggested: number;
-    suggestionAccepted: number;
-    suggestionRejected: number;
+    suggested: any;
+    suggestionAccepted: any;
+    suggestionRejected: any;
     fulltimerTags: FulltimerTag[];
     area: Area;
     country: Country;
     nationality: Country;
+    university: University;
     notes: Note[];
 }

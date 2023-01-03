@@ -127,8 +127,8 @@ export class CompanyContactFormPage implements OnInit {
 
   // convenience getters for easy access to form fields
   get f() { return this.form.controls; }
-  get emails() { return this.f.emails as FormArray; }
-  get phones() { return this.f.phones as FormArray; }
+  get emails() { return this.f['emails'] as FormArray; }
+  get phones() { return this.f['phones'] as FormArray; }
 
   /**
    * Update Model Data based on Form Input
@@ -242,8 +242,8 @@ export class CompanyContactFormPage implements OnInit {
   addToTeam() {
     this.addingToTeam = true;
 
-    this.companyContact.allow_access = this.form.controls.allow_access.value;
-    this.companyContact.contact_position = this.form.controls.position.value;
+    this.companyContact.allow_access = this.form.controls['allow_access'].value;
+    this.companyContact.contact_position = this.form.controls['position'].value;
     this.companyContact.contact_uuid = this.contact.contact_uuid;
 
     this.companyContactService.addToTeam(this.companyContact).subscribe(async data => {

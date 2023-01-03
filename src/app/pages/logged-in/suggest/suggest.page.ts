@@ -62,8 +62,8 @@ export class SuggestPage implements OnInit {
   }
 
   selectRequest(request) {
-    this.form.controls.request_uuid.setValue(request.request_uuid);
-    this.form.controls.request_uuid.markAsDirty();
+    this.form.controls['request_uuid'].setValue(request.request_uuid);
+    this.form.controls['request_uuid'].markAsDirty();
   }
 
   /**

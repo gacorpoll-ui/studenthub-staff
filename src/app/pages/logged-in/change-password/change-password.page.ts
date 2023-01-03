@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController, ToastController } from '@ionic/angular';
+import {AlertController, ModalController, ToastController} from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 //services
 import { AuthService } from 'src/app/providers/auth.service';
@@ -27,6 +27,7 @@ export class ChangePasswordPage implements OnInit {
     private _toastCtrl: ToastController,
     private _alertCtrl: AlertController,
     private _fb: FormBuilder,
+    public modalCtrl: ModalController,
     public accountService: AccountService,
     public authService: AuthService,
   ) {
@@ -42,6 +43,14 @@ export class ChangePasswordPage implements OnInit {
     });
   }
 
+  close(refresh = false) {
+    const data = { refresh };
+    this.modalCtrl.getTop().then(o => {
+      if(o) {
+        o.dismiss(data);
+      }
+    });
+  }
   /**
    * Save new password
    */

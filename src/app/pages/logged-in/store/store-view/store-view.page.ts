@@ -53,17 +53,18 @@ export class StoreViewPage implements OnInit {
   }
 
   ngOnInit() {
+    console.log(this.directView);
     window.analytics.page('Store View Page');
 
     if (!this.store_id && this.activatedRoute.snapshot.paramMap.get('id')) {
       this.store_id = this.activatedRoute.snapshot.paramMap.get('id');
     }
 
-    if (this.navParams && this.navParams.data && this.navParams.data.store_id) {
-      this.store_id = this.navParams.data.store_id;
+    if (this.navParams && this.navParams.data && this.navParams.data['store_id']) {
+      this.store_id = this.navParams.data['store_id'];
     }
 
-    if (this.navParams && this.navParams.data && this.navParams.data.view) {
+    if (this.navParams && this.navParams.data && this.navParams.data['view']) {
       this.directView = true;
     }
 
@@ -297,7 +298,7 @@ export class StoreViewPage implements OnInit {
 
   /**
    * popover for store option
-   * @param event 
+   * @param event
    */
   async options(event) {
 
@@ -309,13 +310,13 @@ export class StoreViewPage implements OnInit {
       showBackdrop: false
     });
     await popover.present();
-  
+
     const { data } = await popover.onDidDismiss();
-    
+
     if(data && data.action == 'delete') {
       this.delete();
     }
-    
+
     if(data && data.action == 'edit') {
       this.edit();
     }
@@ -345,9 +346,9 @@ export class StoreViewPage implements OnInit {
       }
 
       if (e.data && e.data.refresh) {
-        this.loadData(); 
+        this.loadData();
 
-        this.eventService.storeUpdated$.next();
+        this.eventService.storeUpdated$.next({});
 
       }
     });
@@ -391,10 +392,10 @@ export class StoreViewPage implements OnInit {
                 });
                 toast.present();
               }
-              
+
               this.navCtrl.back();
 
-              this.eventService.storeDeleted$.next();
+              this.eventService.storeDeleted$.next({});
             });
           }
         },

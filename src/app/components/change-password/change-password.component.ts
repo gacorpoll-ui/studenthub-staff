@@ -81,4 +81,14 @@ export class ChangePasswordComponent implements OnInit {
       this.loading = false;
     });
   }
+
+
+  close(refresh = false) {
+    const data = { refresh };
+    this.modalCtrl.getTop().then(o => {
+      if(o) {
+        o.dismiss(data);
+      }
+    });
+  }
 }

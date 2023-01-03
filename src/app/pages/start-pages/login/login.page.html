@@ -39,8 +39,18 @@
             <span *ngIf="!isLoading">Sign in</span>
           </ion-button>
         </div>
+        
       </form>
       <!-- END Login Form -->
+
+      
+      <div class="separator"> <span>OR</span> </div>
+
+      <ion-button class="btn-login-bawes" fill="outline" (click)="loginWithRedirect()">
+        Log in with BAWES <ion-icon slot="end" src="assets/images/icon-bawes.svg"></ion-icon>
+      </ion-button>
+      
+
     </ion-card-content>
   </ion-card>
 

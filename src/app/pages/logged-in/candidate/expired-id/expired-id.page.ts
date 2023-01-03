@@ -81,7 +81,7 @@ export class ExpiredIdPage implements OnInit {
       this.currentPage = 1;
       this.loadData(this.currentPage);
 
-      this._events.expiredIdCard$.next();
+      this._events.expiredIdCard$.next({});
     }, () => {
       this.renewLoader = false;
     });

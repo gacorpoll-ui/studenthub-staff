@@ -307,4 +307,26 @@ export class FulltimerViewPage implements OnInit {
     });
     confirm.present();
   }
+
+  /**
+   * suggestion list page
+   * @param status
+   */
+  suggestionListPage(status: number) {
+    if (status == 1 && this.fulltimer.suggested == "0") { // Suggested
+      return false;
+    }
+    if (status == 2 && this.fulltimer.suggestionRejected == "0") { // Rejected
+      return false;
+    }
+    if (status == 3 && this.fulltimer.suggestionAccepted == "0") { // Accepted
+      return false;
+    }
+
+    this.router.navigate(['fulltimer-suggestions', this.fulltimer_uuid, status], {
+      state: {
+        fulltimer: this.fulltimer
+      }
+    });
+  }
 }

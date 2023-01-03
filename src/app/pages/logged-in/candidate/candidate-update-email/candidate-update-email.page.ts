@@ -2,15 +2,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { AlertController, NavController, ModalController } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Plugins } from '@capacitor/core';
 // services
 import { AccountService } from 'src/app/providers/logged-in/account.service';
 import { EventService } from 'src/app/providers/event.service';
 import {TranslateLabelService} from 'src/app/providers/translate-label.service';
 import {CandidateService} from 'src/app/providers/logged-in/candidate.service';
 
-
-const { Storage } = Plugins;
 
 @Component({
   selector: 'app-candidate-update-email',
@@ -85,21 +82,21 @@ export class CandidateUpdateEmailPage implements OnInit {
     //
     //   if (res.operation == 'success') {
     //
-    //     const { value } = await Storage.get({ key: 'loggedInUser' });
+    //     const { value } = await this.storageService.get('loggedInUser');
     //
-    //     Storage.set({
+    //     this.storageService.set({
     //       key: 'unVerifiedToken',
     //       value
     //     }).catch(r => {
-    //       this.eventService.errorStorage$.next();
+    //       this.eventService.errorStorage$.next({});
     //     });
     //
     //     /*this.eventService.verifyEmail$.next({
-    //       email: this.form.controls.email.value,
+    //       email: this.form.controls['email'].value,
     //       candidate_uuid: res.candidate_uuid
     //     });*/
     //
-    //     this.dismiss({ email: this.form.controls.email.value });
+    //     this.dismiss({ email: this.form.controls['email'].value });
     //
     //   }
     //   else if (res.operation == 'error') {

@@ -25,11 +25,6 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
-//text editor
-//@import '~quill/dist/quill.core.css';
-//@import '~quill/dist/quill.bubble.css';
-//@import '~quill/dist/quill.snow.css';
-
 html,
 body {
   font-family: Inter, sans-serif !important;
@@ -459,7 +454,7 @@ ng5-slider {
   .modal-change-password .modal-wrapper {
     height: 490px;
   }
-  
+
   .modal-delivered-story  .modal-wrapper {
     height: 403px;
   }
@@ -620,7 +615,7 @@ ion-item.toggle-wrapper {
   --inner-border-width: 0;
   --padding-start: 5px;
   --padding-end: 0;
-  --inner-padding-end: 0; 
+  --inner-padding-end: 0;
 
   ion-toggle {
     padding-inline-end: 2px;
@@ -704,4 +699,18 @@ ion-item.input-wrapper:not(.item-has-value) {
 
 .tab-requests request-listing ion-card {
   margin-top: 0;
+}
+.date-popup-over{
+    --background: rgba(40, 173, 218, 0.6);
+    --backdrop-opacity: 0.6;
+    --box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.6);
+    --color: white;
+    --width: 300px!important;
+
+  ion-content {
+    --background: rgba(40, 173, 218, 0.6);
+  }
+}
+.date-popup-over::part(backdrop) {
+  background-color: rgb(6, 14, 106);
 }

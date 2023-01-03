@@ -101,7 +101,7 @@ export class CompanyRequestFormPage implements OnInit {
 
     const data = event.editor.getData();
 
-    this.form.controls.job_description.setValue(data);
+    this.form.controls['job_description'].setValue(data);
     this.form.markAsDirty();
     this.form.updateValueAndValidity();
   }
@@ -202,20 +202,20 @@ export class CompanyRequestFormPage implements OnInit {
     popover.onDidDismiss().then((_) => {
 
       if (_ && _.data && _.data.contact) {
-        this.form.controls.contact_name.setValue(_.data.contact.contact_name);
-        this.form.controls.contact_uuid.setValue(_.data.contact.contact_uuid);
+        this.form.controls['contact_name'].setValue(_.data.contact.contact_name);
+        this.form.controls['contact_uuid'].setValue(_.data.contact.contact_uuid);
 
         if ((!this.company || !this.company.company_id) && _.data.contact.company) {
-          this.form.controls.company_id.setValue(_.data.contact.company.company_id);
+          this.form.controls['company_id'].setValue(_.data.contact.company.company_id);
         }
       }
 
       if (_ && _.data && _.data.companyContact) {
-        this.form.controls.contact_name.setValue(_.data.companyContact.contact_name);
-        this.form.controls.contact_uuid.setValue(_.data.companyContact.contact_uuid);
+        this.form.controls['contact_name'].setValue(_.data.companyContact.contact_name);
+        this.form.controls['contact_uuid'].setValue(_.data.companyContact.contact_uuid);
 
         if (!this.company || !this.company.company_id) {
-          this.form.controls.company_id.setValue(_.data.companyContact.company.company_id);
+          this.form.controls['company_id'].setValue(_.data.companyContact.company.company_id);
         }
 
       }
@@ -231,15 +231,15 @@ export class CompanyRequestFormPage implements OnInit {
    * reset form inputs
    */
   resetForm() {
-    this.form.controls.contact_name.setValue(null);
-    this.form.controls.contact_uuid.setValue(null);
-    this.form.controls.position_type.setValue(null);
-    this.form.controls.position_title.setValue(null);
-    this.form.controls.number_of_employees.setValue(null);
-    this.form.controls.additional_info.setValue(null);
-    this.form.controls.job_description.setValue(null);
-    this.form.controls.compensation.setValue(null);
-    this.form.controls.location.setValue(null);
-    this.form.controls.no_of_employees_per_story.setValue(null);
+    this.form.controls['contact_name'].setValue(null);
+    this.form.controls['contact_uuid'].setValue(null);
+    this.form.controls['position_type'].setValue(null);
+    this.form.controls['position_title'].setValue(null);
+    this.form.controls['number_of_employees'].setValue(null);
+    this.form.controls['additional_info'].setValue(null);
+    this.form.controls['job_description'].setValue(null);
+    this.form.controls['compensation'].setValue(null);
+    this.form.controls['location'].setValue(null);
+    this.form.controls['no_of_employees_per_story'].setValue(null);
   }
 }

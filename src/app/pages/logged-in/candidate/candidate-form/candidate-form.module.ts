@@ -10,6 +10,7 @@ import { CandidateFormPage } from './candidate-form.page';
 import {SelectSearchModule} from 'src/app/components/select-search/select-search.module';
 import {LoadingModalModule} from 'src/app/components/loading-modal/loading-modal.module';
 import {ImageUploadModule} from 'src/app/components/image-upload/image-upload.module';
+import {DatePopupModule} from "../../../../components/date-popup/date-popup.module";
 @NgModule({
     imports: [
         CommonModule,
@@ -18,7 +19,8 @@ import {ImageUploadModule} from 'src/app/components/image-upload/image-upload.mo
         ReactiveFormsModule,
         SelectSearchModule,
         LoadingModalModule,
-        ImageUploadModule
+        ImageUploadModule,
+        DatePopupModule
     ],
   declarations: [CandidateFormPage]
 })

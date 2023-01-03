@@ -380,9 +380,9 @@ export class BrandFormPage implements OnInit {
       imgLarge.src = event.Location;
       imgLarge.onload = () => {
 
-        this.form.controls.logo_path.setValue(event.Location);
-        this.form.controls.logo.setValue(event.Key);
-        this.form.controls.logo.markAsDirty();
+        this.form.controls['logo_path'].setValue(event.Location);
+        this.form.controls['logo'].setValue(event.Key);
+        this.form.controls['logo'].markAsDirty();
         this.form.updateValueAndValidity();
 
         this.model.brand_logo = event.Key;

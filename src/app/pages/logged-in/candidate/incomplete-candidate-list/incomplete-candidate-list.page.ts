@@ -78,7 +78,7 @@ export class IncompleteCandidateListPage implements OnInit {
     this.candidateService.candidates = [];
     this.candidateIdCardService.candidates = [];
 
-    this.eventService.clearCandidateSelection$.next();
+    this.eventService.clearCandidateSelection$.next({});
   }
 
   ionViewWillEnter() {

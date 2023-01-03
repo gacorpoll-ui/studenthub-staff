@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, ModalController } from '@ionic/angular';
+import { format, parseISO } from 'date-fns';
 // models
 import { Transfer } from 'src/app/models/transfer';
 // services
@@ -34,7 +35,8 @@ export class TransferListAllPage implements OnInit {
     public alertCtrl: AlertController,
     public modalCtrl: ModalController,
     public transferService: TransferService
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     window.analytics.page('Transfer List Page');
@@ -92,18 +94,13 @@ export class TransferListAllPage implements OnInit {
 
   getUrlParams() {
     let urlParams = 'expand=transferCandidates,transferCandidates.candidate,invoices,createdBy,updatedBy';
+
     if (this.start_date) {
-      const date = new Date(this.start_date);
-      const month = (date.getMonth() + 1).toString().padStart(2, '0');
-      const day   = date.getDate().toString().padStart(2, '0');
-      urlParams += '&start_date=' + date.getUTCFullYear() + '-' + month + '-' + day;
+      urlParams += '&start_date=' + this.start_date;
     }
 
     if (this.end_date) {
-      const date = new Date(this.end_date);
-      const month = (date.getMonth() + 1).toString().padStart(2, '0');
-      const day   = date.getDate().toString().padStart(2, '0');
-      urlParams += '&end_date=' + date.getUTCFullYear() + '-' + month + '-' + day;
+      urlParams += '&end_date=' + this.end_date;
     }
 
     if (this.type) {
@@ -111,5 +108,13 @@ export class TransferListAllPage implements OnInit {
     }
 
     return urlParams;
+  }
+
+  filterDate($event, type) {
+    if (type == 'startDate') {
+      this.start_date = format(parseISO($event.original), 'yyyy-MM-dd');
+    } else {
+      this.end_date = format(parseISO($event.original), 'yyyy-MM-dd');
+    }
   }
 }

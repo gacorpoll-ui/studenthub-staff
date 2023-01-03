@@ -1,12 +1,10 @@
 import {Component, ViewChild, OnInit, ChangeDetectorRef, ViewRef} from '@angular/core';
 import { NavController, Platform, MenuController, PopoverController, IonContent, ModalController } from '@ionic/angular';
-import { Plugins } from '@capacitor/core';
-// import { Storage } from '@ionic/storage';
 import { environment } from '../../../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { TransferState, makeStateKey } from '@angular/platform-browser';
-import * as algoliasearchProxy from 'algoliasearch/index';
-import * as VERSION from 'algoliasearch/src/version';
+import algoliasearch from 'algoliasearch';
+import * as VERSION from 'algoliasearch-helper/src/version';
 import * as encodeProxy from 'querystring-es3/encode';
 // service
 import { AuthService } from '../../../../providers/auth.service';
@@ -20,8 +18,6 @@ import { Fulltimer } from 'src/app/models/fulltimer';
 import { FulltimerFormPage } from '../fulltimer-form/fulltimer-form.page';
 
 
-const { Storage } = Plugins;
-const algoliasearch = algoliasearchProxy.default || algoliasearchProxy;
 const encode = encodeProxy.default || encodeProxy;
 
 @Component({
@@ -257,24 +253,48 @@ export class FulltimerSearchPage implements OnInit {
       transferState = _a.transferState,
       makeStateKey = _a.makeStateKey;
 
-    const client = algoliasearch(appId, apiKey, {});
+    const client = algoliasearch(appId, apiKey, {
+      
+      requester: {
+        send({ headers, method, url, data }) {
+            
+          const transferStateKey = makeStateKey(`ngais(${data})`);
 
-    client.addAlgoliaAgent('angular-instantsearch ' + VERSION);
+            if (transferState.hasKey(transferStateKey) && !this.refreshingFulltimers) {
+                const response = JSON.parse(transferState.get(transferStateKey, JSON.stringify({})));
+                return Promise.resolve({
+                    status: response.status,
+                    content: JSON.stringify(response.body),
+                    isTimedOut: false,
+                });
+            }
 
-    client._request = (rawUrl, opts, fromResetKey = false) => {
+            return new Promise((resolve, reject) => {
+                httpClient
+                    .request(method, url, {
+                    headers,
+                    body: data,
+                    observe: 'response',
+                })
+                    .subscribe(response => {
+                    
+                   // this.processResponse(response, transferState, transferStateKey);
 
-      if (this.instantSearchConfig.searchClient) {
-        opts.headers['x-algolia-api-key'] = this.instantSearchConfig.searchClient.apiKey;
+                    resolve({
+                        status: response.status,
+                        content: JSON.stringify(response.body),
+                        isTimedOut: false,
+                    });
+                }, response => reject({
+                    status: response.status,
+                    body: response.body,
+                }));
+            });
+        },
       }
+    });
 
-      let headers = new HttpHeaders();
-      headers = headers.set('content-type', opts.method === 'POST' ? 'application/x-www-form-urlencoded' : 'application/json');
-      headers = headers.set('accept', 'application/json');
-
-      let url = rawUrl + (rawUrl.includes('?') ? '&' : '?') + encode(opts.headers);
-      url += '&x-requested-at=' + new Date().getTime();
-
-      const transferStateKey = makeStateKey('pogi-source-ais(' + opts.body + ')');
+    /*const requester = (rawUrl, opts, fromResetKey = false) => {
 
       if (transferState.hasKey(transferStateKey) && !this.refreshingFulltimers) {
 
@@ -320,7 +340,7 @@ export class FulltimerSearchPage implements OnInit {
               });
             }
           });
-        }*/
+        }*
 
         //if key got time out
 
@@ -356,7 +376,7 @@ export class FulltimerSearchPage implements OnInit {
 
           });
       });
-    };
+    };*/
     return client;
   }
 
@@ -364,6 +384,7 @@ export class FulltimerSearchPage implements OnInit {
  
     this.algoliaService.getKey(true).then(response => {
 
+      //this.instantSearch.searchClient.api
       // update config
 
       this.instantSearchConfig = this.instantSearchConfigRefactor(makeStateKey, HttpHeaders, response);
@@ -448,37 +469,46 @@ export class FulltimerSearchPage implements OnInit {
 
     // Handle No Internet Connection Error
     if (error.status == 0 || !navigator.onLine) {
-      return this.eventService.internetOffline$.next();
+      return this.eventService.internetOffline$.next({});
     }
 
     // Handle internal server error - 500 or 400
     if (error.status === 500) {
-      return this.eventService.error500$.next();
+      return this.eventService.error500$.next({});
     }
 
     if (error.status === 404) {
-      return this.eventService.error404$.next();
+      return this.eventService.error404$.next({});
     }
 
     alert('Error: ' + errMsg);
+  }
+
+  onRender(event) {
+    console.log(event);
   }
 
   /**
    * set loader on scroll to bottom if have more data
    * @param e
    */
-  doInfinite(e) {
+  doInfinite(e, state = null, showMoreHandler = null) {
+
+    console.log(state, showMoreHandler);
+
+    //showMoreHandler(e);
 
     // if already loading
 
-    if (this.loading) {
+    /*if (this.loading) {
       e.target.complete();
       return false;
-    }
+    }*/
 
     setTimeout(_ => {
       this.loading = true;
     });
+
     this.eleInfinite = event.target;
 
     return true;
@@ -506,6 +536,11 @@ export class FulltimerSearchPage implements OnInit {
 
     return {
       indexName: environment.algoliaFulltimerIndex,
+      
+      /*onStateChange({ uiState, setUiState }) {
+        // Custom logic
+        setUiState(uiState);
+      },*/
       searchClient: this.createSSRSearchClient({
         makeStateKey,
         HttpHeaders,

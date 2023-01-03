@@ -32,13 +32,7 @@
                 </a>
             </div>
 
-            <ion-button tabindex="2" class="fileUpload" full (click)="mobileUpload();" *ngIf="platform.is('hybrid')">
-                <ion-icon slot="start" src="assets/images/md-cloud-upload.svg"></ion-icon>
-                <span *ngIf="candidate.candidate_resume">{{ "Replace File" }}</span>
-                <span *ngIf="!candidate.candidate_resume">{{ "Select file" }}</span>
-            </ion-button>
-
-            <ion-button tabindex="3" class="fileUpload" full *ngIf="!platform.is('hybrid')">
+            <ion-button tabindex="3" class="fileUpload" full>
                 <ion-icon slot="start" src="assets/images/md-cloud-upload.svg"></ion-icon>
                 <span *ngIf="candidate.candidate_resume">{{ "Replace File" }}</span>
                 <span *ngIf="!candidate.candidate_resume">{{ "Select file" }}</span>

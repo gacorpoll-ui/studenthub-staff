@@ -94,9 +94,9 @@ export class InvitePage implements OnInit {
           {
             text: 'Ok',
             handler: async (data) => {
-              this.form.controls.reason.setValue(data.feedback);
-              this.form.controls.request_uuid.setValue(request.request_uuid);
-              this.form.controls.request_uuid.markAsDirty();
+              this.form.controls['reason'].setValue(data.feedback);
+              this.form.controls['request_uuid'].setValue(request.request_uuid);
+              this.form.controls['request_uuid'].markAsDirty();
               this.save();
             }
           }

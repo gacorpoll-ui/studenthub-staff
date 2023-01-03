@@ -152,10 +152,10 @@ export class CompanyNotesPage implements OnInit {
     this.ckeditor.editorInstance.setData('');
     this.editorFocused = false;
 
-    this.noteForm.controls.note.reset();
-    this.noteForm.controls.type.reset();
-    this.noteForm.controls.contact.reset();
-    this.noteForm.controls.request.reset();
+    this.noteForm.controls['note'].reset();
+    this.noteForm.controls['type'].reset();
+    this.noteForm.controls['contact'].reset();
+    this.noteForm.controls['request'].reset();
     this.addNewNote = false;
   }
 
@@ -171,7 +171,7 @@ export class CompanyNotesPage implements OnInit {
 
     const data = event.editor.getData();
 
-    this.noteForm.controls.note.setValue(data);
+    this.noteForm.controls['note'].setValue(data);
     this.noteForm.markAsDirty();
     this.noteForm.updateValueAndValidity();
   }
@@ -193,12 +193,12 @@ export class CompanyNotesPage implements OnInit {
 
     const model = new Note();
     model.company_id = this.company.company_id;
-    model.note_text = this.noteForm.controls.note.value;
-    model.note_type = this.noteForm.controls.type.value;
-    model.contact_uuid = this.noteForm.controls.contact.value;
+    model.note_text = this.noteForm.controls['note'].value;
+    model.note_type = this.noteForm.controls['type'].value;
+    model.contact_uuid = this.noteForm.controls['contact'].value;
 
-    if (this.noteForm.controls.request.value) {
-      model.request_uuid = this.noteForm.controls.request.value;
+    if (this.noteForm.controls['request'].value) {
+      model.request_uuid = this.noteForm.controls['request'].value;
     }
 
     let response = null;
@@ -246,17 +246,17 @@ export class CompanyNotesPage implements OnInit {
   async editNote(note: Note) {
 
     this.editNoteData = note;
-    this.noteForm.controls.note.setValue(note.note_text);
+    this.noteForm.controls['note'].setValue(note.note_text);
     this.ckeditor.editorInstance.setData(note.note_text);
     this.editorFocused = true;
 
-    this.noteForm.controls.type.setValue(note.note_type);
+    this.noteForm.controls['type'].setValue(note.note_type);
 
     if (note.contact_uuid) {
-      this.noteForm.controls.contact.setValue(note.contact_uuid);
+      this.noteForm.controls['contact'].setValue(note.contact_uuid);
     }
     if (note.request_uuid) {
-      this.noteForm.controls.request.setValue(note.request_uuid);
+      this.noteForm.controls['request'].setValue(note.request_uuid);
     }
   }
 

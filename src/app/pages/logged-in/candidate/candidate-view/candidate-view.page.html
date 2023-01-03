@@ -19,7 +19,7 @@
         src="{{ awsService.cloudinaryUrl + 'candidate-photo/' + candidate.candidate_personal_photo }}" />
     </ion-thumbnail>
 
-    <h2 class="candidate-name" [title]=pendingData *ngIf="candidate.candidate_name">
+    <h2 class="candidate-name" *ngIf="candidate.candidate_name">
       {{ candidate.candidate_name }} <small>({{candidate.candidate_id}})</small><ion-badge color="danger" *ngIf="candidate.deleted">Deleted</ion-badge>
 
       <ion-button size="small" class="btn-copy" (click)="copy($event, candidate.candidate_name)">
@@ -36,17 +36,28 @@
       </ion-button>
     </h4>
 
-    <ion-badge color="warning" *ngIf="candidate && !candidate.isProfileCompleted">Incomplete profile</ion-badge>
+    <ion-badge color="warning" tappabel id="pending-fields" *ngIf="candidate && !candidate.isProfileCompleted">Incomplete profile</ion-badge>
     <ng-container  *ngIf="candidate && candidate.civilExpired">
       &nbsp;&nbsp;<ion-badge color="danger">Civil Id Expired</ion-badge>
     </ng-container>
 
+    <ion-popover [keepContentsMounted]="true" trigger="pending-fields">
+      <ng-template>
+        <ion-content>
+          <ion-list>
+            <ion-item *ngFor="let data of candidate.pendingField">{{data}}</ion-item>
+          </ion-list>
+        </ion-content>
+      </ng-template>
+    </ion-popover>
+
+
   </ion-toolbar>
 
-  <!-- [class.hidden]="borderLimit"-->
+
   <ion-toolbar class="container">
-    <!--(ionChange)="segmentChanged($event)"-->
-    <ion-segment mode="md" [(ngModel)]="segment">
+
+    <ion-segment mode="md" *ngIf="!platform.is('mobile')" (ionChange)="segmentChanged($event)" [value]="segment">
 
       <ion-segment-button mode="md" value="activity">
         <ion-label>Activity</ion-label>
@@ -64,6 +75,13 @@
         <ion-label>Financials</ion-label>
       </ion-segment-button>
     </ion-segment>
+
+    <ion-select *ngIf="platform.is('mobile')" interface="popover" (ionChange)="segmentChanged($event)" [value]="segment">
+      <ion-select-option value="activity">Activity</ion-select-option>
+      <ion-select-option value="work-details">Work Details</ion-select-option>
+      <ion-select-option value="personal-details">Personal Details</ion-select-option>
+      <ion-select-option value="financials">Financials</ion-select-option>
+    </ion-select>
   </ion-toolbar>
 
   <ion-progress-bar type="indeterminate" *ngIf="approving || unapproving"></ion-progress-bar>

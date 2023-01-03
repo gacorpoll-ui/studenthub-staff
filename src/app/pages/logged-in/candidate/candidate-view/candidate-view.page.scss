@@ -469,7 +469,7 @@ h4.candidate-name {
 }
 
 .video {
-  background: url('src/assets/images/ic_video.svg') no-repeat 0 0px;
+  background: url('../../../../../assets/images/ic_video.svg') no-repeat 0 0px;
 
   img {
     width: 90px;
@@ -478,64 +478,64 @@ h4.candidate-name {
 }
 
 .resume {
-  background: url('src/assets/images/ic_ad.svg') no-repeat 0 0px;
+  background: url('../../../../../assets/images/ic_ad.svg') no-repeat 0 0px;
 }
 
 .skills {
-  background: url('src/assets/images/ic_food_tools.svg') no-repeat 0 0px;
+  background: url('../../../../../assets/images/ic_food_tools.svg') no-repeat 0 0px;
 }
 
 .experiences {
-  background: url('src/assets/images/ic_suitcase.svg') no-repeat 0 0px;
+  background: url('../../../../../assets/images/ic_suitcase.svg') no-repeat 0 0px;
 }
 
 .area {
-  background: url('src/assets/images/icon-location.svg') no-repeat 0 0px;
+  background: url('../../../../../assets/images/icon-location.svg') no-repeat 0 0px;
 }
 
 .birth-date {
-  background: url('src/assets/images/icon-calendar.svg') no-repeat 0px -1px;
+  background: url('../../../../../assets/images/icon-calendar.svg') no-repeat 0px -1px;
 }
 
 .phone {
-  background: url('src/assets/images/icon-phone.svg') no-repeat 0px -1px;
+  background: url('../../../../../assets/images/icon-phone.svg') no-repeat 0px -1px;
 }
 
 .whatsapp {
-  background: url('src/assets/images/icon-phone.svg') no-repeat 0 -1px;
+  background: url('../../../../../assets/images/icon-phone.svg') no-repeat 0 -1px;
 }
 
 .email {
-  background: url('src/assets/images/icon-email.svg') no-repeat 0 0px;
+  background: url('../../../../../assets/images/icon-email.svg') no-repeat 0 0px;
 }
 
 .nationality {
-  background: url('src/assets/images/icon-earth.svg') no-repeat 0 0px;
+  background: url('../../../../../assets/images/icon-earth.svg') no-repeat 0 0px;
 }
 
 .gender {
-  background: url('src/assets/images/icon-profile.svg') no-repeat 0 0px;
+  background: url('../../../../../assets/images/icon-profile.svg') no-repeat 0 0px;
 }
 
 .university {
-  background: url('src/assets/images/icon-education.svg') no-repeat 0 0px;
+  background: url('../../../../../assets/images/icon-education.svg') no-repeat 0 0px;
 }
 
 .driving-license {
-  background: url('src/assets/images/icon-car.svg') no-repeat 0 0px;
+  background: url('../../../../../assets/images/icon-car.svg') no-repeat 0 0px;
 }
 
 .mother-nationality {
-  background: url('src/assets/images/icon-profile.svg') no-repeat 0 0px;
+  background: url('../../../../../assets/images/icon-profile.svg') no-repeat 0 0px;
 }
 
 .id-number {
-  background: url('src/assets/images/icon-card.svg') no-repeat 0 0px;
+  background: url('../../../../../assets/images/icon-card.svg') no-repeat 0 0px;
 }
 
 .civil-front,
 .civil-back {
-  background: url('src/assets/images/ic_profile_info.svg') no-repeat 0 0px;
+  background: url('../../../../../assets/images/ic_profile_info.svg') no-repeat 0 0px;
 
   p {
     margin-bottom: 7px;
@@ -543,7 +543,7 @@ h4.candidate-name {
 }
 
 .bank {
-  background: url('src/assets/images/ic_bank.svg') no-repeat 0 0px;
+  background: url('../../../../../assets/images/ic_bank.svg') no-repeat 0 0px;
 
   h5,
   p {
@@ -552,7 +552,7 @@ h4.candidate-name {
 }
 
 .created-at {
-  background: url('src/assets/images/ic_timer.svg') no-repeat 0 0px;
+  background: url('../../../../../assets/images/ic_timer.svg') no-repeat 0 0px;
 
   p {
     margin-bottom: 0 !important;
@@ -895,4 +895,12 @@ ion-content {
 
 .verified {
   font-size: 20px;
+}
+ion-toolbar {
+  ion-select {
+    padding: 10px;
+    border: 1px solid;
+    border-radius: 12px;
+    background: #f7f8fa;
+  }
 }

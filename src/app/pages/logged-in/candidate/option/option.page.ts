@@ -155,7 +155,7 @@ export class OptionPage implements OnInit {
               this.expiring = false;
 
               if (response.operation == 'success') {
-                this.eventService.reloadCandidateHistory$.next();
+                this.eventService.reloadCandidateHistory$.next({});
               }
 
               const prompt = await this.alertCtrl.create({
@@ -197,7 +197,7 @@ export class OptionPage implements OnInit {
               // Dismiss the loader
               this.expiring = false;
               if (response.operation == 'success') {
-                this.eventService.reloadCandidateHistory$.next();
+                this.eventService.reloadCandidateHistory$.next({});
               }
               const prompt = await this.alertCtrl.create({
                 message: this._processResponseMessage(response),
@@ -241,7 +241,7 @@ export class OptionPage implements OnInit {
 
               if (data.operation == 'success') {
                 this.candidate.candidate_job_search_status = this.candidate.candidate_job_search_status == 1 ? 0 : 1;
-                this.eventService.reloadCandiate$.next();
+                this.eventService.reloadCandiate$.next({});
               } else {
                 this.toastCtrl.create({
                   message: data.message,

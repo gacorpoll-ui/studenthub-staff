@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastController, NavController, LoadingController, ModalController } from '@ionic/angular';
-import { Plugins } from '@capacitor/core';
+import { StorageService } from 'src/app/providers/storage.service';
 
-const { Storage } = Plugins;
 
 @Component({
   selector: 'pogi-app-error',
@@ -15,7 +14,8 @@ export class AppErrorPage implements OnInit {
     private modalCtrl: ModalController,
     public navCtrl: NavController,
     public toastCtrl: ToastController,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    public storageService: StorageService
   ) { }
 
   ngOnInit() {
@@ -41,7 +41,7 @@ export class AppErrorPage implements OnInit {
    */
   async home() {
     
-    Storage.get({ key: 'loggedInUser' }).then(ret => {
+    this.storageService.get('loggedInUser').then(ret => {
 
       this.navCtrl.navigateRoot('/');
     }).catch(r => {

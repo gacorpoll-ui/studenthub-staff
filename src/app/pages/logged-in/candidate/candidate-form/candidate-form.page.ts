@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {AlertController, ModalController, NavController, ToastController} from '@ionic/angular';
 import { CustomValidator } from 'src/app/validators/custom.validator';
+import { format, parseISO } from 'date-fns';
 // service
 import { CandidateService } from 'src/app/providers/logged-in/candidate.service';
 import { UniversityService } from 'src/app/providers/logged-in/university.service';
@@ -35,7 +36,7 @@ export class CandidateFormPage implements OnInit {
   public maxDate;
   public minBirthDate;
   public maxBirthDate;
-  
+
   public loading = false;
   public saving = false;
 
@@ -94,9 +95,12 @@ export class CandidateFormPage implements OnInit {
     this.model.candidate_name_ar = this.form.value.name_ar;
 
     this.model.candidate_phone = this.form.value.phone;
-    this.model.candidate_birth_date = this.form.value.birth_date;
+
+    this.model.candidate_birth_date = this.form.controls['birth_date'].value;
+
     this.model.candidate_civil_id = this.form.value.civil_id;
-    this.model.candidate_civil_expiry_date = this.form.value.expiry_date;
+
+    this.model.candidate_civil_expiry_date = this.form.controls['expiry_date'].value;
 
     //this.model.candidate_hourly_rate = this.form.value.hourly_rate;
     this.model.university_id = Number(this.form.value.university_id);
@@ -279,27 +283,27 @@ export class CandidateFormPage implements OnInit {
         candidate_mom_kuwait: [this.model.candidate_mom_kuwaiti],
         preferred_time: [this.model.candidate_preferred_time],
       });
-      
+
       this.loadExp();
       this.loadSkill();
     }
   }
 
   setGenderOption(value) {
-    this.form.controls.gender.setValue(value);
-    this.form.controls.gender.markAsDirty();
+    this.form.controls['gender'].setValue(value);
+    this.form.controls['gender'].markAsDirty();
     this.model.candidate_gender = value;
   }
 
   setKuwaitiMomStatus(value) {
-    this.form.controls.candidate_mom_kuwait.setValue(value);
-    this.form.controls.candidate_mom_kuwait.markAsDirty();
+    this.form.controls['candidate_mom_kuwait'].setValue(value);
+    this.form.controls['candidate_mom_kuwait'].markAsDirty();
     this.model.candidate_mom_kuwaiti = value;
   }
 
   setLicenseOption(value) {
-    this.form.controls.license.setValue(value);
-    this.form.controls.license.markAsDirty();
+    this.form.controls['license'].setValue(value);
+    this.form.controls['license'].markAsDirty();
     this.model.candidate_driving_license = value;
   }
 
@@ -325,8 +329,8 @@ export class CandidateFormPage implements OnInit {
     const { data } = await modal.onWillDismiss();
 
     if (data && data.skills) {
-      this.form.controls.skills.setValue(data.skills);
-      this.form.controls.skills.markAsDirty();
+      this.form.controls['skills'].setValue(data.skills);
+      this.form.controls['skills'].markAsDirty();
       this.model.skill = data.skills;
     }
   }
@@ -353,8 +357,8 @@ export class CandidateFormPage implements OnInit {
     const { data } = await modal.onWillDismiss();
 
     if (data && data.experiences) {
-      this.form.controls.experiences.setValue(data.experiences);
-      this.form.controls.experiences.markAsDirty();
+      this.form.controls['experiences'].setValue(data.experiences);
+      this.form.controls['experiences'].markAsDirty();
       this.model.experience = data.experiences;
     }
   }
@@ -364,7 +368,7 @@ export class CandidateFormPage implements OnInit {
     if (this.model.candidateSkills && this.model.candidateSkills.length > 0) {
       for (const skl of this.model.candidateSkills) {
           skills.push(skl.skill);
-          this.form.controls.skills.setValue(skills.join(','));
+          this.form.controls['skills'].setValue(skills.join(','));
           this.model.skill = skills.join(',');
         }
       }
@@ -375,7 +379,7 @@ export class CandidateFormPage implements OnInit {
     if (this.model.candidateExperiences && this.model.candidateExperiences.length > 0) {
       for (const exp of this.model.candidateExperiences) {
           experiences.push(exp.experience);
-          this.form.controls.experiences.setValue(experiences.join(','));
+          this.form.controls['experiences'].setValue(experiences.join(','));
           this.model.experience = experiences.join(',');
         }
       }
@@ -402,8 +406,8 @@ export class CandidateFormPage implements OnInit {
     const { data } = await modal.onWillDismiss();
 
     if (data && data.resume) {
-      this.form.controls.resume.setValue(data.resume);
-      this.form.controls.resume.markAsDirty();
+      this.form.controls['resume'].setValue(data.resume);
+      this.form.controls['resume'].markAsDirty();
       this.model.candidate_resume = data.resume;
     }
   }
@@ -436,16 +440,23 @@ export class CandidateFormPage implements OnInit {
     const { data } = await modal.onWillDismiss();
 
     if (data && data.area_uuid) {
-      this.form.controls.area_uuid.setValue(data.area_uuid);
-      this.form.controls.area_uuid.markAsDirty();
+      this.form.controls['area_uuid'].setValue(data.area_uuid);
+      this.form.controls['area_uuid'].markAsDirty();
 
-      this.form.controls.country_id.setValue(data.country_id);
-      this.form.controls.country_id.markAsDirty();
+      this.form.controls['country_id'].setValue(data.country_id);
+      this.form.controls['country_id'].markAsDirty();
 
       this.model.area = data.area;
       this.model.country = data.country;
 
       this.form.updateValueAndValidity();
+    }
+  }
+
+  selectDate($event, type) {
+    if ($event && $event.modified) {
+      this.form.controls[type].setValue(format(parseISO($event.original), 'yyyy-MM-dd'));
+      this.form.controls[type].markAsDirty();
     }
   }
 }

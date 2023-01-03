@@ -4,13 +4,14 @@ import { catchError, first, map, retryWhen, take } from 'rxjs/operators';
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import {ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 import {genericRetryStrategy} from '../util/genericRetryStrategy';
+import { Storage } from '@ionic/storage-angular';
 // service
 import {EventService} from './event.service';
 import {environment} from '../../environments/environment';
+import { AuthService as Auth0Service } from '@auth0/auth0-angular';
+import { AlertController, LoadingController } from '@ionic/angular';
+import { StorageService } from './storage.service';
 
-import { Plugins } from '@capacitor/core';
-
-const { Storage } = Plugins;
 
 @Injectable({
   providedIn: 'root'
@@ -39,11 +40,17 @@ export class AuthService {
   private _urlBasicAuth = '/auth/login';
   private _urlUpdatePass = '/auth/update-password';
   private _urlResetPassRequest = '/auth/request-reset-password';
+  public _urlLoginAuth0 = '/auth/login-auth0';
 
   constructor(
+    public storage: Storage,
     public _http: HttpClient,
+    public auth: Auth0Service,
     public router: Router,
+    public alertCtrl: AlertController,
+    public loadingCtrl: LoadingController,
     public eventService: EventService,
+    public storageService: StorageService,
     public rendererFactory: RendererFactory2
   ) {
     this.renderer = this.rendererFactory.createRenderer(null, null);
@@ -62,7 +69,7 @@ export class AuthService {
 
       this.navEnable = true;
 
-      if (route.data.navDisable) {
+      if (route.data['navDisable']) {
         this.navEnable = false;
       }
 
@@ -70,9 +77,7 @@ export class AuthService {
         resolve(true);
       }
 
-      Storage.get({ key: 'loggedInStaff' }).then(ret => {
-
-        const user = JSON.parse(ret.value);
+      this.storageService.get('loggedInStaff').then(user => {
 
         if (user) {
           this.isLogged = true;
@@ -87,10 +92,12 @@ export class AuthService {
           resolve(true);
         } else {
           resolve(false);
-          this.logout('invalid access');
+
+          this.router.navigate(['login']);
+          //this.logout('invalid access');
         }
       }).catch(r => {
-        this.eventService.errorStorage$.next();
+        this.eventService.errorStorage$.next({});
       });
     });
   }
@@ -100,11 +107,8 @@ export class AuthService {
    * @param theme
    */
   setTheme(theme) {
-    Storage.set({
-      key: 'theme',
-      value: theme
-    }).catch(r => {
-      this.eventService.errorStorage$.next();
+    this.storageService.set('theme', theme).catch(r => {
+      this.eventService.errorStorage$.next({});
     });
 
     this.theme = theme;
@@ -122,18 +126,18 @@ export class AuthService {
    * Save user data in storage
    */
   saveInStorage() {
-    Storage.set({
-      key: 'loggedInStaff',
-      value: JSON.stringify({
+    this.storageService.set(
+      'loggedInStaff',
+      {
         token: this._accessToken,
         staff_id: this.staff_id,
         name: this.name,
         email: this.email,
         role: this.role,
         story: this.story
-      })
-    }).catch(r => {
-      this.eventService.errorStorage$.next();
+      }
+    ).catch(r => {
+      this.eventService.errorStorage$.next({});
     });
   }
 
@@ -155,19 +159,18 @@ export class AuthService {
     this.email = null;
     this.story = null;
 
-    Storage.clear().catch(r => {
-      this.eventService.errorStorage$.next();
+    this.storageService.clear().catch(r => {
+      this.eventService.errorStorage$.next({});
     });
 
     if (!silent) {
       this.eventService.userLoggedOut$.next(reason ? reason : false);
     }
 
-    Storage.set({
-      key: 'cookieMessageWasApproved',
-      value : (this.displayCookieMessage == '0') ? '1' : '0'
-    }).catch(r => {
-      this.eventService.errorStorage$.next();
+    this.storageService.set('cookieMessageWasApproved',
+     (this.displayCookieMessage == '0') ? '1' : '0'
+    ).catch(r => {
+      this.eventService.errorStorage$.next({});
     });
   }
 
@@ -193,33 +196,41 @@ export class AuthService {
 
     if (this._accessToken) {
       this.isLogged = true;
-      this.eventService.userLogined$.next({ redirect });
+      // this.eventService.userLogined$.next({ redirect });
+      this.router.navigate(['/']);
     }
   }
 
   // This is the method you want to call at bootstrap
-  async load(): Promise<any> {
+  load(): Promise<any> {
 
-    Storage.get({ key: 'loggedInStaff' }).then(ret => {
+    return new Promise((resolve, reject) => {
+      this.storage.create().then(storage => {
 
-      const staff = JSON.parse(ret.value);
+        this.storageService._storage = storage;
 
-      if (staff && staff.token) {
-        return this.setAccessToken(staff);
-      } else {
-        // return this.logout('error with store variables',true);
-      }
-    }).catch(r => {
-      this.eventService.errorStorage$.next();
-    });
+        this.storageService.get('theme').then(ret => {
 
-    Storage.get({ key: 'theme' }).then(ret => {
+          if (ret) {
+            this.setTheme(ret);
+          }
+        }).catch(r => {
+          this.eventService.errorStorage$.next({});
+        });
 
-      if (ret.value) {
-        this.setTheme(ret.value);
-      }
-    }).catch(r => {
-      this.eventService.errorStorage$.next();
+        this.storageService.get('loggedInStaff').then(staff => {
+
+          if (staff && staff.token) {
+            this.setAccessToken(staff);
+          } else {
+            // return this.logout('error with store variables',true);
+          }
+        }).catch(r => {
+          this.eventService.errorStorage$.next({});
+        });
+
+        resolve(true);
+      });
     });
   }
 
@@ -234,15 +245,14 @@ export class AuthService {
       return this._accessToken;
     }
 
-    Storage.get({ key: 'loggedInStaff' }).then(ret => {
-      const user = JSON.parse(ret.value);
+    this.storageService.get('loggedInStaff').then(user => {
 
       if (user) {
         this.setAccessToken(user, redirect);
         this._accessToken = user.token;
       }
     }).catch(r => {
-      this.eventService.errorStorage$.next();
+      this.eventService.errorStorage$.next({});
     });
 
     return this._accessToken;
@@ -267,6 +277,82 @@ export class AuthService {
       first(),
       map((res: HttpResponse<any>) => res)
     );
+  }
+
+  /**
+   * Login by Auth0 accessToken
+   */
+  async useTokenForAuth(accessToken, showLoader = true) {
+
+    let loading;
+
+    if (showLoader) {
+      loading = await this.loadingCtrl.create({
+        spinner: 'crescent',
+        message: 'Logging in...'
+      });
+      loading.present();
+    }
+
+    const url = environment.apiEndpoint + this._urlLoginAuth0;
+
+    const headers = this._buildAuthHeaders();
+
+    return this._http.post(url, {
+      accessToken: accessToken,
+    }, {
+      headers: headers
+    })
+      .pipe(
+        retryWhen(genericRetryStrategy()),
+        catchError((err) => this._handleError(err)),
+        first(),
+        map((res) => res)
+      )
+      .subscribe(async response => {
+
+        if (response.operation == 'success') {
+
+          this.setAccessToken(response, true);
+
+        } else if (response.code == 1) {
+
+          const alert = await this.alertCtrl.create({
+            message: 'No account with login email', // JSON.stringify(err)
+            buttons: ['Okay']
+          });
+          await alert.present();
+
+          this.auth.logout({ returnTo: document.location.origin });
+
+        } else if (response.operation == 'error') {
+
+          const alert = await this.alertCtrl.create({
+            message: 'Error getting login by Auth0 API', // JSON.stringify(err)
+            buttons: ['Okay']
+          });
+          await alert.present();
+
+        }
+
+        //this.eventService.googleLoginFinished$.next({});
+
+      }, err => {
+
+        //this.eventService.googleLoginFinished$.next(err);
+      },
+      () => {
+        if (loading) {
+          loading.dismiss();
+        }
+      });
+  }
+
+  _buildAuthHeaders() {
+    return new HttpHeaders({
+      //Language: this.language_pref || 'en',
+      'Content-Type': 'application/json'
+    });
   }
 
   /**
@@ -343,19 +429,19 @@ export class AuthService {
     // This error usually appears when agent attempts to handle an
     // account that he's been removed from assigning
     if (error.status === 400) {
-      this.eventService.accountAssignmentRemoved$.next();
+      this.eventService.accountAssignmentRemoved$.next({});
       return EMPTY;
     }
 
     // Handle No Internet Connection Error /service worker timeout
 
     if (error.status === 0 || error.status === 504) {
-      this.eventService.internetOffline$.next();
+      this.eventService.internetOffline$.next({});
       return EMPTY;
     }
 
     if (!navigator.onLine) {
-      this.eventService.internetOffline$.next();
+      this.eventService.internetOffline$.next({});
       return EMPTY;
     }
 
@@ -367,13 +453,13 @@ export class AuthService {
 
     // Handle internal server error - 500
     if (error.status === 500) {
-      this.eventService.error500$.next();
+      this.eventService.error500$.next({});
       return EMPTY;
     }
 
     // Handle page not found - 404 error
     if (error.status === 404) {
-      this.eventService.error404$.next();
+      this.eventService.error404$.next({});
       return EMPTY;
     }
     console.log('Error: ' + errMsg);

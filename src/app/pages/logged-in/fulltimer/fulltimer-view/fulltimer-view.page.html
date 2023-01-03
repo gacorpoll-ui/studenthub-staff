@@ -101,19 +101,19 @@
     <div class="suggestion-wrapper" *ngIf="fulltimer">
       <h5 class="heading">Full-timer has been</h5>
 
-      <ion-item>
+      <ion-item tappable (click)="suggestionListPage(1)">
         <div tabindex="0"></div>
         <ion-label>Suggested</ion-label>
         <ion-note slot="end">{{ fulltimer.suggested }}</ion-note>
       </ion-item>
 
-      <ion-item>
+      <ion-item tappable (click)="suggestionListPage(3)">
         <div tabindex="0"></div>
         <ion-label>Accepted</ion-label>
         <ion-note class="accepted" slot="end">{{ fulltimer.suggestionAccepted }}</ion-note>
       </ion-item>
 
-      <ion-item>
+      <ion-item tappable (click)="suggestionListPage(2)">
         <div tabindex="0"></div>
         <ion-label>Rejected</ion-label>
         <ion-note class="rejected" slot="end">{{ fulltimer.suggestionRejected }}</ion-note>
@@ -149,7 +149,7 @@
             Download CV
           </ion-button>
         </ion-col>
-        <ion-col>
+        <ion-col *ngIf="story && story.request && story.request.request_position_type == 1">
           <ion-button class="btn-suggest" (click)="suggest()" [disabled]="suggesting">
             <span *ngIf="!suggesting">Suggest for client request</span>
             <ion-spinner *ngIf="suggesting"></ion-spinner>

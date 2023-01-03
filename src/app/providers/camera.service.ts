@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import {Platform} from "@ionic/angular";
+import { Platform } from '@ionic/angular';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
-import {Plugins, CameraResultType, CameraSource} from '@capacitor/core';
-const { Camera } = Plugins;
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +10,7 @@ export class CameraService {
 
   constructor(
     private _platform: Platform
-  ){
+  ) {
     // Cleanup Temporary Camera Files on iOS on app load
     /*if(this._platform.is('ios')){
       Camera.cleanup();
@@ -22,7 +21,7 @@ export class CameraService {
    * Opens Camera and returns native file path on selection
    * @returns {Promise<string>} native file path
    */
-  getImageFromCamera(){
+  getImageFromCamera() {
     return this.getPic('cam');
   }
 
@@ -30,8 +29,8 @@ export class CameraService {
    * Opens Library and returns native file path on selection
    * @returns {Promise<string>} native file path
    */
-  getImageFromLibrary(){
-    return this.getPic('photo')
+  getImageFromLibrary() {
+    return this.getPic('photo');
   }
 
   /**
@@ -80,16 +79,31 @@ export class CameraService {
    */
   async getPic(type = 'cam') {
 
-    const image = await Camera.getPhoto({
-      quality: 100,
-      allowEditing: true,
-      resultType: CameraResultType.Uri,
-      source: (type == 'cam') ? CameraSource.Camera : CameraSource.Photos
-    });
+    let image;
+    
+    if(this._platform.is('android')) {
+      image = await Camera.getPhoto({
+        quality: 100,
+        allowEditing: true,
+        resultType: CameraResultType.Uri,
+        source: (type == 'cam') ? CameraSource.Camera : CameraSource.Photos
+      });
+    }
+    else 
+    {
+      image = await Camera.getPhoto({
+        quality: 100,
+        allowEditing: false,
+        resultType: CameraResultType.Uri,
+        source: (type == 'cam') ? CameraSource.Camera : CameraSource.Photos
+      });
+    }
+
     // image.webPath will contain a path that can be set as an image src.
     // You can access the original file using image.path, which can be
     // passed to the Filesystem API to read the raw data of the image,
     // if desired (or pass resultType: CameraResultType.Base64 to getPhoto)
-    return image.webPath;
+    
+    return image.path;//webPath
   }
 }

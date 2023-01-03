@@ -1,6 +1,6 @@
-import { Component, Input, Inject, forwardRef, EventEmitter, Output, OnInit } from '@angular/core';
+import { Component, Input, Inject, forwardRef, EventEmitter, Output, OnInit, Optional } from '@angular/core';
 import { connectRange } from 'instantsearch.js/es/connectors';
-import { BaseWidget, NgAisInstantSearch } from 'angular-instantsearch';
+import { BaseWidget, NgAisIndex, NgAisInstantSearch } from 'angular-instantsearch';
 import { parseNumberInput, noop } from 'angular-instantsearch/esm2015/utils';
 import {CalendarModal, CalendarModalOptions, CalendarResult} from 'ion2-calendar';
 import { ModalController } from '@ionic/angular';
@@ -48,7 +48,9 @@ export class DateRangeRefinementListComponent extends BaseWidget {
 
   constructor(
       @Inject(forwardRef(() => NgAisInstantSearch))
-      public instantSearchParent,
+      public instantSearchInstance,
+      @Optional()
+        public parentIndex: NgAisIndex,
       public modalCtrl: ModalController
   ) {
       super('RangeRefinementComponent');
@@ -176,10 +178,10 @@ export class DateRangeRefinementListComponent extends BaseWidget {
       //to fix: https://www.pivotaltracker.com/story/show/170494756
 
       if (
-          this.instantSearchParent.searchParameters && this.instantSearchParent.searchParameters.disjunctiveFacetsRefinements
-          && this.instantSearchParent.searchParameters.disjunctiveFacetsRefinements[this.attribute]
+          this.instantSearchInstance.searchParameters && this.instantSearchInstance.searchParameters.disjunctiveFacetsRefinements
+          && this.instantSearchInstance.searchParameters.disjunctiveFacetsRefinements[this.attribute]
       ) {
-          this.instantSearchParent.searchParameters.disjunctiveFacetsRefinements[this.attribute] = [];
+          this.instantSearchInstance.searchParameters.disjunctiveFacetsRefinements[this.attribute] = [];
       }
 
       //clear value

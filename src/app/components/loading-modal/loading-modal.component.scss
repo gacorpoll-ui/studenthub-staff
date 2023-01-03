@@ -572,7 +572,7 @@
   }
 
   .video {
-    --background: url('src/assets/images/ic_video.svg') no-repeat 0px 11px;
+    --background: url('../../../assets/images/ic_video.svg') no-repeat 0px 11px;
 
     ion-skeleton-text:nth-child(1) {
       width: 170px;
@@ -584,7 +584,7 @@
   }
 
   .resume {
-    --background: url('src/assets/images/ic_ad.svg') no-repeat 0px 11px;
+    --background: url('../../../assets/images/ic_ad.svg') no-repeat 0px 11px;
 
     ion-skeleton-text:nth-child(1) {
       width: 80px;
@@ -596,7 +596,7 @@
   }
 
   .skills {
-    --background: url('src/assets/images/ic_food_tools.svg') no-repeat 0px 11px;
+    --background: url('../../../assets/images/ic_food_tools.svg') no-repeat 0px 11px;
 
     ion-skeleton-text:nth-child(2) {
       width: 250px;
@@ -608,7 +608,7 @@
   }
 
   .experiences {
-    --background: url('src/assets/images/ic_suitcase.svg') no-repeat 0px 11px;
+    --background: url('../../../assets/images/ic_suitcase.svg') no-repeat 0px 11px;
 
     ion-skeleton-text:nth-child(2) {
       width: 250px;
@@ -621,7 +621,7 @@
   }
 
   .area {
-    --background: url('src/assets/images/ic_home_2.svg') no-repeat 0px 11px;
+    --background: url('../../../assets/images/ic_home_2.svg') no-repeat 0px 11px;
 
     ion-skeleton-text:nth-child(1) {
       width: 180px;
@@ -633,7 +633,7 @@
   }
 
   .phone {
-    --background: url('src/assets/images/ic_phone.svg') no-repeat 0px 15px;
+    --background: url('../../../assets/images/ic_phone.svg') no-repeat 0px 15px;
 
     ion-skeleton-text:nth-child(1) {
       width: 170px;
@@ -662,7 +662,7 @@
   }
 
   .email {
-    --background: url('src/assets/images/ic_message.svg') no-repeat 0px 15px;
+    --background: url('../../../assets/images/ic_message.svg') no-repeat 0px 15px;
 
     ion-skeleton-text:nth-child(1) {
       width: 180px;
@@ -674,7 +674,7 @@
   }
 
   .nationality {
-    --background: url('src/assets/images/ic_globe.svg') no-repeat 0px 15px;
+    --background: url('../../../assets/images/ic_globe.svg') no-repeat 0px 15px;
 
     ion-skeleton-text:nth-child(1) {
       width: 70px;
@@ -686,7 +686,7 @@
   }
 
   .gender {
-    --background: url('src/assets/images/ic_swipe.svg') no-repeat 0px 15px;
+    --background: url('../../../assets/images/ic_swipe.svg') no-repeat 0px 15px;
 
     ion-skeleton-text:nth-child(1) {
       width: 160px;
@@ -698,7 +698,7 @@
   }
 
   .university {
-    --background: url('src/assets/images/md-school.svg') no-repeat 0px 15px;
+    --background: url('../../../assets/images/md-school.svg') no-repeat 0px 15px;
 
     ion-skeleton-text:nth-child(1) {
       width: 160px;
@@ -710,7 +710,7 @@
   }
 
   .driving-license {
-    --background: url('src/assets/images/ic_car.svg') no-repeat 0px 15px;
+    --background: url('../../../assets/images/ic_car.svg') no-repeat 0px 15px;
 
     ion-skeleton-text:nth-child(1) {
       width: 160px;
@@ -722,7 +722,7 @@
   }
 
   .mother-nationality {
-    --background: url('src/assets/images/ic_username.svg') no-repeat 0px 15px;
+    --background: url('../../../assets/images/ic_username.svg') no-repeat 0px 15px;
 
     ion-skeleton-text:nth-child(1) {
       width: 170px;
@@ -734,7 +734,7 @@
   }
 
   .id-number {
-    --background: url('src/assets/images/ic_feed.svg') no-repeat 0px 15px;
+    --background: url('../../../assets/images/ic_feed.svg') no-repeat 0px 15px;
 
     ion-skeleton-text:nth-child(1) {
       width: 160px;
@@ -747,7 +747,7 @@
 
   .civil-front,
   .civil-back {
-    --background: url('src/assets/images/ic_profile_info.svg') no-repeat 0px 15px;
+    --background: url('../../../assets/images/ic_profile_info.svg') no-repeat 0px 15px;
 
     p {
       margin-bottom: 7px;
@@ -764,7 +764,7 @@
   }
 
   .bank {
-    --background: url('src/assets/images/ic_bank.svg') no-repeat 0px 15px;
+    --background: url('../../../assets/images/ic_bank.svg') no-repeat 0px 15px;
 
     h5,
     p {
@@ -781,7 +781,7 @@
   }
 
   .created-at {
-    --background: url('src/assets/images/ic_timer.svg') no-repeat 0px 15px;
+    --background: url('../../../assets/images/ic_timer.svg') no-repeat 0px 15px;
 
     p {
       margin-bottom: 0 !important;

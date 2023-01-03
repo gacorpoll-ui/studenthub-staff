@@ -26,10 +26,18 @@
         <div  *ngIf="!staff_work_session.session">
           <h3>Work session</h3>
 
-          <ion-button size="small" class="btn-start-session" [disabled]="loadingSession" (click)="startSession()">
-            <ion-spinner *ngIf="loadingSession"></ion-spinner>
-            <span *ngIf="!loadingSession">Start Session</span>
-          </ion-button>
+          <ng-container *ngIf="!leave">
+            <ion-button size="small" class="btn-start-session" [disabled]="loadingSession" (click)="startSession()">
+              <ion-spinner *ngIf="loadingSession"></ion-spinner>
+              <span *ngIf="!loadingSession">Start Session</span>
+            </ion-button>
+
+            <ion-button size="small" color="secondary" class="btn-on-leave" [disabled]="loadingSession" (click)="leaveRequest()">
+              I'm on leave
+            </ion-button>
+          </ng-container>
+
+          <p *ngIf="leave">On leave from {{ leave.from_date }} to {{ leave.to_date }}.</p>
         </div>
 
         <div *ngIf="staff_work_session.session" class="">
@@ -80,6 +88,7 @@
       <div *ngIf="statistics.activeRequests > 0">
 
         <h3>Recruitment Tasks</h3>
+
         <ion-card class="stats" tappable>
           <ion-item (click)="scrollToActive()" class="ion" detail lines="none">
             <div tabindex="0"></div>

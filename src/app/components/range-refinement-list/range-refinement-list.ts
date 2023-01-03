@@ -1,6 +1,7 @@
-import { Component, Input, Inject, forwardRef, EventEmitter, Output, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, Inject, forwardRef, EventEmitter, Output, ChangeDetectorRef, Optional } from '@angular/core';
 import { connectRange } from 'instantsearch.js/es/connectors';
-import { BaseWidget, NgAisInstantSearch } from 'angular-instantsearch';
+import { RangeRenderState } from 'instantsearch.js/es/connectors/range/connectRange';
+import { BaseWidget, NgAisIndex, NgAisInstantSearch } from 'angular-instantsearch';
 import { parseNumberInput, noop } from 'angular-instantsearch/esm2015/utils';
 import { Options } from 'ng5-slider';
 
@@ -25,9 +26,18 @@ export class RangeRefinementComponent extends BaseWidget {
 
     @Output() change: EventEmitter<any> = new EventEmitter();
 
-    state;
+
+    public override state: RangeRenderState = {
+        range: {min: 0, max: 1},
+        refine: noop,
+        canRefine: null,
+        sendEvent: noop,
+        format: noop,
+        start: [0, 1],
+    };
+
     slider;
-    updateState;
+
     handleChange;
     formatTooltip;
 
@@ -36,7 +46,7 @@ export class RangeRefinementComponent extends BaseWidget {
 
     value;
 
-    average;
+    average = 0;
 
     options: Options = {
         floor: 0,
@@ -45,7 +55,9 @@ export class RangeRefinementComponent extends BaseWidget {
 
     constructor(
         @Inject(forwardRef(() => NgAisInstantSearch))
-        public instantSearchParent
+        public instantSearchInstance,
+        @Optional()
+        public parentIndex: NgAisIndex,
     ) {
         super('RangeRefinementComponent');
 
@@ -54,20 +66,27 @@ export class RangeRefinementComponent extends BaseWidget {
         this.tooltips = true;
         this.precision = 2;
 
-        this.state = {
+        /*this.state = {
             range: {min: 0, max: 1},
             refine: noop,
             start: [0, 1],
-        };
+        };*/
 
-        this.updateState = (state, isFirstRendering) => {
+        this.updateState = (state: RangeRenderState, isFirstRendering) => {
+
             // update component inner state
-            this.state = state;
+            if(isFirstRendering)
+                this.state = state;
+            else {
+                this.state.range = state.range;
+                this.state.start = state.start;
+            }
 
             // update the slider state
-            const {range: {min, max}, start, } = state;
+            const { range: {min, max}, start, } = state;
+            //const min = state.range.min, max = 0;
 
-            setTimeout(_ => {
+            //setTimeout(_ => {
 
                 this.min = (min === max) ? 0 : Math.ceil(min);
                 this.max = Math.ceil(max);
@@ -77,19 +96,19 @@ export class RangeRefinementComponent extends BaseWidget {
                 let lower;
                 let upper;
 
-                if (this.state.start[0] == '-Infinity') {
+                if (this.state.start[0] == -Infinity) {
                     lower = this.min;
                 } else {
                     lower = this.state.start[0];
                 }
 
-                if (this.state.start[1] == 'Infinity') {
+                if (this.state.start[1] == Infinity) {
                      upper = this.max;
                 } else {
                      upper = this.state.start[1];
                 }
 
-                if (this.state.start[0] == '-Infinity' && this.state.start[1] == 'Infinity') {
+                if (this.state.start[0] == -Infinity && this.state.start[1] == Infinity) {
                     this.dirty = false;
                 } else {
                     this.dirty = true;
@@ -107,14 +126,16 @@ export class RangeRefinementComponent extends BaseWidget {
                 this.options = newOptions;
 
                 this.setLabel(); // update label
-            });
+            //}
         };
 
-        this.handleChange = () => {
-            //let range = [e.detail.value.lower, e.detail.value.upper];
+        this.handleChange = (e) => {
 
-            let range = [this.value.lower, this.value.upper];
-            this.state.refine(range);
+           // let range = [e.detail.value.lower, e.detail.value.upper];
+                //[this.value.lower, this.value.upper]
+
+             //   this.state.range.lower = [this.value.lower, this.value.upper];
+            this.state.refine([this.value.lower, this.value.upper]);
             //this.change.emit();
         };
 
@@ -135,7 +156,7 @@ export class RangeRefinementComponent extends BaseWidget {
     /**
      * @return {?}
      */
-    ngOnInit() {
+    override ngOnInit() {
         this.createWidget(connectRange, {
             attributeName: this.attribute,
             attribute: this.attribute,
@@ -171,10 +192,10 @@ export class RangeRefinementComponent extends BaseWidget {
         //to fix: https://www.pivotaltracker.com/story/show/170494756
 
         if (
-            this.instantSearchParent.searchParameters && this.instantSearchParent.searchParameters.disjunctiveFacetsRefinements
-            && this.instantSearchParent.searchParameters.disjunctiveFacetsRefinements[this.attribute]
+            this.instantSearchInstance.searchParameters && this.instantSearchInstance.searchParameters.disjunctiveFacetsRefinements
+            && this.instantSearchInstance.searchParameters.disjunctiveFacetsRefinements[this.attribute]
         ) {
-            this.instantSearchParent.searchParameters.disjunctiveFacetsRefinements[this.attribute] = [];
+            this.instantSearchInstance.searchParameters.disjunctiveFacetsRefinements[this.attribute] = [];
         }
 
         //clear value

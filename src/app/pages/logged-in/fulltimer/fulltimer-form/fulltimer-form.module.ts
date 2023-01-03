@@ -8,15 +8,17 @@ import { FulltimerFormPageRoutingModule } from './fulltimer-form-routing.module'
 
 import { FulltimerFormPage } from './fulltimer-form.page';
 import { SelectSearchModule } from 'src/app/components/select-search/select-search.module';
+import {DatePopupModule} from "../../../../components/date-popup/date-popup.module";
 
 @NgModule({
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    IonicModule,
-    SelectSearchModule,
-    FulltimerFormPageRoutingModule
-  ],
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        IonicModule,
+        SelectSearchModule,
+        FulltimerFormPageRoutingModule,
+        DatePopupModule
+    ],
   declarations: [FulltimerFormPage]
 })
 export class FulltimerFormPageModule {}

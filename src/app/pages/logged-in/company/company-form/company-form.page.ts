@@ -293,7 +293,7 @@ export class CompanyFormPage implements OnInit {
 
     const data = event.editor.getData();
 
-    this.form.controls.description_en.setValue(data);
+    this.form.controls['description_en'].setValue(data);
     this.form.markAsDirty();
     this.form.updateValueAndValidity();
   }
@@ -320,7 +320,7 @@ export class CompanyFormPage implements OnInit {
 
     const data = event.editor.getData();
 
-    this.form.controls.description_ar.setValue(data);
+    this.form.controls['description_ar'].setValue(data);
     this.form.markAsDirty();
     this.form.updateValueAndValidity();
   }

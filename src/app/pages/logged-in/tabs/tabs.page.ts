@@ -91,7 +91,7 @@ export class TabsPage implements OnInit, OnDestroy {
       //skip for first time
 
       if(this.statLoaded && this.totalRequest != response.totalRequests) {
-        this.eventService.requestCountUpdated$.next();
+        this.eventService.requestCountUpdated$.next({});
       }
 
       this.statLoaded = true;

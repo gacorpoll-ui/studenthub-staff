@@ -1,5 +1,5 @@
-import { Component, Inject, forwardRef, Input, Output, EventEmitter } from '@angular/core';
-import { BaseWidget, NgAisInstantSearch } from 'angular-instantsearch';
+import { Component, Inject, forwardRef, Input, Output, EventEmitter, Optional } from '@angular/core';
+import { BaseWidget, NgAisIndex, NgAisInstantSearch } from 'angular-instantsearch';
 import { connectRefinementList } from "instantsearch.js/es/connectors";
 import { parseNumberInput, noop } from "angular-instantsearch/esm2015/utils"; 
 //services
@@ -27,17 +27,19 @@ export class RefinementListComponent extends BaseWidget {
     @Output() change: EventEmitter<any> = new EventEmitter();
 
     public open: boolean = false;
-    public autoHideContainer: boolean = false;
 
+    public override state; 
+    
     public limit;
     public sortBy;
-    public state;
 
     //NgAisInstantSearch
 
     constructor(
         @Inject(forwardRef(() => NgAisInstantSearch))
-        public instantSearchParent,
+        public instantSearchInstance,
+        @Optional()
+        public parentIndex: NgAisIndex,
         public eventService: EventService,
         public translateService: TranslateLabelService
     ) {
@@ -68,8 +70,8 @@ export class RefinementListComponent extends BaseWidget {
         });
     }
 
-    public ngOnInit() {
-        if(this.instantSearchParent) {
+    public override ngOnInit() {
+        if(this.instantSearchInstance) {
             this.createWidget(connectRefinementList, {
                 limit: parseNumberInput(this.limit),
                 showMoreLimit: parseNumberInput(this.showMoreLimit),
@@ -81,10 +83,6 @@ export class RefinementListComponent extends BaseWidget {
             });
             super.ngOnInit();
         }
-    }
-
-    ngOnDestroy() {
-        //don't destroy refinement list
     }
 
     /**
@@ -124,11 +122,11 @@ export class RefinementListComponent extends BaseWidget {
 
             if (
                 this.isRefined() && 
-                this.instantSearchParent.instantSearchInstance.helper.state &&
-                this.instantSearchParent.instantSearchInstance.helper.state.disjunctiveFacetsRefinements && 
-                !this.instantSearchParent.instantSearchInstance.helper.state.disjunctiveFacetsRefinements[this.attribute]
+                this.instantSearchInstance.instantSearchInstance.helper.state &&
+                this.instantSearchInstance.instantSearchInstance.helper.state.disjunctiveFacetsRefinements && 
+                !this.instantSearchInstance.instantSearchInstance.helper.state.disjunctiveFacetsRefinements[this.attribute]
             )
-                this.instantSearchParent.instantSearchInstance.helper.state.disjunctiveFacetsRefinements[this.attribute] = [];
+                this.instantSearchInstance.instantSearchInstance.helper.state.disjunctiveFacetsRefinements[this.attribute] = [];
 
             //this.change.emit();
         }

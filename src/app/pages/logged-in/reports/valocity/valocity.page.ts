@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { Platform } from '@ionic/angular';
-
+import { format, parseISO } from 'date-fns';
 // models
 import { Staff } from 'src/app/models/staff';
 // services
@@ -86,15 +86,11 @@ export class ValocityPage implements OnInit {
     let urlParams = '&expand=totalStoryEmployees,totalCompletedStories,timeForCompletedStories,totalInvitations';
 //totalClosedRequests,totalPendingRequests,timeForCompletedRequests,timeForCancelledRequests,
     if (this.start_date) {
-      const date = new Date(this.start_date);
-      const month = date.getMonth() + 1;
-      urlParams += '&start_date=' + date.getUTCFullYear() + '-' + month + '-' + date.getUTCDay();
+      urlParams += '&start_date=' + this.start_date;
     }
 
     if (this.end_date) {
-      const date = new Date(this.end_date);
-      const month = date.getMonth() + 1;
-      urlParams += '&end_date=' + date.getUTCFullYear() + '-' + month + '-' + date.getUTCDay();
+      urlParams += '&end_date=' + this.end_date;
     }
 
     return urlParams;
@@ -219,5 +215,13 @@ export class ValocityPage implements OnInit {
 
   clearSelection() {
     this.start_date = this.end_date = null;
+  }
+
+  filterDate($event, type) {
+    if (type == 'startDate') {
+      this.start_date = format(parseISO($event.original), 'yyyy-MM-dd');
+    } else {
+      this.end_date = format(parseISO($event.original), 'yyyy-MM-dd');
+    }
   }
 }

@@ -1,6 +1,6 @@
-import { Component, Inject, forwardRef, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Inject, forwardRef, Input, Output, EventEmitter, Optional } from '@angular/core';
 import { connectSearchBox } from 'instantsearch.js/es/connectors';
-import { BaseWidget, NgAisInstantSearch } from 'angular-instantsearch';
+import { BaseWidget, NgAisIndex, NgAisInstantSearch } from 'angular-instantsearch';
 import { Subject, timer, EMPTY } from 'rxjs';
 import { debounceTime, distinctUntilChanged, debounce } from 'rxjs/operators';
 // services
@@ -25,7 +25,7 @@ export class IsSearchBoxComponent extends BaseWidget {
     @Output() focus: EventEmitter<any> = new EventEmitter();
     @Output() blur: EventEmitter<any> = new EventEmitter();
 
-    state;
+    override state;
 
     modelChanged: Subject<{query: string, code: number }> = new Subject();
 
@@ -36,7 +36,9 @@ export class IsSearchBoxComponent extends BaseWidget {
 
     constructor(
         @Inject(forwardRef(() => NgAisInstantSearch))
-        public instantSearchParent,
+        public instantSearchInstance,
+        @Optional()
+        public parentIndex: NgAisIndex,
         public _translateService: TranslateLabelService
     ) {
         super('IsSearchBoxComponent');
@@ -54,7 +56,7 @@ export class IsSearchBoxComponent extends BaseWidget {
      * Initialize widget
      */
     public ngOnInit() {
-        if (this.instantSearchParent) {
+        if (this.instantSearchInstance) {
             this.createWidget(connectSearchBox);
             setTimeout( _ => { // to protect dual request
                 super.ngOnInit();

@@ -1,8 +1,10 @@
-import { Component, Inject, forwardRef, Input, ViewEncapsulation } from '@angular/core';
-import { BaseWidget, NgAisInstantSearch } from 'angular-instantsearch';
+import { Component, Inject, forwardRef, Input, ViewEncapsulation, Optional } from '@angular/core';
+import { BaseWidget, NgAisIndex, NgAisInstantSearch } from 'angular-instantsearch';
 import { noop } from "angular-instantsearch/esm2015/utils";
-import { connectCurrentRefinedValues } from "instantsearch.js/es/connectors";
 import { AgePipe } from 'src/app/pipes/age.pipe';
+import { connectCurrentRefinements } from "instantsearch.js/es/connectors";
+import { CurrentRefinementsRenderState } from 'instantsearch.js/es/connectors/current-refinements/connectCurrentRefinements';
+
 
 @Component({
     selector: 'current-refinement',
@@ -21,7 +23,9 @@ export class CurrentRefinementComponent extends BaseWidget {
 
     constructor(
         @Inject(forwardRef(() => NgAisInstantSearch))
-        public instantSearchParent
+        public instantSearchInstance,
+        @Optional()
+        public parentIndex: NgAisIndex,
     ) {
         super('CurrentRefinementComponent');
 
@@ -49,8 +53,8 @@ export class CurrentRefinementComponent extends BaseWidget {
         };
 
         //connectCurrentRefinedValues
-        if(this.instantSearchParent) { 
-            this.createWidget(connectCurrentRefinedValues, options);
+        if(this.instantSearchInstance) { 
+            this.createWidget(connectCurrentRefinements, options);
             super.ngOnInit();
         }
     }
@@ -76,7 +80,7 @@ export class CurrentRefinementComponent extends BaseWidget {
      */
     handleClearAllClick(event) {
 
-        //let helper = this.instantSearchParent.instantSearchInstance.helper; 
+        //let helper = this.instantSearchInstance.instantSearchInstance.helper; 
 
         //on location clear, show results sorted by location 
 
@@ -86,8 +90,8 @@ export class CurrentRefinementComponent extends BaseWidget {
             helper.setQueryParameter('aroundRadius', 'all');
         }*/
 
-        this.instantSearchParent.instantSearchInstance.helper.clearRefinements(this.attribute);
-        this.instantSearchParent.instantSearchInstance.refresh();
+        this.instantSearchInstance.instantSearchInstance.helper.clearRefinements(this.attribute);
+        this.instantSearchInstance.instantSearchInstance.refresh();
         
         event.preventDefault();
         event.stopPropagation();

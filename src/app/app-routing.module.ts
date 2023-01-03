@@ -468,7 +468,7 @@ const routes: Routes = [
   },
   {
     path: 'change-password',
-    loadChildren: () => import('./pages/logged-in/change-password/change-password-routing.module').then( m => m.ChangePasswordPageRoutingModule),
+    loadChildren: () => import('./pages/logged-in/change-password/change-password.module').then( m => m.ChangePasswordPageModule),
     canActivate: [AuthService],
     data: {
       name: 'ChangePasswordPage'
@@ -476,7 +476,7 @@ const routes: Routes = [
   },
   {
     path: 'candidate-salary-list',
-    loadChildren: () => import('./pages/logged-in/candidate/candidate-salary-list/candidate-salary-list-routing.module').then( m => m.CandidateSalaryListPageRoutingModule),
+    loadChildren: () => import('./pages/logged-in/candidate/candidate-salary-list/candidate-salary-list.module').then(m => m.CandidateSalaryListPageModule),
     canActivate: [AuthService],
     data: {
       name: 'CandidateSalaryListPage'
@@ -535,13 +535,25 @@ const routes: Routes = [
     loadChildren: () => import('./pages/errors/app-error/app-error.module').then( m => m.AppErrorPageModule)
   },
   {
-    path: '**',
-    redirectTo: 'not-found'
-  },  {
     path: 'candidate-assign-form',
     loadChildren: () => import('./pages/logged-in/candidate-assign-form/candidate-assign-form.module').then( m => m.CandidateAssignFormPageModule)
   },
-
+  {
+    path: 'leave-request',
+    loadChildren: () => import('./pages/logged-in/leave-request/leave-request.module').then( m => m.LeaveRequestPageModule)
+  },
+  {
+    path: 'fulltimer-suggestions',
+    loadChildren: () => import('./pages/logged-in/fulltimer/fulltimer-suggestions/fulltimer-suggestions.module').then( m => m.FulltimerSuggestionsPageModule),
+    canActivate: [AuthService],
+    data: {
+      name: 'FulltimerSuggestionsPage'
+    }
+  },
+  {
+    path: '**',
+    redirectTo: 'not-found'
+  },
 ];
 
 @NgModule({
