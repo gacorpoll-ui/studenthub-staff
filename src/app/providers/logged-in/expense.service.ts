@@ -17,7 +17,7 @@ export class ExpenseService {
    * @param mallUUID
    */
   view(mallUUID) {
-    return this.authHttp.get(this.endpoint + '/' + mallUUID + '?expand=candidates,stores,stores.candidatesCount');
+    return this.authHttp.get(this.endpoint + '/' + mallUUID + '?expand=staff');
   }
 
   /**

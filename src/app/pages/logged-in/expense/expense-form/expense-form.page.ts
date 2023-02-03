@@ -1,21 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AlertController, ModalController, NavController} from '@ionic/angular';
 
-// service
-import {MallService} from 'src/app/providers/logged-in/mall.service';
 // model
 import {AuthService} from "../../../../providers/auth.service";
 import {Expense} from "../../../../models/expense";
 import {ExpenseService} from "../../../../providers/logged-in/expense.service";
+import {AwsService} from "../../../../providers/aws.service";
+import {Subscription} from "rxjs";
+import {SentryErrorhandlerService} from "../../../../providers/sentry.errorhandler.service";
+
 
 @Component({
   selector: 'app-expense-form',
   templateUrl: './expense-form.page.html',
   styleUrls: ['./expense-form.page.scss'],
 })
-export class ExpenseFormPage implements OnInit {
+export class ExpenseFormPage implements OnInit, OnDestroy {
+
+  @ViewChild('fileInput', { static: false }) fileInput: ElementRef;
 
   public model: Expense = new Expense();
   public brands: any = [];
@@ -26,9 +30,18 @@ export class ExpenseFormPage implements OnInit {
 
   public borderLimit = false;
 
+  public progress;
+
+  public filePickSubscription: Subscription;
+  public browserUploadSubscription: Subscription;
+  public uploadSubscription: Subscription;
+  public currentTarget;
+
   constructor(
     public activatedRoute: ActivatedRoute,
+    public awsService: AwsService,
     public expenseService: ExpenseService,
+    public sentryService: SentryErrorhandlerService,
     private fb: FormBuilder,
     private modelCtrl: ModalController,
     private navCtrl: NavController,
@@ -50,6 +63,21 @@ export class ExpenseFormPage implements OnInit {
     }
 
     this.formInit();
+  }
+
+  ngOnDestroy() {
+
+    if (!!this.uploadSubscription) {
+      this.uploadSubscription.unsubscribe();
+    }
+
+    if (!!this.filePickSubscription) {
+      this.filePickSubscription.unsubscribe();
+    }
+
+    if (!!this.browserUploadSubscription) {
+      this.browserUploadSubscription.unsubscribe();
+    }
   }
 
   formInit() {
@@ -159,4 +187,92 @@ export class ExpenseFormPage implements OnInit {
   logScrolling(e) {
     this.borderLimit = (e.detail.scrollTop > 20);
   }
+
+  getResumeUrl() {
+
+    if (this.form.controls['file'].value) {
+      return decodeURIComponent(this.form.controls['file'].value);
+    }
+
+    if (this.form.controls['file'].value) {
+      return this.awsService.permanentBucketUrl + 'staff-expenses/' + encodeURIComponent(this.form.controls['file'].value);
+    }
+  }
+
+  browserUpload(event) {
+    const fileList: FileList = event.target.files;
+
+    if (fileList.length == 0) {
+      return false;
+    }
+
+    this.progress = 1; // show loader
+
+    this.browserUploadSubscription = this.awsService.uploadFile(fileList[0]).subscribe(event => {
+        this._handleFileSuccess(event);
+      },
+      async err => {
+        // log to slack/sentry to know how many user getting file upload error
+
+        if (!err.message || !err.message.includes('aborted')) {
+
+          const alert = await this.alertCtrl.create({
+            header: 'Error',
+            message: 'Error while uploading file!',
+            buttons: ['Okay']
+          });
+          await alert.present();
+
+          this.sentryService.handleError(err);
+        }
+
+        if (this.fileInput && this.fileInput.nativeElement) {
+          this.fileInput.nativeElement.value = null;
+        }
+
+        this.progress = null;
+      });
+  }
+
+  removeResume(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.form.controls['file'].setValue(null);
+    this.form.controls['file'].updateValueAndValidity();
+  }
+
+  /**
+   * Handle file upload success
+   * @param event
+   */
+  public _handleFileSuccess(event) {
+
+    // Via this API, you get access to the raw event stream.
+    // Look for upload progress events.
+    if (event.type === 'progress') {
+      // This is an upload progress event. Compute and show the % done:
+      this.progress = Math.round(100 * event.loaded / event.total);
+
+    } else if (event.Key && event.Key.length > 0) {
+
+      if (this.fileInput && this.fileInput.nativeElement) {
+        this.fileInput.nativeElement.value = null;
+      }
+
+      this.form.controls['file'].setValue(event.Key);
+      this.form.controls['file'].markAsDirty();
+
+      // this.form.controls['tempPdfCVLocation'].setValue(event.Location);
+      // this.form.controls['tempPdfCVLocation'].markAsDirty();
+
+      this.form.updateValueAndValidity();
+
+      this.progress = null;
+
+    } else {
+      this.currentTarget = event;
+    }
+  }
+
 }

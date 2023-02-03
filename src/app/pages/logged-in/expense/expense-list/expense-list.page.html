@@ -10,7 +10,7 @@
   <div class="container">
     <ion-list *ngIf="!loading">
       <section>
-        <ion-item tappable  *ngFor="let expense of expenses" lines="none">
+        <ion-item tappable *ngFor="let expense of expenses" lines="none" [routerLink]="['/expenses-view',expense.staff_expense_uuid]">
           <div tabindex="0"></div>
           <ion-label>
             <ion-text>

@@ -5,7 +5,7 @@ import { ExpenseViewPage } from './expense-view.page';
 
 const routes: Routes = [
   {
-    path: ':id',
+    path: ':expense_uuid',
     component: ExpenseViewPage
   }
 ];

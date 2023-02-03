@@ -66,11 +66,41 @@
           <ion-label position="floating">description</ion-label>
           <ion-input type="text" formControlName="description"></ion-input>
         </ion-item>
-        <ion-item>
+
+        <ion-item tappable>
           <div tabindex="0"></div>
-          <ion-label position="floating">file</ion-label>
-          <ion-input type="text" formControlName="file"></ion-input>
+          <ion-label position="floating">Attachment</ion-label>
+          <ion-input type="text" readonly formControlName="file"></ion-input>
+          <ion-buttons slot="end">
+
+            <!-- download -->
+
+            <ion-button *ngIf="form.controls['file'].value"
+                        [href]="getResumeUrl()" target="_blank">
+              <ion-icon name="cloud-download-outline"></ion-icon>
+            </ion-button>
+
+            <!-- change/ upload -->
+
+            <ion-button>
+              <ion-icon name="cloud-upload-outline"></ion-icon>
+              <input class="upload" accept=".pdf,.doc,.docx" type='file' #fileInput (change)="browserUpload($event)">
+            </ion-button>
+
+            <!-- remove -->
+
+            <ion-button *ngIf="form.controls['file'].value"
+                        (click)="removeResume($event)">
+              <ion-icon name="trash-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
         </ion-item>
+
+        <div class="error-wrapper" *ngIf="!form.controls['file'].pristine">
+          <p class="error" *ngIf="form.controls['file'].errors && form.controls['file'].errors.required">
+            * required
+          </p>
+        </div>
       </ion-list>
     </form>
   </div>
