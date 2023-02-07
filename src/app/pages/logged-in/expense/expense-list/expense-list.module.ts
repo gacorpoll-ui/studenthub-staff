@@ -7,12 +7,14 @@ import { IonicModule } from '@ionic/angular';
 import { ExpenseListPageRoutingModule } from './expense-list-routing.module';
 
 import { ExpenseListPage } from './expense-list.page';
-import {LoadingModalModule} from "../../../../components/loading-modal/loading-modal.module";
+import {LoadingModalModule} from "src/app/components/loading-modal/loading-modal.module";
+import {NoItemsModule} from "src/app/components/no-items/no-items.module";
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
+    NoItemsModule,
     IonicModule,
     ExpenseListPageRoutingModule,
     LoadingModalModule

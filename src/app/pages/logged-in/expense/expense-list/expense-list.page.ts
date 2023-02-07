@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {NavController, Platform} from '@ionic/angular';
+import {AlertController, LoadingController, NavController, Platform, ToastController} from '@ionic/angular';
 
 import {Expense} from "../../../../models/expense";
 import {ExpenseService} from "../../../../providers/logged-in/expense.service";
+
 
 @Component({
   selector: 'app-expense-list',
@@ -25,11 +26,16 @@ export class ExpenseListPage implements OnInit {
     private expenseService: ExpenseService,
     private navCtrl: NavController,
     public platform: Platform,
+    public alertCtrl: AlertController,
+    public loadingCtrl: LoadingController,
+    public toastCtrl: ToastController,
   ) { }
 
   ngOnInit() {
     window.analytics.page('Expense List Page');
+  }
 
+  ionViewWillEnter() {
     this.loadData(this.currentPage);
   }
 
@@ -57,17 +63,6 @@ export class ExpenseListPage implements OnInit {
     );
   }
 
-  /**
-   * When its selected
-   */
-  rowSelected(model) {
-    // Load Detail Page
-    this.navCtrl.navigateForward('mall-view/' + model.mall_uuid, {
-      state: {
-        model
-      }
-    });
-  }
 
   /**
    * Loads the create page
@@ -96,50 +91,51 @@ export class ExpenseListPage implements OnInit {
   //   });
   //   return await modal.present();
   // }
-  //
-  //
-  // async delete(event, mall: Mall) {
-  //   event.preventDefault();
-  //   event.stopPropagation();
-  //
-  //   const confirm = await this.alertCtrl.create({
-  //     header: 'Delete Mall?',
-  //     message: 'Are you sure you want to delete this Mall?',
-  //     buttons: [
-  //       {
-  //         text: 'Yes',
-  //         handler: () => {
-  //           this.loading = true;
-  //           this.mallService.delete(mall).subscribe(async jsonResp => {
-  //             this.loading = false;
-  //
-  //             if (jsonResp.operation == 'error') {
-  //               const alert = await this.alertCtrl.create({
-  //                 header: 'Deletion Error!',
-  //                 subHeader: jsonResp.message,
-  //                 buttons: ['OK']
-  //               });
-  //               alert.present();
-  //             }
-  //
-  //             if (jsonResp.operation == 'success') {
-  //               const toast = await this.toastCtrl.create({
-  //                 message: jsonResp.message,
-  //                 duration: 3000
-  //               });
-  //               toast.present();
-  //             }
-  //             this.loadData(this.currentPage);
-  //           });
-  //         }
-  //       },
-  //       {
-  //         text: 'No'
-  //       }
-  //     ]
-  //   });
-  //   confirm.present();
-  // }
+
+
+  async delete(event, expense: Expense) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const confirm = await this.alertCtrl.create({
+      header: 'Delete Expense?',
+      message: 'Are you sure you want to delete this Expense?',
+      buttons: [
+        {
+          text: 'Yes',
+          handler: async () => {
+            const load = await this.loadingCtrl.create();
+            load.present();
+            this.expenseService.delete(expense).subscribe(async jsonResp => {
+              load.dismiss();
+
+              if (jsonResp.operation == 'error') {
+                const alert = await this.alertCtrl.create({
+                  header: 'Deletion Error!',
+                  subHeader: jsonResp.message,
+                  buttons: ['OK']
+                });
+                alert.present();
+              }
+
+              if (jsonResp.operation == 'success') {
+                const toast = await this.toastCtrl.create({
+                  message: jsonResp.message,
+                  duration: 3000
+                });
+                toast.present();
+              }
+              this.loadData(this.currentPage);
+            });
+          }
+        },
+        {
+          text: 'No'
+        }
+      ]
+    });
+    confirm.present();
+  }
 
   /**
    * load more

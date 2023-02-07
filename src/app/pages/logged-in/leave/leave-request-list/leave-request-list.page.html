@@ -24,9 +24,10 @@
               <p><b>File:</b> <a target="_blank" href="{{getFileUrl(leave)}}">Download</a></p>
             </ion-text>
           </ion-label>
-          <ion-button color="danger" slot="end" *ngIf="!leave.status" (click)="delete($event, leave.staff_leave_uuid)">Delete</ion-button>
+          <ion-button color="danger" slot="end" (click)="delete($event, leave.staff_leave_uuid)">Delete</ion-button>
         </ion-item>
     </ion-list>
+    <no-items *ngIf="!loading && staffLeaves && staffLeaves.length == 0" message="~ No Request Found ~"></no-items>
     <loading-modal [loading]="loading || loadMore" type="mall-list"></loading-modal>
   </div>
   <ion-infinite-scroll *ngIf="currentPage < pageCount" (ionInfinite)="doInfinite($event)">

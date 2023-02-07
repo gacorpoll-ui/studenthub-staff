@@ -32,9 +32,9 @@
               <span *ngIf="!loadingSession">Start Session</span>
             </ion-button>
 
-            <ion-button size="small" color="secondary" class="btn-on-leave" [disabled]="loadingSession" (click)="leaveRequest()">
-              I'm on leave
-            </ion-button>
+<!--            <ion-button size="small" color="secondary" class="btn-on-leave" [disabled]="loadingSession" (click)="leaveRequest()">-->
+<!--              I'm on leave-->
+<!--            </ion-button>-->
           </ng-container>
 
           <p *ngIf="leave">On leave from {{ leave.from_date }} to {{ leave.to_date }}.</p>

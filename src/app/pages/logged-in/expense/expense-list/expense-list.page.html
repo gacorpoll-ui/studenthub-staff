@@ -20,10 +20,12 @@
               <p><b>Amount:</b> {{expense.currency}} / {{expense.total_amount}}</p>
               <p><b>Status:</b> {{expense.statusLbl}}</p>
             </ion-text>
+            <ion-button color="danger" slot="end" *ngIf="expense.status < 1 || expense.status > 2" (click)="delete($event, expense)">Delete</ion-button>
           </ion-label>
         </ion-item>
       </section>
     </ion-list>
+    <no-items *ngIf="!loading && expenses.length == 0" message="~ No Expense Found ~"></no-items>
     <loading-modal [loading]="loading || loadMore" type="mall-list"></loading-modal>
   </div>
   <ion-infinite-scroll *ngIf="currentPage < pageCount" (ionInfinite)="doInfinite($event)">

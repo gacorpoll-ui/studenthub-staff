@@ -8,11 +8,13 @@ import { LeaveRequestListPageRoutingModule } from './leave-request-list-routing.
 
 import { LeaveRequestListPage } from './leave-request-list.page';
 import {LoadingModalModule} from "../../../../components/loading-modal/loading-modal.module";
+import {NoItemsModule} from "src/app/components/no-items/no-items.module";
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
+    NoItemsModule,
     IonicModule,
     LeaveRequestListPageRoutingModule,
     LoadingModalModule
