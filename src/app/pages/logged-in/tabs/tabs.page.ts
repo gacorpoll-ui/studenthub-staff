@@ -24,6 +24,8 @@ export class TabsPage implements OnInit, OnDestroy {
 
   public companyFollowUp: any = 0;
 
+  public companyUnderReview = 0;
+  
   public totalRequest: any = 0;
 
   public internvalSubscribe;
@@ -98,6 +100,7 @@ export class TabsPage implements OnInit, OnDestroy {
 
       this.companyFollowUp = response.requireFollowup;
       this.totalRequest = response.totalRequests;
+      this.companyUnderReview = response.companyUnderReview;
 
       this.eventService.statistics$.next(response);
 

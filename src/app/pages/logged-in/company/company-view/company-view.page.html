@@ -29,8 +29,9 @@
         </ion-badge>
 
         <ion-badge class="company_status_badge success" slot="start" *ngIf="company.company_status && !company.parent_company_id">
-          Active
+          {{ company.company_status == 9? "Under Review": "Active "}} 
         </ion-badge>
+
       </div>
     </ion-title>
   </ion-toolbar>

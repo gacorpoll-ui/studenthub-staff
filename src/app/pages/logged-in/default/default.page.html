@@ -155,8 +155,19 @@
           </ion-item>
         </ion-card>
       </div>
-      <div *ngIf="statistics.companyMoreThen40DaysWithoutPayment > 0 || statistics.requireFollowup > 0 || statistics.last40daysNoRequest > 0">
+      <div *ngIf="statistics.companyUnderReview > 0 || statistics.companyMoreThen40DaysWithoutPayment > 0 || statistics.requireFollowup > 0 || statistics.last40daysNoRequest > 0">
         <h3>Sales</h3>
+        
+        <ion-card class="danger stats" *ngIf="statistics.companyUnderReview > 0" tappable (click)="companyListReview()">
+          <ion-item class="ion" detail lines="none">
+            <div tabindex="0"></div>
+            <ion-label class="ion-text-wrap">
+              <span>{{ statistics.companyUnderReview }}</span>
+              <p><b>Urgent! Companies waiting to be contacted and review new signups</b></p>
+            </ion-label>
+          </ion-item>
+        </ion-card>
+
         <ion-card class="danger stats" *ngIf="statistics.companyMoreThen40DaysWithoutPayment > 0" tappable (click)="companyList()">
           <ion-item class="ion" detail lines="none">
             <div tabindex="0"></div>

@@ -87,6 +87,7 @@ export class DefaultPage implements OnInit {
         profileApprovalRequire: any;
         assignedIdleCandidates: any;
         companyMoreThen40DaysWithoutPayment: any;
+        companyUnderReview: any;
     }) => {
       this.statistics = response;
     });
@@ -269,6 +270,16 @@ export class DefaultPage implements OnInit {
         state : {
           filter : 'last40days',
           value : '3'
+        }
+      }
+    );
+  }
+  
+  companyListReview() {
+    this.navCtrl.navigateForward('/view/company-list', {
+        state : {
+          filter : 'underReview',
+          value : '9'
         }
       }
     );

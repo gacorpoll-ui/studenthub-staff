@@ -593,19 +593,21 @@ export class CompanyViewPage implements OnInit {
 
     window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
 
-    const actions = [
+    let actions = [
       {
         name: "Edit Client",
         icon: 'assets/icon/icon-edit-2.svg',
         trigger: 'edit'
-      },
-      {
+      },      
+    ];
+
+    if(this.company.company_status_override == 9) {
+      actions.push({
         name: "Remove from review list",
         icon: 'assets/icon/icon-edit-2.svg',
         trigger: 'remove-review'
-      },
-      
-    ];
+      });
+    }
 
     const modal = await this.popoverCtrl.create({
       component: ActionComponent,
@@ -634,7 +636,7 @@ export class CompanyViewPage implements OnInit {
       } else if(data.action.trigger == 'remove-review') {
         //this.updateReviewStatus();
 
-        this.companyService.changeStatus(this.company, null).subscribe(async resp => {
+        this.companyService.changeStatus(this.company, 0).subscribe(async resp => {
           if (resp.operation != 'success') {
             const prompt = await this.alertCtrl.create({
               header: 'Error!',
@@ -645,7 +647,7 @@ export class CompanyViewPage implements OnInit {
           }
           else {
             this.company.company_status = resp.company_status;
-            this.company.company_status_override = null;
+            this.company.company_status_override = 0;
           }
         });
       } 
