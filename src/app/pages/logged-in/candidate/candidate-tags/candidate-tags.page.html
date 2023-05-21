@@ -1,0 +1,32 @@
+<ion-header mode="md" [class.add-border]="borderLimit" class="ion-no-border">
+  <ion-toolbar class="container">
+    <ion-title>Candidate tags</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button icon="assets/images/icon-back.svg" defaultHref="/candidate-view/{{ candidate_id }}"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+<ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
+  <div class="container">
+
+    <h4 *ngIf="candidate">
+      {{ candidate.candidate_name }}
+      <span *ngIf="!candidate.candidate_name">{{ candidate.candidate_name_ar }}</span>
+    </h4>
+
+    <ion-card *ngFor="let candidateTag of candidate.candidateTags">
+      
+      <div class="salary">
+        <b>{{ candidateTag.tag  }}</b>
+      </div>
+ 
+      <p class="txt-time">
+        {{ transferCandidate.created_at | timeAgo }} on
+        {{ toDate(transferCandidate.created_at) | date: 'MMM d, y' }}
+      </p>
+    </ion-card>
+
+    <loading-modal [loading]="loading" type="note-list"></loading-modal>
+  </div>
+</ion-content>
