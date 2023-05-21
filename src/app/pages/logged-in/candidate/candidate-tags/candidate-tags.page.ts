@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { ModalController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 //services
 import { EventService } from 'src/app/providers/event.service';
 import { CandidateService } from 'src/app/providers/logged-in/candidate.service';
+import { TagService } from 'src/app/providers/logged-in/tag.service';
+import { TranslateLabelService } from 'src/app/providers/translate-label.service';
 
 
 @Component({
@@ -15,13 +18,24 @@ export class CandidateTagsPage implements OnInit {
 
   public borderLimit;
   public loading: boolean = false;
+  
+  public isLoading: boolean = false;
+
   public candidate;
   public candidate_id;
 
+  public tags = [];
+
+  public form: FormGroup;
+
   constructor(
+    public fb: FormBuilder,
+    public alertCtrl: AlertController,
     public modalCtrl: ModalController,
     public activatedRoute: ActivatedRoute,
+    public translateService: TranslateLabelService,
     public eventService: EventService,
+    public tagService: TagService,
     public candidateService: CandidateService
   ) {
   }
@@ -44,8 +58,17 @@ export class CandidateTagsPage implements OnInit {
     this.eventService.reloadCandiate$.subscribe((res) => {
       this.loadData();
     });
+
+    this.loadTags();
   }
  
+  loadTags() {
+    this.tagService.list().subscribe(res => {
+      this.tags = res;
+
+      this.initForm();
+    });
+  }
 
   /**
    * load candidate notes without pagination
@@ -79,5 +102,46 @@ export class CandidateTagsPage implements OnInit {
     if (date) {
       return new Date(date.replace(/-/g, '/'));
     }
+  }
+
+  onTagSelected(tag) {
+    this.form.controls['tag'].setValue(tag);
+    this.form.controls['tag'].updateValueAndValidity();
+  }
+
+  initForm() {
+    this.form = this.fb.group({
+      tag: [null, [Validators.required]],
+      reason: [null, [Validators.required]],
+      candidate_id: [this.candidate_id, [Validators.required]],
+    });
+  }
+
+  onSubmit() {
+    this.isLoading = true; 
+    
+    this.candidateService.addTag(this.form.value).subscribe(async res => {
+
+      this.isLoading = false;
+    
+       if (res.operation == 'success') {
+    
+        this.loadData();
+
+        this.form.controls['tag'].reset();
+        this.form.controls['reason'].reset();
+
+       }
+       else if (res.operation == 'error') {
+        const prompt = await this.alertCtrl.create({
+          message: this.translateService.errorMessage(res.message),
+          buttons: ["Okay"]
+        });
+        prompt.present();
+       }
+    
+     }, error => {
+       this.isLoading = false;
+     });
   }
 }

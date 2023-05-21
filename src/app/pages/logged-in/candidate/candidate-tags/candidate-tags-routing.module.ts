@@ -5,7 +5,7 @@ import { CandidateTagsPage } from './candidate-tags.page';
 
 const routes: Routes = [
   {
-    path: '',
+    path: ':candidate_id',
     component: CandidateTagsPage
   }
 ];
