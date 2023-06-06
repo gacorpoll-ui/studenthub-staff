@@ -4,10 +4,12 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { CandidateWarningListPageRoutingModule } from './candidate-warning-list-routing.module';
+import { CandidateWarningsPageRoutingModule } from './candidate-warning-list-routing.module';
 
 import { CandidateWarningsPage } from './candidate-warning-list.page';
+
 import { LoadingModalModule } from 'src/app/components/loading-modal/loading-modal.module';
+import { PipesModule } from 'src/app/pipes/pipes.module';
 
 @NgModule({
   imports: [
@@ -15,8 +17,11 @@ import { LoadingModalModule } from 'src/app/components/loading-modal/loading-mod
     FormsModule,
     LoadingModalModule,
     IonicModule,
-    CandidateWarningListPageRoutingModule
+    PipesModule,
+    CandidateWarningsPageRoutingModule
   ],
-  declarations: [CandidateWarningsPage]
+  declarations: [
+    CandidateWarningsPage
+  ]
 })
 export class CandidateWarningListPageModule {}

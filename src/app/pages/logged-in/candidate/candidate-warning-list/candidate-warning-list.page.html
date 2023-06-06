@@ -21,12 +21,22 @@
       <span *ngIf="!candidate.candidate_name">{{ candidate.candidate_name_ar }}</span>
     </h4>
 
-    <ion-item *ngFor="let warning of warnings">
-      <ion-label>
-        <h5>{{ warning.title }}</h5>
+
+    <ion-card  *ngFor="let warning of warnings">
+      <ion-card-header>
+        {{ warning.title }}
+      </ion-card-header>
+
+      <ion-card-content>
+            
         <p>{{ warning.message }}</p>
-      </ion-label>
-    </ion-item>
+
+        <p class="txt-time">
+          <b>{{ warning.updated_at | timeAgo }}</b> on
+          <b>{{ toDate(warning.created_at) | date: 'MMM d, y' }}</b>
+        </p>
+      </ion-card-content>
+    </ion-card>  
 
     <loading-modal [loading]="loading" type="note-list"></loading-modal>
   

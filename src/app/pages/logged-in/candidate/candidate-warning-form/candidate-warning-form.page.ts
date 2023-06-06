@@ -83,7 +83,7 @@ export class CandidateWarningFormPage implements OnInit {
 
     if (!this.warning.warning_id) {
       // Create
-      action = this.candidateService.warnCandidate(this.candidate, this.warning);
+      action = this.candidateService.warnCandidate(this.candidate.candidate_id, this.warning);
     } else {
       // Update
       action = this.candidateService.updateWarning(this.warning);

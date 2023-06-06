@@ -13,8 +13,8 @@ import { CandidateWarningFormPage } from '../candidate-warning-form/candidate-wa
 
 @Component({
   selector: 'app-candidate-warnings',
-  templateUrl: './candidate-warnings.page.html',
-  styleUrls: ['./candidate-warnings.page.scss'],
+  templateUrl: './candidate-warning-list.page.html',
+  styleUrls: ['./candidate-warning-list.page.scss'],
 })
 export class CandidateWarningsPage implements OnInit {
 
@@ -39,6 +39,19 @@ export class CandidateWarningsPage implements OnInit {
     public candidateService: CandidateService,
     public analyticService: AnalyticsService
   ) {
+  }
+  
+    /**
+     * Make date readable by Safari
+     * @param date
+     */
+    toDate(date) {
+      if (!date) 
+      return null;
+      
+      if (date) {
+      return new Date(date.replace(/-/g, '/'));
+      }
   }
 
   ngOnInit() {
