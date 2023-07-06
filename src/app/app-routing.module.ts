@@ -672,7 +672,11 @@ const routes: Routes = [
   {
     path: '**',
     redirectTo: 'not-found'
+  },  {
+    path: 'company-candidates',
+    loadChildren: () => import('./pages/logged-in/company/company-candidates/company-candidates.module').then( m => m.CompanyCandidatesPageModule)
   },
+
 ];
 
 @NgModule({

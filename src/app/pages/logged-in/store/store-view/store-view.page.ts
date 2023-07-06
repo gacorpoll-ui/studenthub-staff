@@ -55,7 +55,7 @@ export class StoreViewPage implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.directView);
+    
     this.analyticService.page('Store View Page');
 
     if (!this.store_id && this.activatedRoute.snapshot.paramMap.get('id')) {

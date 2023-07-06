@@ -20,6 +20,7 @@ export class CompanyComponent implements OnInit {
   @Input() page = null;
 
   public totalCandidates = 0;
+
   constructor(
     public router: Router,
     public aws: AwsService,
@@ -65,6 +66,7 @@ export class CompanyComponent implements OnInit {
   }
 
   countCandidate() {
+    
     if (this.company && this.company.stores && this.company.stores.length > 0) {
       this.company.stores.map(store => {
         this.totalCandidates += store.store_total_candidates;
@@ -80,6 +82,17 @@ export class CompanyComponent implements OnInit {
           }
       });
     }
+  }
+
+  viewAssigned(company, event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.router.navigateByUrl('/candidate-list', {
+      state: {
+        company: company
+      }
+    });
   }
 
   stripTag(str) {

@@ -1,0 +1,34 @@
+<ion-header mode="md" [class.add-border]="borderLimit" class="ion-no-border">
+  <ion-toolbar class="container">
+    <ion-buttons slot="start">
+      <!--<ion-back-button icon="assets/images/icon-back.svg" *ngIf="!directView" defaultHref="/"></ion-back-button>-->
+
+      <ion-back-button icon="assets/images/icon-back.svg" (click)="close()"></ion-back-button>
+    </ion-buttons> 
+  </ion-toolbar>
+  <ion-toolbar *ngIf="company" class="container">
+    <ion-title>{{ company.company_name }}</ion-title>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
+  <div class="container">
+
+    <ion-list>
+
+      <candidate tappable (click)="candidateSelected(candidate)" [candidate]="candidate" (refresh)="loadData()" 
+        *ngFor="let candidate of candidates"></candidate>
+
+    </ion-list>
+    
+    <no-items *ngIf="!loading && candidates && candidates.length == 0" message="No candidate data available"></no-items>
+
+    <loading-modal [loading]="loading" type="candidate-list"></loading-modal>
+
+    <ion-infinite-scroll *ngIf="currentPage < pageCount" (ionInfinite)="doInfinite($event)">
+      <ion-infinite-scroll-content></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
+  </div>
+</ion-content>

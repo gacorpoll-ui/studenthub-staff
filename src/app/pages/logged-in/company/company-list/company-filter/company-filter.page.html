@@ -29,8 +29,14 @@
       <ion-badge tappable color="primary" (click)="filterByStatus($event, 9)" [class.active]="filters.status == 9">Under Review</ion-badge>
 
       <br/>
+
       <ion-badge tappable color="primary" (click)="filterByApprovedToHire($event, 1)" [class.active]="filters.approved_to_hire == 1">Approved to hire</ion-badge>
       <ion-badge tappable color="primary" (click)="filterByApprovedToHire($event, 0)" [class.active]="filters.approved_to_hire == 0">Not approved to hire</ion-badge>
+
+      <br/>
+      
+      <ion-badge tappable color="primary" (click)="filterByHaveStudents($event, 1)" [class.active]="filters.have_students == 1">Have students</ion-badge>
+
     </div>
   </div>
 

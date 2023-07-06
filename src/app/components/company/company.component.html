@@ -42,9 +42,11 @@
         <ion-badge slot="start" color="light" *ngIf="company.total_candidate && !company.transferInLast40Days">
           40 days passed without payment
         </ion-badge>
-        <ion-badge slot="start" color="light" *ngIf="totalCandidates > 0">
+        
+        <ion-badge slot="start" color="light" *ngIf="totalCandidates > 0" tappable (click)="viewAssigned(company, $event)">
           {{ totalCandidates }} Assigned Candidate
         </ion-badge>
+
         <ion-badge slot="start" color="light" *ngIf="company.total_suggestions > 0">
           {{ company.total_suggestions }} total Suggestions
         </ion-badge>

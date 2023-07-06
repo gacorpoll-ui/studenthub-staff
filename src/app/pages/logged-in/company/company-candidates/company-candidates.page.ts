@@ -1,26 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AlertController, NavController, PopoverController, ToastController } from '@ionic/angular';
-// models
+import { AlertController, ModalController, NavController, PopoverController, ToastController } from '@ionic/angular';
 import { Candidate } from 'src/app/models/candidate';
-import { Story } from 'src/app/models/request';
-// service
-import { CandidateService } from 'src/app/providers/logged-in/candidate.service';
-import { AwsService } from 'src/app/providers/aws.service';
-import { EventService } from 'src/app/providers/event.service';
-import { CandidateIdCardService } from 'src/app/providers/logged-in/candidate.id.card.service';
-//pages
-import { CandidateMergeSelectPage } from '../candidate-merge-select/candidate-merge-select.page';
-import { AnalyticsService } from 'src/app/providers/analytics.service';
 import { Company } from 'src/app/models/company';
+import { Story } from 'src/app/models/request';
+//services
+import { AnalyticsService } from 'src/app/providers/analytics.service';
+import { EventService } from 'src/app/providers/event.service';
+import { CandidateService } from 'src/app/providers/logged-in/candidate.service';
 
 
 @Component({
-  selector: 'app-candidate-list',
-  templateUrl: './candidate-list.page.html',
-  styleUrls: ['./candidate-list.page.scss'],
+  selector: 'app-company-candidates',
+  templateUrl: './company-candidates.page.html',
+  styleUrls: ['./company-candidates.page.scss'],
 })
-export class CandidateListPage implements OnInit {
+export class CompanyCandidatesPage implements OnInit {
 
   public pageCount = 0;
 
@@ -59,6 +54,7 @@ export class CandidateListPage implements OnInit {
   public candidates: Candidate[];
 
   public loading: boolean = false;
+  
   public paginationLoading: boolean = false;
 
   public downloading: boolean = false;
@@ -77,13 +73,12 @@ export class CandidateListPage implements OnInit {
     public alertCtrl: AlertController,
     public navCtrl: NavController,
     public activatedRoute: ActivatedRoute,
-    public aws: AwsService,
-    public candidateIdCardService: CandidateIdCardService,
     public eventService: EventService,
+    public modalCtrl: ModalController,
     public candidateService: CandidateService,
     public analyticService: AnalyticsService
-  ) {
-  }
+  ) { }
+  
 
   ngOnInit() {
 
@@ -157,87 +152,7 @@ export class CandidateListPage implements OnInit {
     };
     this.loadData(1); // reload all result
   }
-
-  /**
-   * Generate id cards
-   */
-  async generate() {
-
-    if (this.candidateIdCardService.candidates.length == 0) {
-      const prompt = await this.alertCtrl.create({
-        message: 'Please select candidate(s)',
-        buttons: ['Ok']
-      });
-      prompt.present();
-
-      return false;
-    }
-
-    this.downloading = true;
-
-    this.candidateIdCardService.generate(this.candidateIdCardService.candidates).subscribe(response => {
-    }, (err) => {
-    }, () => {
-      this.downloading = false;
-      this.deselect();
-    });
-  }
-
-  deselect() {
-    this.candidateService.candidates = [];
-    this.candidateIdCardService.candidates = [];
-
-    this.eventService.clearCandidateSelection$.next({});
-  }
-
-  /**
-   * Merge to account
-   */
-  async merge(e) {
-
-    if (this.candidateService.candidates.length != 2) {
-      const prompt = await this.alertCtrl.create({
-        message: 'Please select any 2 candidates',
-        buttons: ['Okay']
-      });
-      prompt.present();
-
-      return false;
-    }
-
-    const popover = await this.popoverCtrl.create({
-      component: CandidateMergeSelectPage,
-      event: e,
-      cssClass: 'candidate-merge-select'
-    });
-
-    popover.onDidDismiss().then(e => {
-
-      if(!e.data || !e.data.candidate) {
-        return false;
-      }
-
-      let source;
-
-      if(e.data.candidate.candidate_id == this.candidateService.candidates[1].candidate_id) {
-        source = this.candidateService.candidates[0].candidate_id;
-      } else {
-        source = this.candidateService.candidates[1].candidate_id;
-      }
-
-      this.merging = true;
-
-      this.candidateService.merge(source, e.data.candidate.candidate_id).subscribe(response => {
-      }, (err) => {
-      }, () => {
-        this.merging = false;
-        this.deselect();
-        this.loadData(this.currentPage);
-      });
-    });
-    popover.present();
-  }
-
+ 
   ionViewWillEnter() {
     // this.loadData(1);
   }
@@ -314,38 +229,15 @@ export class CandidateListPage implements OnInit {
   logScrolling(e) {
     this.borderLimit = (e.detail.scrollTop > 20);
   }
-
+ 
   /**
-   * export id cards
+   * close page
    */
-  async export() {
-    const alert = await this.alertCtrl.create({
-      header: 'Are you sure you want to export the file?',
-      cssClass: 'custom-alert',
-      buttons: [
-        {
-          text: 'No',
-          cssClass: 'alert-button-cancel',
-        },
-        {
-          text: 'Yes',
-          cssClass: 'alert-button-confirm',
-          handler: async () => {
-            this.exporting = true;
-            const search = this.urlParams();
-            this.candidateService.export(search).subscribe(response => {
-              this.exporting = false;
-            }, (err) => {
-              this.exporting = false;
-            }, () => {
-              this.exporting = false;
-              this.deselect();
-            });
-          }
-        },
-      ],
+  close() {
+    this.modalCtrl.getTop().then(o => {
+      if(o) {
+        this.modalCtrl.dismiss();
+      }
     });
-    await alert.present();
   }
 }
-

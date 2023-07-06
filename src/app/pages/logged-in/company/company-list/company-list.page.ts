@@ -35,11 +35,13 @@ export class CompanyListPage implements OnInit {
   public filters: {
     name: string
     status: number,
-    approved_to_hire: number
+    approved_to_hire: number,
+    have_students: number
   } = {
       name: null,
       status: 100,
-      approved_to_hire: null
+      approved_to_hire: null,
+      have_students: null
     };
 
   constructor(
@@ -93,6 +95,10 @@ export class CompanyListPage implements OnInit {
     if (this.filters.status) {
       urlParams += '&status=' + this.filters.status;
     }
+    
+    if ([0, 1].indexOf(this.filters.have_students) > -1) {
+      urlParams += '&have_students=' + this.filters.have_students;
+    }
 
     if ([0, 1].indexOf(this.filters.approved_to_hire) > -1) {
       urlParams += '&approved_to_hire=' + this.filters.approved_to_hire;
@@ -105,7 +111,8 @@ export class CompanyListPage implements OnInit {
     this.filters = {
       name: this.filters.name,
       status: 100,
-      approved_to_hire: null
+      approved_to_hire: null,
+      have_students: null
     };
 
     this.loadData(1); // reload all result
@@ -118,7 +125,8 @@ export class CompanyListPage implements OnInit {
     this.filters = {
       approved_to_hire: null,
       name: null,
-      status: 100
+      status: 100,
+      have_students: null
     };
 
     this.loadData(1); // reload all result
@@ -279,6 +287,18 @@ export class CompanyListPage implements OnInit {
     this.loadData(1); // reload all result
   }
 
+
+  filterByHaveStudents($event, status) {
+
+    if(this.filters.have_students == status) {
+      this.filters.have_students = null;
+    } else {
+      this.filters.have_students = status;
+    }
+
+    this.loadData(1); // reload all result
+  }
+  
   filterByApprovedToHire($event, status) {
 
     if(this.filters.approved_to_hire == status) {
