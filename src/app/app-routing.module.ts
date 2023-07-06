@@ -670,6 +670,16 @@ const routes: Routes = [
     loadChildren: () => import('./pages/logged-in/transfer/transfer-candidate-list/transfer-candidate-list.module').then( m => m.TransferCandidateListPageModule)
   },
   {
+    path: 'company-registration-request-list',
+    canActivate: [AuthService],
+    loadChildren: () => import('./pages/logged-in/company/company-registration-request-list/company-registration-request-list.module').then( m => m.CompanyRegistrationRequestListPageModule)
+  },
+  {
+    path: 'company-registration-request-view',
+    canActivate: [AuthService],
+    loadChildren: () => import('./pages/logged-in/company/company-registration-request-view/company-registration-request-view.module').then( m => m.CompanyRegistrationRequestViewPageModule)
+  },
+  {
     path: '**',
     redirectTo: 'not-found'
   },

@@ -95,10 +95,10 @@ export class TranslateLabelService extends TranslateService {
      */
     toDate(date) {
         if (!date) 
-        return null;
+            return null;
         
         if (date) {
-        return new Date(date.replace(/-/g, '/'));
+            return new Date(date.replace(/-/g, '/'));
         }
     }
 }

@@ -280,13 +280,14 @@ export class DefaultPage implements OnInit {
   }
   
   companyListReview() {
-    this.navCtrl.navigateForward('/view/company-list', {
+    this.navCtrl.navigateForward('/company-registration-request-list');
+    /*this.navCtrl.navigateForward('/view/company-list', {
         state : {
           filter : 'underReview',
           value : '9'
         }
       }
-    );
+    );*/
   }
 
   async getAccountInfo() {

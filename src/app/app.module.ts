@@ -83,6 +83,7 @@ import {EvaluationReportViewPageModule} from "./pages/logged-in/candidate/evalua
 import {MenuOptionPageModule} from "src/app/pages/logged-in/default/menu-option/menu-option.module";
 import { TagFormPageModule } from './pages/logged-in/candidate/tag-form/tag-form.module';
 import { CandidateWarningFormPageModule } from './pages/logged-in/candidate/candidate-warning-form/candidate-warning-form.module';
+import { CompanyRegistrationRequestViewPageModule } from './pages/logged-in/company/company-registration-request-view/company-registration-request-view.module';
 
 export function startupServiceFactory(authService) {
   return () => authService.load();
@@ -183,7 +184,8 @@ declare global {
     LeaveRequestPageModule,
     DatePopupModule,
     EvaluationReportViewPageModule,
-    MenuOptionPageModule
+    MenuOptionPageModule,
+    CompanyRegistrationRequestViewPageModule
   ],
   exports: [
     ActionComponentModule
