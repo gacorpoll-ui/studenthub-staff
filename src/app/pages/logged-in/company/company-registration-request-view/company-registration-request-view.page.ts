@@ -8,6 +8,7 @@ import { AuthService } from 'src/app/providers/auth.service';
 //models
 import { ComapanyRequest } from 'src/app/models/company.request';
 import { ActivatedRoute } from '@angular/router';
+import { AwsService } from 'src/app/providers/aws.service';
  
 
 @Component({
@@ -31,6 +32,7 @@ export class CompanyRegistrationRequestViewPage implements OnInit {
     public activeRoute: ActivatedRoute,
     public modalCtrl: ModalController,
     public alertCtrl: AlertController,
+    public aws: AwsService,
     public authService: AuthService,
     public translateService: TranslateLabelService,
     public requestService: CompanyRegistrationRequestService,

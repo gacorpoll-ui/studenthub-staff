@@ -58,6 +58,24 @@
         </ion-label>
       </ion-item>
  
+      <ion-item>
+        <div tabindex="0"></div>
+        <ion-label>
+          <h5>Requesting for</h5>
+          <p>{{ request.requesting_for }}</p>
+        </ion-label>
+      </ion-item>
+
+      <!--
+      <ion-item>
+        <div tabindex="0"></div>
+        <ion-label>
+          <h5>Commercial licence</h5>
+          <p *ngIf="request.commercial_licence">{{ aws.permanentBucketUrl + request.commercial_licence }}</p>
+          <p *ngIf="!request.commercial_licence" class="txt-color-danger">No licence uploaded!</p>
+        </ion-label>
+      </ion-item>-->
+  
     </ion-list>
     
     <h5 *ngIf="request && request.contact_name">Contact</h5>
