@@ -76,7 +76,9 @@ export class CandidateTagsPage implements OnInit {
   loadData() {
     this.loading = true;
 
-    this.candidateService.detail(this.candidate_id).subscribe(response => {
+    const query = 'expand=candidateTags';
+
+    this.candidateService.detail(this.candidate_id, query).subscribe(response => {
 
       this.loading = false;
 

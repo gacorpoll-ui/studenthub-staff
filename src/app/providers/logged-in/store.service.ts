@@ -44,7 +44,7 @@ export class StoreService {
    * @returns {Observable<any>}
    */
   getStoresBelongingToCompany(companyId: number, page): Observable<any>{
-    const url = `${this._storeEndpoint}?companyId=${companyId}&page=${page}&expand=candidates,storeManager`;
+    const url = `${this._storeEndpoint}?companyId=${companyId}&page=${page}&expand=storeManager`;
     return this._authhttp.getRaw(url);
   }
 
@@ -53,7 +53,8 @@ export class StoreService {
    * @param story_id
    */
   detail(story_id: number): Observable<any>{
-    return this._authhttp.get(`${this._storeEndpoint}/${story_id}?expand=storeManager,storeManager.contact,candidates,brand,company,company.brands,mall`);
+    const url = `${this._storeEndpoint}/${story_id}?expand=storeManager,candidates`;
+    return this._authhttp.get(url);
   }
 
   /**

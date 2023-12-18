@@ -21,7 +21,8 @@ export class NoteService {
    * @param searchParams
    */
   list(searchParams = '', page = null): Observable<any> {
-    let url = this.noteEndpoint + '?' + searchParams + '&expand=companyContact,request,company,createdBy,updatedBy';
+    let url = this.noteEndpoint + '?' + searchParams + '&expand=updatedBy,staff';
+    //companyContact,request,company,createdBy,
 
     if(page) {
       url += '&page=' + page;
@@ -36,7 +37,7 @@ export class NoteService {
    * @param note
    */
   view(note): Observable<any> {
-    const url = this.noteEndpoint + '/' + note.note_uuid + '?expand=companyContact.contact,request,company,createdBy,updatedBy,candidate';
+    const url = this.noteEndpoint + '/' + note.note_uuid + '?expand=companyContact,companyContact.contact,candidate,company,request,updatedBy';
     return this.authhttp.get(url);
   }
 

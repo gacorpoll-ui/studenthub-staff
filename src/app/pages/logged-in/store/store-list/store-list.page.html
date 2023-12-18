@@ -25,8 +25,8 @@
             <p *ngIf="store.store_location"><ion-icon name="location-outline"></ion-icon> {{ store.store_location }}</p>
           </ion-label>
 
-          <ion-badge slot="end" *ngIf="store.candidates?.length > 0">
-            <ion-icon name="person"></ion-icon> {{ store.candidates.length }}
+          <ion-badge slot="end">
+            <ion-icon name="person"></ion-icon> {{ store.store_total_candidates }}
           </ion-badge>
 
           <ion-buttons slot="end" *ngIf="platform.width() > 768">

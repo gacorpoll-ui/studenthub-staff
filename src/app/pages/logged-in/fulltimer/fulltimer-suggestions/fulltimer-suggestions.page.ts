@@ -99,15 +99,4 @@ export class FulltimerSuggestionsPage implements OnInit {
   logScrolling(e) {
     this.borderLimit = (e.detail.scrollTop > 20);
   }
-
-  /**
-   * load candidate notes without pagination
-   */
-  loadNotes() {
-    const params = '&fulltimer=' + this.fulltimer;
-
-    this.noteService.list(params).subscribe(async jsonResponse => {
-      this.notes = jsonResponse;
-    });
-  }
 }

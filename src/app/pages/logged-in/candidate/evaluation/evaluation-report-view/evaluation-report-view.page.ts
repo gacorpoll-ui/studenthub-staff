@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from "@ionic/angular";
+//services
 import {CandidateEvaluationService} from "src/app/providers/logged-in/candidate-evaluation.service";
+
 
 @Component({
   selector: 'app-evaluation-report-view',

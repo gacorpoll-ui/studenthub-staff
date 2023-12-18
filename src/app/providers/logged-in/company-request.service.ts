@@ -53,6 +53,25 @@ export class CompanyRequestService {
   }
 
   /**
+   * view request
+   * @param id
+   */
+  view(id): Observable<any> {
+    const url = this.companyRequestEndpoint + '/' + id +
+      '?expand=storyOwners,stories,stories.storyActivities,stories.storyActivities.staff,stories.staff,stories.staff,staffs,staff,requestCreatedBy,requestUpdatedBy,contact,company,company.companyContact,requestActivities,requestActivities.staff';
+    return this._authhttp.get(url);
+  }
+
+  /**
+   * requests started/active but not by login user
+   */
+  listAllRequestsThatHaveSuggestedCadidates(page: number, urlParams: string = ''): Observable<any> {
+    const url = this.companyRequestEndpoint + '/pending-request?page=' + page + urlParams +
+      '&expand=storyOwners,storyOwners,staffs,staff,lastActivity,lastActivity.createdBy,company';
+    return this._authhttp.getRaw(url);
+  }
+  
+  /**
    * return request checklist
    * @returns
    */
@@ -152,25 +171,6 @@ export class CompanyRequestService {
     return this._authhttp.delete(`${this.companyRequestEndpoint}/${model.request_uuid}`);
   }
 
-  /**
-   * view request
-   * @param id
-   */
-  view(id): Observable<any> {
-    const url = this.companyRequestEndpoint + '/' + id +
-      '?expand=storyOwners,stories,stories.storyActivities,stories.storyActivities.staff,stories.staff,stories.staff,staffs,staff,requestCreatedBy,requestUpdatedBy,contact,company,company.companyContact,requestActivities,requestActivities.staff';
-    return this._authhttp.get(url);
-  }
-
-  /**
-   * requests started/active but not by login user
-   */
-  listAllRequestsThatHaveSuggestedCadidates(page: number, urlParams: string = ''): Observable<any> {
-    const url = this.companyRequestEndpoint + '/pending-request?page=' + page + urlParams +
-      '&expand=storyOwners,storyOwners,staffs,staff,lastActivity,lastActivity.createdBy,company';
-    return this._authhttp.getRaw(url);
-  }
-  
   /**
    * add activity
    * @param params

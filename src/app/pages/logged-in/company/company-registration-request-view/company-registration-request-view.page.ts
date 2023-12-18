@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
+import { ActivatedRoute } from '@angular/router';
 //services
 import { AnalyticsService } from 'src/app/providers/analytics.service';
 import { CompanyRegistrationRequestService } from 'src/app/providers/logged-in/company-registration-request.service';
 import { TranslateLabelService } from 'src/app/providers/translate-label.service';
 import { AuthService } from 'src/app/providers/auth.service';
+import { AwsService } from 'src/app/providers/aws.service';
 //models
 import { ComapanyRequest } from 'src/app/models/company.request';
-import { ActivatedRoute } from '@angular/router';
-import { AwsService } from 'src/app/providers/aws.service';
  
 
 @Component({

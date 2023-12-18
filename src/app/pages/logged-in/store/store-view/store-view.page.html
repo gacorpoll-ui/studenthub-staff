@@ -67,13 +67,15 @@
     <ion-list *ngIf="store">
 
       <h5>
-        Staff <span *ngIf="store.candidates">({{ store.candidates.length }})</span>
+        Staff <span>({{ store.store_total_candidates }})</span>
       </h5>
 
-      <candidate tappable (click)="candidateSelected(candidate)" [candidate]="candidate" (refresh)="loadData()" *ngFor="let candidate of store.candidates"></candidate>
+      <candidate tappable (click)="candidateSelected(candidate)" [candidate]="candidate" (refresh)="loadData()" 
+        *ngFor="let candidate of store.candidates"></candidate>
 
     </ion-list>
 
     <loading-modal [loading]="loading" type="candidate-list"></loading-modal>
+    
   </div>
 </ion-content>

@@ -71,7 +71,9 @@ export class TransferViewPage implements OnInit {
     // Load list of transfer
     this.loading = true;
 
-    this.transferService.transferIdDetails(this.transfer_id).subscribe(response => {
+    const query = ',invoices'
+
+    this.transferService.transferIdDetails(this.transfer_id, query).subscribe(response => {
 
       this.transfer = response;
 

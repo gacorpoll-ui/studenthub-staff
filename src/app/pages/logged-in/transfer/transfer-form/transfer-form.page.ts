@@ -637,7 +637,7 @@ export class TransferFormPage implements OnInit {
   }
 
   /**
-   * download transfer template invoice
+   * download transfer template 
    */
   async downloadTemplate() {
     let loader = await this._loadingCtrl.create();

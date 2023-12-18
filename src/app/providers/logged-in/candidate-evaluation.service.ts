@@ -40,7 +40,7 @@ export class CandidateEvaluationService {
    * @constructor
    */
   viewReport(canEvalUUID: string) {
-    let url = `${this.endPoint}/report/${canEvalUUID}?expand=department,staff,candidate,questionAnswer`;
+    let url = `${this.endPoint}/report/${canEvalUUID}?expand=department,questionAnswer`;
     return this.authHttp.get(url);
   }
 

@@ -48,3 +48,10 @@ To fix heap limit error
 `export NODE_OPTIONS=--max_old_space_size=20480`
 
 
+TODO: 
+
+invitation.service.ts 
+fulltimer.service.ts 
+email-campaign.service.ts 
+company.service.ts 
+company-request.service.ts 

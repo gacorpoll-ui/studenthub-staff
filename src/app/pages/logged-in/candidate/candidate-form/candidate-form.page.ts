@@ -210,7 +210,10 @@ export class CandidateFormPage implements OnInit {
    */
   async candidateDetail() {
     this.loading = true;
-    this.candidateService.detail(this.candidate_id).subscribe(response => {
+
+    const query = 'expand=candidateSkills,candidateTags,candidateExperiences,area,country';
+
+    this.candidateService.detail(this.candidate_id, query).subscribe(response => {
       this.loading = false;
       if (response) {
         this.model = response;

@@ -80,6 +80,7 @@ export class CandidateInvitationsPage implements OnInit {
 
   loadCandidateDetail(loading = true) {
     this.loading = loading;
+    
     this.candidateService.detail(this.candidate_id).subscribe(response => {
       this.loading = false;
       this.candidate = response;

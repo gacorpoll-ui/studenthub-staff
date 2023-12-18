@@ -16,13 +16,14 @@
     </h4>
 
     <ng-container *ngFor="let suggestion of suggestions" >
+      
       <suggestion [model]="suggestion" (onUpdate)="loadSuggestions()"></suggestion>
+
       <ng-container *ngIf="suggestion.feedbacks && suggestion.feedbacks.length > 0 && this.status != 1">
         <note *ngFor="let feedback of suggestion.feedbacks" [routerLink]="'/note-view/' + feedback.note_uuid"
               [note]="feedback"></note>
       </ng-container>
     </ng-container>
-
 
     <loading-modal [loading]="loading" type="note-list"></loading-modal>
   </div>
