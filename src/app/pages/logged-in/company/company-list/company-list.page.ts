@@ -282,7 +282,7 @@ export class CompanyListPage implements OnInit {
   }
 
   logScrolling(e) {
-    this.borderLimit = (e.detail.scrollTop > 20);
+    this.borderLimit = (e.detail.scrollTop > 166);
   }
 
   /**

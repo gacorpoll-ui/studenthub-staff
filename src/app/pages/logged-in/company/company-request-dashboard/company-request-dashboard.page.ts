@@ -7,9 +7,9 @@ import {Request, Story} from 'src/app/models/request';
 import { CompanyRequestService } from 'src/app/providers/logged-in/company-request.service';
 import { EventService } from 'src/app/providers/event.service';
 import { StoryService } from '../../../../providers/logged-in/story.service';
+import { AnalyticsService } from 'src/app/providers/analytics.service';
 //components
 import { RequestFilterComponent } from 'src/app/components/request-filter/request-filter.component';
-import { AnalyticsService } from 'src/app/providers/analytics.service';
 
 
 @Component({
@@ -24,6 +24,9 @@ export class CompanyRequestDashboardPage implements OnInit {
   public loading = false;
 
   public borderLimit = false;
+
+  public noStories = false;
+  public noRequests = false;
 
   public requests: Request[] = [];
 
@@ -54,6 +57,8 @@ export class CompanyRequestDashboardPage implements OnInit {
 
   public query = '';
 
+  public storyQuery = '';
+
   public alertRequestCountUpdated;
 
   constructor(
@@ -68,18 +73,14 @@ export class CompanyRequestDashboardPage implements OnInit {
   ) {
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.contact_uuid = this.activatedRoute.snapshot.paramMap.get('id');
-
-    this.analyticService.page('Company Request Dashboard Page');
 
     const state = window.history.state;
 
     if(state && state.requestStatus) {
       this.filters.requestStatus = state.requestStatus;
-    } else {
-      this.loadAllRequest();
-    }
+    }  
 
     this.eventService.companyRequestUpdate$.subscribe(() => {
       this.loadAllRequest();
@@ -123,6 +124,8 @@ export class CompanyRequestDashboardPage implements OnInit {
     // this.eventService.storyStatusUpdated$.subscribe(() => {
     //   this.loadStories(1);
     // });
+
+    this.analyticService.page('Company Request Dashboard Page');
   }
 
   ionViewWillEnter() {
@@ -132,9 +135,9 @@ export class CompanyRequestDashboardPage implements OnInit {
 
     if(state && state.requestStatus) {
       this.filters.requestStatus = state.requestStatus;
-
-      this.loadAllRequest();
     }
+    
+    this.loadRequests();
   }
 
   ionViewWillLeave() {
@@ -160,17 +163,27 @@ export class CompanyRequestDashboardPage implements OnInit {
 
     let param = this.urlParams();
 
+    this.loading = true; 
+    
     this.requestService.listWithPagination(1, param).subscribe(response => {
+
       this.requests = response.body;
+
       this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
       this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
       this.total = parseInt(response.headers.get('X-Pagination-Total-Count'));
       this.loading = false;
+
+      if(this.total == 0) {
+        this.noRequests = true;
+      } else {
+        this.noRequests = false;
+      }
     });
   }
 
   logScrolling(e) {
-    this.borderLimit = (e.detail.scrollTop > 20);
+    this.borderLimit = (e.detail.scrollTop > 209);
   }
 
   /**
@@ -218,8 +231,8 @@ export class CompanyRequestDashboardPage implements OnInit {
       urlParams += '&contact_uuid=' + this.contact_uuid;
     }
 
-    if (this.query) {
-      urlParams += '&query=' + this.query;
+    if (this.storyQuery) {
+      urlParams += '&query=' + this.storyQuery;
     }
 
     if (this.filters.requestStatus) {
@@ -308,6 +321,14 @@ export class CompanyRequestDashboardPage implements OnInit {
 
   segmentChanged(event) {
     this.segment = event.target.value;
+
+    if (this.segment == 'request') {
+      if(this.total == 0)
+        this.loadRequests();
+    } else {
+      if(this.storyTotal == 0)
+        this.loadStories(1);
+    }
   }
 
   /**
@@ -326,7 +347,14 @@ export class CompanyRequestDashboardPage implements OnInit {
       this.storyPageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
       this.storyCurrentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
       this.storyTotal = parseInt(response.headers.get('X-Pagination-Total-Count'));
+
       this.stories = response.body;
+
+      if(this.storyTotal == 0) {
+        this.noStories = true;
+      } else {
+        this.noStories = false;
+      }
     },
       error => {
       },
@@ -411,13 +439,16 @@ export class CompanyRequestDashboardPage implements OnInit {
   }
 
   searchFilter(event) {
-    this.query = event.target.value;
+
     if (this.segment == 'request') {
-      this.loadAllRequest();
+      this.query = event.target.value;
+      this.loadRequests();
     } else {
+      this.storyQuery = event.target.value;
       this.loadStories(1);
     }
   }
+
   getPosition(pos) {
     if (pos == 2) {
       return 'Part-time';
@@ -456,6 +487,37 @@ export class CompanyRequestDashboardPage implements OnInit {
     const month = d.getMonth() + 1;
     return d.getFullYear() + '-' + month + '-' + d.getDate();
   }
+
+  clearRequestStatus() {
+    this.filters.requestStatus = null; 
+    this.loadRequests();
+  }
+
+  clearPositionType() {
+    this.filters.position_type = null; 
+    this.loadRequests();
+  }
+
+  clearStartDate() {
+    this.filters.startDate = null;
+    this.loadRequests();
+  }
+
+  clearEndDate() {
+    this.filters.endDate = null;
+    this.loadRequests();
+  }
+
+  clearStoryStatus() {
+    this.filters.storyStatus = null;
+    this.loadStories(1);
+  }
+
+  clearStoryPositionType() {
+    this.filters.story_position_type = null; 
+    this.loadStories(1);
+  }
+
   resetFilter(tab) {
     if (tab == 'request') {
       this.filters = {

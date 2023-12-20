@@ -39,10 +39,11 @@
 
           <p *ngIf="story.staff" class="working">{{ story.staff.staff_name }} {{story.story_status == 1 || story.story_status == 7 ? 'is working': 'was working'}} on it</p>
           <p *ngIf="!story.staff" class="working">No one has started work on it</p>
-          <ion-button (click)="startStory($event,story)" *ngIf="story.story_status == status.UNSTARTED || story.story_status == status.STOPPED">Start Working</ion-button>
-          <ion-button (click)="stopStory($event,story)"  *ngIf="(story.story_status == status.STARTED || story.story_status == status.REWORK) && story.staff_id == authService.staff_id">Stop Working</ion-button>
-          <ion-button (click)="deliverStory($event,story)" *ngIf="(story.story_status != status.DELIVERED && story.suggestion > 0)">Deliver</ion-button>
-          <ion-button (click)="reworkStory($event,story)" *ngIf="(story.story_status == status.DELIVERED)">Rework</ion-button>
+          
+          <ion-button size="small" (click)="startStory($event,story)" *ngIf="story.story_status == status.UNSTARTED || story.story_status == status.STOPPED">Start Working</ion-button>
+          <ion-button size="small" (click)="stopStory($event,story)"  *ngIf="(story.story_status == status.STARTED || story.story_status == status.REWORK) && story.staff_id == authService.staff_id">Stop Working</ion-button>
+          <ion-button size="small" (click)="deliverStory($event,story)" *ngIf="(story.story_status != status.DELIVERED && story.suggestion > 0)">Deliver</ion-button>
+          <ion-button size="small" (click)="reworkStory($event,story)" *ngIf="(story.story_status == status.DELIVERED)">Rework</ion-button>
         </ng-container>
       </div>
 

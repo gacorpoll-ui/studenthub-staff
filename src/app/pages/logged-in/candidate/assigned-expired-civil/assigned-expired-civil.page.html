@@ -18,6 +18,7 @@
 
 <ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
   <div class="container">
+    
     <ion-searchbar [(ngModel)]="searchBar" (ionChange)="loadData(this.currentPage)" debounce="200" animated>
     </ion-searchbar>
 

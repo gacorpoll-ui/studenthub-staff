@@ -7,6 +7,22 @@ import { Subject } from 'rxjs';
 })
 export class EventService {
 
+  public statistics: {
+    id_need_generated: any;
+    totalExpiredCards: any;
+    assignedExpiredCivilID: any;
+    activeRequests: any;
+    requireFollowup: any;
+    last40daysNoRequest: any;
+    missingBankInfo: any;
+    incompleteAssignedToWork: any;
+    profileApprovalRequire: any;
+    assignedIdleCandidates: any;
+    companyMoreThen40DaysWithoutPayment: any;
+    transfersWithNoProfitInProgress: any;
+    transfersWithSameRateInProgress: any;
+  };
+
   public setOneSignal$ = new Subject();
   public profileUpdated$ = new Subject();
   public error404$ = new Subject();
@@ -50,9 +66,7 @@ export class EventService {
   public noteUpdated$ = new Subject();
 
   public invitationUpdated$ = new Subject();
-
-  public statistics$ = new Subject();
-
+ 
   public transferDeleted$ = new Subject();
 
   public storeDeleted$ = new Subject();

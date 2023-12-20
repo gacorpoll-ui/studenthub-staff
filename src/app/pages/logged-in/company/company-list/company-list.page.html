@@ -1,4 +1,4 @@
-<ion-header mode="md" [class.add-border]="borderLimit" class="ion-no-border">
+<ion-header mode="md" [class.add-border]="borderLimit" class="ion-no-border" [class.hidden]="borderLimit">
   <ion-toolbar class="container title">
     <ion-title class="ion-text-wrap">
       Clients
@@ -10,7 +10,7 @@
       </span>
     </ion-title>
   </ion-toolbar>
-  <ion-toolbar class="container search searchbar-wrapper" [class.hidden]="borderLimit">
+  <ion-toolbar class="container search searchbar-wrapper">
     
     <ion-searchbar debounce="500" placeholder="Type to search" (ionChange)="searchByName($event)"></ion-searchbar>
 
