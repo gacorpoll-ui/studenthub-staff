@@ -1,29 +1,32 @@
-<ion-header mode="md" [class.add-border]="borderLimit" class="ion-no-border">
+<ion-header mode="md" [class.add-border]="borderLimit" class="ion-no-border" [class.hidden]="borderLimit">
+  <!-- [class.slide-in-bottom]="borderLimit" -->
   <ion-toolbar class="container title">
     <ion-title>
       <span *ngIf="segment == 'request'">Requests</span>
       <span *ngIf="segment == 'story'">Stories</span>
     </ion-title>
   </ion-toolbar>
-  <ion-toolbar  class="container searchbar-wrapper"  [class.hidden]="borderLimit">
-    <ion-searchbar mode="md" [(ngModel)]="query" (ionInput)="searchFilter($event)" debounce=500></ion-searchbar>
-
+  <ion-toolbar class="container searchbar-wrapper">
+    
+    <ion-searchbar *ngIf="segment == 'request'" mode="md" [(ngModel)]="query" (ionInput)="searchFilter($event)" debounce=500></ion-searchbar>
+    <ion-searchbar *ngIf="segment == 'story'"  mode="md" [(ngModel)]="storyQuery" (ionInput)="searchFilter($event)" debounce=500></ion-searchbar>
+    
     <ion-buttons slot="end">
-      <ion-button class="setting_btn" (click)="openFilter()">
+      <ion-button class="setting_btn" [class.active]="filters.requestStatus || filters.storyStatus || filters.position_type || filters.startDate || filters.endDate || filters.story_position_type" (click)="openFilter()">
         <ion-icon name="options-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 
-  <ion-toolbar  class="container"  [class.hidden]="borderLimit">
+  <ion-toolbar  class="container">
     <ion-segment mode="md" (ionChange)="segmentChanged($event)" value="request">
 
       <ion-segment-button  mode="md" value="request">
-        <ion-label>Requests ({{total}})</ion-label>
+        <ion-label>Requests <!-- ({{total}})--></ion-label>
       </ion-segment-button>
 
       <ion-segment-button  mode="md" value="story">
-        <ion-label>Stories ({{storyTotal}})</ion-label>
+        <ion-label>Stories <!-- ({{storyTotal}})--></ion-label>
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
@@ -36,21 +39,30 @@
       <ng-container *ngIf="segment == 'request'">
         
         <ng-container [ngSwitch]="filters.requestStatus">
-          <ion-badge *ngSwitchCase="'re_work'">Re-Work</ion-badge>
-          <ion-badge *ngSwitchCase="'finished_by_recruitment'">Finished</ion-badge>
-          <ion-badge *ngSwitchDefault>{{ filters.requestStatus }}</ion-badge>
+          <ion-chip *ngSwitchCase="'re_work'" (click)="clearRequestStatus()">
+            Re-Work  <ion-icon name="close-outline"></ion-icon>
+          </ion-chip>
+          <ion-chip *ngSwitchCase="'finished_by_recruitment'" (click)="clearRequestStatus()">
+            Finished  <ion-icon name="close-outline"></ion-icon>
+          </ion-chip>
+          <ng-container *ngSwitchDefault>
+            <ion-chip (click)="clearRequestStatus()" *ngIf="filters.requestStatus">
+              {{ filters.requestStatus }}  <ion-icon name="close-outline"></ion-icon>
+            </ion-chip>
+          </ng-container>
        </ng-container>
        
-        <ion-badge *ngIf="filters.position_type">{{getPosition(this.filters.position_type)}}</ion-badge>
-        <ion-badge *ngIf="filters.startDate">{{getDate(this.filters.startDate)}}</ion-badge>
-        <ion-badge *ngIf="filters.endDate">{{getDate(this.filters.endDate)}}</ion-badge>
-        <ion-badge color="danger" *ngIf="filters.requestStatus || filters.position_type || filters.startDate || filters.endDate" (click)="resetFilter('request')"  tappable>Reset</ion-badge>
+        <ion-chip (click)="clearPositionType()" *ngIf="filters.position_type">{{getPosition(this.filters.position_type)}}  <ion-icon name="close-outline"></ion-icon></ion-chip>
+        <ion-chip (click)="clearStartDate()" *ngIf="filters.startDate">{{getDate(this.filters.startDate)}}  <ion-icon name="close-outline"></ion-icon></ion-chip>
+        <ion-chip (click)="clearEndDate()" *ngIf="filters.endDate">{{getDate(this.filters.endDate)}}  <ion-icon name="close-outline"></ion-icon></ion-chip>
       </ng-container>
 
       <ng-container *ngIf="segment == 'story'">
-        <ion-badge *ngIf="filters.storyStatus">{{getStoryStatus(this.filters.storyStatus)}}</ion-badge>
-        <ion-badge *ngIf="filters.story_position_type">{{getPosition(this.filters.story_position_type)}}</ion-badge>
-        <ion-badge color="danger" *ngIf="filters.storyStatus || filters.story_position_type" (click)="resetFilter('story')" tappable>Reset</ion-badge>
+        <ion-chip *ngIf="filters.storyStatus" (click)="clearStoryStatus()">
+          {{getStoryStatus(this.filters.storyStatus)}}  <ion-icon name="close-outline"></ion-icon></ion-chip>
+
+        <ion-chip *ngIf="filters.story_position_type" (click)="clearStoryPositionType()">
+          {{getPosition(this.filters.story_position_type)}}  <ion-icon name="close-outline"></ion-icon></ion-chip>
       </ng-container>
 
     </div>
@@ -59,7 +71,7 @@
       <request-listing *ngFor="let request of requests" tappable (click)="requestDetail(request)"
                          [request]="request" [showStatus]="false"></request-listing>
 
-      <no-items message="~ No Request Found ~" *ngIf="!loading && requests.length == 0"></no-items>
+      <no-items message="~ No Request Found ~" *ngIf="noRequests"></no-items>
 
       <ion-infinite-scroll *ngIf="currentPage < pageCount" (ionInfinite)="doInfinite($event)">
         <ion-infinite-scroll-content></ion-infinite-scroll-content>
@@ -74,7 +86,7 @@
         <app-story-item *ngFor="let story of stories" [story]="story" (click)="rowSelected(story)"></app-story-item>
       </ng-container>
 
-      <no-items message="~ No Story Found ~" *ngIf="!loading && stories.length == 0"></no-items>
+      <no-items message="~ No Story Found ~" *ngIf="noStories"></no-items>
       
       <ion-infinite-scroll *ngIf="storyCurrentPage < storyPageCount" (ionInfinite)="doInfiniteStories($event)">
         <ion-infinite-scroll-content></ion-infinite-scroll-content>

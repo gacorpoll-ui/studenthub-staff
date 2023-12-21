@@ -442,7 +442,11 @@ export class CandidateViewPage implements OnInit {
   loadCandidateDetail(loading = true) {
     this.loading = loading;
 
-    this.candidateService.detail(this.candidate_id).subscribe(response => {
+    const query = 'expand=candidateIdCard,store,company,candidateSkills,' +
+      'candidateTags,candidateExperiences,bank,nationality,area,country,university,' + 
+      'invited,invitationAccepted,invitationRejected,suggestionAccepted,suggestionRejected,suggested';
+
+    this.candidateService.detail(this.candidate_id, query).subscribe(response => {
 
       this.loading = false;
 

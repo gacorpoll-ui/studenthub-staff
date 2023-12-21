@@ -1,4 +1,4 @@
-<ion-header mode="md" [class.add-border]="borderLimit" class="ion-no-border">
+<ion-header mode="md" [class.add-border]="borderLimit" [class.hidden]="borderLimit" class="ion-no-border">
   <ion-toolbar class="container">
     <ion-buttons slot="start">
       <ion-back-button icon="assets/images/icon-back.svg" defaultHref="/candidate-search"></ion-back-button>
@@ -216,18 +216,22 @@
         <ion-icon src="assets/images/icon-download.svg"></ion-icon> {{ "CV / Portfolio" | translate }}
       </ion-button>
 
-      <ion-button class="btn-video" *ngIf="candidate.candidate_video" [class.required]="!candidate.candidate_video">
+      <ion-button class="btn-video" *ngIf="candidate.candidate_video && candidate.candidate_video_processed" 
+        href="{{ awsService.permanentBucketUrl }}candidate-video/{{ candidate.candidate_video }}.mp4"
+        target="_blank"
+        [class.required]="!candidate.candidate_video">
         <ion-icon src="assets/images/icon-video.svg"></ion-icon> {{ "Intro Video" | translate }}
       </ion-button>
 
-      <!-- <ng-container *ngIf="candidate.candidate_video && candidate.candidate_video_processed">
-              <video class="manipulation-video" controls="true" preload="none" width="300"
-                poster="{{ awsService.permanentBucketUrl }}candidate-video/{{ candidate.candidate_video }}.jpg">
-                <source src="{{ awsService.permanentBucketUrl }}candidate-video/{{ candidate.candidate_video }}.mp4"
-                  type="video/mp4">
-                Your browser does not support HTML5 video tags
-              </video>
-            </ng-container> -->
+      <!--
+      <ng-container *ngIf="candidate.candidate_video && candidate.candidate_video_processed">
+        <video class="manipulation-video" controls="true" preload="none" width="300"
+          poster="{{ awsService.permanentBucketUrl }}candidate-video/{{ candidate.candidate_video }}.jpg">
+          <source src="{{ awsService.permanentBucketUrl }}candidate-video/{{ candidate.candidate_video }}.mp4"
+            type="video/mp4">
+          Your browser does not support HTML5 video tags
+        </video>
+      </ng-container> -->
 
       <div class="work-experience-wrapper"
         *ngIf="candidate.candidateExperiences && candidate.candidateExperiences.length > 0">

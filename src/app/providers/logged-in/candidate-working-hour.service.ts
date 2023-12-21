@@ -17,7 +17,7 @@ export class CandidateWorkingHourService {
    * @returns {Observable<any>}
    */
   list(page: number, param = null): Observable<any>{
-    const url = this._endpoint + `/date?page=${page}&expand=company,dateListByCandidate${param}`;
+    const url = this._endpoint + `/date?page=${page}&expand=dateListByCandidate${param}`;//company,
     return this._authhttp.getRaw(url);
   }
 
@@ -35,7 +35,7 @@ export class CandidateWorkingHourService {
    * @param candidateId
    */
   detail(date, candidateId): Observable<any>{
-    const url = `${this._endpoint}/date/${date}/${candidateId}?expand=company,dateListByCandidate`;
+    const url = `${this._endpoint}/date/${date}/${candidateId}?expand=dateListByCandidate`;//company,
     return this._authhttp.get(url);
   }
 }

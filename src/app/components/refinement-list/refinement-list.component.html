@@ -49,7 +49,7 @@
           </ion-item>
       </ng-container>
 
-      <ion-button *ngIf="canShowMore()" class="skip-hover"
+      <ion-button *ngIf="canShowMore()" class="skip-hover" 
           [class.btn-expand]="!state.isShowingMore"
           [class.btn-collapse]="state.isShowingMore"
           (click)="state.toggleShowMore()">

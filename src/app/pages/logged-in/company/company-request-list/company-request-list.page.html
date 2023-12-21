@@ -1,4 +1,4 @@
-<ion-header mode="md" [class.add-border]="borderLimit" class="ion-no-border">
+<ion-header mode="md" [class.add-border]="borderLimit" [class.hidden]="borderLimit" class="ion-no-border">
   <ion-toolbar class="container">
     <ion-buttons slot="start">
       <ion-back-button icon="assets/images/icon-back.svg" defaultHref="/view/company-request-dashboard"></ion-back-button>
@@ -14,18 +14,18 @@
       <ion-grid>
         <ion-row>
           <ion-col size-md="6" size-lg="6" size-xs="12" >
-            <ion-badge tappable color="primary" (click)="filterByStatus($event, null)" [class.active]="filters.requestStatus == null">All Request</ion-badge>
-            <ion-badge tappable color="primary" (click)="filterByStatus($event, 'pending')" [class.active]="filters.requestStatus == 'pending'">Pending</ion-badge>
-            <ion-badge tappable color="primary" (click)="filterByStatus($event, 'started')" [class.active]="filters.requestStatus == 'started'">Started</ion-badge>
-            <ion-badge tappable color="primary" (click)="filterByStatus($event, 'delivered')" [class.active]="filters.requestStatus == 'delivered'">Delivered</ion-badge>
-            <ion-badge tappable color="primary" (click)="filterByStatus($event, 'cancelled')" [class.active]="filters.requestStatus == 'cancelled'">Cancelled</ion-badge>
-            <ion-badge tappable color="primary" (click)="filterByStatus($event, 're_work')" [class.active]="filters.requestStatus == 're_work'">Re-Work</ion-badge>
-            <ion-badge tappable color="primary" (click)="filterByStatus($event, 'finished_by_recruitment')" [class.active]="filters.requestStatus == 'finished_by_recruitment'">Finished</ion-badge>
+            <ion-chip tappable color="primary" (click)="filterByStatus($event, null)" [class.active]="filters.requestStatus == null">All Request</ion-chip>
+            <ion-chip tappable color="primary" (click)="filterByStatus($event, 'pending')" [class.active]="filters.requestStatus == 'pending'">Pending</ion-chip>
+            <ion-chip tappable color="primary" (click)="filterByStatus($event, 'started')" [class.active]="filters.requestStatus == 'started'">Started</ion-chip>
+            <ion-chip tappable color="primary" (click)="filterByStatus($event, 'delivered')" [class.active]="filters.requestStatus == 'delivered'">Delivered</ion-chip>
+            <ion-chip tappable color="primary" (click)="filterByStatus($event, 'cancelled')" [class.active]="filters.requestStatus == 'cancelled'">Cancelled</ion-chip>
+            <ion-chip tappable color="primary" (click)="filterByStatus($event, 're_work')" [class.active]="filters.requestStatus == 're_work'">Re-Work</ion-chip>
+            <ion-chip tappable color="primary" (click)="filterByStatus($event, 'finished_by_recruitment')" [class.active]="filters.requestStatus == 'finished_by_recruitment'">Finished</ion-chip>
           </ion-col>
           <ion-col size-md="6" size-lg="6" size-xs="12" >
-            <ion-badge tappable color="primary" (click)="filterByType($event, null)" [class.active]="filters.position_type == null">All Type</ion-badge>
-            <ion-badge tappable color="primary" (click)="filterByType($event, 2)" [class.active]="filters.position_type == 2">Part Timer</ion-badge>
-            <ion-badge tappable color="primary" (click)="filterByType($event, 1)" [class.active]="filters.position_type == 1">Full Timer</ion-badge>
+            <ion-chip tappable color="primary" (click)="filterByType($event, null)" [class.active]="filters.position_type == null">All Type</ion-chip>
+            <ion-chip tappable color="primary" (click)="filterByType($event, 2)" [class.active]="filters.position_type == 2">Part Timer</ion-chip>
+            <ion-chip tappable color="primary" (click)="filterByType($event, 1)" [class.active]="filters.position_type == 1">Full Timer</ion-chip>
           </ion-col>
         </ion-row>
       </ion-grid>

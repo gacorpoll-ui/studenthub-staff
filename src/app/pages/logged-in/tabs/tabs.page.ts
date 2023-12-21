@@ -1,6 +1,6 @@
 import {Component, Renderer2, ViewChild, OnInit, ViewEncapsulation, OnDestroy} from '@angular/core';
 import { Platform, IonTabs, ActionSheetController, IonTabButton } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 // services
 import { AuthService } from 'src/app/providers/auth.service';
 import { EventService } from 'src/app/providers/event.service';
@@ -38,6 +38,7 @@ export class TabsPage implements OnInit, OnDestroy {
     public renderer: Renderer2,
     public platform: Platform,
     public router: Router,
+    public route: ActivatedRoute,
     public statisticService: StatisticService,
     public authService: AuthService,
     public accountService: AccountService,
@@ -72,7 +73,7 @@ export class TabsPage implements OnInit, OnDestroy {
 
     this.internvalSubscribe = setInterval(() => {
       this.loadStats();
-    }, 3 * 1000);//every 3 seconds
+    }, 60 * 1000);//every min 
   }
 
   ngOnDestroy() {
@@ -88,7 +89,7 @@ export class TabsPage implements OnInit, OnDestroy {
    */
   async loadStats() {
 
-    this.statisticService.get().subscribe(response => {
+    this.statisticService.get(true).subscribe(response => {
 
       //skip for first time
 
@@ -101,8 +102,8 @@ export class TabsPage implements OnInit, OnDestroy {
       this.companyFollowUp = response.requireFollowup;
       this.totalRequest = response.totalRequests;
       this.companyUnderReview = response.companyUnderReview;
-
-      this.eventService.statistics$.next(response);
+ 
+      this.eventService.statistics = response;
 
       this.eventService.expiredIdCard$.next({
         assignedExpiredCivilID: response.assignedExpiredCivilID,

@@ -31,6 +31,7 @@ export class DefaultPage implements OnInit {
   public dailyStandupQuestion;
 
   public counter = null;
+
   public staff_work_session: {
     leave: any,
     session: any
@@ -43,23 +44,9 @@ export class DefaultPage implements OnInit {
 
   public leave: StaffLeave;
 
-  public statistics: {
-    id_need_generated: any;
-    totalExpiredCards: any;
-    assignedExpiredCivilID: any;
-    activeRequests: any;
-    requireFollowup: any;
-    last40daysNoRequest: any;
-    missingBankInfo: any;
-    incompleteAssignedToWork: any;
-    profileApprovalRequire: any;
-    assignedIdleCandidates: any;
-    companyMoreThen40DaysWithoutPayment: any;
-    transfersWithNoProfitInProgress: any;
-    transfersWithSameRateInProgress: any;
-  };
-
   public loading = false;
+
+  public statsLoaded = false; 
 
   constructor(
     public modalCtrl: ModalController,
@@ -71,56 +58,53 @@ export class DefaultPage implements OnInit {
     public statisticService: StatisticService,
     public analyticService: AnalyticsService,
     public popoverCtrl: PopoverController,
-    private _events: EventService,
+    public eventsService: EventService,
   ) { }
 
   ngOnInit() {
     this.analyticService.page('Home Page');
-
-    this._events.statistics$.subscribe((response: {
-        id_need_generated: any;
-        totalExpiredCards: any;
-        assignedExpiredCivilID: any;
-        activeRequests: any;
-        requireFollowup: any;
-        last40daysNoRequest: any;
-        missingBankInfo: any;
-        incompleteAssignedToWork: any;
-        profileApprovalRequire: any;
-        assignedIdleCandidates: any;
-        companyMoreThen40DaysWithoutPayment: any;
-        companyUnderReview: any;
-        transfersWithNoProfitInProgress: any;
-        transfersWithSameRateInProgress: any;
-    }) => {
-      this.statistics = response;
-    });
-
+ 
     this.getAccountInfo();
 
     //check session
 
     this.getSession();
+
+    //this.loadData(false);
+  }
+
+  /*ionViewDidEnter() {
+    if(!this.statsLoaded)
+      this.loadData(false);
+  }*/
+
+  handleRefresh(event = null) {
+    this.loadData(true, true);
+
+    if(event)
+      event.target.complete();
   }
 
   /**
    * load current data
    */
-  async loadData(loading = true) {
+  async loadData(loading = true, refresh = false) {
 
     if(loading)
       this.loading = true;
 
-    this.statisticService.get().subscribe(response => {
+    this.statisticService.get(refresh).subscribe(response => {
 
-      this.statistics = response;
+      this.eventsService.statistics = response;
 
-      this._events.expiredIdCard$.next({
+      this.eventsService.expiredIdCard$.next({
         assignedExpiredCivilID: response.assignedExpiredCivilID,
         expiredIdCount: response.totalExpiredCards
       });
 
-      this._events.reviewRequired$.next(this.statistics.profileApprovalRequire);
+      this.eventsService.reviewRequired$.next(this.eventsService.statistics.profileApprovalRequire);
+
+      this.statsLoaded = true;
     },
       error => { },
       () => { this.loading = false; }

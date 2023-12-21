@@ -20,7 +20,7 @@ export class CompanyRegistrationRequestService {
      * @param company_request_uuid
      */
     view(company_request_uuid) {
-      const url = this._endpoint + '/' + company_request_uuid + '?expand=contact,contact.contactPhones';
+      const url = this._endpoint + '/' + company_request_uuid;
       return this._authhttp.get(url);
     }
   

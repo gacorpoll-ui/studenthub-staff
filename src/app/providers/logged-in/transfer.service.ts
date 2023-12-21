@@ -46,8 +46,8 @@ export class TransferService {
    * @param {number} transfer_id
    * @returns {Observable<any>}
    */
-  transferIdDetails(transfer_id: number): Observable<any> {
-    const url = `${this._transferEndpoint}/${transfer_id}?expand=transferCandidates,transferCandidates.candidate,invoices,createdBy,updatedBy`;
+  transferIdDetails(transfer_id: number, query: string = ''): Observable<any> {
+    const url = `${this._transferEndpoint}/${transfer_id}?expand=transferCandidates,transferCandidates.candidate${query}`;//createdBy,updatedBy
     return this._authhttp.get(url);
   }
 
@@ -60,6 +60,11 @@ export class TransferService {
     return this._authhttp.patch(url, '');
   }
   
+  /**
+   * mark transfer as cancelled 
+   * @param transfer 
+   * @returns 
+   */
   makeTransfertoCancel(transfer: Transfer): Observable<any> {
     const url = `${this._transferEndpoint}/cancel/${transfer.transfer_id}`;
     return this._authhttp.patch(url, '');

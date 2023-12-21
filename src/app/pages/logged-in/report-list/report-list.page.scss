@@ -1,10 +1,18 @@
+ion-list {
+  --background: #f7f8fa;
+  background: #f7f8fa;
+  margin-top: 0;
+  padding-top: 0;
+}
+
 ion-item {
-  margin: 12px 0 0 0;
+  margin: 12px 4px 0 2px;
   //padding: 12px 17px 12px 21px;
   border-radius: 5px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08), 2px 0 4px 0 rgba(0, 0, 0, 0.12);
   background-color: #ffffff;
 }
+
 ion-badge {
   padding: 5px 9px 5px;
   font-size: 12px;
@@ -17,9 +25,7 @@ ion-badge {
   color: #000;
   border-radius: 0;
 }
-section,ion-list {
-  background: #fafafa;
-}
+
 h3{
   font-size: 14px;
   font-weight: bold;

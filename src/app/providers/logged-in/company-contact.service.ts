@@ -21,15 +21,16 @@ export class CompanyContactService {
    * @param company_id
    */
   list(page, query = ''): Observable<any>{
-    const url = `${this._endpoint}?expand=contact.contactEmails,contact.contactPhones,company,companies&page=${page}&query=${query}`;
+    const url = `${this._endpoint}?expand=contactEmails,contactPhones,company,companies&page=${page}&query=${query}`;
     return this._authhttp.getRaw(url);
   }
 
   /**
    * get given company contacts
    * @param companyID
+   * //notes,requests
    */
-  companyContacts(companyID, query = '', expands= 'contact.contactEmails,contact.contactPhones,company,contact.notes,contact.requests'): Observable<any>{
+  companyContacts(companyID, query = '', expands= 'contactEmails,contactPhones,company'): Observable<any>{
     const url = `${this._endpoint}?company_id=${companyID}&query=${query}&expand=${expands}`;
     return this._authhttp.get(url);
   }

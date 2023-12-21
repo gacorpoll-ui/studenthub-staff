@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
-import { AuthHttpService } from './authhttp.service';
 import { Observable } from 'rxjs';
+//services 
+import { AuthHttpService } from './authhttp.service';
+//models
 import { Mall } from 'src/app/models/mall';
+
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +20,7 @@ export class MallService {
    * @param mallUUID
    */
   view(mallUUID) {
-    return this.authHttp.get(this.mallEndpoint + '/' + mallUUID + '?expand=candidates,stores,stores.candidatesCount');
+    return this.authHttp.get(this.mallEndpoint + '/' + mallUUID + '?expand=stores,stores.brand');
   }
 
   /**

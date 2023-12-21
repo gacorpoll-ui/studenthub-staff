@@ -47,8 +47,8 @@ export class CandidateService {
    * candidate detail
    * @returns {Observable<any>}
    */
-  detail(id: number): Observable<any> {
-    const url = this._candidateEndpoint + '/detail/' + id + '?expand=candidateIdCard,store,company,candidateSkills,candidateTags,candidateTags.createdBy,candidateExperiences,bank,nationality,area,country,university,invited,invitationAccepted,invitationRejected,suggestionAccepted,suggestionRejected,suggested';
+  detail(id: number, query: string = ''): Observable<any> {
+    const url = this._candidateEndpoint + '/detail/' + id + '?' + query;
     return this._authhttp.get(url);
   }
 
@@ -67,7 +67,7 @@ export class CandidateService {
    */
   list(): Observable<any> {
     const url = this._candidateEndpoint;
-    return this._authhttp.getRaw(url + '?expand=store,company,candidateSkills,candidateTags,candidateExperiences');
+    return this._authhttp.getRaw(url + '?expand=store,company,candidateTags');//candidateSkills,candidateExperiences
   }
 
   /**
@@ -75,7 +75,7 @@ export class CandidateService {
    * @returns {Observable<any>}
    */
   listFilter(search: string, page: number): Observable<any> {
-    const url = this._candidateEndpoint + '/filter?page=' + page + search + '&expand=store,company,candidateSkills,candidateTags,candidateExperiences';
+    const url = this._candidateEndpoint + '/filter?page=' + page + search + '&expand=store,company,candidateTags'; //candidateSkills,candidateExperiences
     return this._authhttp.getRaw(url);
   }
 
@@ -102,7 +102,8 @@ export class CandidateService {
    * @returns {Observable<any>}
    */
   listAssigned(candidate_name: string, page: number, incompleteProfile = 0, withoutBank = 0): Observable<any> {
-    const url = this._candidateEndpoint + '/assigned?candidate_name=' + candidate_name + '&page=' + page + '&incomplete_profile=' + incompleteProfile  + '&without_bank=' + withoutBank + '&expand=store,company,candidateSkills,candidateExperiences';
+    const url = this._candidateEndpoint + '/assigned?candidate_name=' + candidate_name + '&page=' + page + '&incomplete_profile=' + incompleteProfile  
+      + '&without_bank=' + withoutBank + '&expand=store,company,candidateTags';//candidateSkills,candidateExperiences
     return this._authhttp.getRaw(url);
   }
 
@@ -112,7 +113,7 @@ export class CandidateService {
    */
   listWithoutBank(candidate_name: string, page: number): Observable<any> {
     const url = this._candidateEndpoint + '/without-bank?candidate_name=' + candidate_name + '&page=' + page
-     + '&expand=store,company,candidateSkills,candidateTags,candidateExperiences';
+     + '&expand=store,company,candidateTags';//candidateSkills,candidateTags,candidateExperiences
     return this._authhttp.getRaw(url);
   }
 
@@ -121,7 +122,9 @@ export class CandidateService {
    * @returns {Observable<any>}
    */
   listNotAssigned(candidate_name: string, page: number, incompleteProfile = 0, withoutBank = 0): Observable<any> {
-    const url = this._candidateEndpoint + '/not-assigned?candidate_name=' + candidate_name + '&page=' + page + '&incomplete_profile=' + incompleteProfile + '&without_bank=' + withoutBank + '&expand=store,company,candidateSkills,candidateTags,candidateExperiences';
+    const url = this._candidateEndpoint + '/not-assigned?candidate_name=' + candidate_name + '&page=' + page + 
+      '&incomplete_profile=' + incompleteProfile + '&without_bank=' + withoutBank + 
+      '&expand=store,company,candidateTags';//candidateSkills,candidateExperiences
     return this._authhttp.getRaw(url);
   }
 
@@ -309,7 +312,7 @@ export class CandidateService {
    * @param page
    */
   listByCountry(country: Country, page: number): Observable<any> {
-    const url = this._candidateEndpoint + '/search?expand=store,company&country_id=' + country.country_id + '&page=' + page;
+    const url = this._candidateEndpoint + '/search?expand=store,company,candidateTags&country_id=' + country.country_id + '&page=' + page;
     return this._authhttp.getRaw(url);
   }
   
@@ -354,7 +357,7 @@ export class CandidateService {
    * @returns {Observable<any>}
    */
   listToReview(page: number): Observable<any>{
-    const url = this._candidateEndpoint + '/search?expand=store,company&by=review&review=0&page=' + page;
+    const url = this._candidateEndpoint + '/search?expand=store,company,candidateTags&by=review&review=0&page=' + page;
     return this._authhttp.getRaw(url);
   }
 
@@ -425,7 +428,8 @@ export class CandidateService {
    * @param page
    */
   assignedIdleCandidate(candidateName: string, page: number): Observable<any>{
-    const url = this._candidateEndpoint + '/assigned-idle-candidate?candidate_name=' + candidateName + '&page=' + page + '&expand=store,company,workHistory';
+    const url = this._candidateEndpoint + '/assigned-idle-candidate?candidate_name=' + candidateName + '&page=' + page + 
+      '&expand=store,company,workHistory,candidateTags';
     return this._authhttp.getRaw(url);
   }
 

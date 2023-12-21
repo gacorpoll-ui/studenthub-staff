@@ -1,4 +1,4 @@
-<ion-header mode="md" [class.add-border]="borderLimit" class="ion-no-border">
+<ion-header mode="md" [class.add-border]="borderLimit" [class.hidden]="borderLimit" class="ion-no-border">
   <ion-toolbar class="container">
     <ion-buttons slot="start">
       <ion-back-button icon="assets/images/icon-back.svg" *ngIf="!directView" defaultHref="/"></ion-back-button>
@@ -67,13 +67,15 @@
     <ion-list *ngIf="store">
 
       <h5>
-        Staff <span *ngIf="store.candidates">({{ store.candidates.length }})</span>
+        Staff <span>({{ store.store_total_candidates }})</span>
       </h5>
 
-      <candidate tappable (click)="candidateSelected(candidate)" [candidate]="candidate" (refresh)="loadData()" *ngFor="let candidate of store.candidates"></candidate>
+      <candidate tappable (click)="candidateSelected(candidate)" [candidate]="candidate" (refresh)="loadData()" 
+        *ngFor="let candidate of store.candidates"></candidate>
 
     </ion-list>
 
     <loading-modal [loading]="loading" type="candidate-list"></loading-modal>
+    
   </div>
 </ion-content>

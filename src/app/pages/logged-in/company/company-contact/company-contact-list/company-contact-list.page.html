@@ -1,4 +1,4 @@
-<ion-header mode="md" [class.add-border]="borderLimit" class="ion-no-border">
+<ion-header mode="md" [class.add-border]="borderLimit" [class.hidden]="borderLimit" class="ion-no-border">
   <ion-toolbar class="container">
     <ion-buttons slot="start">
       <ion-back-button icon="assets/images/icon-back.svg" (click)="dismiss()"></ion-back-button>
@@ -40,6 +40,7 @@
                 </a>
               </p>
             </ion-label>
+            
             <ng-container *ngIf="companyContact && companyContact.companies && companyContact.companies.length > 1">
               <ion-icon slot="end" *ngIf="selectedContact != companyContact.contact_uuid" name="arrow-down-outline">
               </ion-icon>

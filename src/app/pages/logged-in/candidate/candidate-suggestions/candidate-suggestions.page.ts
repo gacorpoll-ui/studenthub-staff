@@ -96,15 +96,4 @@ export class CandidateSuggestionsPage implements OnInit {
   logScrolling(e) {
     this.borderLimit = (e.detail.scrollTop > 20);
   }
-
-  /**
-   * load candidate notes without pagination
-   */
-  loadNotes() {
-    const params = '&candidate_id=' + this.candidate_id;
-
-    this.noteService.list(params).subscribe(async jsonResponse => {
-      this.notes = jsonResponse;
-    });
-  }
 }
