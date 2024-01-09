@@ -69,3 +69,6 @@ Thumbs.db
 .angular
 .angular/
 .angular/*
+
+# Sentry Config File
+.sentryclirc
