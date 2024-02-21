@@ -1,4 +1,5 @@
 {
+    "View Result": "عرض النتائج",
     "txt_view_candidates": "عرض {{ value }} المرشحين",
     "txt_minutes": "{{value}} دقيقة",
     "txt_hours": "{{ value }} ساعة",

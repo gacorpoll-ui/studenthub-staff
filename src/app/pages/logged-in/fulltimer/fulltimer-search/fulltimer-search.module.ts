@@ -14,6 +14,7 @@ import { NoItemsModule } from '../../../../components/no-items/no-items.module';
 import { NgAisModule } from 'angular-instantsearch';
 import { FulltimerFilterModule } from 'src/app/components/fulltimer-filter/fulltimer-filter.module';
 import { BawesAisPaginationModuleModule } from 'src/app/components/bawes-ais-pagination/bawes-ais-pagination-module.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -26,6 +27,7 @@ import { BawesAisPaginationModuleModule } from 'src/app/components/bawes-ais-pag
     FulltimerFilterModule,
     AppliedFiltersModule,
     LoadingModalModule,
+    TranslateModule.forChild(),
     NoItemsModule
   ],
   declarations: [FulltimerSearchPage]

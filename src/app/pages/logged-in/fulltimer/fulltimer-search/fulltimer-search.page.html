@@ -189,12 +189,16 @@
 
 <ion-footer class="ion-no-border" [class.filter-closed]="!showFilter" [class.filter-opened]="showFilter">
   <ion-toolbar class="container ion-no-padding">
-    <ion-button [disabled]="loading || nbHits == 0" (click)="dismiss()" expands="full" class="btn-view-fulltimers">
+    <!-- || nbHits == 0-->
+    <ion-button [disabled]="loading" (click)="dismiss()" expands="full" class="btn-view-fulltimers">
       <span *ngIf="!loading || !refreshingFulltimers">
+        {{ "View Result" | translate }}
+        <!--
         <span *ngIf="nbHits == 0">No Job Found</span>
-        <span *ngIf="nbHits > 0">View {{ nbHits }} fulltimers</span>
+        <span *ngIf="nbHits > 0">View {{ nbHits }} fulltimers</span>-->
       </span>
-      <ion-spinner *ngIf="loading || refreshingFulltimers || nbHits == null"></ion-spinner>
+      <!-- || refreshingFulltimers || nbHits == null -->
+      <ion-spinner *ngIf="loading"></ion-spinner>
     </ion-button>
   </ion-toolbar>
 </ion-footer>

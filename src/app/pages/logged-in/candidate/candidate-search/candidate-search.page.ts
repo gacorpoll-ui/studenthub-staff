@@ -234,10 +234,12 @@ export class CandidateSearchPage implements OnInit {
   openFilter() {
 
     this.showFilter = true;
-    // this.updateAlgoliaState();
+    
+    //this.updateAlgoliaState();
     //
     // this.router.navigate(['job-with-filter']);
   }
+
   dismiss() {
     this.showFilter = false;
   }
@@ -295,7 +297,7 @@ export class CandidateSearchPage implements OnInit {
   async setConfig() {
 
     setTimeout(_ => {
-      this.loading = true;
+    //  this.loading = true;
     });
 
     this.algoliaService.getKey().then(response => {
@@ -494,7 +496,7 @@ export class CandidateSearchPage implements OnInit {
    * @param transferStateKey
    */
   processResponse(resp, transferState = null, transferStateKey = null) {
-
+ 
     if (transferState) {
       transferState.set(transferStateKey, JSON.stringify(resp));
     }
@@ -645,7 +647,7 @@ export class CandidateSearchPage implements OnInit {
 
     this.nbPages = 0;
 
-    this.loading = true;
+    //this.loading = true;
     this.refreshingCandidates = true;
 
     this.instantSearch.instantSearchInstance.helper.clearCache().setPage(0).setQuery('').search();

@@ -234,7 +234,7 @@ export class FulltimerSearchPage implements OnInit {
   async setConfig() {
 
     setTimeout(_ => {
-      this.loading = true;
+    //  this.loading = true;
     });
 
     this.algoliaService.getKey().then(response => {

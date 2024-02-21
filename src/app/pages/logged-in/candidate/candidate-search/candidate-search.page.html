@@ -120,13 +120,17 @@
 <ion-footer class="ion-no-border" *ngIf="showFilter || candidateService.candidates.length > 0">
 
   <ion-toolbar class="container mobile-only ion-no-padding" *ngIf="showFilter">
-    <ion-button [disabled]="loading || nbHits == 0" (click)="dismiss()" expands="full"
+    <!-- || nbHits == 0-->
+    <ion-button [disabled]="loading" (click)="dismiss()" expands="full"
                 class="btn-view-candidates">
-          <span *ngIf="!loading && instantSearchConfig">
+          <span *ngIf="!loading">
+             {{ "View Result" | translate }}
+             <!--
               <span *ngIf="nbHits == 0">{{ "No Candidate Found" | translate }}</span>
               <span *ngIf="nbHits > 0">{{ 'txt_view_candidates' | translate : { value : nbHits } }}</span>
+              -->
           </span>
-      <ion-spinner *ngIf="loading || !instantSearchConfig"></ion-spinner>
+      <ion-spinner *ngIf="loading"></ion-spinner>
     </ion-button>
   </ion-toolbar>
 
