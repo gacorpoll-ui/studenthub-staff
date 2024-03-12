@@ -125,7 +125,7 @@ export class CompanyViewPage implements OnInit {
   }
 
   async openStores() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: ModalPopPage,
@@ -147,7 +147,7 @@ export class CompanyViewPage implements OnInit {
   }
 
   async openSubCompanies() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: CompanySubcompaniesPage,
@@ -166,7 +166,7 @@ export class CompanyViewPage implements OnInit {
   }
 
   async openMalls() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     /*const modal = await this.modalCtrl.create({
       component: CompanyNavPage,
@@ -194,7 +194,7 @@ export class CompanyViewPage implements OnInit {
   }
 
   async openDocuments() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: CompanyDocumentsPage,
@@ -213,7 +213,7 @@ export class CompanyViewPage implements OnInit {
   }
 
   async openContacts() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: CompanyContactsPage,
@@ -233,7 +233,7 @@ export class CompanyViewPage implements OnInit {
   }
 
   async openBrands() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: CompanyBrandsPage,
@@ -256,7 +256,7 @@ export class CompanyViewPage implements OnInit {
   }
 
   async openNotes(addNewNote = false) {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: CompanyNotesPage,
@@ -278,7 +278,7 @@ export class CompanyViewPage implements OnInit {
   }
 
   async openRequests() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: CompanyRequestsPage,
@@ -297,7 +297,7 @@ export class CompanyViewPage implements OnInit {
   }
 
   async openTransfers() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: TransferListPage,
@@ -316,7 +316,7 @@ export class CompanyViewPage implements OnInit {
   }
 
   async openChart() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: TransferChartPage,
@@ -502,7 +502,7 @@ export class CompanyViewPage implements OnInit {
    * add followup note
    */
   async addFollowupNote() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: CompanyFollowupNotePage,
@@ -594,7 +594,7 @@ export class CompanyViewPage implements OnInit {
     event.preventDefault();
     event.stopPropagation();
 
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     let actions = [
       {
@@ -676,7 +676,7 @@ export class CompanyViewPage implements OnInit {
    */
   async update() {
     // return this.router.navigate(['/company-form/' + this.company_id]);
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: CompanyFormPage,

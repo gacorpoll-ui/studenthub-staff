@@ -315,7 +315,7 @@ export class CandidateFormPage implements OnInit {
   }
 
   async updateTags () {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: TagFormPage,
@@ -344,7 +344,7 @@ export class CandidateFormPage implements OnInit {
 
 
   async updateSkills() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: SkillFormPage,
@@ -372,7 +372,7 @@ export class CandidateFormPage implements OnInit {
   }
 
   async updateExperiences() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: ExperienceFormPage,
@@ -433,7 +433,7 @@ export class CandidateFormPage implements OnInit {
   }
 
   async updateResume() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: UploadCvPage,
@@ -467,7 +467,7 @@ export class CandidateFormPage implements OnInit {
    * select fulltimer location
    */
   async updateLocation() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: LocationPage,

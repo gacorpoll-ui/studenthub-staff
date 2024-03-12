@@ -276,7 +276,7 @@ export class TransferViewPage implements OnInit {
   }
 
   async importTransfer(transfer: Transfer) {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: ImportTransferFormPage,
@@ -306,7 +306,7 @@ export class TransferViewPage implements OnInit {
    * Load the Transfer form page to edit the transfer details
    */
   async edit(transfer: any) {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: TransferFormPage,

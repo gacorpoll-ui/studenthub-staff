@@ -72,7 +72,7 @@ export class StoreComponent implements OnInit {
    * open store form
    */
     async edit() {
-      window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+      window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
       const modal = await this.modalCtrl.create({
         component: StoreFormPage,

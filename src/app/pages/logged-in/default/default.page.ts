@@ -296,6 +296,9 @@ export class DefaultPage implements OnInit {
    * return name initial for profile photo placeholder
    */
   getInitials() {
+    if(!this.authService.name) 
+      return "";
+    
     const initials = this.authService.name.match(/\b\w/g) || [];
     return ((initials.shift() || '') + (initials.pop() || '')).toUpperCase();
   }
@@ -305,7 +308,7 @@ export class DefaultPage implements OnInit {
   }
 
   async leaveRequest() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: LeaveRequestPage

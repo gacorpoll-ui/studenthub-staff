@@ -71,7 +71,7 @@ export class MallViewPage implements OnInit {
    * Loads Form in modal to update
    */
   async update() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: MallFormPage,
@@ -165,7 +165,7 @@ export class MallViewPage implements OnInit {
   // }
 
   async rowSelected(store) {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: ModalPopPage,

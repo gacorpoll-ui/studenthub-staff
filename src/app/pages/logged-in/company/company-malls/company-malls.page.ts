@@ -58,7 +58,7 @@ export class CompanyMallsPage implements OnInit {
       }, 100);
     });
 
-    /*window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    /*window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: MallViewPage,

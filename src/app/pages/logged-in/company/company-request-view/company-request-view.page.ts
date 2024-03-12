@@ -345,7 +345,7 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
    */
   async assign() {
 
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: StaffPage,
@@ -388,7 +388,7 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
    */
   async showUpdateAlert() {
 
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const note = new Note();
     note.request_uuid = this.request_uuid;
@@ -436,7 +436,7 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
   async update() {
     this.navCtrl.navigateForward(['request-form', this.request_uuid]);
     /*
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: CompanyRequestFormPage,
@@ -744,7 +744,7 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
     $event.preventDefault();
     $event.stopPropagation();
 
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: FulltimerSearchPage,//FulltimerFormPage,

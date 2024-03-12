@@ -125,7 +125,7 @@ export class CompanyContactsPage implements OnInit {
     });
     
     /*
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: CompanyContactViewPage,
@@ -269,7 +269,7 @@ export class CompanyContactsPage implements OnInit {
    * add new contact to company
    */
   async addCompanyContact() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const companyContact = new CompanyContact();
     companyContact.company_id = this.company.company_id;

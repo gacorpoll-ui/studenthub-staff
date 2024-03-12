@@ -95,7 +95,7 @@ export class FulltimerNotesPage implements OnInit {
    */
   async add() {
 
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     let note = new Note;
     note.fulltimer_uuid = this.fulltimer_uuid;

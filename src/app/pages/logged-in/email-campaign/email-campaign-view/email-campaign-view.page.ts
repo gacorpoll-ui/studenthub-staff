@@ -138,7 +138,7 @@ export class EmailCampaignViewPage implements OnInit {
    * Loads Form in modal to update
    */
   async update() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this._modalCtrl.create({
       component: EmailCampaignFormPage,

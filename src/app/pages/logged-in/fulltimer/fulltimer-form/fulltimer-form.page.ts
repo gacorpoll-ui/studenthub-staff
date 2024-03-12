@@ -436,7 +436,7 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
   }
 
   async selectNationality() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: NationalityPage,
@@ -467,7 +467,7 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
   }
 
   async selectUniversity() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: UniversityPage,
@@ -501,7 +501,7 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
    * select fulltimer location
    */
   async updateLocation() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: FulltimeLocationPage,

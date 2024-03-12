@@ -198,7 +198,7 @@ export class CompanyFormPage implements OnInit {
   async openCountryList() {
 
     window.history.pushState({
-      navigationId: window.history.state.navigationId
+      navigationId: window.history.state?.navigationId
     }, null, window.location.pathname);
 
     const modal = await this.modelCtrl.create({

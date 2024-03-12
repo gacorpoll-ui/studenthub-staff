@@ -332,7 +332,7 @@ export class OptionPage implements OnInit {
   }
 
   async updateTags () {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     let candidate = Object.assign({}, this.candidate);
 

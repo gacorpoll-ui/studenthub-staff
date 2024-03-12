@@ -77,7 +77,7 @@ export class TransferListPage implements OnInit {
       });
     });
     /*
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: TransferViewPage,
@@ -128,7 +128,7 @@ export class TransferListPage implements OnInit {
    * Loads form to initiate a new transfer
    */
   async createNewTransfer() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     let transfer = new Transfer;
     transfer.company_id = this.company.company_id;
@@ -158,7 +158,7 @@ export class TransferListPage implements OnInit {
    */
   async importTransfer() {
 
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     let transfer = new Transfer;
     transfer.company_id = this.company.company_id;

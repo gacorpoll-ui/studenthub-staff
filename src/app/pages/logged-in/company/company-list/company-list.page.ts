@@ -78,12 +78,14 @@ export class CompanyListPage implements OnInit {
 
     const state = window.history.state;
 
-    if (state.filter) {
-      this.filters.status = state.value;
-    }
+    if(state) {
+      if (state.filter) {
+        this.filters.status = state.value;
+      }
 
-    if(state.filters) {
-      this.filters = state.filters;
+      if(state.filters) {
+        this.filters = state.filters;
+      }
     }
     
     // if (state.companies) {
@@ -238,7 +240,7 @@ export class CompanyListPage implements OnInit {
    */
   async create() {
     // return this.router.navigate(['company-form']);
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this._modalCtrl.create({
       component: CompanyFormPage,
@@ -267,7 +269,7 @@ export class CompanyListPage implements OnInit {
    * Loads the create page
    */
   async filter() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this._modalCtrl.create({
       component: CompanyFilterPage,

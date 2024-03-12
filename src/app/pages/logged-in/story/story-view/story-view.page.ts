@@ -623,7 +623,7 @@ export class StoryViewPage implements OnInit, OnDestroy {
    */
    async assign() {
 
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: StaffPage,
