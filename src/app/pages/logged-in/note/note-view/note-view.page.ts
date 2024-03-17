@@ -71,7 +71,7 @@ export class NoteViewPage implements OnInit {
    */
   async edit() {
 
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: CompanyNoteFormPage,

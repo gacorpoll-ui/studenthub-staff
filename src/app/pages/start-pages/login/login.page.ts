@@ -5,6 +5,8 @@ import {AuthService} from '../../../providers/auth.service';
 import {CustomValidator} from '../../../validators/custom.validator';
 import { AuthService as Auth0Service } from '@auth0/auth0-angular';
 import { AnalyticsService } from 'src/app/providers/analytics.service';
+import { EventService } from 'src/app/providers/event.service';
+
 
 @Component({
   selector: 'app-login',
@@ -27,24 +29,33 @@ export class LoginPage implements OnInit {
 
   public type: string = 'password';
 
+  public loading: boolean = false; 
+
   constructor(
     private _fb: FormBuilder,
     public platform: Platform,
     public auth0: Auth0Service,
-    private _auth: AuthService,
+    public _auth: AuthService,
+    public eventService: EventService,
     public analyticService: AnalyticsService,
     private _alertCtrl: AlertController
   ){
-    // Initialize the Login Form
-    this.loginForm = this._fb.group({
-      email: ['', [Validators.required, CustomValidator.emailValidator]],
-      password: ['', Validators.required]
-    });
   }
 
   ngOnInit() {
+
     this.analyticService.page('Login Page');
     
+    // Initialize the Login Form
+    this.loginForm = this._fb.group({
+      email: ['', [Validators.required, CustomValidator.emailValidator]],
+      password: ['', Validators.required],
+      currency_code: [this._auth.currency_pref || "KWD", Validators.required],
+    });
+    
+    this.eventService.googleLoginFinished$.subscribe(() => {
+      this.loading = false;
+    });
   }
 
   /**
@@ -56,6 +67,8 @@ export class LoginPage implements OnInit {
     const email = this.oldEmailInput = this.loginForm.value.email;
     const password = this.oldPasswordInput = this.loginForm.value.password;
 
+    this._auth.currency_pref = this.loginForm.value.currency_code;
+    
     this._auth.basicAuth(email, password).subscribe(async res => {
       this.isLoading = false;
 
@@ -110,6 +123,15 @@ export class LoginPage implements OnInit {
   }
 
   /**
+   * login by google on capacitor app 
+   */
+  loginByGoogle() {
+    this.loading = true; 
+
+    this._auth.loginByGoogle();
+  } 
+
+  /**
    * redirec to auth0
    */
   loginWithRedirect() {
@@ -119,5 +141,10 @@ export class LoginPage implements OnInit {
 
   togglePasswordVisibility() {
     this.type = this.type == 'password'? 'text': 'password';
+  }
+
+  onCurrencyChange(event) {
+    this._auth.currency_pref = event;
+    this._auth.saveInStorage();
   }
 }

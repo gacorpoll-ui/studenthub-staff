@@ -4,6 +4,7 @@ import { Request } from './request';
 import {Transfer} from "./transfer";
 import {Mall} from "./mall";
 import {Contact} from "./contact";
+import { Country } from './country';
 
 export class Company {
     company_id: number;
@@ -31,6 +32,8 @@ export class Company {
     total_suggestions: number;
     company_approved_to_hire: any;
     password: any;
+    country_id: number;
+    currency_code: string;
     subcompanies: Company[];
     subCompanies: Company[];
     stores: Store[];
@@ -44,4 +47,5 @@ export class Company {
     requests: Request[];
     parentTransfers: Transfer[];
     stats: any[];
+    country: Country;
 }

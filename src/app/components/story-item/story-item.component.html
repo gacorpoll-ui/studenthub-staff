@@ -1,8 +1,8 @@
-<ion-card tappable>
+<ion-card tappable *ngIf="request">
   <ion-card-content>
     <div class="inner-card-content">
 
-      <h1>({{ story.number_of_employees }}) {{request.request_position_title}}</h1>
+      <h1>({{ story.number_of_employees }}) {{ request.request_position_title }}</h1>
 
       <h3 *ngIf="request.company">
         {{ request.company.company_common_name_en? request.company.company_common_name_en: request.company.company_name }}
@@ -36,6 +36,11 @@
           <ion-badge>
             Suggested : {{story.suggestion}}
           </ion-badge>
+
+          <ng-container *ngIf="story.request.company">
+            <ion-badge>{{ story.request.company.currency_code }} </ion-badge>
+            <ion-badge *ngIf="story.request.company.country">{{ request.company.country.country_name_en }} </ion-badge>        
+          </ng-container>
 
           <p *ngIf="story.staff" class="working">{{ story.staff.staff_name }} {{story.story_status == 1 || story.story_status == 7 ? 'is working': 'was working'}} on it</p>
           <p *ngIf="!story.staff" class="working">No one has started work on it</p>

@@ -94,7 +94,7 @@ export class CandidateNotesPage implements OnInit {
    */
   async add() {
 
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     let note = new Note;
     note.candidate_id = this.candidate_id;

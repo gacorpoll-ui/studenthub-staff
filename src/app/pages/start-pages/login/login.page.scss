@@ -53,8 +53,38 @@ ion-item.field-password {
   }
 }
 
-.btn-login-bawes {
+.btn-login-google,
+.btn-login-bawes,
+.btn-login {
+  display: flex;
   width: 100%;
+  --background-hover: inherit;
+  height: 52px;
+  --border-radius: 16px !important;
+ 
+  font-size: 16px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.btn-login,
+.btn-login-bawes,
+.btn-login-google {
+  border-radius: 16px;
+  --border-radius: 16px;
+  margin-bottom: 15px;
+  --box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+
+  ion-icon {
+    margin: 0 5px;
+    position: relative;
+    top: 2px;
+  }
 }
 
 .separator {

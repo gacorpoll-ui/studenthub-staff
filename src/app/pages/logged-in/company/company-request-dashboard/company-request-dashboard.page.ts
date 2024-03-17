@@ -264,7 +264,7 @@ export class CompanyRequestDashboardPage implements OnInit {
       urlParams += '&story_status=' + this.filters.storyStatus;
     }
 
-    urlParams += '&expand=staff,request,request.company,latestStoryActivity';
+    urlParams += '&expand=staff,request,request.company,request.company.country,latestStoryActivity';
     
     //'&expand=storyOwners,staffs,staff,requestCreatedBy,requestUpdatedBy,contact,company,company.companyContact,requestActivities,requestActivities.staff';
 
@@ -313,7 +313,7 @@ export class CompanyRequestDashboardPage implements OnInit {
       urlParams += '&story_status=' + this.filters.storyStatus;
     }
 
-    urlParams += '&expand=storyOwners,staffs,staff,company';
+    urlParams += '&expand=storyOwners,staffs,staff,company,company.country';
     
     //'&expand=storyOwners,staffs,staff,requestCreatedBy,requestUpdatedBy,contact,company,company.companyContact,requestActivities,requestActivities.staff';
 

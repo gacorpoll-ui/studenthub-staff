@@ -2,7 +2,9 @@
   <ion-card [class.pending]="request.request_status == 'pending'" tappable>
     <ion-card-content>
       <div class="inner-card-content">
-        <h1>({{ request.request_number_of_employees }}) {{request.request_position_title}}</h1>
+        <h1>({{ request.request_number_of_employees }}) {{request.request_position_title}}
+        </h1>
+
         <h3 *ngIf="request.company">
           {{ request.company.company_common_name_en? request.company.company_common_name_en: request.company.company_name }}
           <ion-icon name="checkmark-outline"  *ngIf="request.company && request.company.company_approved_to_hire"></ion-icon>
@@ -46,6 +48,12 @@
           <ion-badge>
             Suggested : {{request.suggestion}}
           </ion-badge>
+
+          <ng-container *ngIf="request.company">
+            <ion-badge>{{ request.company.currency_code }} </ion-badge>
+            <ion-badge *ngIf="request.company.country">{{ request.company.country.country_name_en }} </ion-badge>        
+          </ng-container>
+          
         </div>
 
         <p *ngFor="let staff of request.storyOwners" class="working">{{ staff.staff_name }} is working on it</p>
@@ -78,6 +86,7 @@
         </p>
 
       </div>
-    </ion-card-content>
+    
+    </ion-card-content> 
   </ion-card>
 </ng-container>

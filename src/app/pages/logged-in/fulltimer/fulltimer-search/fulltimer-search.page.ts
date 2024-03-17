@@ -476,6 +476,7 @@ export class FulltimerSearchPage implements OnInit {
 
     // Handle internal server error - 500 or 400
     if (error.status === 500) {
+      console.error(error);
       return this.eventService.error500$.next({});
     }
 
@@ -561,7 +562,7 @@ export class FulltimerSearchPage implements OnInit {
     $event.preventDefault();
     $event.stopPropagation();
 
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: FulltimerFormPage,

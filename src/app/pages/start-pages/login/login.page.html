@@ -9,14 +9,14 @@
       <!-- Login Form -->
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" (keyup.enter)="onSubmit()" class="classicInput" novalidate>
 
-        <ion-item lines="none">
+        <ion-item>
           <ion-input type="email" #emailInput
                   formControlName="email"
                   placeholder="Your Email Address">
           </ion-input>
         </ion-item> 
 
-        <ion-item lines="none" class="field-password">
+        <ion-item class="field-password">
 
           <ion-input type="{{ type }}" #passwordInput
                     formControlName="password"
@@ -30,8 +30,16 @@
 
         </ion-item>
 
+        <ion-item>
+          <ion-select placeholder="Select Currency" formControlName="currency_code" (ionChange)="onCurrencyChange($event)"> 
+            <ion-select-option [value]="currency.code" *ngFor="let currency of _auth.currencies">
+              {{ currency.code }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item> 
+
         <div class="ion-text-center">
-          <ion-button expand="block" class="login-btn" type="submit"
+          <ion-button expand="block" class="btn-login" type="submit"
                   [disabled]="!loginForm.valid || isLoading ||
                         (emailInput.value == oldEmailInput && passwordInput.value == oldPasswordInput)">
 
@@ -46,7 +54,15 @@
       
       <div class="separator"> <span>OR</span> </div>
 
-      <ion-button class="btn-login-bawes" fill="outline" (click)="loginWithRedirect()">
+      <ion-button class="btn-login-google" fill="clear" [class.google-logo]="!loading" [disabled]="loading" (click)="loginByGoogle()">
+        <ion-spinner *ngIf="loading"></ion-spinner>
+        <span *ngIf="!loading"> 
+          {{ "Log in with Google" | translate }} 
+          <ion-icon slot="end" src="assets/images/google.svg"></ion-icon>
+        </span>
+      </ion-button>
+
+      <ion-button class="btn-login-bawes" fill="clear" (click)="loginWithRedirect()">
         Log in with BAWES <ion-icon slot="end" src="assets/images/icon-bawes.svg"></ion-icon>
       </ion-button>
       

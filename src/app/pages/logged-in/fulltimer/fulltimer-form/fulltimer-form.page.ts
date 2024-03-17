@@ -189,6 +189,7 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
         location: ['', Validators.required],
         current_salary: [''],
         expected_salary: [''],
+        currency_code: [this.authService.currency_pref],
         tempPdfCVLocation: [''],
       });
 
@@ -232,6 +233,7 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
         location: [location, Validators.required],
         current_salary: [this.model.fulltimer_current_salary],
         expected_salary: [this.model.fulltimer_expected_salary],
+        currency_code: [this.model.currency_code],
         university: [null],
         university_id: [this.model.university_id],
         employed: [this.model.fulltimer_employed],
@@ -434,7 +436,7 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
   }
 
   async selectNationality() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: NationalityPage,
@@ -465,7 +467,7 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
   }
 
   async selectUniversity() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: UniversityPage,
@@ -499,7 +501,7 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
    * select fulltimer location
    */
   async updateLocation() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: FulltimeLocationPage,
@@ -555,10 +557,15 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
     this.model.fulltimerTags = this.form.value.fulltimerTags;
     this.model.fulltimer_current_salary = this.form.value.current_salary;
     this.model.fulltimer_expected_salary = this.form.value.expected_salary;
+    
     this.model.university_id = this.form.value.university_id;
     this.model.fulltimer_employed = this.form.value.employed;
     this.model.fulltimer_gender = this.form.value.gender;
     this.model.fulltimer_driving_license = this.form.value.driving_license;
+
+    if(!this.model.currency_code)
+      this.model.currency_code = this.form.value.currency_code;
+    
     // this.model.fulltimer_birth_date = format(parseISO(this.form.controls['birth_date'].value), 'yyyy-MM-dd');//, { timeZone: '+3:30' }
   }
 

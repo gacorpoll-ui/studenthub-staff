@@ -41,7 +41,7 @@ export class CompanyRegistrationRequestListPage implements OnInit {
  
   async viewRequest(request) {
 
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: CompanyRegistrationRequestViewPage,
@@ -89,7 +89,7 @@ export class CompanyRegistrationRequestListPage implements OnInit {
       this.totalCount = parseInt(response.headers.get('X-Pagination-Total-Count'));
 
       this.requests = response.body;
-
+ 
       if(event)
         event.target.complete();
 

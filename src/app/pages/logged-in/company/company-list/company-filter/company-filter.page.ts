@@ -191,7 +191,7 @@ export class CompanyFilterPage implements OnInit {
    * Loads the create page
    */
   // async create() {
-  //   window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+  //   window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
   //
   //   const modal = await this._modalCtrl.create({
   //     component: CompanyFormPage,

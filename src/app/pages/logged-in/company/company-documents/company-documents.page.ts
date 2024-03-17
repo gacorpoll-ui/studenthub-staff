@@ -93,7 +93,7 @@ export class CompanyDocumentsPage implements OnInit {
    * upload company document to S3
    */
   async uploadDocument() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: UploadFilePage,

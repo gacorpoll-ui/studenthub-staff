@@ -87,6 +87,8 @@ import { CandidateWarningFormPageModule } from './pages/logged-in/candidate/cand
 import { CompanyRegistrationRequestViewPageModule } from './pages/logged-in/company/company-registration-request-view/company-registration-request-view.module';
 import { EmailCampaignFormPageModule } from './pages/logged-in/email-campaign/email-campaign-form/email-campaign-form.module';
 import { UpdateAccountPageModule } from './pages/logged-in/update-account/update-account.module';
+import { CountryModalComponent } from './components/country-modal/country-modal.component';
+import { CountryModalModule } from './components/country-modal/country-modal.module';
 
 export function startupServiceFactory(authService) {
   return () => authService.load();
@@ -191,7 +193,8 @@ declare global {
     EmailCampaignFormPageModule,
     CompanyRegistrationRequestViewPageModule,
     EditorModule,
-    UpdateAccountPageModule
+    UpdateAccountPageModule,
+    CountryModalModule
   ],
   exports: [
     ActionComponentModule
@@ -210,7 +213,7 @@ declare global {
     SelectiveLoadingStrategy,
     { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' },
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    { provide: ErrorHandler, useClass: SentryErrorhandlerService }
+    //{ provide: ErrorHandler, useClass: SentryErrorhandlerService }
   ],
   bootstrap: [AppComponent]
 })

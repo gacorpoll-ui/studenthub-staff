@@ -203,7 +203,7 @@ export class CompanyContactViewPage implements OnInit {
   }
 
   async openNotes(addNewNote = false) {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: CompanyNotesPage,
@@ -242,7 +242,7 @@ export class CompanyContactViewPage implements OnInit {
   }
 
   async edit() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: CompanyContactFormPage,
@@ -526,7 +526,7 @@ export class CompanyContactViewPage implements OnInit {
     event.preventDefault();
     event.stopPropagation();
 
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const actions = [
       {

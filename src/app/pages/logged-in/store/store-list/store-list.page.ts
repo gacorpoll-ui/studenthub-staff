@@ -156,7 +156,7 @@ export class StoreListPage implements OnInit {
    * @param store 
    */
   async selectStoreManager(event, store) {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     event.preventDefault();
     event.stopPropagation();
@@ -215,7 +215,7 @@ export class StoreListPage implements OnInit {
    * Loads the create page
    */
   async create() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: StoreFormPage,

@@ -349,7 +349,7 @@ export class CandidateViewPage implements OnInit {
    */
   async assignCandidateToStore(storeID) {
 
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: ModalPopPage,
@@ -468,7 +468,7 @@ export class CandidateViewPage implements OnInit {
 
   async openWorkPlace(history) {
     if (history.store) {
-      window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+      window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
       const modal = await this.modalCtrl.create({
         component: ModalPopPage,
@@ -564,7 +564,7 @@ export class CandidateViewPage implements OnInit {
       return this.addInvitation();
     }
 
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: InvitePage,
@@ -725,7 +725,7 @@ export class CandidateViewPage implements OnInit {
    */
   async suggest() {
 
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: SuggestPage,
@@ -856,7 +856,7 @@ export class CandidateViewPage implements OnInit {
    */
   async toggleCommitted() {
 
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: CandidateCommittedFormPage,
@@ -988,7 +988,7 @@ export class CandidateViewPage implements OnInit {
    */
   async addNote() {
 
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const note = new Note;
     note.candidate_id = this.candidate_id;

@@ -59,7 +59,7 @@ export class CompanyBrandsPage implements OnInit {
       }, 100);
     });
     /*
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: BrandViewPage,
@@ -90,7 +90,7 @@ export class CompanyBrandsPage implements OnInit {
    * form to add new brand
    */
   async addBrand() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const brand = new Brand();
     brand.company_id = this.company.company_id;

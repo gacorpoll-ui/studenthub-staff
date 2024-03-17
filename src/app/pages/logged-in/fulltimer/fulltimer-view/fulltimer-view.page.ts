@@ -98,7 +98,7 @@ export class FulltimerViewPage implements OnInit {
    */
   async addNote() {
 
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     let note = new Note;
     note.fulltimer_uuid = this.fulltimer_uuid;
@@ -155,7 +155,7 @@ export class FulltimerViewPage implements OnInit {
    * Loads Form in modal to update
    */
   async update() {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: FulltimerFormPage,
@@ -223,7 +223,7 @@ export class FulltimerViewPage implements OnInit {
       return this.addSuggestion();
     }
 
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: SuggestPage,

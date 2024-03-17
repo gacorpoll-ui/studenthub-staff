@@ -5,6 +5,8 @@ import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import {ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 import {genericRetryStrategy} from '../util/genericRetryStrategy';
 import { Storage } from '@ionic/storage-angular';
+//import "@codetrix-studio/capacitor-google-auth";
+import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 // service
 import {EventService} from './event.service';
 import {environment} from '../../environments/environment';
@@ -12,6 +14,7 @@ import { AuthService as Auth0Service } from '@auth0/auth0-angular';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { StorageService } from './storage.service';
 import { AnalyticsService } from './analytics.service';
+import { TranslateLabelService } from './translate-label.service';
 
 
 @Injectable({
@@ -30,8 +33,10 @@ export class AuthService {
   public story: any;
 
   public navEnable = true;
-  public currency_pref = 'USD';
+  public currency_pref = 'KWD';
 
+  public currencies = [];
+  
   public isLogged = false;
 
   public displayCookieMessage = '0';
@@ -43,6 +48,7 @@ export class AuthService {
   private _urlResetPassRequest = '/auth/request-reset-password';
   public _urlLoginAuth0 = '/auth/login-auth0';
   public _urlUpdatePassword = '/auth/update-password';
+  public _urlLoginByGoogle = '/auth/login-by-google';
 
   constructor(
     public storage: Storage,
@@ -52,6 +58,7 @@ export class AuthService {
     public alertCtrl: AlertController,
     public loadingCtrl: LoadingController,
     public eventService: EventService,
+    public translate: TranslateLabelService,
     public storageService: StorageService,
     public analyticService: AnalyticsService,
     public rendererFactory: RendererFactory2
@@ -129,6 +136,9 @@ export class AuthService {
    * Save user data in storage
    */
   saveInStorage() {
+
+    this.storageService.set('currency_pref', this.currency_pref);
+
     this.storageService.set(
       'loggedInStaff',
       {
@@ -211,12 +221,25 @@ export class AuthService {
 
         this.storageService._storage = storage;
 
+        this.storageService.get('currency_pref').then(ret => {
+           
+          if (ret) {
+            this.currency_pref = ret;
+          } else {
+            this.currency_pref = "KWD";//default 
+          }
+        }).catch(r => {
+          console.info(r);
+          //this.eventService.errorStorage$.next({});
+        });
+
         this.storageService.get('theme').then(ret => {
 
           if (ret) {
             this.setTheme(ret);
           }
         }).catch(r => {
+          console.error(r);
           this.eventService.errorStorage$.next({});
         });
 
@@ -228,6 +251,7 @@ export class AuthService {
             // return this.logout('error with store variables',true);
           }
         }).catch(r => {
+          console.error(r);
           this.eventService.errorStorage$.next({});
         });
 
@@ -269,7 +293,8 @@ export class AuthService {
   basicAuth(email: string, password: string): Observable<any> {
     // Add Basic Auth Header with Base64 encoded email and password
     const authHeader = new HttpHeaders({
-      Authorization: 'Basic ' + btoa(unescape(encodeURIComponent(`${email}:${password}`)))
+      Authorization: 'Basic ' + btoa(unescape(encodeURIComponent(`${email}:${password}`))),
+      Currency: this.currency_pref
     });
     const url = environment.apiEndpoint + this._urlBasicAuth;
     return this._http.get(url, {
@@ -279,6 +304,132 @@ export class AuthService {
       first(),
       map((res: HttpResponse<any>) => res)
     );
+  }
+
+  /**
+   * show login error message
+   * @param message
+   */
+  async showLoginError(message = null) {
+    const alert = await this.alertCtrl.create({
+      message: message? message: this.translate.transform('Error getting login'),
+      buttons: [this.translate.transform('Okay')]
+    });
+    await alert.present();
+  }
+
+  /**
+   * Login by Google for mobile app
+   */
+  loginByGoogle() {
+
+    GoogleAuth.signIn().then(async googleUser => {
+ 
+      if (googleUser && googleUser.authentication && googleUser.authentication.idToken) {
+        this.useGoogleIdTokenForAuth(googleUser.authentication.idToken, false);
+      } else {
+        this.eventService.googleLoginFinished$.next({});
+
+        this.showLoginError('Error getting login by Google+ API');
+      }
+    }).catch(async err => {
+
+      console.error(err);
+
+      this.eventService.googleLoginFinished$.next({});
+
+      if (err = 'popup_closed_by_user') {
+        return false;
+      }
+
+      this.showLoginError('Error getting login by Google+ API');
+    }); 
+  }
+  
+  /**
+   * Login by google idToken
+   */
+  async useGoogleIdTokenForAuth(idToken, showLoader = true) {
+
+    let loading;
+
+    if (showLoader) {
+      loading = await this.loadingCtrl.create({
+        spinner: 'crescent',
+        message: this.translate.transform('Logging in...')
+      });
+      loading.present();
+    }
+
+    const url = environment.apiEndpoint + this._urlLoginByGoogle;
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Language: this.translate.currentLang || "en"
+    });
+    
+    return this._http.post(url, {
+      idToken: idToken,
+    }, {
+      headers: headers
+    })
+      .pipe(
+        retryWhen(genericRetryStrategy()),
+        catchError((err) => this._handleError(err)),
+        first(),
+        map((res) => res)
+      )
+      .subscribe(async response => {
+
+        if (response.operation == 'success') {
+
+          this.handleLogin(response, 'Google');
+
+        } else if (response.operation == 'error') {
+          const alert = await this.alertCtrl.create({
+            message: this.translate.transform('Error getting login by Google+ API'), // JSON.stringify(err)
+            buttons: [this.translate.transform('Ok')]
+          });
+          await alert.present();
+
+        }
+
+        this.eventService.googleLoginFinished$.next({});
+
+      }, err => {
+
+        this.eventService.googleLoginFinished$.next(err);
+      },
+      () => {
+        if (loading) {
+          loading.dismiss();
+        }
+      });
+  }
+
+  /**
+   * Handle response from api call to get login/register by google token or otp
+   * @param response
+   */
+  handleLogin(response, channel) {
+
+    if (response.operation === 'success') {
+ 
+      /*this.analyticsService.track("Log In", { 
+        login_method: channel
+      })*/
+
+      this.setAccessToken(response, true);
+
+    } else {
+
+      this.alertCtrl.create({
+        message: response.message,
+        buttons: [this.translate.transform('Okay')]
+      }).then(alert => {
+        alert.present();
+      });
+    }
   }
 
   /**
@@ -353,7 +504,8 @@ export class AuthService {
   _buildAuthHeaders() {
     return new HttpHeaders({
       //Language: this.language_pref || 'en',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Currency': this.currency_pref
     });
   }
 
@@ -392,6 +544,7 @@ export class AuthService {
     const url = environment.apiEndpoint + this._urlResetPassRequest;
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
+      'Currency': this.currency_pref
     });
     return this._http.post(url, { email }, { headers }).pipe(
       retryWhen(genericRetryStrategy()),
@@ -400,13 +553,17 @@ export class AuthService {
       map((res) => res)
     );
   }
+  
   /**
    * Change password by password reset token
    * @param token
    * @param newPassword
    */
   changePassword(newPassword: string, token: string): Observable<any> {
-    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    const headers = new HttpHeaders({
+      Currency: this.currency_pref,
+      'Content-Type': 'application/json'
+    });
     return this._http.patch(environment.apiEndpoint + this._urlUpdatePass, {
       newPassword,
       token
@@ -455,6 +612,7 @@ export class AuthService {
 
     // Handle internal server error - 500
     if (error.status === 500) {
+      console.error(error);
       this.eventService.error500$.next({});
       return EMPTY;
     }

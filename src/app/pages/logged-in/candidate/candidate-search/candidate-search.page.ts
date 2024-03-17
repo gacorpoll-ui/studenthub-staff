@@ -560,6 +560,7 @@ export class CandidateSearchPage implements OnInit {
 
     // Handle internal server error - 500 or 400
     if (error.status === 500) {
+      console.error(error);
       return this.eventService.error500$.next({});
     }
 

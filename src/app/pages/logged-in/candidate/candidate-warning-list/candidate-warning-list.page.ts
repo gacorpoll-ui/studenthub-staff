@@ -133,7 +133,7 @@ export class CandidateWarningsPage implements OnInit {
    */
   async add() {
 
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     let warning = new CandidateWarning;
     warning.candidate_id = this.candidate_id;

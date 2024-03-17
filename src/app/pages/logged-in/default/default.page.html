@@ -3,7 +3,13 @@
     <ion-title>Dashboard
     </ion-title>
     <ion-buttons slot="end">
-       
+      
+      <ion-select placeholder="Select currency" [(ngModel)]="authService.currency_pref" (ionChange)="onCurrencyChange($event)"> 
+        <ion-select-option [value]="currency.code" *ngFor="let currency of authService.currencies">
+          {{ currency.code }}
+        </ion-select-option>
+      </ion-select>
+
       <ion-button (click)="handleRefresh()" fill="clear" class="btn-refresh">
         <ion-icon name="refresh-outline"></ion-icon> 
       </ion-button>

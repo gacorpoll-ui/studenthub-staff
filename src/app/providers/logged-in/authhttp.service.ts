@@ -106,6 +106,7 @@ export class AuthHttpService {
       responseType: 'blob', // ResponseContentType.Blob,  https://github.com/angular/angular/issues/18654#issuecomment-321947661
       headers: new HttpHeaders({
         'Content-Type': 'application/x-www-form-urlencoded',
+        'Currency': this._auth.currency_pref,
         Authorization: 'Bearer ' + bearerToken
       })
     }).pipe(
@@ -131,6 +132,7 @@ export class AuthHttpService {
       responseType: 'blob', // ResponseContentType.Blob,  https://github.com/angular/angular/issues/18654#issuecomment-321947661
       headers: new HttpHeaders({
         'Content-Type': 'application/x-www-form-urlencoded',
+        'Currency': this._auth.currency_pref,
         Authorization: 'Bearer ' + bearerToken
       })
     }).pipe(
@@ -253,7 +255,8 @@ export class AuthHttpService {
     return new HttpHeaders({
       Authorization: 'Bearer ' + bearerToken,
       'Content-Type': 'application/json',
-      Language: 'en'
+      Language: 'en',
+      'Currency': this._auth.currency_pref
     });
   }
 
@@ -290,6 +293,7 @@ export class AuthHttpService {
 
     // Handle internal server error - 500
     if (error.status === 500) {
+      console.error(error);
       this.eventService.error500$.next({});
       return EMPTY;
     }

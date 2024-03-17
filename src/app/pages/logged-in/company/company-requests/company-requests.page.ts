@@ -96,7 +96,7 @@ export class CompanyRequestsPage implements OnInit {
       }, 100);
     });
     /*
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: CompanyRequestViewPage,
@@ -165,7 +165,7 @@ export class CompanyRequestsPage implements OnInit {
   }
 
   async addRequest($event) {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({
       component: CompanyRequestFormPage,

@@ -85,4 +85,6 @@ export class EventService {
   public campaignStopped$ = new Subject();
   public campaignStatus$ = new Subject();
   public campaignStatusList$ = new Subject();
+
+  public googleLoginFinished$ = new Subject();
 }
