@@ -156,6 +156,8 @@ export class CompanyRequestsPage implements OnInit {
 
     if (this.company_id) {
       urlParams += '&company_id=' + this.company_id;
+    } else if(this.company) {
+      urlParams += '&company_id=' + this.company.company_id;
     }
 
     urlParams += '&expand=storyOwners,staffs,staff,company';
