@@ -14,7 +14,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" scrollEvents="true" (ionScroll)="logScrolling($event)">
+<ion-content [fullscreen]="true" scrollEvents="true" class="{{ authService.theme }}" (ionScroll)="logScrolling($event)">
 
   <div class="container">
     <form [formGroup]="form" *ngIf="form">

@@ -257,7 +257,7 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
 
   // convenience getters for easy access to form fields
   get f() { return this.form.controls; }
-  get fulltimerTags() { return this.f['fulltimerTags'] as FormArray; }
+  get fulltimerTags() { return <FormArray<FormGroup>>this.f['fulltimerTags']; }
 
   removeTag(index) {
     this.fulltimerTags.removeAt(index);

@@ -1,13 +1,13 @@
 <!--<ion-card (click)="openCandidatePage()" tappable>-->
 <ion-card tappable>
   <ng-container *ngIf="showBadge">
-    <ion-badge *ngIf="model.suggestion_status == 1">
+    <ion-badge color="light" *ngIf="model.suggestion_status == 1">
       Suggested a candidate
     </ion-badge>
-    <ion-badge *ngIf="model.suggestion_status == 3">
+    <ion-badge color="light" *ngIf="model.suggestion_status == 3">
       Accepted a candidate
     </ion-badge>
-    <ion-badge *ngIf="model.suggestion_status == 2">
+    <ion-badge color="light" *ngIf="model.suggestion_status == 2">
       Rejected a candidate
     </ion-badge>
   </ng-container>

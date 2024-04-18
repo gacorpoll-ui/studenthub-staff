@@ -50,7 +50,7 @@ export class CompanyRequestFormPage implements OnInit {
     private fb: FormBuilder,
     private modalCtrl: ModalController,
     private alertCtrl: AlertController,
-    private authService: AuthService,
+    public authService: AuthService,
     private popoverCtrl: PopoverController,
     private eventService: EventService,
     public analyticService: AnalyticsService

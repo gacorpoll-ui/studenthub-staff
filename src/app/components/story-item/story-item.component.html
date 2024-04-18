@@ -9,7 +9,8 @@
       </h3>
 
       <div class="badge-section" >
-        <ion-badge *ngIf="story" class="status">
+
+        <ion-badge *ngIf="story" class="status" color="primary">
           <span *ngIf="story.story_status == 0"> Unstarted </span>
           <span *ngIf="story.story_status == 1"> Started </span>
           <span *ngIf="story.story_status == 2"> Finished </span>
@@ -23,23 +24,23 @@
 
         <ng-container *ngIf="request">
 
-          <ion-badge *ngIf="request.request_position_type == 1">Full-time</ion-badge>
-          <ion-badge *ngIf="request.request_location">{{request.request_location.length > 30 ? request.request_location.substr(0,30)+'...' : request.request_location }}</ion-badge>
-          <ion-badge *ngIf="request.request_position_type == 2">Part-time</ion-badge>
+          <ion-badge color="light" *ngIf="request.request_position_type == 1">Full-time</ion-badge>
+          <ion-badge color="light" *ngIf="request.request_location">{{request.request_location.length > 30 ? request.request_location.substr(0,30)+'...' : request.request_location }}</ion-badge>
+          <ion-badge color="light" *ngIf="request.request_position_type == 2">Part-time</ion-badge>
 
-          <ion-badge>
+          <ion-badge color="light">
             Required : {{story.number_of_employees}}
           </ion-badge>
-          <ion-badge>
+          <ion-badge color="light">
             Invited : {{story.invited}}
           </ion-badge>
-          <ion-badge>
+          <ion-badge color="light">
             Suggested : {{story.suggestion}}
           </ion-badge>
 
           <ng-container *ngIf="story.request.company">
-            <ion-badge>{{ story.request.company.currency_code }} </ion-badge>
-            <ion-badge *ngIf="story.request.company.country">{{ request.company.country.country_name_en }} </ion-badge>        
+            <ion-badge color="light">{{ story.request.company.currency_code }} </ion-badge>
+            <ion-badge color="light" *ngIf="story.request.company.country">{{ request.company.country.country_name_en }} </ion-badge>        
           </ng-container>
 
           <p *ngIf="story.staff" class="working">{{ story.staff.staff_name }} {{story.story_status == 1 || story.story_status == 7 ? 'is working': 'was working'}} on it</p>

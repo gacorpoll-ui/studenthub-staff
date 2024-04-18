@@ -239,7 +239,6 @@ ion-content {
 
 ion-footer ion-button {
     width: calc(100% - 48px);
-    --background: var(--ion-color-custom-14);
     text-transform: none;
     display: block;
     margin: 24px 24px;
@@ -253,7 +252,6 @@ ion-footer ion-button {
     line-height: 1.5;
     letter-spacing: normal;
     text-align: center;
-    color: var(--ion-color-primary-contrast);
 }
 
 ion-item {

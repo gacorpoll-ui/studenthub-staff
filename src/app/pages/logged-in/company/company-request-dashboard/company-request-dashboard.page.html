@@ -101,10 +101,6 @@
       </ion-infinite-scroll>
     </div>
 
-    <div class="add-request" tappable routerLink="/request-form">
-      <ion-icon name="add-outline"></ion-icon>
-    </div>
-
   </div>
 
   <div class="update-alert" dir="ltr" *ngIf="alertRequestCountUpdated">
@@ -121,6 +117,12 @@
         <ion-icon name="close"></ion-icon>
     </div>
   </div>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button routerLink="/request-form">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
 </ion-content>
 <!--

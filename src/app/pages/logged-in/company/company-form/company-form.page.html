@@ -8,6 +8,10 @@
   <ion-toolbar class="container" [class.hidden]="borderLimit">
     <ion-title>{{ operation }}</ion-title>
     <ion-buttons slot="end">
+      <ion-button clear [disabled]="!form.valid || loading || saving" (click)="save()">
+        <span *ngIf="!saving">Save</span>
+        <ion-spinner *ngIf="saving"></ion-spinner>
+      </ion-button>
       <ion-button clear (click)="close()">
         Cancel
       </ion-button>
@@ -144,6 +148,7 @@
     </form>
   </div>
 </ion-content>
+<!--
 <ion-footer class="ion-no-border">
   <div class="container" *ngIf="form">
     <ion-button class="btn-save" [disabled]="!form.valid || loading || saving" (click)="save()">
@@ -151,4 +156,4 @@
       <ion-spinner *ngIf="saving"></ion-spinner>
     </ion-button>
   </div>
-</ion-footer>
+</ion-footer>-->

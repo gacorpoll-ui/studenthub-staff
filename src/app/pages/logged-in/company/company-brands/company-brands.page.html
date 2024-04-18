@@ -45,8 +45,12 @@
 
     <no-items *ngIf="!loading && brands.length ==0" message="~ No brand data available ~"></no-items>
 
-    <div class="add-request" tappable (click)="addBrand()">
-      <ion-icon name="add-outline"></ion-icon>
-    </div>
   </div>
+  
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="addBrand()">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
 </ion-content>

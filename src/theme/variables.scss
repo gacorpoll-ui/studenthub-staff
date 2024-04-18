@@ -247,6 +247,9 @@
   body.night {
     background: #000000;
     
+    --ck-color-base-background: var(--background);
+    --ck-color-toolbar-background: var(--background);
+
     --ion-card-background: #383a3e;
 
     --ion-color-primary: #428cff;

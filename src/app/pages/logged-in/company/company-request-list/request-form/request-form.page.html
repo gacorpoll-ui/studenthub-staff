@@ -15,7 +15,7 @@
 
 </ion-header>
 
-<ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
+<ion-content scrollEvents="true" class="{{ authService.theme }}" (ionScroll)="logScrolling($event)">
   <div class="container">
     <form [formGroup]="form" *ngIf="form">
   

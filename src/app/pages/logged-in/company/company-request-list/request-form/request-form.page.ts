@@ -54,7 +54,7 @@ export class RequestFormPage implements OnInit {
     public navCtrl: NavController,
     private modalCtrl: ModalController,
     private alertCtrl: AlertController,
-    private authService: AuthService,
+    public authService: AuthService,
     private popoverCtrl: PopoverController,
     private location: Location,
     private eventService: EventService,

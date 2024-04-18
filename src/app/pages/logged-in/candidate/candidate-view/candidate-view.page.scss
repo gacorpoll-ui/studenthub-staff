@@ -646,7 +646,10 @@ ion-footer {
     margin: 24px;
     --box-shadow: none;
   }
+}
 
+
+.day {
   .btn-invite {
     --background: var(--ion-color-custom-14);
   }
@@ -656,8 +659,7 @@ ion-footer {
   .btn-export-cv {
     --background: var(--ion-color-custom-10);
     color: var(--ion-color-primary-contrast);
-  }
-}
+  } 
 
 .btn-unassign {
   --background: var(--ion-color-custom-23);
@@ -665,9 +667,17 @@ ion-footer {
 }
 
 .btn-copy {
+  --color: var(--ion-color-light-contrast); 
+}
+}
+.night .btn-copy,
+.dark .btn-copy {
+  --color: var(--ion-color-primary-contrast); 
+}
+
+.btn-copy {
   --background: none;
   --box-shadow: none;
-  --color: var(--ion-color-light-contrast);
   opacity: 0.5;
 }
 

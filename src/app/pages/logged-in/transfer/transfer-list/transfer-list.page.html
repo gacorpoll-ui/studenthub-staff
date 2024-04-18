@@ -60,9 +60,11 @@
 
     <no-items *ngIf="!loading && company && company.parentTransfers.length == 0" message="~ No transfer Data ~"></no-items>
   </div>
+
   <ion-fab *ngIf="company && !company.parent_company_id" slot="fixed">
     <ion-fab-button (click)="createNewTransfer()">
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
+  
 </ion-content>

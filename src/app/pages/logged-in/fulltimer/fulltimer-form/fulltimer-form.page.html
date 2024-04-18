@@ -237,8 +237,8 @@
           </ion-card-header>
           <ion-card-content>
 
-            <div *ngFor="let fulltimerTag of fulltimerTags.controls; let i = index">
-              <!-- [formGroup]="fulltimerTag"-->
+            <div [formGroup]="fulltimerTag" *ngFor="let fulltimerTag of fulltimerTags.controls; let i = index">
+              
               <ion-item  class="input-wrapper" >
                 <div tabindex="0"></div>
 
