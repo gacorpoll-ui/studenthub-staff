@@ -49,6 +49,7 @@ export class AuthService {
   public _urlLoginAuth0 = '/auth/login-auth0';
   public _urlUpdatePassword = '/auth/update-password';
   public _urlLoginByGoogle = '/auth/login-by-google';
+  public _urlLoginByKey = '/auth/login-by-key';
 
   constructor(
     public storage: Storage,
@@ -322,7 +323,7 @@ export class AuthService {
     });
     await alert.present();
   }
-
+ 
   /**
    * Login by Google for mobile app
    */
@@ -351,6 +352,57 @@ export class AuthService {
     }); 
   }
   
+  async loginByKey(auth_key: string) {
+    
+    const loading = await this.loadingCtrl.create({
+      spinner: 'crescent',
+      message: this.translate.transform('Logging in...')
+    });
+    loading.present();
+
+    const url = environment.apiEndpoint + this._urlLoginByKey;
+
+    const headers = this._buildAuthHeaders();
+
+    return this._http.post(url, {
+      auth_key: auth_key
+    }, {
+      headers
+    })
+      .pipe(
+        retryWhen(genericRetryStrategy()),
+        catchError((err) => this._handleError(err)),
+        first(),
+        map((res) => res)
+      )
+      .subscribe(async response => {
+
+        if (response.operation == 'success') {
+
+          this.setAccessToken(response, true);
+
+        } else if (response.operation == 'error') {
+          const alert = await this.alertCtrl.create({
+            message: this.translate.transform('Error getting login'), // JSON.stringify(err)
+            buttons: [this.translate.transform('Okay')]
+          });
+          await alert.present();
+
+        }
+
+        //this.eventService.googleLoginFinished$.next({});
+
+      }, err => {
+
+        //this.eventService.googleLoginFinished$.next(err);
+      },
+      () => {
+        if (loading) {
+          loading.dismiss();
+        }
+      });
+  }
+
   /**
    * Login by google idToken
    */

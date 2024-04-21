@@ -64,6 +64,13 @@ export class AppComponent implements OnInit {
 
   async initializeApp() {
 
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    
+    if(urlParams.get('auth_key')) {
+      this.authService.loginByKey(urlParams.get('auth_key'));
+    }
+
     // use hook after platform dom ready
     GoogleAuth.initialize({
       clientId: "123188361193-ijgbu581g8sp4qag6gt4nia3410160qk.apps.googleusercontent.com",
