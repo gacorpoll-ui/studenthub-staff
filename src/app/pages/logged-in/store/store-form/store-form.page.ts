@@ -12,6 +12,7 @@ import {Mall} from 'src/app/models/mall';
 import {Brand} from "../../../../models/brand";
 import {EventService} from "../../../../providers/event.service";
 import { AnalyticsService } from 'src/app/providers/analytics.service';
+import { StoreManager } from 'src/app/models/store-manager';
 
 
 @Component({
@@ -93,18 +94,27 @@ export class StoreFormPage implements OnInit {
         name: ['', Validators.required],
         location: ['', Validators.required],
         brand: [''],
-        mall: ['']
+        mall: [''],
+        manager_name: [''],
+        manager_email: [''],
+        manager_phone_number: [''],
+        manager_password: ['']
       });
-    }else{ // Show Update Form
+    } else { // Show Update Form
       this.operation = 'Edit Store';
       this.form = this._fb.group({
         name: [this.model.store_name, Validators.required],
         location: [this.model.store_location, Validators.required],
         brand: [this.model.brand_uuid],
-        mall: [this.model.mall_uuid]
+        mall: [this.model.mall_uuid],
+        manager_name: [this.model.storeManager?.name],
+        manager_email: [this.model.storeManager?.email],
+        manager_phone_number: [this.model.storeManager?.phone_number],
+        manager_password: [""]
       });
     }
   }
+   
   /**
    * Update Model Data based on Form Input
    */
@@ -117,6 +127,15 @@ export class StoreFormPage implements OnInit {
     this.model.store_location = this.form.value.location;
     this.model.brand_uuid = this.form.value.brand || null;
     this.model.mall_uuid = this.form.value.mall || null;
+
+    if(!this.model.storeManager) {
+      this.model.storeManager = new StoreManager;
+    }
+    
+    this.model.storeManager.name = this.form.value.manager_name;
+    this.model.storeManager.email = this.form.value.manager_email;
+    this.model.storeManager.phone_number = this.form.value.manager_phone_number;
+    this.model.storeManager.password = this.form.value.manager_password;
   }
 
   /**

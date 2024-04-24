@@ -16,9 +16,10 @@
 
     <ion-title>{{ store.store_name }}</ion-title>
 
+    <!--
     <ion-button *ngIf="!store.storeManager" class="btn-store-manager" (click)="selectStoreManager()">
       Select store manager
-    </ion-button>
+    </ion-button>-->
 
     <ion-item *ngIf="store.storeManager" class="store-manager">
       <div tabindex="0"></div>
@@ -28,10 +29,11 @@
       </ion-avatar>
 
       <ion-label>
-        <h4>{{ store.storeManager.contact_name }}</h4>
-        <p> {{ store.storeManager.contact_position? store.storeManager.contact_position: "Store Manager" }}</p>
+        <h4>{{ store.storeManager.name }}</h4>
+        <p> {{ "Store Manager" }}</p>
       </ion-label>
 
+      <!--
       <ion-buttons slot="end">
 
         <ion-button color="primary" (click)="selectStoreManager()">
@@ -42,6 +44,7 @@
           <ion-icon src="assets/icon/icon-trash.svg"></ion-icon>
         </ion-button>
       </ion-buttons>
+      -->
     </ion-item>
 
       <!--

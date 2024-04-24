@@ -31,10 +31,11 @@
 
           <ion-buttons slot="end" *ngIf="platform.width() > 768">
 
+            <!--
             <ion-button *ngIf="!store.storeManager" (click)="selectStoreManager($event, store)">
               <ion-icon name="call-outline"></ion-icon>
               Select store manager
-            </ion-button>
+            </ion-button>-->
 
             <ion-button color="danger" (click)="delete($event, store)">
               <ion-icon slot="start" name="trash-outline"></ion-icon>
@@ -46,10 +47,11 @@
 
         <ion-item-options side="end">
 
+          <!--
           <ion-button *ngIf="!store.storeManager" color="primary" (click)="selectStoreManager($event, store)">
             <ion-icon name="call-outline"></ion-icon>
             Select store manager
-          </ion-button>
+          </ion-button>-->
 
           <ion-button color="danger" (click)="delete($event, store)">
             <ion-icon name="trash"></ion-icon>
