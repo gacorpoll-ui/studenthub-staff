@@ -180,16 +180,16 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
    */
   loadDetail(loading = true) {
 
+    //hide update alert
+
+    this.alertRequestUpdated = false;
+
     if (loading)
       this.loading = true;
 
     const urlParams = '?expand=storyOwners,staffs,staff,contact,company,stories,stories.staff,requestSkills';
 
     this.requestService.view(this.request_uuid, urlParams).subscribe(data => {
-
-      //hide update alert
-
-      this.alertRequestUpdated = false;
 
       this.request = data;
 
@@ -209,7 +209,7 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
     }
 
     this.requestService.isRequestUpdated(this.request_uuid).subscribe(data => {
-      if (data.request_updated_datetime != this.request.request_updated_datetime) {
+      if (data.request_updated_datetime != this.request.request_updated_datetime && !this.loading) {
         //this.loadDetail(false);//refresh without showing loader
         this.alertRequestUpdated = true;
       }

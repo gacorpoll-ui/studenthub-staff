@@ -268,8 +268,7 @@
   </ion-grid>
 </ion-footer>
 
-
-<div class="update-alert" dir="ltr" *ngIf="alertRequestUpdated">
+<div class="update-alert" dir="ltr" *ngIf="alertRequestUpdated && !this.loading">
   <span class="wrapper">
       <span class="title">Requests updated</span>
       <span class="btn-refresh">
