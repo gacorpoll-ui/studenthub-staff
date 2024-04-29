@@ -713,7 +713,15 @@ const routes: Routes = [
   {
     path: '**',
     redirectTo: 'not-found'
+  },  {
+    path: 'store-assignment-request-list',
+    loadChildren: () => import('./pages/logged-in/store-assignment-request/store-assignment-request-list/store-assignment-request-list.module').then( m => m.StoreAssignmentRequestListPageModule)
   },
+  {
+    path: 'store-assignment-request-view',
+    loadChildren: () => import('./pages/logged-in/store-assignment-request/store-assignment-request-view/store-assignment-request-view.module').then( m => m.StoreAssignmentRequestViewPageModule)
+  },
+
 
 ];
 
