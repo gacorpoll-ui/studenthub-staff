@@ -104,7 +104,7 @@
           <div tabindex="0"></div>
           <ion-label>
             <h5>Account created at</h5>
-            <p>{{ staff.staff_created_at }}</p>
+            <p>{{ toDate(staff.staff_created_at) | date: 'MMM d, y, h:mm:ss a' }}</p>
           </ion-label>
         </ion-item>
 
@@ -112,7 +112,7 @@
           <div tabindex="0"></div>
           <ion-label>
             <h5>Account updated at</h5>
-            <p>{{ staff.staff_updated_at }}</p>
+            <p>{{ toDate(staff.staff_updated_at) | date: 'MMM d, y, h:mm:ss a' }}</p>
           </ion-label>
         </ion-item>
  

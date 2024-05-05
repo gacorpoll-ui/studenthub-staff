@@ -44,6 +44,21 @@
           Latest Work Started on {{ toDate(latestWorkStartedOn) | date }}
         </small>
       </p>
+        
+      <p *ngIf="application && application.requestInterview">
+        <span *ngIf="application.requestInterview.status == 0">
+          Requested to schedule interview at {{ toDate(application.requestInterview.interview_at) | date: 'MMM d, y, h:mm:ss a' }}
+        </span>
+        <span *ngIf="application.requestInterview.status == 1">
+          Interview scheduled at {{ toDate(application.requestInterview.interview_at) | date: 'MMM d, y, h:mm:ss a' }}
+        </span>
+        <span *ngIf="application.requestInterview.status == 2">
+          Interview schedule request rejected
+        </span>
+        <span *ngIf="application.requestInterview.status == 3">
+          Interview schedule request cancelled
+        </span>
+      </p>
       
       <ng-container *ngIf="candidate.candidateTags">
         <ion-badge color="warning" class="candidate-tag" *ngFor="let candidateTag of candidate.candidateTags">
@@ -67,7 +82,7 @@
         Deleted
       </ion-badge>
 
-      <p><small>Created on: {{candidate.candidate_created_at}} | Updated On: {{candidate.candidate_updated_at}}</small></p>
+      <p><small>Created on: {{ toDate(candidate.candidate_created_at) | date: 'MMM d, y, h:mm:ss a'}} | Updated On: {{ toDate(candidate.candidate_updated_at) | date: 'MMM d, y, h:mm:ss a'}}</small></p>
     </ion-label>
 
     <ion-checkbox *ngIf="type == 'candidate'" #checkbox
@@ -77,5 +92,17 @@
 
   </ion-item>
 
+  <ion-card-header *ngIf="application && application.requestInterview 
+    && application.requestInterview.status == 0">
+
+    <ion-button (click)="acceptInterview($event, application.requestInterview)">
+      Accept interview
+    </ion-button>
+
+    <ion-button color="light" (click)="rejectInterview($event, application.requestInterview)">
+      Reject interview request
+    </ion-button>
+
+  </ion-card-header>
 </ion-card>
 

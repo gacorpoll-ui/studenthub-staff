@@ -88,11 +88,11 @@
         </div>
 
         <p class="txt-time">
-          <ion-icon src="assets/images/icon-updated-on.svg"></ion-icon> Updated on  <span>{{ transfer.transfer_updated_at}}</span>
+          <ion-icon src="assets/images/icon-updated-on.svg"></ion-icon> Updated on  <span>{{ toDate(transfer.transfer_updated_at) | date: 'MMM d, y, h:mm:ss a' }}</span>
         </p>
 
         <p class="txt-time">
-          <ion-icon src="assets/images/icon-transfer-time.svg"></ion-icon>  Created on <span>{{ transfer.transfer_created_at}}</span>
+          <ion-icon src="assets/images/icon-transfer-time.svg"></ion-icon>  Created on <span>{{ toDate(transfer.transfer_created_at) | date: 'MMM d, y, h:mm:ss a' }}</span>
         </p>
 
           <ion-grid>

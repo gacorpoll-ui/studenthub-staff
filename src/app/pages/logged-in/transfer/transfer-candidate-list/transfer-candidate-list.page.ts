@@ -133,6 +133,17 @@ export class TransferCandidateListPage implements OnInit {
     return urlParams;
   }
 
+  /**
+   * Make date readable by Safari
+   * @param date
+   */
+  toDate(date) {
+    if (!date) 
+      return null;
+    
+    return new Date(date.replace(/-/g, '/'));
+  }
+
   filterDate($event, type) {
     if (type == 'startDate') {
       this.start_date = format(parseISO($event.original), 'yyyy-MM-dd');

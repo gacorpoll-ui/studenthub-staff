@@ -230,6 +230,7 @@ const routes: Routes = [
   },
   {
     path: 'store-manager-form',
+    canActivate: [AuthService],
     loadChildren: () => import('./pages/logged-in/store/store-manager-form/store-manager-form.module').then( m => m.StoreManagerFormPageModule)
   },
   {
@@ -719,6 +720,11 @@ const routes: Routes = [
     path: 'store-assignment-request-view',
     canActivate: [AuthService],
     loadChildren: () => import('./pages/logged-in/store-assignment-request/store-assignment-request-view/store-assignment-request-view.module').then( m => m.StoreAssignmentRequestViewPageModule)
+  },
+  {
+    path: 'request-interview-list',
+    canActivate: [AuthService],
+    loadChildren: () => import('./pages/logged-in/company/request-interview-list/request-interview-list.module').then( m => m.RequestInterviewListPageModule)
   },
   {
     path: '**',

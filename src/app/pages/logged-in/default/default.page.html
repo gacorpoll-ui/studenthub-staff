@@ -151,6 +151,16 @@
           </ion-item>
         </ion-card>
 
+        <ion-card routerLink="/request-interview-list" class="stats" tappable>
+          <ion-item class="ion" detail lines="none">
+            <div tabindex="0"></div>
+            <ion-label class="ion-text-wrap">
+              <span>{{ eventsService.statistics.totalInterviewRequests }}</span>
+              <p><b>Interview schedule requests.</b> Need to schedule and accept or reject.</p>
+            </ion-label>
+          </ion-item>
+        </ion-card>
+
       </div>
 
       <div *ngIf="eventsService.statistics.totalExpiredCards > 0 || eventsService.statistics.missingBankInfo > 0 || eventsService.statistics.assignedExpiredCivilID > 0 || eventsService.statistics.assignedIdleCandidates > 0 || eventsService.statistics.incompleteAssignedToWork > 0">

@@ -59,6 +59,17 @@ export class ExpenseViewPage implements OnInit {
     });
   }
 
+  /**
+   * Make date readable by Safari
+   * @param date
+   */
+  toDate(date) {
+    if (!date) 
+      return null;
+    
+    return new Date(date.replace(/-/g, '/'));
+  }
+  
   getFileUrl() {
     return this.awsService.permanentBucketUrl + 'staff-expenses/' + encodeURIComponent(this.expense.file);
   }

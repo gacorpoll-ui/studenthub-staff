@@ -133,4 +133,16 @@ export class TransferListAllPage implements OnInit {
       this.end_date = format(parseISO($event.original), 'yyyy-MM-dd');
     }
   }
+
+  /**
+   * Make date readable by Safari
+   * @param date
+   */
+  toDate(date) {
+    if (!date) 
+      return null;
+    
+    return new Date(date.replace(/-/g, '/'));
+  }
+
 }

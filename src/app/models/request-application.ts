@@ -1,5 +1,6 @@
 import { Candidate } from "./candidate";
 import { Fulltimer } from "./fulltimer";
+import { RequestInterview } from "./request-interview";
 
 export class RequestApplication {
     application_uuid: string;
@@ -11,5 +12,6 @@ export class RequestApplication {
     updated_at: string;
     candidate: Candidate;
     fulltimer: Fulltimer;
+    requestInterview: RequestInterview
 }
 

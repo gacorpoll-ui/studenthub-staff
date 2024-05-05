@@ -277,4 +277,16 @@ export class TeamViewPage implements OnInit {
       }
     });
   }
+
+
+  /**
+   * Make date readable by Safari
+   * @param date
+   */
+  toDate(date) {
+    if (!date) 
+      return null;
+    
+    return new Date(date.replace(/-/g, '/'));
+  }
 }

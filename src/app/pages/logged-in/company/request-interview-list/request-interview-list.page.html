@@ -1,0 +1,38 @@
+<ion-header mode="md" [class.add-border]="borderLimit" class="ion-no-border">
+  <ion-toolbar class="container">
+    <ion-buttons slot="start">
+      <!--*ngIf="!directView" 
+        <ion-back-button icon="assets/images/icon-back.svg" (click)="close()"></ion-back-button>
+        -->
+      <ion-back-button icon="assets/images/icon-back.svg" defaultHref="/"></ion-back-button> 
+    </ion-buttons> 
+    <ion-title>
+      Interview schedule requests
+    </ion-title>
+  </ion-toolbar>
+  <ion-toolbar *ngIf="company" class="container">
+    <ion-title>{{ company.company_name }}</ion-title>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
+  <div class="container">
+
+    <ion-list>
+
+      <candidate tappable (click)="candidateSelected(requestInterview.candidate)" [candidate]="requestInterview.candidate" (refresh)="loadData()" 
+        *ngFor="let requestInterview of requestInterviews" [requestInterview]="requestInterview"></candidate>
+
+    </ion-list>
+    
+    <no-items *ngIf="!loading && requestInterviews && requestInterviews.length == 0" message="No data available"></no-items>
+
+    <loading-modal [loading]="loading" type="candidate-list"></loading-modal>
+
+    <ion-infinite-scroll *ngIf="currentPage < pageCount" (ionInfinite)="doInfinite($event)">
+      <ion-infinite-scroll-content></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
+  </div>
+</ion-content>

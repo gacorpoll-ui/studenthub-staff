@@ -48,10 +48,20 @@ export class CompanyRequestService {
    * @returns 
    */
   listApplications(request_uuid: string, page: number) : Observable<any> {
-    let url = this.companyRequestEndpoint + '/applications/'+ request_uuid +'?expand=candidate&page=' + page;
+    let url = this.companyRequestEndpoint + '/applications/'+ request_uuid +'?expand=candidate,requestInterview&page=' + page;
     return this._authhttp.getRaw(url);
   }
 
+  /**
+   * list interview requests 
+   * @param page 
+   * @returns 
+   */
+  listInterviewRequests(page: number) : Observable<any> {
+    let url = this.companyRequestEndpoint + '/interview-requests?expand=candidate&page=' + page;
+    return this._authhttp.getRaw(url);
+  }
+  
   /**
    * view request
    * @param id
@@ -60,6 +70,25 @@ export class CompanyRequestService {
     const url = this.companyRequestEndpoint + '/' + id + urlParams;
     return this._authhttp.get(url);
   }
+
+  /**
+   * accept interview request 
+   * @param request_interview_uuid 
+   * @returns 
+   */
+  acceptInterviewRequest(request_interview_uuid: string): Observable<any> {
+    const url = this.companyRequestEndpoint + '/accept-interview-request/' + request_interview_uuid;
+    return this._authhttp.patch(url, {});
+  }
+  
+  /**
+   * @param request_interview_uuid 
+   * @returns 
+   */
+  rejectInterviewRequest(request_interview_uuid: string): Observable<any> {
+    const url = this.companyRequestEndpoint + '/reject-interview-request/' + request_interview_uuid;
+    return this._authhttp.patch(url, {});
+  } 
 
   /**
    * requests started/active but not by login user

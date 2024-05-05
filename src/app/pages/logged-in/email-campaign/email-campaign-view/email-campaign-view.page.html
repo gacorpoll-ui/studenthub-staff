@@ -62,7 +62,7 @@
         <div tabindex="0"></div>
         <ion-label>
           <h5>Created at </h5>
-          <p>{{ emailCampaign.created_at }}</p>
+          <p>{{ toDate(emailCampaign.created_at) | date: 'MMM d, y, h:mm:ss a' }}</p>
         </ion-label>
       </ion-item>
 
@@ -70,7 +70,7 @@
         <div tabindex="0"></div>
         <ion-label>
           <h5>Updated at </h5>
-          <p>{{ emailCampaign.updated_at }}</p>
+          <p>{{ toDate(emailCampaign.updated_at) | date: 'MMM d, y, h:mm:ss a' }}</p>
         </ion-label>
       </ion-item>
 
