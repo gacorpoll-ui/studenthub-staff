@@ -35,9 +35,10 @@
         <ion-label>Invited <ion-chip *ngIf="request">{{ allInvitedCandidates.length }}</ion-chip></ion-label>
       </ion-segment-button>
 
+      <!--
       <ion-segment-button mode="md" value="applied" *ngIf="request && request.request_position_type == 2">
         <ion-label>Applied <ion-chip *ngIf="request">{{ applicationTotal }}</ion-chip></ion-label>
-      </ion-segment-button>
+      </ion-segment-button>-->
 
       <ion-segment-button mode="md" value="suggested">
         <ion-label>Suggested <ion-chip *ngIf="request">{{ Stotal }}</ion-chip></ion-label>
@@ -54,9 +55,9 @@
           <ion-select-option value="invited">
             Invited 
           </ion-select-option>
-          <ion-select-option value="applied">
+          <!--<ion-select-option value="applied">
             Applied 
-          </ion-select-option>
+          </ion-select-option>-->
       </ng-container>
       <ion-select-option value="suggested">
         Suggested 
