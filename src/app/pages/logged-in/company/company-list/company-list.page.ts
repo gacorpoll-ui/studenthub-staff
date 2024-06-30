@@ -372,8 +372,8 @@ export class CompanyListPage implements OnInit {
     this.loadData(1); // reload all result
   }
 
-  searchByName($event) {
-    this.filters.name = $event.detail.value;
+  searchByName(event) {
+    this.filters.name = event.detail.value;
     this.loadData(1); // reload all result
   }
 }
