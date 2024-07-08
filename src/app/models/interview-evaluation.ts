@@ -15,4 +15,19 @@ export class InterviewEvaluation {
     staff: Staff;
     request: Request;
     company: Company;
+    interviewEvaluationNoteVersions: InterviewEvaluationNoteVersion[];
+    latestInterviewEvaluationNoteVersions: InterviewEvaluationNoteVersion;
+}
+
+export class InterviewEvaluationNoteVersion {
+    ienv_uuid: string;
+    interview_evaluation_uuid: string;
+    created_at: string;
+    updated_at: string;
+    interviewEvaluationNotes: InterviewEvaluationNote[];
+}
+
+export class InterviewEvaluationNote {
+    ienv_uuid: string;
+    note: string;
 }

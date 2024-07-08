@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController, ModalController } from '@ionic/angular';
+import { AlertController, ModalController, ToastController } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 //models
-import { InterviewEvaluation } from 'src/app/models/interview-evaluation';
+import { InterviewEvaluation, InterviewEvaluationNote } from 'src/app/models/interview-evaluation';
 import { Note } from 'src/app/models/note';
 //pages
 import { CompanyRequestListPopupPage } from '../../../company/company-request-list/company-request-list-popup/company-request-list-popup.page';
@@ -29,8 +29,20 @@ export class InterviewEvaluationFormPage implements OnInit {
 
   public borderLimit = false;
 
+  public interviewEvaluationNotes: InterviewEvaluationNote[] = [new InterviewEvaluationNote];
+
+  public txtInterviewEvaluationNotes = '';
+  public loading = false;
+  public tmpInterviewEvaluationNotes: any = [];// [new InterviewEvaluationNote]; // assignment initial value
+
+  public count;
+
+  public dirty: boolean = false; 
+  public query;
+
   constructor(
     public fb: FormBuilder,
+    public toastCtrl: ToastController,
     public alertCtrl: AlertController,
     public modalCtrl: ModalController,
     public authService: AuthService,
@@ -42,10 +54,162 @@ export class InterviewEvaluationFormPage implements OnInit {
     this.analyticService.page('Interview Evaluation Form Page');
 
     this.form = this.fb.group({
-      note: ['', Validators.required],
+     // note: ['', Validators.required],
       request_uuid: ['', Validators.required],
       request_name: ['', Validators.required],
     });
+
+    if (this.interviewEvaluationNotes.length > 0) {
+      this.interviewEvaluationNotes.map((data, index) => {
+        // initializing note list and loop count
+
+        this.tmpInterviewEvaluationNotes.push(index); // for loop
+        
+      });
+    } else {
+      // initializing note list with zero and loop count
+      this.tmpInterviewEvaluationNotes[0] = null;
+    }
+
+    this.count = this.tmpInterviewEvaluationNotes.length; // to check to add new textbox when type
+  }
+
+  
+  ionViewDidEnter() {
+
+    if(!this.interviewEvaluationNotes) {
+      this.interviewEvaluationNotes = [];
+    }
+
+    setTimeout(() => {
+
+      const lastElementIndex = this.interviewEvaluationNotes.length;
+
+      const lastElement = document.getElementById('input[' + lastElementIndex + ']') as any;
+
+      if (lastElement && document.getElementById('input[' + lastElementIndex + ']')) {
+        lastElement.setFocus();
+      }
+    }, 200);
+  }
+  
+  /**
+   * focus on next input on enter pressed
+   * @param event
+   * @param i
+   */
+  nextOnEnter(event, i) {
+    if (event.which == 13) {
+
+      i++;
+
+      const ele = document.getElementById('input[' + i + ']') as any;
+
+      ele.setFocus();
+    }
+  }
+
+  /**
+   * close popup modal
+   */
+  dismiss(data = {}) {
+    this.modalCtrl.getTop().then(overlay => {
+      if (overlay) {
+        this.modalCtrl.dismiss(data);
+      }
+    });
+  }
+
+  /**
+   * When user hit enter on input
+   * @param event
+   * @param index
+   * @param tempIndex
+   */
+  change(event, index, tempIndex) {
+
+    this.query = event.target.value;
+
+    // remove field on clearing it out + have next empty field
+
+    if (this.count - index > 1 && event.target.value.length == 0) {
+      return this.removeNote(index, tempIndex);
+    }
+
+    // check if new field is not added && something is typed
+    if (((index - this.count) === -1) && event.target.value) {
+      // adding new field
+      this.tmpInterviewEvaluationNotes.push(this.interviewEvaluationNotes.length);
+      this.interviewEvaluationNotes.push(new InterviewEvaluationNote);
+      this.count++;
+    }
+
+    this.dirty = true;
+  }
+
+  /**
+   * validate notes
+   */
+  validateNotes() {
+
+    let found = false, noteIndex;
+
+    for (let i = 0; i < this.interviewEvaluationNotes.length; i++) {
+      for (let j = 0; j < this.interviewEvaluationNotes.length; j++) {
+        if (i != j && this.interviewEvaluationNotes[i]['note'] == this.interviewEvaluationNotes[j]["note"]) {// not same index but same value
+          noteIndex = j; // remove value at j
+          found = true;
+          break;
+        }
+      }
+    }
+
+    if (found) {
+      this.toastCtrl.create({
+        message: 'Duplicate note not allowed!',
+        duration: 3000,
+        cssClass: 'error_toast_'
+      }).then(toast => toast.present());
+
+      this.removeNote(noteIndex, noteIndex);
+
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * remove note item
+   * @param noteIndex
+   * @param tempIndex
+   */
+  removeItem(noteIndex, tempIndex) {
+    this.interviewEvaluationNotes = this.interviewEvaluationNotes.filter((value, index) => index != noteIndex); // remove data from note
+    this.tmpInterviewEvaluationNotes.splice(tempIndex, 1); // remove index value for loop
+    this.count--; // decrease one value to compare new field
+    this.tmpInterviewEvaluationNotes = new Array(this.tmpInterviewEvaluationNotes.length).fill(1); // resetting loop to avoid duplicate key
+
+    this.dirty = !!(this.interviewEvaluationNotes.length); // to check if change or if its length is greater then zero
+  }
+
+  /**
+   * removing note
+   * @param noteIndex
+   * @param tempIndex
+   */
+  removeNote(noteIndex, tempIndex) {
+    this.dirty = true;
+
+    if (tempIndex == 0) {
+      if (this.interviewEvaluationNotes.length > 0) {
+        this.removeItem(noteIndex, tempIndex);
+      } else {
+        this.interviewEvaluationNotes = [];
+      }
+    } else {
+      this.removeItem(noteIndex, tempIndex);
+    }
   }
 
   /**
@@ -59,10 +223,10 @@ export class InterviewEvaluationFormPage implements OnInit {
 
     this.model.request_uuid = this.form.value.request_uuid;
     this.model.candidate_id = this.candidate_id;
-
-    let note = new Note;
+    
+    /*let note = new Note;
     note.note_text = this.form.value.note;
-    this.model.notes = [note];
+    this.model.notes = [note];*/
   }
 
   /**
@@ -81,6 +245,10 @@ export class InterviewEvaluationFormPage implements OnInit {
    */
   async save() {
 
+    if(!this.validateNotes()) {
+      return false;
+    }
+
     this.saving = true;
 
     this.updateModelDataFromForm();
@@ -89,10 +257,10 @@ export class InterviewEvaluationFormPage implements OnInit {
 
     if (!this.model.interview_evaluation_uuid) {
       // Create
-      action = this.interviewEvaluationService.create(this.model);
+      action = this.interviewEvaluationService.create(this.model, this.interviewEvaluationNotes);
     } else {
       // Update
-      action = this.interviewEvaluationService.update(this.model);
+      action = this.interviewEvaluationService.update(this.model, this.interviewEvaluationNotes);
     }
 
     action.subscribe(async jsonResponse => {

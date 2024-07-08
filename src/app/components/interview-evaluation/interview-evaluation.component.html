@@ -12,7 +12,7 @@
 
       <small class="time">{{ interviewEvaluation.created_at | timeAgo }} </small>
 
-      <p *ngIf="interviewEvaluation.request.request_additional_info" class="txt-additional-info">{{interviewEvaluation.request.request_additional_info.substr(0,85)}}...</p>
+     <!--  <p *ngIf="interviewEvaluation.request.request_additional_info" class="txt-additional-info">{{interviewEvaluation.request.request_additional_info.substr(0,85)}}...</p>
 
       <div>
         
@@ -41,7 +41,14 @@
           <span *ngIf="interviewEvaluation.request.request_status == 'finished_by_recruitment'">Finished by recruitment</span>
         </ion-badge>
          
-      </div>
+      </div>-->
+
+      <ul *ngIf="interviewEvaluation.latestInterviewEvaluationNoteVersions && interviewEvaluation.latestInterviewEvaluationNoteVersions.interviewEvaluationNotes">
+        <li *ngFor="let interviewNote of interviewEvaluation.latestInterviewEvaluationNoteVersions.interviewEvaluationNotes">
+          {{ interviewNote.note }}
+        </li>
+      </ul>
+      
     </div>
 
     <!-- todo: display latest note -->

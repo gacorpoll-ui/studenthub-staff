@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 //services
 import { AuthHttpService } from './authhttp.service';
 //models
-import { InterviewEvaluation } from 'src/app/models/interview-evaluation';
+import { InterviewEvaluation, InterviewEvaluationNote, InterviewEvaluationNoteVersion } from 'src/app/models/interview-evaluation';
 import { Note } from 'src/app/models/note';
 
 
@@ -21,7 +21,7 @@ export class InterviewEvaluationService {
    * @returns 
    */
   list(page: number = 1): Observable<any> {
-    const url = this.endpoint + '?page=' + page + '&expand=staff,request,company';//notes,
+    const url = this.endpoint + '?page=' + page + '&expand=latestInterviewEvaluationNoteVersions,latestInterviewEvaluationNoteVersions.interviewEvaluationNotes,staff,request,company';//notes,
     return this.authhttp.getRaw(url);
   }
 
@@ -30,7 +30,7 @@ export class InterviewEvaluationService {
    * @returns 
    */
   view(interview_evaluation_uuid: string): Observable<any> {
-    const url = this.endpoint + '/' + interview_evaluation_uuid + '?expand=notes,staff,request,company';
+    const url = this.endpoint + '/' + interview_evaluation_uuid + '?expand=interviewEvaluationNoteVersions,interviewEvaluationNoteVersions.interviewEvaluationNotes,staff,request,company';
     return this.authhttp.get(url);
   }
 
@@ -38,20 +38,40 @@ export class InterviewEvaluationService {
    * @param model 
    * @returns 
    */
-  create(model: InterviewEvaluation): Observable<any>{
-    return this.authhttp.post(this.endpoint, model);
-  }
-  
-  addNote(interview_evaluation_uuid: string, note: Note) {
-    return this.authhttp.patch(this.endpoint + "/add-note/" + interview_evaluation_uuid, note);
+  create(model: InterviewEvaluation, interviewEvaluationNotes: InterviewEvaluationNote[]): Observable<any>{
+    return this.authhttp.post(this.endpoint, {
+      ...model,
+      interviewEvaluationNotes: interviewEvaluationNotes
+    });
   }
 
   /**
    * @param model 
    * @returns 
    */
-  update(model: InterviewEvaluation): Observable<any>{
-    return this.authhttp.patch(this.endpoint + "/" + model.interview_evaluation_uuid, model);
+  update(model: InterviewEvaluation, interviewEvaluationNotes: InterviewEvaluationNote[]): Observable<any>{
+    return this.authhttp.patch(this.endpoint + "/" + model.interview_evaluation_uuid, {
+      ...model,
+      interviewEvaluationNotes: interviewEvaluationNotes
+    });
+  }
+
+  /**
+   * @param interview_evaluation_uuid 
+   * @param noteVersion 
+   * @returns 
+   */
+  addNewVersion(interview_evaluation_uuid: string, noteVersion: InterviewEvaluationNoteVersion) {
+    return this.authhttp.patch(this.endpoint + "/add-new-version/" + interview_evaluation_uuid, noteVersion);
+  }
+
+  /**
+   * @param interview_evaluation_uuid 
+   * @param note 
+   * @returns 
+   */
+  addNote(interview_evaluation_uuid: string, note: Note) {
+    return this.authhttp.patch(this.endpoint + "/add-note/" + interview_evaluation_uuid, note);
   }
 
   /**
