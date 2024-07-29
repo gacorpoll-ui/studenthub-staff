@@ -727,9 +727,44 @@ const routes: Routes = [
     loadChildren: () => import('./pages/logged-in/company/request-interview-list/request-interview-list.module').then( m => m.RequestInterviewListPageModule)
   },
   {
+    path: 'support',
+    canActivate: [AuthService],
+    loadChildren: () => import('./pages/logged-in/support/ticket-list/ticket-list.module').then( m => m.TicketListPageModule)
+  },
+  {
+    path: 'ticket-view',
+    canActivate: [AuthService],
+    loadChildren: () => import('./pages/logged-in/support/ticket-view/ticket-view.module').then( m => m.TicketViewPageModule)
+  },
+  {
+    path: 'ticket-form',
+    canActivate: [AuthService],
+    loadChildren: () => import('./pages/logged-in/support/ticket-form/ticket-form.module').then( m => m.TicketFormPageModule)
+  },
+  {
+    path: 'firing-hitmap',
+    canActivate: [AuthService],
+    loadChildren: () => import('./pages/logged-in/company/firing-hitmap/firing-hitmap.module').then( m => m.FiringHitmapPageModule)
+  },
+  {
+    path: 'interview-evaluation-form',
+    canActivate: [AuthService],
+    loadChildren: () => import('./pages/logged-in/candidate/interview-evaluation/interview-evaluation-form/interview-evaluation-form.module').then( m => m.InterviewEvaluationFormPageModule)
+  },
+  {
+    path: 'interview-evaluation-view',
+    canActivate: [AuthService],
+    loadChildren: () => import('./pages/logged-in/candidate/interview-evaluation/interview-evaluation-view/interview-evaluation-view.module').then( m => m.InterviewEvaluationViewPageModule)
+  },
+  {
+    path: 'interview-evaluation-list',
+    canActivate: [AuthService],
+    loadChildren: () => import('./pages/logged-in/candidate/interview-evaluation/interview-evaluation-list/interview-evaluation-list.module').then( m => m.InterviewEvaluationListPageModule)
+  },
+  {
     path: '**',
     redirectTo: 'not-found'
-  }
+  },   
 ];
 
 @NgModule({

@@ -46,6 +46,10 @@ import { InvitePage } from '../../invite/invite.page';
 import { CandidateAssignFormPage } from '../../candidate-assign-form/candidate-assign-form.page';
 import { AnalyticsService } from 'src/app/providers/analytics.service';
 import { RequestApplication } from 'src/app/models/request-application';
+import { InterviewEvaluationService } from 'src/app/providers/logged-in/interview-evaluation.service';
+import { InterviewEvaluation } from 'src/app/models/interview-evaluation';
+import { InterviewEvaluationFormPage } from '../interview-evaluation/interview-evaluation-form/interview-evaluation-form.page';
+import { ArcElement, Chart, PieController } from 'chart.js';
 
 
 
@@ -57,6 +61,8 @@ import { RequestApplication } from 'src/app/models/request-application';
 export class CandidateViewPage implements OnInit {
 
   @ViewChild('ckeditor') ckeditor;
+
+  @ViewChild('invitationChart', { static: false }) invitationChart;
 
   public candidate: Candidate;
 
@@ -80,7 +86,8 @@ export class CandidateViewPage implements OnInit {
   public unapproving = false;
   public downloading = false;
   public inviting = false;
-
+  public loadingLoginUrl: boolean = false; 
+  
   public processing = null;
 
   public updatingJobSearchStatus = false;
@@ -120,6 +127,13 @@ export class CandidateViewPage implements OnInit {
   public applicationCurrentPage  = 0;
   public applicationTotal = 0;
 
+  public loadingInterviewEvaluations: boolean = false;
+  public interviewEvaluations: InterviewEvaluation[] = [];
+  
+  public interviewPageCount = 0;
+  public interviewCurrentPage  = 0;
+  public interviewTotal = 0;
+ 
   constructor(
     public navCtrl: NavController,
     public router: Router,
@@ -131,6 +145,7 @@ export class CandidateViewPage implements OnInit {
     public translateService: TranslateLabelService,
     public invitationService: InvitationService,
     public awsService: AwsService,
+    public interviewEvaluationService: InterviewEvaluationService,
     public toastCtrl: ToastController,
     public eventService: EventService,
     public authService: AuthService,
@@ -142,7 +157,6 @@ export class CandidateViewPage implements OnInit {
     private loadingCtrl: LoadingController,
     public analyticService: AnalyticsService
   ) {
-
   }
 
   ngOnInit() { 
@@ -177,6 +191,9 @@ export class CandidateViewPage implements OnInit {
     });
 
     this.initNoteForm();
+    this.loadInterviews();
+
+    Chart.register(PieController, ArcElement);
   }
 
   ionViewDidEnter() {
@@ -451,7 +468,8 @@ export class CandidateViewPage implements OnInit {
   loadCandidateDetail(loading = true) {
     this.loading = loading;
 
-    const query = 'expand=candidateStats,candidateIdCard,store,company,candidateSkills,' +
+    const query = 'expand=invitationStats,avgTimeToViewInvitations,candidateEducations,candidateEducations.degree,candidateEducations.major,' +
+      'candidateEducations.university,candidateStats,candidateIdCard,store,company,candidateSkills,' +
       'candidateTags,candidateExperiences,bank,nationality,area,country,university,' + 
       'invited,invitationAccepted,invitationRejected,suggestionAccepted,suggestionRejected,suggested';
 
@@ -471,7 +489,31 @@ export class CandidateViewPage implements OnInit {
 
       setTimeout(_ => {
         this.job_search_status = !!(this.candidate.candidate_job_search_status);
+
+        if (this.candidate.avgTimeToViewInvitations > 0) {
+          this.loadInvitationChart(); 
+        }
       }, 500);
+    });
+  }
+
+  loadInvitationChart() {
+    new Chart(this.invitationChart.nativeElement, {
+      type: 'pie',
+      data: {
+        /*labels: [
+          'Yellow'
+        ],*/
+        datasets: [{
+          //label: 'My First Dataset',
+          data: [this.candidate.invitationStats.totalEmailPercentage, this.candidate.invitationStats.totalAppPercentage],
+          backgroundColor: [
+            '#BDBDBD',
+            'rgb(255, 255, 255)'
+          ],
+          hoverOffset: 4
+        }]
+      },
     });
   }
 
@@ -560,6 +602,32 @@ export class CandidateViewPage implements OnInit {
 
       if (e.data && e.data.markDuplicate) {
         this.markDuplicate();
+      }
+
+      if (e.data && e.data.login) {
+        this.login();
+      }
+    });
+  }
+
+
+  login() {
+     
+    this.loadingLoginUrl = true; 
+
+    this.candidateService.login(this.candidate_id).subscribe(async res => {
+
+      this.loadingLoginUrl = false;
+       
+      if(res.operation == "error") {
+        const alert = await this.alertCtrl.create({
+          header: 'Oops',
+          subHeader: this.authService.errorMessage(res.message),
+          buttons: ['Okay']
+        });
+        alert.present();
+      } else {
+        window.open(res.redirect, "_blank");
       }
     });
   }
@@ -755,6 +823,14 @@ export class CandidateViewPage implements OnInit {
       }
     });
     await modal.present();
+  }
+
+  openEvaluations() {
+    this.router.navigate(["interview-evaluation-list", this.candidate_id], {
+      state: {
+        candidate: this.candidate
+      }
+    });
   }
 
   openNotes() {
@@ -1437,6 +1513,63 @@ export class CandidateViewPage implements OnInit {
     });
   }
 
+  loadInterviews() {
+    this.loadingInterviewEvaluations = true; 
+
+    const urlParams = "&candidate_id=" + this.candidate_id;
+
+    this.interviewEvaluationService.list(this.interviewCurrentPage, urlParams).subscribe(res => {
+      this.loadingInterviewEvaluations = false; 
+
+      this.interviewEvaluations = res.body;
+      this.interviewPageCount = parseInt(res.headers.get('X-Pagination-Page-Count'));
+      this.interviewCurrentPage = parseInt(res.headers.get('X-Pagination-Current-Page'));
+      this.interviewTotal = parseInt(res.headers.get('X-Pagination-Total-Count'));
+    });
+  }
+
+  doInfiniteInterviews(event) {
+
+    this.interviewCurrentPage++;
+
+    const urlParams = "&candidate_id=" + this.candidate_id;
+
+    this.interviewEvaluationService.list(this.interviewCurrentPage, urlParams).subscribe(res => {
+      this.loadingInterviewEvaluations = false; 
+
+      event.target.complete();
+
+      this.interviewEvaluations = this.interviewEvaluations.concat(res.body);
+      this.interviewPageCount = parseInt(res.headers.get('X-Pagination-Page-Count'));
+      this.interviewCurrentPage = parseInt(res.headers.get('X-Pagination-Current-Page'));
+      this.interviewTotal = parseInt(res.headers.get('X-Pagination-Total-Count'));
+    }, () => {
+      this.loadingInterviewEvaluations = false; 
+
+      event.target.complete();
+    });
+  }
+
+  interviewEvaluationSelected(interviewEvaluation) {
+    this.navCtrl.navigateForward("/interview-evaluation-view/" + interviewEvaluation.interview_evaluation_uuid);
+  }
+
+  async addEvaluation() {
+    const modal = await this.modalCtrl.create({
+      component: InterviewEvaluationFormPage,
+      componentProps: {
+        candidate_id: this.candidate_id
+      }
+    });
+    modal.onDidDismiss().then(e => {
+
+      if (e && e.data && e.data.refresh) {
+        this.loadInterviews();
+      }
+    });
+    modal.present();
+  }
+
   loadApplications() {
  
     this.loadingApplications = true;
@@ -1494,6 +1627,10 @@ export class CandidateViewPage implements OnInit {
     if(this.segment == "applications") {
       if(this.candidateApplications.length == 0) {
         this.loadApplications();
+      }
+    } else if(this.segment == "interview-evaluation") {
+      if(this.interviewEvaluations.length == 0) {
+        this.loadInterviews();
       }
     }
   }

@@ -1,0 +1,81 @@
+<ion-header mode="md" [class.add-border]="borderLimit" class="ion-no-border">
+  <ion-toolbar class="container">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/" icon="assets/images/icon-back.svg"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>  
+  <ion-toolbar  class="container">
+    <ion-title>
+      Evaluation
+
+      <p *ngIf="model && model.request" class="txt-sub-title">
+        {{ model.request.request_position_title }} 
+      </p> 
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
+
+  <div class="container max-width">
+    <div *ngIf="model">
+
+      <ion-card class="card-latest-version" *ngIf="model.interviewEvaluationNoteVersions.length > 0">
+        <ion-card-content>
+          
+          <h3 >
+            <ng-container *ngIf="model.interviewEvaluationNoteVersions[0].staff">
+              {{ model.interviewEvaluationNoteVersions[0].staff.staff_name }} <br />
+            </ng-container>  
+            {{ translateService.toDate(model.interviewEvaluationNoteVersions[0].created_at) | date: 'MMM d, y h:mm a' }} 
+          </h3>
+      
+          <h5>Version {{ model.interviewEvaluationNoteVersions[0].version }}</h5>
+
+          <ul *ngIf="model.interviewEvaluationNoteVersions.length > 0">
+            <li *ngFor="let interviewEvaluationNote of model.interviewEvaluationNoteVersions[0].interviewEvaluationNotes">
+              {{ interviewEvaluationNote.note }}
+            </li>
+          </ul>
+
+
+        </ion-card-content>
+      </ion-card>
+
+      <ion-button class="btn-update" (click)="addVersion()">
+        Update
+      </ion-button>
+
+      <h5 class="heading" *ngIf="model.interviewEvaluationNoteVersions.length > 1">
+        Older versions
+      </h5>
+
+      <ng-container *ngFor="let interviewEvaluationNoteVersion of model.interviewEvaluationNoteVersions; let i = index;">
+        <ion-card class="card-old-versions" *ngIf="i != 0">
+          <ion-card-content>
+            
+            <h3>
+              <ng-container *ngIf="interviewEvaluationNoteVersion.staff">
+                {{ interviewEvaluationNoteVersion.staff.staff_name }} <br />
+              </ng-container>
+
+              {{ translateService.toDate(interviewEvaluationNoteVersion.created_at) | date: 'MMM d, y h:mm a' }} 
+            </h3>
+        
+            <h5>Version {{ interviewEvaluationNoteVersion.version }}</h5>
+
+            <ul>
+              <li *ngFor="let interviewEvaluationNote of interviewEvaluationNoteVersion.interviewEvaluationNotes">
+                {{ interviewEvaluationNote.note }}
+              </li>
+            </ul>
+          </ion-card-content>
+        </ion-card>
+      </ng-container>
+
+      <ion-infinite-scroll *ngIf="currentPage < pageCount" (ionInfinite)="doInfiniteInterviews($event)">
+        <ion-infinite-scroll-content></ion-infinite-scroll-content>
+      </ion-infinite-scroll>
+
+    </div>
+  </div>
+</ion-content>

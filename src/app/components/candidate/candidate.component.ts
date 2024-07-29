@@ -24,6 +24,8 @@ export class CandidateComponent implements OnInit {
 
   @ViewChild('checkbox') checkbox: IonCheckbox;
 
+  @Input() fromAlgolia: boolean = false;
+
   @Input() candidate: Candidate;
   @Input() application: RequestApplication;
   @Input() requestInterview: RequestInterview;

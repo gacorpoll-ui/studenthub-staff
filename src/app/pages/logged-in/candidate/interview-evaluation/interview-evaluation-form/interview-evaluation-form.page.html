@@ -1,0 +1,52 @@
+<ion-header mode="md" [class.add-border]="borderLimit" class="ion-no-border">
+  <ion-toolbar class="container">
+    <ion-buttons slot="start" (click)="close()">
+      <ion-back-button icon="assets/images/icon-back.svg"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ "Add evaluation" }}</ion-title>
+    
+  </ion-toolbar>
+</ion-header>
+<ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
+
+  <div class="container max-width">
+     
+    <form [formGroup]="form" *ngIf="form">
+       
+        <ion-item class="input-wrapper" (click)="openRequest($event)">
+          <div tabindex="0"></div>
+          <ion-label position="floating">Request (Optional)</ion-label>
+          <ion-input type="text" formControlName="request_name" readonly></ion-input>
+        </ion-item>
+
+        <!--
+        <ion-item class="input-wrapper">
+          <div tabindex="0"></div>
+          <ion-label position="floating">Note</ion-label>
+          <ion-textarea formControlName="note"></ion-textarea>
+        </ion-item>--> 
+    </form>
+
+    <h5>Evaluations</h5>
+
+    <ion-item class="input-wrapper"  *ngFor="let s of tmpInterviewEvaluationNotes;let i=index;">
+      <div tabindex="0"></div>
+      
+      <ion-input id="input[{{ i }}]" placeholder="{{ 'Enter Evaluation Here' }}"
+        [(ngModel)]="interviewEvaluationNotes[i]['note']" (ionFocus)="validateNotes()"
+        (ionChange)="change($event, i, s)" type="text" enterkeyhint="{{ 'Next'}}" (keyup)="nextOnEnter($event, i)"></ion-input>
+
+      <ion-button fill="clear" tabindex="-1" item-right *ngIf="interviewEvaluationNotes[i]['note']" fill="clear" (click)="removeNote(i,s)"
+        class="skip-hover">
+        <img src="assets/images/ic_circledCancel.svg">
+      </ion-button>
+    </ion-item>
+
+    <ion-button [disabled]="!form || !form.valid || saving" (click)="save()">
+      <span *ngIf="!saving">Save</span>
+      <ion-spinner *ngIf="saving"></ion-spinner>
+    </ion-button>
+  </div>
+
+</ion-content>
+

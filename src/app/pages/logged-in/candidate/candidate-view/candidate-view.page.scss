@@ -254,6 +254,11 @@ h4.candidate-name {
   }
 }
 
+interview-evaluation {
+  display: block;
+}
+
+.invitation-stats-wrapper,
 .assignment-wrapper,
 .note-wrapper,
 .suggestion-wrapper {
@@ -275,6 +280,7 @@ h4.candidate-name {
     }
   }
 
+  interview-evaluation,
   note {
     margin: 0 0 9px;
   }
@@ -373,6 +379,12 @@ h4.candidate-name {
       fill: var(--ion-color-custom-7);
     }
   }
+}
+
+.invitation-chart {
+  width: 90px;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 .assignment-wrapper {
@@ -740,6 +752,20 @@ ion-content {
 
     ion-icon {
       margin-inline-end: 4px;
+    }
+  }
+
+  .education-wrapper {
+    margin-top: 22px;
+    margin-bottom: 22px;
+    
+    ion-card {
+      --border-radius: 8px;
+      --box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+      --background-color: var(--ion-card-background);
+      margin: 16px 0 0 0;
+      --padding: 16px;
+      text-transform: capitalize;
     }
   }
 

@@ -7,6 +7,7 @@ import { Area } from './area';
 import { CandidateIdCard } from './candidate-id-card';
 import { Note } from "./note";
 import { CandidateTag } from './candidate-tag';
+import { CandidateEducation } from './candidate-education';
 
 export class Candidate {
     employee_id: number;
@@ -64,6 +65,8 @@ export class Candidate {
     suggestionAccepted: any;
     suggestionRejected: any;
     deleted: any;
+    invitationStats: any;
+    avgTimeToViewInvitations: number;
     store: Store;
     company: Company;
     university: University;
@@ -74,6 +77,7 @@ export class Candidate {
     tags: string;
     candidateExperiences: any;
     candidateSkills: any;
+    candidateEducations: CandidateEducation[];
     currency_code: string;
     candidateTags: CandidateTag[];
     candidateIdCard: CandidateIdCard;
