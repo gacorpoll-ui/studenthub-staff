@@ -343,7 +343,9 @@ export class CompanyNotesPage implements OnInit {
     this.currentPage++;
 
     this.loadingMoreNotes = true;
+    
     const searchParams = this.urlParams();
+
     this.noteService.list(searchParams, this.currentPage).subscribe(response => {
 
       this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
