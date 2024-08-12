@@ -384,7 +384,8 @@ export class CandidateViewPage implements OnInit {
         activatedRoutePathProps: {
           view: 'direct',
         }
-      }
+      },
+      cssClass: "popup-modal"
     });
     modal.onDidDismiss().then(e => {
 
@@ -393,9 +394,10 @@ export class CandidateViewPage implements OnInit {
         window.history.back();
       }
 
-      if(e.data && e.data.rate)
-        this.assignCandidateToStoreWithRate(storeID, e.data.rate, e.data.start_date, e.data.company_hourly_rate);
-
+      if(e.data && e.data.rate) {
+        this.assignCandidateToStoreWithRate(storeID, e.data.rate, e.data.start_date, 
+          e.data.company_hourly_rate, e.data.company_transfer_cost, e.data.transfer_cost);
+      }
     });
     modal.present();
   }
@@ -405,11 +407,26 @@ export class CandidateViewPage implements OnInit {
    * @param store_id
    * @param rate
    */
-  assignCandidateToStoreWithRate(store_id, rate, start_date = null, company_hourly_rate = null) {
+  assignCandidateToStoreWithRate(
+    store_id, 
+    rate, 
+    start_date = null, 
+    company_hourly_rate = null,
+    company_transfer_cost = null, 
+    transfer_cost = null
+  ) {
 
     this.assigning = true;
 
-    this.candidateService.assignCandidateToStore(this.candidate, store_id, rate, start_date, company_hourly_rate).subscribe(async response => {
+    this.candidateService.assignCandidateToStore(
+      this.candidate, 
+      store_id, 
+      rate, 
+      start_date, 
+      company_hourly_rate,
+      company_transfer_cost,
+      transfer_cost
+    ).subscribe(async response => {
 
       this.assigning = false;
 
@@ -529,7 +546,8 @@ export class CandidateViewPage implements OnInit {
             store_id: history.store.store_id,
             view: 'direct',
           }
-        }
+        },
+        cssClass: "popup-modal"
       });
       modal.onDidDismiss().then(e => {
 
@@ -648,7 +666,8 @@ export class CandidateViewPage implements OnInit {
       componentProps: {
         candidate: this.candidate,
         story: this.story
-      }
+      },
+      cssClass: "popup-modal"
     });
     modal.onDidDismiss().then(e => {
 
@@ -808,7 +827,8 @@ export class CandidateViewPage implements OnInit {
       component: SuggestPage,
       componentProps: {
         candidate: this.candidate
-      }
+      },
+      cssClass: "popup-modal"
     });
     modal.onDidDismiss().then(e => {
 
@@ -947,7 +967,8 @@ export class CandidateViewPage implements OnInit {
       component: CandidateCommittedFormPage,
       componentProps: {
         candidate: this.candidate
-      }
+      },
+      cssClass: "popup-modal"
     });
     modal.present();
     modal.onDidDismiss().then(e => {
@@ -1083,7 +1104,8 @@ export class CandidateViewPage implements OnInit {
       componentProps: {
         note,
         candidate: this.candidate
-      }
+      },
+      cssClass: "popup-modal"
     });
     modal.present();
     modal.onDidDismiss().then(e => {
@@ -1205,6 +1227,7 @@ export class CandidateViewPage implements OnInit {
   async openClient(e) {
     const popover = await this.modalCtrl.create({
       component: AllCompanyListPage,
+      cssClass: "popup-modal"
     });
     popover.onDidDismiss().then((_) => {
 
@@ -1233,11 +1256,13 @@ export class CandidateViewPage implements OnInit {
         component: CompanyRequestListPopupPage,
         componentProps: {
           company: this.company
-        }
+        },
+        cssClass: "popup-modal"
       });
     } else {
       popover = await this.modalCtrl.create({
-        component: CompanyRequestListPopupPage
+        component: CompanyRequestListPopupPage,
+        cssClass: "popup-modal"
       });
     }
 
@@ -1458,7 +1483,8 @@ export class CandidateViewPage implements OnInit {
 
               const myCalendar = await this.modalCtrl.create({
                 component: CalendarModal,
-                componentProps: { options }
+                componentProps: { options },
+                cssClass: "popup-modal"
               });
 
               myCalendar.present();
@@ -1559,7 +1585,8 @@ export class CandidateViewPage implements OnInit {
       component: InterviewEvaluationFormPage,
       componentProps: {
         candidate_id: this.candidate_id
-      }
+      },
+      cssClass: "popup-modal"
     });
     modal.onDidDismiss().then(e => {
 

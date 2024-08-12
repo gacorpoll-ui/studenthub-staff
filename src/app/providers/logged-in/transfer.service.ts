@@ -47,7 +47,7 @@ export class TransferService {
    * @returns {Observable<any>}
    */
   transferIdDetails(transfer_id: number, query: string = ''): Observable<any> {
-    const url = `${this._transferEndpoint}/${transfer_id}?expand=transferCandidates,transferCandidates.candidate${query}`;//createdBy,updatedBy
+    const url = `${this._transferEndpoint}/${transfer_id}?${query}`;//createdBy,updatedBy
     return this._authhttp.get(url);
   }
 

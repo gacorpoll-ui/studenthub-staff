@@ -150,7 +150,8 @@ export class CompanyViewPage implements OnInit {
         activatedRoutePathProps: {
           company: this.company,
         }
-      }
+      },
+      cssClass: "popup-modal"
     });
     modal.onDidDismiss().then(e => {
 
@@ -169,7 +170,8 @@ export class CompanyViewPage implements OnInit {
       component: CompanySubcompaniesPage,
       componentProps: {
         company: this.company,
-      }
+      },
+      cssClass: "popup-modal"
     });
     modal.onDidDismiss().then(e => {
 
@@ -190,14 +192,16 @@ export class CompanyViewPage implements OnInit {
         activatedRoutePath: CompanyMallsPage,//'company-malls/' + this.company_id,
         activatedRoutePathProps: {
           company: this.company
-        }
+        },
+        cssClass: "popup-modal"
       }
     });*/
     const modal = await this.modalCtrl.create({
       component: CompanyMallsPage,
       componentProps: {
         company: this.company
-      }
+      },
+      cssClass: "popup-modal"
     });
     modal.onDidDismiss().then(e => {
 
@@ -216,7 +220,8 @@ export class CompanyViewPage implements OnInit {
       component: CompanyDocumentsPage,
       componentProps: {
         company: this.company,
-      }
+      },
+      cssClass: "popup-modal"
     });
     modal.onDidDismiss().then(e => {
 
@@ -235,7 +240,8 @@ export class CompanyViewPage implements OnInit {
       component: CompanyContactsPage,
       componentProps: {
         company: this.company,
-      }
+      },
+      cssClass: "popup-modal"
     });
     modal.onDidDismiss().then(e => {
  
@@ -255,7 +261,8 @@ export class CompanyViewPage implements OnInit {
       component: CompanyBrandsPage,
       componentProps: {
         company: this.company,
-      }
+      },
+      cssClass: "popup-modal"
     });
     modal.onDidDismiss().then(e => {
 
@@ -280,7 +287,8 @@ export class CompanyViewPage implements OnInit {
         company: this.company,
         addNewNote: addNewNote,
         editorFocused: addNewNote
-      }
+      },
+      cssClass: "popup-modal"
     });
     modal.onDidDismiss().then(e => {
 
@@ -301,7 +309,8 @@ export class CompanyViewPage implements OnInit {
       componentProps: {
         company: this.company,
         company_id: this.company_id
-      }
+      },
+      cssClass: "popup-modal"
     });
     modal.onDidDismiss().then(e => {
 
@@ -320,7 +329,8 @@ export class CompanyViewPage implements OnInit {
       component: TransferListPage,
       componentProps: {
         company: this.company,
-      }
+      },
+      cssClass: "popup-modal"
     });
     modal.onDidDismiss().then(e => {
 
@@ -339,7 +349,8 @@ export class CompanyViewPage implements OnInit {
       component: TransferChartPage,
       componentProps: {
         company: this.company,
-      }
+      },
+      cssClass: "popup-modal"
     });
     modal.onDidDismiss().then(e => {
 
@@ -525,7 +536,8 @@ export class CompanyViewPage implements OnInit {
       component: CompanyFollowupNotePage,
       componentProps: {
         company_id: this.company_id
-      }
+      },
+      cssClass: "popup-modal"
     });
     modal.onDidDismiss().then(e => {
 
@@ -701,7 +713,8 @@ export class CompanyViewPage implements OnInit {
         model: Object.assign({}, this.company),
         company_id: this.company_id,
         subcompany: 0
-      }
+      },
+      cssClass: "popup-modal"
     });
     // Refresh List if required
     modal.onDidDismiss().then(e => {
