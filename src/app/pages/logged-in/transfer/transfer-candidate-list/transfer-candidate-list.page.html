@@ -117,7 +117,7 @@
           <p>
             <strong>Company </strong> 
             {{ candidateTransfer.currency_code }} {{candidateTransfer.company_hourly_rate}} x 
-            {{candidateTransfer.hours}} hours + 
+            {{ candidateTransfer.hours}} hours {{ candidateTransfer.minutes }} minutes {{ candidateTransfer.seconds }} seconds + 
             {{ candidateTransfer.currency_code }} {{ candidateTransfer.bonus }} = 
             {{ candidateTransfer.currency_code }} {{ candidateTransfer.company_total | number:'1.3-3' }}
           </p>
@@ -125,7 +125,7 @@
           <p>
             <strong>Candidate </strong> 
             {{ candidateTransfer.currency_code }} {{candidateTransfer.candidate_hourly_rate}} x 
-            {{candidateTransfer.hours}} hours + 
+            {{candidateTransfer.hours}} hours {{ candidateTransfer.minutes }} minutes {{ candidateTransfer.seconds }} seconds + 
             {{ candidateTransfer.currency_code }} {{ candidateTransfer.bonus }} = 
             {{ candidateTransfer.currency_code }} {{ candidateTransfer.candidate_total | number:'1.3-3' }}
           </p> 

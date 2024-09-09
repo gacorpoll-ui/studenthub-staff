@@ -188,6 +188,15 @@ export class TransferFormPage implements OnInit {
         // Validators.required,
         CustomValidator.negativeNumberValidator
       ]];
+      formControls['minutes[' + record.candidate.candidate_id + ']'] = [record.minutes, [
+        // Validators.required,
+        CustomValidator.negativeNumberValidator
+      ]];
+      formControls['seconds[' + record.candidate.candidate_id + ']'] = [record.seconds, [
+        // Validators.required,
+        CustomValidator.negativeNumberValidator
+      ]];
+      
       formControls['bonus[' + record.candidate.candidate_id + ']'] = [record.bonus, [
         CustomValidator.negativeNumberValidator
       ]];
@@ -231,7 +240,11 @@ export class TransferFormPage implements OnInit {
 
     for (const entry of this.transfer.transferCandidates) {
       // Check if any candidates have unset hours or 0 hours set
-      if (!entry.hours || entry.hours == 0) {
+      if (
+        (!entry.hours || entry.hours == 0) && 
+        (!entry.minutes || entry.minutes == 0) && 
+        (!entry.seconds || entry.seconds == 0)
+      ) {
         error = 'You have set that some employees haven\'t worked any hours. Are you sure?';
       }
 
@@ -239,6 +252,14 @@ export class TransferFormPage implements OnInit {
       if (entry.hours > 180) {
         error = 'You have employees set to have worked for more than 180 hours. are you sure?';
       }
+
+      /*if (entry.minutes > 59) {
+        error = 'Minutes can not be more than 59';
+      }
+
+      if (entry.seconds > 59) {
+        error = 'Seconds can not be more than 59';
+      }*/
 
       // Prompt to show user where error is or Save if he knows about it.
       if (error) {
@@ -357,10 +378,19 @@ export class TransferFormPage implements OnInit {
       this.transfer.transferCandidates.forEach((transferCandidate: TransferCandidate) => {
         // this.total += this.parseNumber(transferCandidate.company_total);
         const hours = this.parseNumber(transferCandidate.hours);
+        const minutes = this.parseNumber(transferCandidate.minutes);
+        const seconds = this.parseNumber(transferCandidate.seconds);
         const bonus = this.parseNumber(transferCandidate.bonus);
+        const company_hourly_rate = this.getCompanyHourlyRate(transferCandidate);
+        
+        const subTotal = (hours * company_hourly_rate) 
+          + (minutes * (company_hourly_rate/ 60)) 
+          + (seconds * (company_hourly_rate/ 3600)) 
+          + bonus;
 
-        this.total += (hours * this.getCompanyHourlyRate(transferCandidate)) + bonus
-          + this.parseNumber(transferCandidate.transfer_cost);
+        if (subTotal > 0)
+          this.total += subTotal + this.parseNumber(transferCandidate.transfer_cost);
+
         //transferCandidate.candidate.company.company_hourly_rate
       });
     }
@@ -445,7 +475,7 @@ export class TransferFormPage implements OnInit {
    */
   removeUnaccountedUsers() {
     this.transfer.transferCandidates = this.transfer.transferCandidates.filter((candidates, index) => {
-      return (candidates.bonus > 0 || candidates.hours > 0);
+      return (candidates.bonus > 0 || candidates.hours > 0 || candidates.minutes > 0 || candidates.seconds > 0);
     });
   }
 

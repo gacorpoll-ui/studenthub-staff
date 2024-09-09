@@ -12,6 +12,9 @@
       <ion-button clear class="cancel" color="primary" (click)="close()">
         Cancel
       </ion-button>
+      <ion-button *ngIf="segment == 'manual'" [disabled]="!form.valid || (total <= 0)" (click)="validate()">
+        Save
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 
@@ -84,13 +87,44 @@
                   <ion-item class="input-wrapper">
 
                     <ion-label position="floating">
-                      Hours Worked
+                      Hours 
                       <span class="error" *ngIf="parseNumber(transferCandidateRecord.hours) < 0">Invalid value</span>
                     </ion-label>
+
                     <!-- [readonly]="transferCandidateRecord.candidate.civilExpired" -->
-                    <ion-input type="number" inputmode="decimal" min="0" (ionChange)="calculateTotal()"
+                    <ion-input type="number" inputmode="numeric" min="0" (ionChange)="calculateTotal()"
                       [(ngModel)]="transferCandidateRecord.hours"
                       formControlName="hours[{{transferCandidateRecord.candidate.candidate_id}}]">
+                    </ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col size-lg="4" size-md="4" size-sm="12" size-xs="12">
+                  <ion-item class="input-wrapper"> 
+
+                    <ion-label position="floating">
+                      Minutes 
+                      <span class="error" *ngIf="parseNumber(transferCandidateRecord.minutes) < 0 || parseNumber(transferCandidateRecord.minutes) > 59">
+                        Invalid value
+                      </span>
+                    </ion-label>        
+                    <ion-input type="number" inputmode="numeric" min="0" (ionChange)="calculateTotal()"
+                      [(ngModel)]="transferCandidateRecord.minutes"
+                      formControlName="minutes[{{transferCandidateRecord.candidate.candidate_id}}]">
+                    </ion-input>
+                  </ion-item>
+                </ion-col>
+
+                <ion-col size-lg="4" size-md="4" size-sm="12" size-xs="12">
+                  <ion-item class="input-wrapper"> 
+                    <ion-label position="floating">
+                      Seconds 
+                      <span class="error" *ngIf="parseNumber(transferCandidateRecord.seconds) < 0 || parseNumber(transferCandidateRecord.seconds) > 59">
+                        Invalid value
+                      </span>
+                    </ion-label>  
+                    <ion-input type="number" inputmode="numeric" min="0" (ionChange)="calculateTotal()"
+                      [(ngModel)]="transferCandidateRecord.seconds"
+                      formControlName="seconds[{{transferCandidateRecord.candidate.candidate_id}}]">
                     </ion-input>
                   </ion-item>
                 </ion-col>
@@ -124,6 +158,16 @@
                             parseNumber(transferCandidateRecord.hours) 
                             * 
                             getCompanyHourlyRate(transferCandidateRecord)
+                          ) 
+                          + (
+                            parseNumber(transferCandidateRecord.minutes) 
+                            * 
+                            getCompanyHourlyRate(transferCandidateRecord) / 60
+                          ) 
+                          + (
+                            parseNumber(transferCandidateRecord.seconds) 
+                            * 
+                            getCompanyHourlyRate(transferCandidateRecord) / 3600
                           ) 
                           + parseNumber(transferCandidateRecord.bonus) 
                           + parseNumber(transferCandidateRecord.transfer_cost)

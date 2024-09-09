@@ -22,7 +22,6 @@ export class TransferService {
 
   constructor(private _authhttp: AuthHttpService) { }
 
-
   /**
    * list of Transfer
    * @returns {Observable<any>}
