@@ -43,6 +43,11 @@
 <ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
   <div class="container">
     <ng-container *ngIf="segment == 'manual'">
+
+      <ion-button class="btn-approved-work-log" *ngIf="ready" (click)="approvedWorkLog()" [disabled]="!startDate || !endDate">
+        Set approved work log for provided date range 
+      </ion-button>
+
       <form [formGroup]="form" *ngIf="ready">
 
         <!-- store_id pipe returns the transferCandidates grouped by store as object of following format: -->

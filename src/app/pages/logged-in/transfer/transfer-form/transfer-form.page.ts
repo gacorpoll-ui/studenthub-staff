@@ -167,7 +167,7 @@ export class TransferFormPage implements OnInit {
       candidateTransferRecord.candidate = candidate;
       candidateTransferRecord.candidate_id = candidate.candidate_id;
       //candidateTransferRecord.currentWorkHistory = candidate.currentWorkHistory;
-      candidateTransferRecord.transfer_cost = candidate.currentWorkHistory.transferCost; //effective transfer cost 
+      candidateTransferRecord.transfer_cost = candidate.currentWorkHistory?.transferCost; //effective transfer cost 
 
       // Append the candidateTransferRecord into the allTransferCandidateRecordsMapped array
       allTransferCandidateRecordsMapped[candidate.candidate_id] = candidateTransferRecord;
@@ -241,6 +241,28 @@ export class TransferFormPage implements OnInit {
     }
 
     this.ready = true;
+  }
+
+  approvedWorkLog() {
+    this.transferService.approvedWorkLog(this.transfer.company_id, this.startDate, this.endDate).subscribe(data => {
+
+      let values = {}
+
+      for (let record of data) {
+        values['hours[' + record.candidate_id + ']'] = record.hours;
+        values['minutes[' + record.candidate_id + ']'] = record.minutes;
+        values['seconds[' + record.candidate_id + ']'] = record.seconds;
+      }
+
+      this.form.patchValue(values);
+      this.form.markAsDirty();
+      this.form.updateValueAndValidity();
+
+      this._toastCtrl.create({
+        message: "Transfer hours, minutes, seconds updated from work log",
+          duration: 3000
+      }).then(t => t.present());
+    });
   }
 
   /**

@@ -32,6 +32,17 @@ export class TransferService {
   }
 
   /**
+   * @param company_id 
+   * @param start_date 
+   * @param end_date 
+   * @returns 
+   */
+  approvedWorkLog(company_id, start_date, end_date): Observable<any> {
+    const url = `${this._transferEndpoint}/approved-work-log/${company_id}?start_date=${start_date}&end_date=${end_date}`;
+    return this._authhttp.get(url);
+  }
+
+  /**
    * list of Transfer candidates
    * @returns {Observable<any>}
    */
