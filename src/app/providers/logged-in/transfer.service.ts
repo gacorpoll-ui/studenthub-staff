@@ -22,7 +22,6 @@ export class TransferService {
 
   constructor(private _authhttp: AuthHttpService) { }
 
-
   /**
    * list of Transfer
    * @returns {Observable<any>}
@@ -30,6 +29,17 @@ export class TransferService {
   list(page, param): Observable<any> {
     const url = `${this._transferEndpoint}?page=${page}&${param}`;
     return this._authhttp.getRaw(url);
+  }
+
+  /**
+   * @param company_id 
+   * @param start_date 
+   * @param end_date 
+   * @returns 
+   */
+  approvedWorkLog(company_id, start_date, end_date): Observable<any> {
+    const url = `${this._transferEndpoint}/approved-work-log/${company_id}?start_date=${start_date}&end_date=${end_date}`;
+    return this._authhttp.get(url);
   }
 
   /**
@@ -157,10 +167,17 @@ export class TransferService {
   /**
    * download transfer Template
    */
-  downloadTransferTemplate(id: number, preFilled = false): Observable<any> {
-    let url = `${this._transferEndpoint}/transfer-excel-template/${id}`;
+  downloadTransferTemplate(id: number, preFilled = null, start_date = null, end_date = null): Observable<any> {
+    let url = `${this._transferEndpoint}/transfer-excel-template/${id}?`;
     if (preFilled) {
-      url += "?preFilled=true";
+      url += "&preFilled=" + preFilled;
+    }
+
+    if (start_date) {
+      url += "&start_date=" + start_date;
+    }
+    if (end_date) {
+      url += "&end_date=" + end_date;
     }
     return this._authhttp.excelget(url, `transfer-template.xlsx`);
   }

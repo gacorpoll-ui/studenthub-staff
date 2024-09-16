@@ -18,7 +18,7 @@ export class ChatService {
    * @param candidate
    */
   list(page: number = 1, filters: any): Observable<any> {
-    let url = this._endpoint + '?page=' + page + '&expand=staff,contact,candidate';
+    let url = this._endpoint + '?page=' + page + '&expand=staff,contact,candidate,company,store';
 
     if (filters.company_id) {
       url += "&company_id=" + filters.company_id;
@@ -31,6 +31,7 @@ export class ChatService {
     if (filters.staff_id) {
       url += "&staff_id=" + filters.staff_id;
     }
+
 
     return this._authhttp.getRaw(url);
   }
@@ -65,6 +66,7 @@ export class ChatService {
     return this._authhttp.get(url);
   }
 
+ 
   startChat(candidate_id) : Observable<any> {
     let url = this._endpoint + '/start-chat'
     return this._authhttp.post(url, {
@@ -79,6 +81,7 @@ export class ChatService {
     });
   }
 
+ 
   sendMessage(chat_uuid: string, message: string): Observable<any> {
     let url = this._endpoint + '/send-message'
     return this._authhttp.post(url, {

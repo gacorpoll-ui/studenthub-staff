@@ -12,6 +12,9 @@
       <ion-button clear class="cancel" color="primary" (click)="close()">
         Cancel
       </ion-button>
+      <ion-button *ngIf="segment == 'manual'" [disabled]="!form.valid || (total <= 0)" (click)="validate()">
+        Save
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 
@@ -24,15 +27,13 @@
       <ion-icon src="assets/images/icon-date-range.svg"></ion-icon>
     </ion-item>
 
-    <!--(ionChange)="segmentChanged($event)"-->
-    <ion-segment mode="md" [(ngModel)]="segment">
-
-      <ion-segment-button mode="md" value="manual">
-        <ion-label>Manual Transfer</ion-label>
-      </ion-segment-button>
-
+    <ion-segment mode="md" [(ngModel)]="segment" (ionChange)="segmentChanged($event)">
       <ion-segment-button mode="md" value="excel-sheet-upload">
         <ion-label>Excel Sheet Upload</ion-label>
+      </ion-segment-button>
+    
+      <ion-segment-button mode="md" value="manual">
+        <ion-label>Manual Transfer</ion-label>
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
@@ -42,6 +43,11 @@
 <ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
   <div class="container">
     <ng-container *ngIf="segment == 'manual'">
+
+      <ion-button class="btn-approved-work-log" *ngIf="ready" (click)="approvedWorkLog()" [disabled]="!startDate || !endDate">
+        Set approved work log for provided date range 
+      </ion-button>
+
       <form [formGroup]="form" *ngIf="ready">
 
         <!-- store_id pipe returns the transferCandidates grouped by store as object of following format: -->
@@ -84,13 +90,44 @@
                   <ion-item class="input-wrapper">
 
                     <ion-label position="floating">
-                      Hours Worked
+                      Hours 
                       <span class="error" *ngIf="parseNumber(transferCandidateRecord.hours) < 0">Invalid value</span>
                     </ion-label>
+
                     <!-- [readonly]="transferCandidateRecord.candidate.civilExpired" -->
-                    <ion-input type="number" inputmode="decimal" min="0" (ionChange)="calculateTotal()"
+                    <ion-input type="number" inputmode="numeric" min="0" (ionChange)="calculateTotal()"
                       [(ngModel)]="transferCandidateRecord.hours"
                       formControlName="hours[{{transferCandidateRecord.candidate.candidate_id}}]">
+                    </ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col size-lg="4" size-md="4" size-sm="12" size-xs="12">
+                  <ion-item class="input-wrapper"> 
+
+                    <ion-label position="floating">
+                      Minutes 
+                      <span class="error" *ngIf="parseNumber(transferCandidateRecord.minutes) < 0 || parseNumber(transferCandidateRecord.minutes) > 59">
+                        Invalid value
+                      </span>
+                    </ion-label>        
+                    <ion-input type="number" inputmode="numeric" min="0" (ionChange)="calculateTotal()"
+                      [(ngModel)]="transferCandidateRecord.minutes"
+                      formControlName="minutes[{{transferCandidateRecord.candidate.candidate_id}}]">
+                    </ion-input>
+                  </ion-item>
+                </ion-col>
+
+                <ion-col size-lg="4" size-md="4" size-sm="12" size-xs="12">
+                  <ion-item class="input-wrapper"> 
+                    <ion-label position="floating">
+                      Seconds 
+                      <span class="error" *ngIf="parseNumber(transferCandidateRecord.seconds) < 0 || parseNumber(transferCandidateRecord.seconds) > 59">
+                        Invalid value
+                      </span>
+                    </ion-label>  
+                    <ion-input type="number" inputmode="numeric" min="0" (ionChange)="calculateTotal()"
+                      [(ngModel)]="transferCandidateRecord.seconds"
+                      formControlName="seconds[{{transferCandidateRecord.candidate.candidate_id}}]">
                     </ion-input>
                   </ion-item>
                 </ion-col>
@@ -124,6 +161,16 @@
                             parseNumber(transferCandidateRecord.hours) 
                             * 
                             getCompanyHourlyRate(transferCandidateRecord)
+                          ) 
+                          + (
+                            parseNumber(transferCandidateRecord.minutes) 
+                            * 
+                            getCompanyHourlyRate(transferCandidateRecord) / 60
+                          ) 
+                          + (
+                            parseNumber(transferCandidateRecord.seconds) 
+                            * 
+                            getCompanyHourlyRate(transferCandidateRecord) / 3600
                           ) 
                           + parseNumber(transferCandidateRecord.bonus) 
                           + parseNumber(transferCandidateRecord.transfer_cost)
@@ -195,13 +242,27 @@
         </div>
       </div>
 
-      <a class="btn-download" tappable (click)="downloadTemplate()">Download Excel Template</a>
+      <a class="btn-download" tappable (click)="downloadTemplate()">
+        Download Excel Template
+      </a>
+ 
+      <br />
+
+      <a class="btn-download" tappable (click)="downloadTemplate('previousTransfer')">
+        Download with previous transfer data
+      </a>
 
       <br />
 
-    <a class="btn-download" tappable (click)="downloadTemplate(true)">
-      Download with previous transfer data
-    </a>
+      <a class="btn-download" tappable (click)="downloadTemplate('workLog')" *ngIf="!startDate || !endDate">
+        Download with current month's work log <br />
+        <small>Select date to download with work log from specific period</small>
+      </a>
+      
+
+      <a class="btn-download" tappable (click)="downloadTemplate('workLog')" *ngIf="startDate && endDate">
+        Download with work log for selected dates
+      </a>
 
       <!-- Upload Form -->
       <input type='file' #fileInput class="upload" (change)="browserUpload($event)" accept=".xlsx,.xls" />

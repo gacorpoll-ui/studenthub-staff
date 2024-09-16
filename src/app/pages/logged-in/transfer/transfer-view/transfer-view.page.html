@@ -129,7 +129,7 @@
             <ion-item-divider><b>{{group.name}}</b></ion-item-divider>
 
             <ion-item *ngFor="let resource of group.resources" tappable (click)="loadCandidateDetail(resource.candidate)"
-              [class.zeroHours]="transfer && (transfer.transfer_status==10) && (resource.hours == 0)">
+              [class.zeroHours]="transfer && (transfer.transfer_status==10) && (resource.hours == 0 || resource.minutes == 0 || resource.seconds == 0)">
               <div tabindex="0"></div>
 
               <ion-avatar slot="start">
@@ -148,10 +148,12 @@
                   Deleted Account
                 </h2>
 
-                <p *ngIf="resource.hours > 0">{{ resource.hours | number }} hours x {{ resource.currency_code }}
-                  {{ resource.company_hourly_rate | number:'1.0-3' }} per hour
-                
+                <p *ngIf="resource.hours > 0">
+                  {{ resource.hours | number }} hours {{ resource.minutes | number }} minutes {{ resource.seconds | number }} seconds 
+                  x 
+                  {{ resource.currency_code }} {{ resource.company_hourly_rate | number:'1.0-3' }} per hour
                 </p>
+
                 <p *ngIf="resource.bonus">Bonus {{ resource.currency_code }} {{resource.bonus | number}}</p>
                 <p *ngIf="resource.transfer_cost > 0">
                   Transfer cost {{ resource.currency_code }} {{ resource.transfer_cost }} 

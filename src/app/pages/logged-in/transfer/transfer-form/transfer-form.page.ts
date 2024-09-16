@@ -56,14 +56,14 @@ export class TransferFormPage implements OnInit {
   public min; // min date
   public max; // max date
   public startDate; // max date
-  public endData; // max date
+  public endDate; // max date
   public selected; // max date
   dateRange: { from: string; to: string; };
   type: 'string'; // 'string' | 'js-date' | 'moment' | 'time' | 'object'
 
   public borderLimit: boolean = false;
 
-  public segment = 'manual';
+  public segment = 'excel-sheet-upload';
 
   public range;
 
@@ -109,18 +109,29 @@ export class TransferFormPage implements OnInit {
     const d = new Date();
     this.max = (this.platform.is('mobile')) ? d.getFullYear() + '-12-12' : d;
 
+    this.analyticService.page('Transfer Form Page');
+
+    if (this.transfer.transfer_id) {
+      this.pageTitle = 'Edit Transfer';
+    }
+  }
+
+  loadData() {
+
     if (!this.transfer.transfer_id) {
 
       // Load List of All Candidates Assigned to this Company
       this._loadCandidateListThenInitialize();
 
     } else {
-      this.pageTitle = 'Edit Transfer';
-
       this.loadTransferDetail();
     }
+  }
 
-    this.analyticService.page('Transfer Form Page');
+  segmentChanged(event) {
+    if (this.segment == "manual" && !this.ready) {
+      this.loadData();
+    }
   }
 
   /**
@@ -156,7 +167,7 @@ export class TransferFormPage implements OnInit {
       candidateTransferRecord.candidate = candidate;
       candidateTransferRecord.candidate_id = candidate.candidate_id;
       //candidateTransferRecord.currentWorkHistory = candidate.currentWorkHistory;
-      candidateTransferRecord.transfer_cost = candidate.currentWorkHistory.transferCost; //effective transfer cost 
+      candidateTransferRecord.transfer_cost = candidate.currentWorkHistory?.transferCost; //effective transfer cost 
 
       // Append the candidateTransferRecord into the allTransferCandidateRecordsMapped array
       allTransferCandidateRecordsMapped[candidate.candidate_id] = candidateTransferRecord;
@@ -188,16 +199,25 @@ export class TransferFormPage implements OnInit {
         // Validators.required,
         CustomValidator.negativeNumberValidator
       ]];
+      formControls['minutes[' + record.candidate.candidate_id + ']'] = [record.minutes, [
+        // Validators.required,
+        CustomValidator.negativeNumberValidator
+      ]];
+      formControls['seconds[' + record.candidate.candidate_id + ']'] = [record.seconds, [
+        // Validators.required,
+        CustomValidator.negativeNumberValidator
+      ]];
+      
       formControls['bonus[' + record.candidate.candidate_id + ']'] = [record.bonus, [
         CustomValidator.negativeNumberValidator
       ]];
     });
 
-    formControls['start_date'] = [(this.transfer && this.transfer.start_date) ? this.transfer.start_date : '', [
+    formControls['start_date'] = [(this.transfer && this.transfer.start_date) ? this.transfer.start_date : this.startDate, [
       Validators.required
     ]];
 
-    formControls['end_date'] = [(this.transfer && this.transfer.end_date) ? this.transfer.end_date : '', [
+    formControls['end_date'] = [(this.transfer && this.transfer.end_date) ? this.transfer.end_date : this.endDate, [
       Validators.required
     ]];
 
@@ -216,11 +236,33 @@ export class TransferFormPage implements OnInit {
     // Calculate transfer total
     this.calculateTotal();
 
-    if(this.form.value.start_date && this.form.value.end_date) {
-      this.range = this.form.value.start_date + '-' + this.form.value.end_date;
+    if(this.startDate && this.endDate) {
+      this.range = this.startDate + '-' + this.endDate;
     }
 
     this.ready = true;
+  }
+
+  approvedWorkLog() {
+    this.transferService.approvedWorkLog(this.transfer.company_id, this.startDate, this.endDate).subscribe(data => {
+
+      let values = {}
+
+      for (let record of data) {
+        values['hours[' + record.candidate_id + ']'] = record.hours;
+        values['minutes[' + record.candidate_id + ']'] = record.minutes;
+        values['seconds[' + record.candidate_id + ']'] = record.seconds;
+      }
+
+      this.form.patchValue(values);
+      this.form.markAsDirty();
+      this.form.updateValueAndValidity();
+
+      this._toastCtrl.create({
+        message: "Transfer hours, minutes, seconds updated from work log",
+          duration: 3000
+      }).then(t => t.present());
+    });
   }
 
   /**
@@ -231,7 +273,11 @@ export class TransferFormPage implements OnInit {
 
     for (const entry of this.transfer.transferCandidates) {
       // Check if any candidates have unset hours or 0 hours set
-      if (!entry.hours || entry.hours == 0) {
+      if (
+        (!entry.hours || entry.hours == 0) && 
+        (!entry.minutes || entry.minutes == 0) && 
+        (!entry.seconds || entry.seconds == 0)
+      ) {
         error = 'You have set that some employees haven\'t worked any hours. Are you sure?';
       }
 
@@ -239,6 +285,14 @@ export class TransferFormPage implements OnInit {
       if (entry.hours > 180) {
         error = 'You have employees set to have worked for more than 180 hours. are you sure?';
       }
+
+      /*if (entry.minutes > 59) {
+        error = 'Minutes can not be more than 59';
+      }
+
+      if (entry.seconds > 59) {
+        error = 'Seconds can not be more than 59';
+      }*/
 
       // Prompt to show user where error is or Save if he knows about it.
       if (error) {
@@ -300,8 +354,8 @@ export class TransferFormPage implements OnInit {
     this.removeUnaccountedUsers();
 
     const action = this.transfer.transfer_id ?
-      this.transferService.updateTransfer(this.transfer, this.form.value.start_date, this.form.value.end_date, this.form.value.currency_code) :
-      this.transferService.save(this.transfer, this.form.value.start_date, this.form.value.end_date, this.form.value.currency_code);
+      this.transferService.updateTransfer(this.transfer, this.startDate, this.endDate, this.form.value.currency_code) :
+      this.transferService.save(this.transfer, this.startDate, this.endDate, this.form.value.currency_code);
 
     action.subscribe(async jsonResponse => {
       loader.dismiss();
@@ -357,10 +411,19 @@ export class TransferFormPage implements OnInit {
       this.transfer.transferCandidates.forEach((transferCandidate: TransferCandidate) => {
         // this.total += this.parseNumber(transferCandidate.company_total);
         const hours = this.parseNumber(transferCandidate.hours);
+        const minutes = this.parseNumber(transferCandidate.minutes);
+        const seconds = this.parseNumber(transferCandidate.seconds);
         const bonus = this.parseNumber(transferCandidate.bonus);
+        const company_hourly_rate = this.getCompanyHourlyRate(transferCandidate);
+        
+        const subTotal = (hours * company_hourly_rate) 
+          + (minutes * (company_hourly_rate/ 60)) 
+          + (seconds * (company_hourly_rate/ 3600)) 
+          + bonus;
 
-        this.total += (hours * this.getCompanyHourlyRate(transferCandidate)) + bonus
-          + this.parseNumber(transferCandidate.transfer_cost);
+        if (subTotal > 0)
+          this.total += subTotal + this.parseNumber(transferCandidate.transfer_cost);
+
         //transferCandidate.candidate.company.company_hourly_rate
       });
     }
@@ -414,6 +477,9 @@ export class TransferFormPage implements OnInit {
       loading.dismiss();
       this.transfer = response;
 
+      this.startDate = this.transfer.start_date;
+      this.endDate = this.transfer.end_date;
+
       // Load List of All Candidates Assigned to this Company
       this._loadCandidateListThenInitialize();
     });
@@ -445,7 +511,7 @@ export class TransferFormPage implements OnInit {
    */
   removeUnaccountedUsers() {
     this.transfer.transferCandidates = this.transfer.transferCandidates.filter((candidates, index) => {
-      return (candidates.bonus > 0 || candidates.hours > 0);
+      return (candidates.bonus > 0 || candidates.hours > 0 || candidates.minutes > 0 || candidates.seconds > 0);
     });
   }
 
@@ -480,9 +546,16 @@ export class TransferFormPage implements OnInit {
     const date = eventCloseData.data;
 
     if (date) {
-      // this.form.value.start_date
-      this.form.controls['start_date'].setValue(date.from.string);
-      this.form.controls['end_date'].setValue(date.to.string);
+      // this.startDate
+
+      console.log(this.form)
+      if (this.form && this.form.controls && this.form.controls['start_date']) {
+        this.form.controls['start_date'].setValue(date.from.string);
+        this.form.controls['end_date'].setValue(date.to.string);
+      }
+
+      this.startDate = date.from.string;
+      this.endDate = date.to.string;
 
       this.range = date.from.string + '-' + date.to.string;
     }
@@ -582,7 +655,7 @@ export class TransferFormPage implements OnInit {
    */
   async newTransferUpload(file) {
 
-    this.transferService.uploadTransferExcel(file, this.form.value.start_date, this.form.value.end_date, this.transfer.company_id).subscribe(async data => {
+    this.transferService.uploadTransferExcel(file, this.startDate, this.endDate, this.transfer.company_id).subscribe(async data => {
 
       this.uploading = false;
 
@@ -622,50 +695,58 @@ export class TransferFormPage implements OnInit {
   async editTransferUpload(file) {
 
     this.transferService
-      .updateTransferUploadExcel(file, this.transfer.transfer_id, this.form.value.start_date, this.form.value.end_date)
-      .subscribe(async data => {
+      .updateTransferUploadExcel(file, this.transfer.transfer_id, this.startDate, this.endDate)
+      .subscribe({
+        next: async data => {
 
-        this.uploading = false;
+          this.uploading = false;
 
-        if (data.operation == 'success') {
+          if (data.operation == 'success') {
 
-          this.eventService.reloadStats$.next({
-            company_id: this.transfer.company_id
-          });
+            this.eventService.reloadStats$.next({
+              company_id: this.transfer.company_id
+            });
 
-          let prompt = await this._alertCtrl.create({
-            message: this.translateService.errorMessage(data.message),
-            buttons: ["Ok"]
-          });
-          prompt.present();
+            let prompt = await this._alertCtrl.create({
+              message: this.translateService.errorMessage(data.message),
+              buttons: ["Ok"]
+            });
+            prompt.present();
 
-          this.close({ refresh: true });
+            this.close({ refresh: true });
 
-          // this.navCtrl.push(TransferViewPage, {
-          //   'model': this.transfer.transfer_id
-          // });
+            // this.navCtrl.push(TransferViewPage, {
+            //   'model': this.transfer.transfer_id
+            // });
+          }
+
+          // On Failure
+          if (data.operation == "error") {
+            let prompt = await this._alertCtrl.create({
+              message: this.translateService.errorMessage(data.message),
+              buttons: ["Ok"]
+            });
+            prompt.present();
+          }
+        }, 
+        error: () => {
+          this.uploading = false;
         }
-
-        // On Failure
-        if (data.operation == "error") {
-          let prompt = await this._alertCtrl.create({
-            message: this.translateService.errorMessage(data.message),
-            buttons: ["Ok"]
-          });
-          prompt.present();
-        }
-      }, () => {
-        this.uploading = false;
       });
   }
 
   /**
    * download transfer template 
    */
-  async downloadTemplate(preFilled = false) {
+  async downloadTemplate(preFilled = null) {
     let loader = await this._loadingCtrl.create();
     loader.present();
-    this.transferService.downloadTransferTemplate(this.transfer.company_id, preFilled).subscribe(response => {
+    this.transferService.downloadTransferTemplate(
+      this.transfer.company_id, 
+      preFilled, 
+      this.startDate, 
+      this.endDate
+    ).subscribe(() => {
       loader.dismiss();
     });
   }
