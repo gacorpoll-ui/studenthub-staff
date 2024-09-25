@@ -140,6 +140,8 @@ export class CandidateViewPage implements OnInit {
   public loadingCertificates: boolean = false; 
   public issueingCertificates: boolean = false; 
   
+  public invitationChartInstant;//: Chart; 
+
   constructor(
     public navCtrl: NavController,
     public router: Router,
@@ -524,22 +526,33 @@ export class CandidateViewPage implements OnInit {
   }
 
   loadInvitationChart() {
-    new Chart(this.invitationChart.nativeElement, {
+    if (!this.invitationChart) {
+      return null;
+    }
+
+    const data = {
+      /*labels: [
+        'Yellow'
+      ],*/
+      datasets: [{
+        //label: 'My First Dataset',
+        data: [this.candidate.invitationStats.totalEmailPercentage, this.candidate.invitationStats.totalAppPercentage],
+        backgroundColor: [
+          '#BDBDBD',
+          'rgb(255, 255, 255)'
+        ],
+        hoverOffset: 4
+      }]
+    };
+
+    if (this.invitationChartInstant) {
+      this.invitationChartInstant.data = data;// setData(data)
+      return;
+    }
+
+    this.invitationChartInstant = new Chart(this.invitationChart.nativeElement, {
       type: 'pie',
-      data: {
-        /*labels: [
-          'Yellow'
-        ],*/
-        datasets: [{
-          //label: 'My First Dataset',
-          data: [this.candidate.invitationStats.totalEmailPercentage, this.candidate.invitationStats.totalAppPercentage],
-          backgroundColor: [
-            '#BDBDBD',
-            'rgb(255, 255, 255)'
-          ],
-          hoverOffset: 4
-        }]
-      },
+      data: data,
     });
   }
 
