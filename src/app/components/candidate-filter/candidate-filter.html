@@ -140,5 +140,16 @@
         
     </div>
 
+    <h4 class="filter-group-name">{{ "Certificates" | translate }}</h4>
+
+    <div class="filter-groups">
+
+        <refinement-list label="{{ 'Certificate Name' | translate }}" [searchable]="true"
+            data-sort-order="1" [class.is-refined]="arrRefined['candidateCertificates.certificateName.en']"
+            searchPlaceholder="{{ 'Search here...' | translate }}" showMoreLabel="{{ 'Show more' | translate }}"
+            showLessLabel="{{ 'Show less' | translate }}" showMoreLimit="15" operator="or"
+            attribute="candidateCertificates.certificateName.en"></refinement-list>
+    </div>
+
 </div>
 
