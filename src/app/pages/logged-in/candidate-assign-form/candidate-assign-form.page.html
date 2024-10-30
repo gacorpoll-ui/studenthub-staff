@@ -18,38 +18,70 @@
   <div class="container">
     <form [formGroup]="form" *ngIf="form">
 
-      <ion-item class="input-wrapper">
-        <div tabindex="0"></div>
-        <ion-label position="floating">Hourly Rate</ion-label>
-        <ion-input type="number" formControlName="rate"></ion-input>
-      </ion-item>
-
-      <ion-item class="input-wrapper">
-        <div tabindex="0"></div>
-        <ion-label position="floating">Override Company Hourly Rate</ion-label>
-        <ion-input type="number" formControlName="company_hourly_rate"></ion-input>
-        <p><small>Leave blank for default company rate</small></p>
-      </ion-item>
-
-      <ion-item class="input-wrapper">
-        <div tabindex="0"></div>
-        <ion-label position="floating">Override Transfer Cost (Company Level)</ion-label>
-        <ion-input type="number" formControlName="company_transfer_cost"></ion-input>
-        <p><small>Leave blank for default transfer rate (0 for now)</small></p>
-      </ion-item>
-
-      <ion-item class="input-wrapper">
-        <div tabindex="0"></div>
-        <ion-label position="floating">Override Transfer Cost (Store/Assignment Level)</ion-label>
-        <ion-input type="number" formControlName="transfer_cost"></ion-input>
-        <p><small>Leave blank for company level transfer rate ({{ form.value.company_transfer_cost }} for now)</small></p>
-      </ion-item>
-
       <h5>Start date</h5>
 
       <!-- [min]="todayDate"-->
       <ion-datetime presentation="date"  [max]="maxDate" formControlName="start_date"></ion-datetime>
 
+      <br/>
+      <br/>
+
+    <ion-segment mode="md" [value]="tab" (ionChange)="segmentChanged($event)" >
+
+      <ion-segment-button mode="md" value="legacy">
+        <ion-label>Legacy</ion-label>
+      </ion-segment-button>
+
+      <ion-segment-button mode="md" value="contract">
+        <ion-label>Contract</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+      <ion-item class="input-wrapper" *ngIf="tab == 'contract'">
+        <div tabindex="0"></div>
+        <ion-label position="floating">Contract</ion-label>
+        <ion-select formControlName="contract_uuid">
+          <ion-select-option [value]="contract.contract_uuid" *ngFor="let contract of contracts">
+            {{ contract.detail }}
+
+            <!-- <ng-container *ngIf="contract.type == 'FIXED_PRICE'">Fixed Price </ng-container> 
+            <ng-container *ngIf="contract.type == 'HOURLY'">Hourly </ng-container> 
+            <ng-container *ngIf="contract.type == 'MONTHLY_SALARY'">Monthly Salary </ng-container> 
+            | -->
+          </ion-select-option> 
+        </ion-select>
+      </ion-item>
+
+      <ng-container *ngIf="tab == 'legacy'">
+
+        <ion-item class="input-wrapper">
+          <div tabindex="0"></div>
+          <ion-label position="floating">Hourly Rate</ion-label>
+          <ion-input type="number" formControlName="rate"></ion-input>
+        </ion-item>
+
+        <ion-item class="input-wrapper">
+          <div tabindex="0"></div>
+          <ion-label position="floating">Override Company Hourly Rate</ion-label>
+          <ion-input type="number" formControlName="company_hourly_rate"></ion-input>
+          <p><small>Leave blank for default company rate</small></p>
+        </ion-item>
+
+        <ion-item class="input-wrapper">
+          <div tabindex="0"></div>
+          <ion-label position="floating">Override Transfer Cost (Company Level)</ion-label>
+          <ion-input type="number" formControlName="company_transfer_cost"></ion-input>
+          <p><small>Leave blank for default transfer rate (0 for now)</small></p>
+        </ion-item>
+
+        <ion-item class="input-wrapper">
+          <div tabindex="0"></div>
+          <ion-label position="floating">Override Transfer Cost (Store/Assignment Level)</ion-label>
+          <ion-input type="number" formControlName="transfer_cost"></ion-input>
+          <p><small>Leave blank for company level transfer rate ({{ form.value.company_transfer_cost }} for now)</small></p>
+        </ion-item>
+
+      </ng-container>
     </form>
   </div>
 

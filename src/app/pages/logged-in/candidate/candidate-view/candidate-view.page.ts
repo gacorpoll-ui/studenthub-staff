@@ -258,7 +258,7 @@ export class CandidateViewPage implements OnInit {
    * Load list of all stores then set store name and id as per candidate data
    */
   loadStoreData() {
-    this.storeService.list('store_id', 'storeWithCompany').subscribe(response => {
+    this.storeService.list('store_id', 'storeWithCompany,contracts').subscribe(response => {
       this.stores = response;
     });
   }
@@ -386,6 +386,8 @@ export class CandidateViewPage implements OnInit {
 
     window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
 
+    const store = this.stores.find(e => e.store_id == storeID);
+
     const modal = await this.modalCtrl.create({
       component: ModalPopPage,
       componentProps: {
@@ -393,7 +395,8 @@ export class CandidateViewPage implements OnInit {
         activatedRoutePathProps: {
           view: 'direct',
           store_id: storeID,
-          candidate_id: this.candidate_id
+          candidate_id: this.candidate_id,
+          contracts: store? store['contracts']: []
         }
       },
       cssClass: "popup-modal"
@@ -405,9 +408,9 @@ export class CandidateViewPage implements OnInit {
         window.history.back();
       }
 
-      if(e.data && e.data.rate) {
+      if(e.data && (e.data.rate || e.data.contract_uuid)) {
         this.assignCandidateToStoreWithRate(storeID, e.data.rate, e.data.start_date, 
-          e.data.company_hourly_rate, e.data.company_transfer_cost, e.data.transfer_cost);
+          e.data.company_hourly_rate, e.data.company_transfer_cost, e.data.transfer_cost, e.data.contract_uuid);
       }
     });
     modal.present();
@@ -424,7 +427,8 @@ export class CandidateViewPage implements OnInit {
     start_date = null, 
     company_hourly_rate = null,
     company_transfer_cost = null, 
-    transfer_cost = null
+    transfer_cost = null,
+    contract_uuid = null
   ) {
 
     this.assigning = true;
@@ -436,7 +440,8 @@ export class CandidateViewPage implements OnInit {
       start_date, 
       company_hourly_rate,
       company_transfer_cost,
-      transfer_cost
+      transfer_cost,
+      contract_uuid
     ).subscribe(async response => {
 
       this.assigning = false;

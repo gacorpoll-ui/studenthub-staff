@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { format, parseISO } from 'date-fns';
+import { Contract } from 'src/app/models/contract';
 import { CandidateService } from 'src/app/providers/logged-in/candidate.service';
 
 
@@ -14,13 +15,17 @@ export class CandidateAssignFormPage implements OnInit {
   
   public candidate_id;
   public store_id; 
-
+  
   public form: FormGroup;
 
   public todayDate;
   public maxDate;
   
   public borderLimit = false;
+
+  public tab = 'contract';
+
+  public contracts: Contract[];
 
   constructor(
     private _fb: FormBuilder,
@@ -32,17 +37,44 @@ export class CandidateAssignFormPage implements OnInit {
     this.setDates();
     this.candidateService.getTransferCostAtCompanyLevel(this.candidate_id, this.store_id).subscribe(res => {
       this.initForm(res);
+      //this.contracts = res.contracts;
     })
   }
 
   initForm(res = null) {
     this.form = this._fb.group({
-      rate: ['', Validators.required],
+      rate: [''],
       company_hourly_rate: [''],
       company_transfer_cost: [res?.transfer_cost],
       transfer_cost: [''],
+      contract_uuid: [null, Validators.required],
       start_date: [this.todayDate, Validators.required],
     });
+
+    //todo: validation based on contract selection?
+
+  }
+
+  segmentChanged(event) {
+    this.tab = event.target.value;
+    
+    if (this.tab == "legacy") {
+      this.form.get("contract_uuid").setValue(null);
+      this.form.get("contract_uuid").setValidators(null)
+      this.form.get("contract_uuid").updateValueAndValidity();
+
+      this.form.get("rate").setValue(null);
+      this.form.get("rate").setValidators(Validators.required)
+      this.form.get("rate").updateValueAndValidity();
+    } else {
+      this.form.get("contract_uuid").setValue(null);
+      this.form.get("contract_uuid").setValidators(Validators.required)
+      this.form.get("contract_uuid").updateValueAndValidity();
+
+      this.form.get("rate").setValue(null);
+      this.form.get("rate").setValidators(null)
+      this.form.get("rate").updateValueAndValidity();
+    }
   }
 
   /**

@@ -317,6 +317,7 @@ export class CandidateService {
       company_hourly_rate: number | null = null,
       company_transfer_cost: number | null = null,
       transfer_cost: number | null = null,
+      contract_uuid: string = null
   ): Observable<any> {
     const params = {
       store_id: store_id,
@@ -325,6 +326,7 @@ export class CandidateService {
       company_transfer_cost: company_transfer_cost,
       transfer_cost: transfer_cost,
       start_date: start_date,
+      contract_uuid: contract_uuid
     };
     const url = `${this._candidateEndpoint}/assign/${candidate.candidate_id}`;
     return this._authhttp.patch(url, params);
