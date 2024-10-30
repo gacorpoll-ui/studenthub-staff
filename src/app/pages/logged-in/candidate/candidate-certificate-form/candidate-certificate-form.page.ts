@@ -62,7 +62,7 @@ export class CandidateCertificateFormPage implements OnInit {
     });
 
     this.form.get('certificate_type').valueChanges.subscribe(val => {
-      console.log("certificate_type", val)
+      
       if (val == "0") {
         this.form.get('candidate_work_history_id').setValidators([Validators.required]);
         this.form.get('exam_uuid').setValue(null);

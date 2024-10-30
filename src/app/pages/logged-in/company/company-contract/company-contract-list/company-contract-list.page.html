@@ -1,0 +1,120 @@
+<ion-header mode="md" [class.add-border]="borderLimit" mode="md">
+  <ion-toolbar class="container">
+    <ion-buttons slot="start">
+      <ion-back-button icon="assets/images/icon-back.svg" (click)="dismiss()"></ion-back-button>
+    </ion-buttons>
+    <!--
+    <ion-buttons slot="end">
+      <ion-button><ion-icon class="setting-icon" name="ellipsis-vertical-outline"></ion-icon></ion-button>
+    </ion-buttons>
+-->
+  </ion-toolbar>
+  <ion-toolbar class="container">
+    <ion-title class="main" size="large">Contracts <strong *ngIf="company && company.contracts">{{company.contracts.length}}</strong></ion-title>
+    <ion-title class="secondary" size="small" *ngIf="company">
+      {{ (company.company_common_name_en) ?  company.company_common_name_en:company.company_name }}
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
+  
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  
+  <div class="container" *ngIf="company">
+
+    <ion-card *ngFor="let contract of company.contracts" tappable (click)="contractSelected(contract)">
+      <ion-card-content>
+
+        <h5>
+          <ng-container *ngIf="contract.type == 'FIXED_PRICE'">Fixed Price </ng-container> 
+          <ng-container *ngIf="contract.type == 'HOURLY'">Hourly </ng-container> 
+          <ng-container *ngIf="contract.type == 'MONTHLY_SALARY'">Monthly Salary </ng-container> 
+        </h5>
+
+        <p *ngIf="contract.transfer_cost">
+          Transfer Cost: {{ contract.transfer_cost }} {{ contract.currency_code }}
+        </p>
+
+        <p *ngIf="contract.start_date">
+          Duration: {{ translateService.toDate(contract.start_date) | date: 'MMM d, y' }} 
+          <ng-container *ngIf="contract.end_date">
+            - {{ translateService.toDate(contract.end_date) | date: 'MMM d, y' }}
+          </ng-container>
+        </p>
+
+        <p class="txt-time">
+          {{ contract.created_at | timeAgo }} on
+          {{ translateService.toDate(contract.created_at) | date: 'MMM d, y' }}
+        </p>
+        
+        <ion-card *ngIf="contract.amount">
+          <ion-card-content *ngIf="contract.type == 'FIXED_PRICE'">
+            <p>
+              <b>Candidate total:</b>
+              <span>{{ contract.amount.candidate_total }} {{ contract.currency_code }}</span>
+            </p>
+            <p>
+              <b>Company total:</b>
+              <span>{{ contract.amount.company_total }} {{ contract.currency_code }}</span>
+            </p>
+            <p>
+              <b>Completion percentage:</b>
+              <span>{{ contract.amount.completion_percentage }}%</span>
+            </p> 
+          </ion-card-content>
+
+          <ion-card-content *ngIf="contract.type == 'HOURLY'">
+            <p>
+              <b>Candidate hourly rate:</b>
+              <span>{{ contract.amount.candidate_hourly_rate }} {{ contract.currency_code }} / hour</span>
+            </p>
+            <p>
+              <b>Company hourly rate:</b>
+              <span>{{ contract.amount.company_hourly_rate }} {{ contract.currency_code }} / hour</span>
+            </p>
+          </ion-card-content>
+
+          <ion-card-content *ngIf="contract.type == 'MONTHLY_SALARY'">
+            <p>
+              <b>Candidate total:</b>
+              <span>{{ contract.amount.candidate_total }} {{ contract.currency_code }} / month</span>
+            </p>
+
+            <p>
+              <b>Company total:</b>
+              <span>{{ contract.amount.company_total }} {{ contract.currency_code }} / month</span>
+            </p>
+
+            <p>
+              <b>Salary day:</b>
+              <span>{{ contract.amount.salary_day }}th day of the month</span>
+            </p>
+          </ion-card-content>  
+
+        </ion-card>
+
+        <ion-button [disabled]="deleting" (click)="delete(contract, $event)" color="danger">
+          Delete <ion-icon *ngIf="!deleting" slot="start" name="trash-outline"></ion-icon>
+          <ion-spinner *ngIf="deleting" ></ion-spinner>
+        </ion-button>
+
+      </ion-card-content>
+    
+    </ion-card>
+
+    <loading-modal type="contract-list" [loading]="loading"></loading-modal>
+
+    <no-items *ngIf="!loading && company && company.contracts && company.contracts.length ==0" message="~ No contract data available ~"></no-items>
+
+  </div>
+  
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="addContract()">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>

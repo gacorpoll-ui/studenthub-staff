@@ -771,10 +771,27 @@ const routes: Routes = [
     canActivate: [AuthService],
     loadChildren: () => import('./pages/logged-in/candidate/interview-evaluation/interview-evaluation-list/interview-evaluation-list.module').then( m => m.InterviewEvaluationListPageModule)
   },
+
+  {
+    path: 'company-contract-form',
+    canActivate: [AuthService],
+    loadChildren: () => import('./pages/logged-in/company/company-contract/company-contract-form/company-contract-form.module').then( m => m.CompanyContractFormPageModule)
+  },
+  {
+    path: 'company-contract-view',
+    canActivate: [AuthService],
+    loadChildren: () => import('./pages/logged-in/company/company-contract/company-contract-view/company-contract-view.module').then( m => m.CompanyContractViewPageModule)
+  },
+  {
+    path: 'company-contract-list',
+    canActivate: [AuthService],
+    loadChildren: () => import('./pages/logged-in/company/company-contract/company-contract-list/company-contract-list.module').then( m => m.CompanyContractListPageModule)
+  },
+
   {
     path: '**',
     redirectTo: 'not-found'
-  }
+  },
 ];
 
 @NgModule({

@@ -30,6 +30,7 @@ import { FiringHitmapService } from 'src/app/providers/logged-in/firing-hitmap.s
 // components
 import { ActionComponent } from 'src/app/components/action/action.component';
 import { TransferRatesPage } from '../../transfer/transfer-rates/transfer-rates.page';
+import { CompanyContractListPage } from '../company-contract/company-contract-list/company-contract-list.page';
 
 
 @Component({
@@ -74,7 +75,8 @@ export class CompanyViewPage implements OnInit {
     brands : 0,
     malls : 0,
     documents : 0,
-    transfers : 0
+    transfers : 0,
+    contracts: 0
   };
 
   segment = 'details';
@@ -231,6 +233,27 @@ export class CompanyViewPage implements OnInit {
         window.history.back();
       }
     });
+    modal.present();
+  }
+
+  async openContracts() {
+    window.history.pushState({ navigationId: window.history.state?.navigationId }, null, window.location.pathname);
+
+    const modal = await this.modalCtrl.create({
+      component: CompanyContractListPage,
+      componentProps: {
+        company: this.company,
+      },
+      cssClass: "popup-modal"
+    });
+    modal.onDidDismiss().then(e => {
+ 
+      if (!e.data || e.data.from != 'native-back-btn') {
+        window['history-back-from'] = 'onDidDismiss';
+       // window.history.back();
+      }
+    });
+
     modal.present();
   }
 

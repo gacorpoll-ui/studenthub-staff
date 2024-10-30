@@ -13,6 +13,7 @@ import {RequestListingModule} from "../../../../components/request-listing/reque
 import { NoteModule } from 'src/app/components/note/note.module';
 import { TransferChartPageModule } from '../../transfer/transfer-chart/transfer-chart.module';
 import { TransferRatesPageModule } from '../../transfer/transfer-rates/transfer-rates.module';
+import { CompanyContractListPageModule } from '../company-contract/company-contract-list/company-contract-list.module';
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import { TransferRatesPageModule } from '../../transfer/transfer-rates/transfer-
     IonicModule,
     PipesModule,
     NoteModule,
+    CompanyContractListPageModule,
     RequestListingModule,
     TransferRatesPageModule,
    // TransferChartPageModule,

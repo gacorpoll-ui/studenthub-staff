@@ -5,6 +5,7 @@ import {Transfer} from "./transfer";
 import {Mall} from "./mall";
 import {Contact} from "./contact";
 import { Country } from './country';
+import { Contract } from './contract';
 
 export class Company {
     company_id: number;
@@ -49,4 +50,5 @@ export class Company {
     stats: any[];
     country: Country;
     companyStats: any;
+    contracts: Contract[];
 }
