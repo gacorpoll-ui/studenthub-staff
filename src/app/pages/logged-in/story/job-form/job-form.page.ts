@@ -52,10 +52,12 @@ export class JobFormPage implements OnInit {
       }
     }
 
-    skillCtrls.push(this.fb.group({
-      skill: ['', [Validators.required]],
-      skill_ar: ['', [Validators.required]],
-    }));
+    if (!this.model.job_uuid) {
+      skillCtrls.push(this.fb.group({
+        skill: ['', [Validators.required]],
+        skill_ar: ['', [Validators.required]],
+      }));
+    }
 
     this.form = this.fb.group({
       area_uuid: [this.model.area_uuid, Validators.required],
