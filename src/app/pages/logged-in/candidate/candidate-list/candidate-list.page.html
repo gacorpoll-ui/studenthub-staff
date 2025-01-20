@@ -8,7 +8,7 @@
 
     <ion-buttons slot="end">
 
-      <ion-button color="primary" [disabled]="candidateIdCardService.candidates.length == 0 || merging || downloading"
+      <ion-button [disabled]="candidateIdCardService.candidates.length == 0 || merging || downloading" color="primary"
         (click)="generate()">
         <span *ngIf="!downloading">Download Zip</span>
         <ion-spinner *ngIf="downloading"></ion-spinner>
