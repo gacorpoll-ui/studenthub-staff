@@ -12,8 +12,12 @@
          #{{ model.cir_uuid }} 
       </span>
     </ion-title>
-    <ion-buttons slot="end" *ngIf="model && model.status== 'pending'">
-      <ion-button color="danger" (click)="delete()">
+    <ion-buttons slot="end" *ngIf="model">
+      <ion-button color="danger" *ngIf="model.status== 'completed'" (click)="regenerate()">
+        Re-generate
+      </ion-button>
+      <!-- todo: delete generated file -->
+      <ion-button color="danger" *ngIf="model.status== 'pending'" (click)="delete()">
         Delete
       </ion-button>
     </ion-buttons>

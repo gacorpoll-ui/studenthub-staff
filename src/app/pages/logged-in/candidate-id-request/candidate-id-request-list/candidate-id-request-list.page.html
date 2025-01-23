@@ -21,8 +21,8 @@
   
   <div class="container">
   
-    <ion-item *ngFor="let model of models" [routerLink]="['/candidate-id-request', model.cir_uuid]">
-      <ion-label>
+    <ion-item *ngFor="let model of models">
+      <ion-label [routerLink]="['/candidate-id-request', model.cir_uuid]">
         <h5>{{ model.status }}</h5>
 
         <p *ngIf="model.status == 'pending'">
@@ -53,7 +53,20 @@
           Created by <span>{{ model.staff.staff_name }}</span>
         </p>
       </ion-label>
+
+      <ion-buttons slot="end">
+
+      <ion-button color="danger" *ngIf="model.status== 'completed'" (click)="regenerate(model, $event)">
+        Re-generate
+      </ion-button>
+      <!-- todo: delete generated file -->
+      <ion-button color="danger" *ngIf="model.status== 'pending'" (click)="delete(model, $event)">
+        Delete
+      </ion-button>
+      </ion-buttons>
     </ion-item>
+
+
     <loading-modal type="transfer-list" [loading]="loading"></loading-modal>
 
     <no-items *ngIf="!loading && models && models.length == 0" message="~ No requests yet ~"></no-items>

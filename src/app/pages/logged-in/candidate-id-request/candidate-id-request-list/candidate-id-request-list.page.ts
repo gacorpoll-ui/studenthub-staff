@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AlertController } from '@ionic/angular';
 import { AnalyticsService } from 'src/app/providers/analytics.service';
 import { AwsService } from 'src/app/providers/aws.service';
+import { AuthService } from 'src/app/providers/auth.service';
 import { CandidateIdRequestService } from 'src/app/providers/logged-in/candidate-id-request.service';
 import { TranslateLabelService } from 'src/app/providers/translate-label.service';
 
@@ -20,7 +22,10 @@ export class CandidateIdRequestListPage implements OnInit {
   public loading: boolean = false;
   public models: any[] = [];
 
+  public deleting: boolean = false;
   constructor(
+    public alertCtrl: AlertController,
+    public authservice: AuthService,
     public awsService: AwsService,
     public translateService: TranslateLabelService,
     public candidateIdRequestService: CandidateIdRequestService,
@@ -76,6 +81,43 @@ export class CandidateIdRequestListPage implements OnInit {
 
   logScrolling(e) {
     this.borderLimit = (e.detail.scrollTop > 20);
+  }
+
+
+  async regenerate(model, event) {
+
+    event.stopPropagation();
+    this.candidateIdRequestService.regenerate(model.cir_uuid).subscribe(response => {
+      if (response.operation === 'success') {
+        this.loadData();
+      } else {
+        this.alertCtrl.create({
+          header: 'Error',
+          message: this.authservice.errorMessage(response.message),
+          buttons: ['OK']
+        }).then(alert => alert.present);
+      }
+    });
+  }
+
+  async delete(model, event) {
+    event.stopPropagation();
+    this.deleting = true;
+ 
+    this.candidateIdRequestService.delete(model.cir_uuid).subscribe(response => {
+
+       if (response.operation === 'success') {
+        this.router.navigate(['/candidate-id-requests']);
+       } else {
+        this.alertCtrl.create({
+          header: 'Error',
+          message: this.authservice.errorMessage(response.message),
+          buttons: ['OK']
+        }).then(alert => alert.present);
+       }
+
+      this.deleting = false;
+    });
   }
 
   onLinkClick(event) {
