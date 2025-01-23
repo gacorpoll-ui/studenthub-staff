@@ -24,6 +24,11 @@ export class CandidateIdRequestService {
     return this._authhttp.get(url);
   }
 
+  regenerate(cir_uuid: string): Observable<any> {
+    let url = this._candidateEndpoint + '/regenerate/'  + cir_uuid;
+    return this._authhttp.patch(url, {});
+  }
+
   delete(cir_uuid: string): Observable<any> {
     let url = this._candidateEndpoint + '/' + cir_uuid;
     return this._authhttp.delete(url);

@@ -77,6 +77,21 @@ export class CandidateIdRequestDetailPage implements OnInit {
     });
   }
 
+  async regenerate() {
+
+    this.candidateIdRequestService.regenerate(this.id).subscribe(response => {
+      if (response.operation === 'success') {
+        this.loadData();
+      } else {
+        this.alertCtrl.create({
+          header: 'Error',
+          message: this.authservice.errorMessage(response.message),
+          buttons: ['OK']
+        }).then(alert => alert.present);
+      }
+    });
+  }
+
   async delete() {
      
     this.deleting = true;
