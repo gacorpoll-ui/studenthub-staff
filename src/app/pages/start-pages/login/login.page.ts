@@ -7,6 +7,7 @@ import { AuthService as Auth0Service } from '@auth0/auth0-angular';
 import { AnalyticsService } from 'src/app/providers/analytics.service';
 import { EventService } from 'src/app/providers/event.service';
 
+declare let grecaptcha: any;
 
 @Component({
   selector: 'app-login',
@@ -62,6 +63,15 @@ export class LoginPage implements OnInit {
    * Attempts to login with the provided email and password
    */
   onSubmit() {
+
+    grecaptcha.ready(() => {
+      grecaptcha.execute('6Lei9R4pAAAAAEJYoXxoIvP2Uu0oq8iXkCVfmy6V', {action: 'submit'}).then((token: string) => {
+        this.onValidCaptcha(token);
+      });
+    });
+  }
+
+  onValidCaptcha(token: string) {
     this.isLoading = true;
 
     const email = this.oldEmailInput = this.loginForm.value.email;
@@ -69,7 +79,7 @@ export class LoginPage implements OnInit {
 
     this._auth.currency_pref = this.loginForm.value.currency_code;
     
-    this._auth.basicAuth(email, password).subscribe(async res => {
+    this._auth.basicAuth(email, password, token).subscribe(async res => {
       this.isLoading = false;
 
       if (res.operation == 'success'){

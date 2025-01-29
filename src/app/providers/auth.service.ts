@@ -290,14 +290,16 @@ export class AuthService {
    * subsequent requests.
    * @param  {string} email
    * @param  {string} password
+   * @param  {string} token
    */
-  basicAuth(email: string, password: string): Observable<any> {
+  basicAuth(email: string, password: string, token: string): Observable<any> {
     // Add Basic Auth Header with Base64 encoded email and password
     const authHeader = new HttpHeaders({
       Authorization: 'Basic ' + btoa(unescape(encodeURIComponent(`${email}:${password}`))),
-      Currency: this.currency_pref
+      Currency: this.currency_pref,
+      'g-recaptcha-token': token
     });
-    const url = environment.apiEndpoint + this._urlBasicAuth;
+    const url = environment.apiEndpoint + this._urlBasicAuth + '?token=' + token;
     return this._http.get(url, {
       headers: authHeader,
     }).pipe(
