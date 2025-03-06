@@ -141,6 +141,29 @@
   </div>
 </div>
 
+<!------------------ contract-list -------------------->
+
+<div class="contract-list" *ngIf="loading && type == 'contract-list'">
+  <ion-list>
+    <ion-item>
+      <div tabindex="0"></div>
+      <ion-skeleton-text></ion-skeleton-text>
+    </ion-item>
+    <ion-item>
+      <div tabindex="0"></div>
+      <ion-skeleton-text></ion-skeleton-text>
+    </ion-item>
+    <ion-item>
+      <div tabindex="0"></div>
+      <ion-skeleton-text></ion-skeleton-text>
+    </ion-item>
+    <ion-item>
+      <div tabindex="0"></div>
+      <ion-skeleton-text></ion-skeleton-text>
+    </ion-item>
+  </ion-list>
+</div>
+
 <!------------------ text-list -------------------->
 
 <div class="text-list" *ngIf="loading && type == 'text-list'">

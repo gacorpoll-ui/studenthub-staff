@@ -22,6 +22,9 @@
 
 <ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
   <div class="container">
+
+    <candidate *ngIf="candidate" [candidate]="candidate" type="candidate"></candidate>
+
     <form [formGroup]="form" *ngIf="form">
 
       <ion-list lines="none" mode="md">
@@ -56,9 +59,7 @@
               </ion-row>
             </ion-grid>
 
-            
-
-            
+          
           </ion-radio-group>
         </ion-list>
 

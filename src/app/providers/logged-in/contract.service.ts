@@ -24,8 +24,9 @@ export class ContractService {
    * List of all Contract
    * @returns {Observable<any>}
    */
-  list(page: number): Observable<any>{
-    return this.authHttp.getRaw(this._endpoint + '?expand=amount,candidate,company,parentCompany,store&page=' + page);
+  list(page: number, urlParams: string): Observable<any>{
+    let url = this._endpoint + '?expand=amount,candidate,company,parentCompany,store&page=' + page + '&' + urlParams;
+    return this.authHttp.getRaw(url);
   }
  
   /**

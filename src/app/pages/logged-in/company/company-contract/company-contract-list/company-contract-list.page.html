@@ -10,10 +10,34 @@
 -->
   </ion-toolbar>
   <ion-toolbar class="container">
-    <ion-title class="main" size="large">Contracts <strong *ngIf="company && company.contracts">{{company.contracts.length}}</strong></ion-title>
+    <ion-title class="main" size="large">
+      Contracts <strong *ngIf="company && company.contracts" class="text-gray-600">
+       ({{totalCount}})
+      </strong>
+    </ion-title>
     <ion-title class="secondary" size="small" *ngIf="company">
       {{ (company.company_common_name_en) ?  company.company_common_name_en:company.company_name }}
     </ion-title>
+  </ion-toolbar>
+  <ion-toolbar class="container search searchbar-wrapper">
+    
+    <div class="filter-wrapper">
+
+      <ion-searchbar mode="ios" debounce="500" placeholder="Type to search" (ionChange)="onSearch($event)"></ion-searchbar>
+ 
+      <ion-chip tappable (click)="filterByType($event, null)" 
+        [class.active]="filter.type == null">All</ion-chip>
+      
+      <ion-chip tappable (click)="filterByType($event, 'FIXED_PRICE')" 
+        [class.active]="filter.type == 'FIXED_PRICE'">Fixed Price</ion-chip>
+      
+      <ion-chip tappable (click)="filterByType($event, 'HOURLY')" 
+        [class.active]="filter.type == 'HOURLY'">Hourly</ion-chip>
+      
+      <ion-chip tappable (click)="filterByType($event, 'MONTHLY_SALARY')" 
+        [class.active]="filter.type == 'MONTHLY_SALARY'">Monthly Salary</ion-chip>
+ 
+    </div>
   </ion-toolbar>
 </ion-header>
 
@@ -23,14 +47,16 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   
-  <div class="container" *ngIf="company && company.contracts">
+  <div class="container">
 
     <!--  tappable (click)="contractSelected(contract)"-->
 
-    <ion-card *ngFor="let contract of company.contracts">
-      <ion-card-content>
+    <ng-container *ngIf="company && company.contracts">
 
-        <candidate [candidate]="contract.candidate" type='candidate'>
+      <ion-card *ngFor="let contract of company.contracts">
+        <ion-card-content>
+
+        <candidate type="contract" [candidate]="contract.candidate">
         </candidate>
 
         <h5>
@@ -108,7 +134,8 @@
 
       </ion-card-content>
     
-    </ion-card>
+      </ion-card>
+    </ng-container>
 
     <loading-modal type="contract-list" [loading]="loading"></loading-modal>
 

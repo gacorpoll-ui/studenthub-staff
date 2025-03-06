@@ -35,6 +35,16 @@ export class CompanyContractListPage implements OnInit {
 
   public pageCount: number;
 
+  public totalCount: number;
+
+  public query: string;
+
+  public filter: {
+    type: string | null;
+  } = {
+    type: null
+  };
+
   constructor(
     public alertCtrl: AlertController,
     public toastCtrl: ToastController,
@@ -53,6 +63,16 @@ export class CompanyContractListPage implements OnInit {
     if (!this.company || !this.company.contracts) {
       this.loadCompanyDetail(); 
     }
+  }
+
+  onSearch(event) {
+    this.query = event.target.value;
+    this.loadContracts();
+  }
+
+  filterByType(event, type) {
+    this.filter.type = type;
+    this.loadContracts();
   }
 
   doRefresh(event) {
@@ -179,14 +199,29 @@ export class CompanyContractListPage implements OnInit {
     });
   }
 
+  getUrlParams() {
+    let url = "&company_id=" + this.company.company_id;
+
+    if (this.query) {
+      url += `&q=${this.query}`;
+    }
+
+    if (this.filter.type) {
+      url += `&type=${this.filter.type}`;
+    }
+
+    return url;
+  }
+
   loadContracts() {
  
     this.loading = true;
  
-    this.contractService.list(1).subscribe(response => {
+    this.contractService.list(1, this.getUrlParams()).subscribe(response => {
 
       this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
       this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
+      this.totalCount = parseInt(response.headers.get('X-Pagination-Total-Count'));
 
       this.company.contracts = response.body;
     },
@@ -211,10 +246,11 @@ export class CompanyContractListPage implements OnInit {
 
     this.currentPage++;
  
-    this.contractService.list(this.currentPage).subscribe(response => {
+    this.contractService.list(this.currentPage, this.getUrlParams()).subscribe(response => {
 
       this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
       this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
+      this.totalCount = parseInt(response.headers.get('X-Pagination-Total-Count'));
 
       this.company.contracts = this.company.contracts.concat(response.body);
     },
