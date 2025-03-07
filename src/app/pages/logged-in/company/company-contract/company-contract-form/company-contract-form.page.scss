@@ -2,6 +2,10 @@ ion-back-button {
     display: block;
 }
 
+ion-content {
+  --padding-top: 24px;
+}
+
 ion-content, ion-list, ion-footer{
     background: var(--ion-color-custom-9);
     --background: var(--ion-color-custom-9);

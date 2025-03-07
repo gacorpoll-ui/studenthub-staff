@@ -325,6 +325,7 @@ export class CandidateService {
       sar_id: number = null,
       end_date: string = null,
       contract_detail: string = null,
+      auto_generate: boolean = false
   ): Observable<any> {
     const params = {
       sar_id: sar_id,
@@ -335,7 +336,8 @@ export class CandidateService {
       contract_type: contract_type,
       contract_detail: contract_detail,
       contract_amount_details: contract_amount_details,
-      currency_code: currency_code
+      currency_code: currency_code,
+      auto_generate: auto_generate
     };
     const url = `${this._candidateEndpoint}/assign/${candidate.candidate_id}`;
     return this._authhttp.patch(url, params);
@@ -348,9 +350,9 @@ export class CandidateService {
    * @param feedback
    * @param store_id
    */
-  removeFromAssignedStore(candidate: Candidate, feedback: string, store_id:number = null): Observable<any> {
+  removeFromAssignedStore(candidate: Candidate, feedback: string, store_id:number = null, work_history_id:number = null): Observable<any> {
     //todo: move feedback to body 
-    const url = `${this._candidateEndpoint}/unassign/${candidate.candidate_id}?store_id=${store_id}&feedback=${feedback}`;
+    const url = `${this._candidateEndpoint}/unassign/${candidate.candidate_id}?store_id=${store_id}&feedback=${feedback}&work_history_id=${work_history_id}`;
     return this._authhttp.delete(url);
   }
 

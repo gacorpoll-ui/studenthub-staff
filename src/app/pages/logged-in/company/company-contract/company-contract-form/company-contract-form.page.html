@@ -22,6 +22,9 @@
 
 <ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
   <div class="container">
+
+    <candidate *ngIf="candidate" [candidate]="candidate" type="contract"></candidate>
+
     <form [formGroup]="form" *ngIf="form">
 
       <ion-list lines="none" mode="md">
@@ -56,9 +59,7 @@
               </ion-row>
             </ion-grid>
 
-            
-
-            
+          
           </ion-radio-group>
         </ion-list>
 
@@ -75,6 +76,7 @@
           <p>How much company will pay for the transfer as transfer fee</p>
         </ion-item>
 
+        <!--
         <ion-item class="input-wrapper" >
           <div tabindex="0"></div>
           <ion-label position="floating">Currency code</ion-label>
@@ -83,8 +85,9 @@
               {{ currency.code }}
             </ion-select-option>
           </ion-select>
-        </ion-item>
+        </ion-item>-->
 
+        <!--
         <ion-item class="input-wrapper" >
           <div tabindex="0"></div>
           <ion-label position="floating">Start date (Optional)</ion-label>
@@ -97,7 +100,7 @@
           <ion-label position="floating">End date (Optional)</ion-label>
           <ion-input formControlName="end_date" id="end_date" placeholder="YYYY-MM-DD"></ion-input>
           <app-date-popup presentation="date" key="end_date" (onClose)="selectDate($event,'end_date')"></app-date-popup>
-        </ion-item>
+        </ion-item>-->
           
         <ng-container *ngIf="form.value.type == 'FIXED_PRICE'">
 
@@ -157,11 +160,21 @@
             <p>How much company will receive</p>
           </ion-item>
 
+          <!--
           <ion-item class="input-wrapper" >
             <div tabindex="0"></div>
             <ion-label position="floating">Salary day (Optional)</ion-label>
             <ion-input type="number" formControlName="salary_day"></ion-input>
             <p>When the salary will be paid</p>
+          </ion-item>
+-->
+          <ion-item class="input-wrapper" >
+            <div tabindex="0"></div>
+            <ion-label>Auto generate transfers</ion-label>
+            <ion-toggle slot="start" formControlName="auto_generate"></ion-toggle>
+            <p>If checked, the transfers will be generated automatically in draft mode each week, 
+              Transfer amount will be Monthly salary / 4.
+            </p>
           </ion-item>
         </ng-container>
       </ion-list>

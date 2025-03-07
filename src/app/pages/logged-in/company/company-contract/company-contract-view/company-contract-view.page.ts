@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Contract } from 'src/app/models/contract';
 
 @Component({
   selector: 'app-company-contract-view',
@@ -7,6 +8,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CompanyContractViewPage implements OnInit {
 
+  public contract: Contract;
+  
   constructor() { }
 
   ngOnInit() {
