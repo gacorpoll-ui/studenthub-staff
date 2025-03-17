@@ -78,6 +78,8 @@
                     <ion-item class="input-wrapper"  [class.have-errors]="emailCampaignFilterForm['controls'].param.errors != null">
                       <ion-label position="stacked">Filter Name/ Parameter</ion-label>
                       <ion-select formControlName="param">
+                        <ion-select-option value="filterProfileCompleted">Profile Completed</ion-select-option>
+                        <ion-select-option value="filterProfileNotCompleted">Profile Not Completed</ion-select-option>
                         <ion-select-option value="filterAssigned">Assigned</ion-select-option>
                         <ion-select-option value="filterNotAssigned">Not Assigned</ion-select-option>
                         <ion-select-option value="filterStore">Store ID</ion-select-option>
@@ -89,7 +91,6 @@
                         <ion-select-option value="withoutBankInfo">Without Bank Details</ion-select-option>
                         <ion-select-option value="candidateMomKuwaitiFieldIsNull">Having Non-kuwaity Mom</ion-select-option>
                         <ion-select-option value="ageRange">Age Range (':' Separated)</ion-select-option>
-                        
                       </ion-select>
                     </ion-item>
                   </ion-col>
