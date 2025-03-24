@@ -89,7 +89,15 @@ export class Candidate {
     pendingField: any[];
     certificates: CandidateCertificate[];
     candidateStats: any;
+    candidateLinks: CandidateLink[];
     currentWorkHistory: CandidateWorkHistory;
+}
+
+export class CandidateLink {
+  cl_uuid: string;
+  candidate_id: number;
+  title: string;
+  url: string;
 }
 
 export class CandidateWorkingHour {

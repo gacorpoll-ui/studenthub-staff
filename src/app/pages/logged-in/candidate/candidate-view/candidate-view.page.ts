@@ -629,7 +629,7 @@ export class CandidateViewPage implements OnInit {
   loadCandidateDetail(loading = true) {
     this.loading = loading;
 
-    const query = 'expand=certificates,certificates.exam,certificates.store,certificates.company,invitationStats,avgTimeToViewInvitations,candidateEducations,candidateEducations.degree,candidateEducations.major,' +
+    const query = 'expand=candidateLinks,certificates,certificates.exam,certificates.store,certificates.company,invitationStats,avgTimeToViewInvitations,candidateEducations,candidateEducations.degree,candidateEducations.major,' +
       'candidateEducations.university,candidateStats,candidateIdCard,store,company,candidateSkills,' +
       'candidateTags,candidateExperiences,bank,nationality,area,country,university,' + 
       'invited,invitationAccepted,invitationRejected,suggestionAccepted,suggestionRejected,suggested';

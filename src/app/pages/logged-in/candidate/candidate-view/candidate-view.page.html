@@ -261,6 +261,8 @@
           Your browser does not support HTML5 video tags
         </video>
       </ng-container> -->
+ 
+
 
       <div class="mt-4 w-full p-4 bg-white rounded-lg shadow-[0px_2px_4px_0px_rgba(0,0,0,0.10)] inline-flex flex-col justify-start items-start gap-2">
         <h5 class="self-stretch justify-start text-[#0f0f2c] text-base font-semibold leading-normal">
@@ -296,6 +298,22 @@
               </div>
           </div>
         </div>
+      </div>
+
+      <div class="work-experience-wrapper">
+        <h5>
+          <ion-icon src="assets/images/icon-suitcase.svg"></ion-icon> {{ "Candidate Links" | translate }}
+        </h5>
+        <p *ngFor="let candidateLink of candidate.candidateLinks">
+          <a href="{{ candidateLink.url }}" target="_blank" class="">
+            {{ candidateLink.title }}
+            <ion-icon name="open-outline"></ion-icon>
+          </a>
+          <!--
+          <ion-button fill="clear" class="float-end top-[-5px]" (click)="copy($event, candidateLink.url)">
+            <ion-icon slot="icon-only" name="copy-outline"></ion-icon>
+          </ion-button>-->
+        </p>
       </div>
 
       <div class="work-experience-wrapper"
