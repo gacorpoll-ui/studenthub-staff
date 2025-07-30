@@ -203,7 +203,6 @@ export class AuthService {
    * Set the access token
    */
   setAccessToken(response, redirect = false) {
-
     this._accessToken = response.token;
     this.staff_id = response.staff_id;
     this.role = response.role;
@@ -216,8 +215,17 @@ export class AuthService {
 
     if (this._accessToken) {
       this.isLogged = true;
-      this.loadPermissions(this.staff_id).subscribe();
-      this.eventService.userLogined$.next({ redirect });
+      // Use PermissionService directly to load permissions
+      this.permissionService.loadPermissions(this.staff_id, this._accessToken).subscribe({
+        next: () => {
+          // Permissions loaded successfully
+          this.eventService.userLogined$.next({ redirect });
+        },
+        error: (error) => {
+          console.error('Error loading permissions:', error);
+          this.eventService.userLogined$.next({ redirect });
+        }
+      });
     }
   }
 
@@ -745,23 +753,4 @@ export class AuthService {
         return 'other';
     }
   }
-
-  public loadPermissions(staffId: number): Observable<Permission[]> {
-      const url = `${environment.apiEndpoint}${this._urlPermission}/${staffId}`;
-      return this._http.get<UserPermission[]>(url, {
-        headers: new HttpHeaders({
-          Authorization: 'Bearer ' + this.getAccessToken()
-        })
-      }).pipe(
-        map(userPermissions => {
-          this.permissionService.setPermissions(userPermissions);
-          return userPermissions;
-        }),
-        catchError(error => {
-          console.error('Error loading permissions:', error);
-          return [];
-        })
-      );
-    }
 }
-
