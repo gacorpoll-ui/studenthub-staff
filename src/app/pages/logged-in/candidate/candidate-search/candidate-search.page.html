@@ -90,7 +90,7 @@
               <ng-template let-results="results" let-showMore="showMore" let-hits="hits">
 
                 <div class="candidate-wrapper">
-                  <candidate tappable (click)="rowSelected(hit)" type='candidate' [fromAlgolia]="true" [candidate]="hit" *ngFor="let hit of hits"></candidate>
+                  <candidate tappable (click)="rowSelected(hit)" type='candidate' [fromMeilisearch]="true" [candidate]="hit" *ngFor="let hit of hits"></candidate>
                 </div>
 
                 <!-- to load more on scroll to bottom, usinng 0(zero) based pagination

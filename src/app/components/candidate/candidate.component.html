@@ -97,7 +97,7 @@
         Deleted
       </ion-badge>
 
-      <ng-container *ngIf="!fromAlgolia">
+      <ng-container *ngIf="!fromMeilisearch">
         <p *ngIf="candidate.avgTimeToViewInvitations">
           Average time to view invitations ~ {{ candidate.avgTimeToViewInvitations | durationBySecond }}
         </p>

@@ -2,24 +2,21 @@ import {Component, ViewChild, OnInit, ChangeDetectorRef, ViewRef} from '@angular
 import { NavController, Platform, MenuController, PopoverController, IonContent, AlertController } from '@ionic/angular';
 // import { Storage } from '@ionic/storage';
 import { environment } from '../../../../../environments/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
 import { TransferState, makeStateKey } from '@angular/platform-browser';
-import algoliasearch from 'algoliasearch/index';
-import * as VERSION from 'algoliasearch-helper/src/version';
-import * as encodeProxy from 'querystring-es3/encode';
 // service
 import { AuthService } from '../../../../providers/auth.service';
 import { CandidateService } from '../../../../providers/logged-in/candidate.service';
 import { TranslateLabelService } from '../../../../providers/translate-label.service';
 import { EventService } from '../../../../providers/event.service';
-import { AlgoliaService } from 'src/app/providers/logged-in/algolia.service';
+import { MeilisearchService } from 'src/app/providers/logged-in/meilisearch.service';
+import { AuthHttpService } from 'src/app/providers/logged-in/authhttp.service';
 import { CandidateIdCardService } from 'src/app/providers/logged-in/candidate.id.card.service';
 //pages
 import { CandidateMergeSelectPage } from '../candidate-merge-select/candidate-merge-select.page';
 import { AnalyticsService } from 'src/app/providers/analytics.service';
 
 
-const encode = encodeProxy.default || encodeProxy;
 
 @Component({
   selector: 'app-candidate-search',
@@ -63,13 +60,13 @@ export class CandidateSearchPage implements OnInit {
   public showFilter = false;
 
   constructor(
-    public httpClient: HttpClient,
     public transferState: TransferState,
     public navCtrl: NavController,
     public alertCtrl: AlertController,
     public platform: Platform,
     public auth: AuthService,
-    public algoliaService: AlgoliaService,
+    public meilisearchService: MeilisearchService,
+    private _authhttp: AuthHttpService,
     public candidateService: CandidateService,
     public candidateIdCardService: CandidateIdCardService,
     public changeDetector: ChangeDetectorRef,
@@ -94,14 +91,14 @@ export class CandidateSearchPage implements OnInit {
   ionViewWillEnter() {
 
     if (
-      this.candidateService.algoliaConfig &&
-      this.candidateService.algoliaConfig.searchParameters &&
+      this.candidateService.meilisearchConfig &&
+      this.candidateService.meilisearchConfig.searchParameters &&
       this.instantSearch &&
       this.instantSearch.instantSearchInstance.helper &&
       (
-        JSON.stringify(this.instantSearch.instantSearchInstance.helper.state.numericRefinements) != JSON.stringify(this.candidateService.algoliaConfig.searchParameters.numericRefinements) ||
-        JSON.stringify(this.instantSearch.instantSearchInstance.helper.state.facetFilters) != JSON.stringify(this.candidateService.algoliaConfig.searchParameters.facetFilters) ||
-        JSON.stringify(this.instantSearch.instantSearchInstance.helper.state.disjunctiveFacetsRefinements) != JSON.stringify(this.candidateService.algoliaConfig.searchParameters.disjunctiveFacetsRefinements)
+        JSON.stringify(this.instantSearch.instantSearchInstance.helper.state.numericRefinements) != JSON.stringify(this.candidateService.meilisearchConfig.searchParameters.numericRefinements) ||
+        JSON.stringify(this.instantSearch.instantSearchInstance.helper.state.facetFilters) != JSON.stringify(this.candidateService.meilisearchConfig.searchParameters.facetFilters) ||
+        JSON.stringify(this.instantSearch.instantSearchInstance.helper.state.disjunctiveFacetsRefinements) != JSON.stringify(this.candidateService.meilisearchConfig.searchParameters.disjunctiveFacetsRefinements)
       )
     ) {
       this.scrollPosition = 0;
@@ -232,8 +229,8 @@ export class CandidateSearchPage implements OnInit {
    */
   initializeSearchParameters() {
 
-    if (this.candidateService.algoliaConfig) {
-      this.searchParameters = Object.assign({}, this.candidateService.algoliaConfig.searchParameters);
+    if (this.candidateService.meilisearchConfig) {
+      this.searchParameters = Object.assign({}, this.candidateService.meilisearchConfig.searchParameters);
     }
   }
 
@@ -244,7 +241,7 @@ export class CandidateSearchPage implements OnInit {
 
     this.showFilter = true;
     
-    //this.updateAlgoliaState();
+    //this.updateMeilisearchState();
     //
     // this.router.navigate(['job-with-filter']);
   }
@@ -254,17 +251,17 @@ export class CandidateSearchPage implements OnInit {
   }
 
   /**
-   * update algolia state
+   * update meilisearch state
    */
-  async updateAlgoliaState() {
-    if(!this.candidateService.algoliaConfig) {
-      this.candidateService.algoliaConfig = {};
+  async updateMeilisearchState() {
+    if(!this.candidateService.meilisearchConfig) {
+      this.candidateService.meilisearchConfig = {};
     }
 
-    this.candidateService.algoliaConfig.instantSearchConfig = Object.assign({}, this.instantSearchConfig);
-    this.candidateService.algoliaConfig.searchParameters = this.instantSearch ? Object.assign({}, this.instantSearch.instantSearchInstance.helper.state) : Object.assign({}, this.searchParameters);
-    this.candidateService.algoliaConfig.nbHits = this.nbHits;
-    this.candidateService.algoliaConfig.nbPages = this.nbPages;
+    this.candidateService.meilisearchConfig.instantSearchConfig = Object.assign({}, this.instantSearchConfig);
+    this.candidateService.meilisearchConfig.searchParameters = this.instantSearch ? Object.assign({}, this.instantSearch.instantSearchInstance.helper.state) : Object.assign({}, this.searchParameters);
+    this.candidateService.meilisearchConfig.nbHits = this.nbHits;
+    this.candidateService.meilisearchConfig.nbPages = this.nbPages;
   }
 
   /**
@@ -301,7 +298,7 @@ export class CandidateSearchPage implements OnInit {
   }
 
   /**
-   * Set algolia config
+   * Set meilisearch config
    */
   async setConfig() {
 
@@ -309,197 +306,85 @@ export class CandidateSearchPage implements OnInit {
     //  this.loading = true;
     });
 
-    this.algoliaService.getKey().then(response => {
+    this.meilisearchService.getKey().then(response => {
       this.instantSearchConfig = this.instantSearchConfigRefactor(makeStateKey, HttpHeaders, response);
     });
   }
 
   /**
-   * @param {?} __0
-   * @return {?}
+   * Create search client that proxies through backend
    */
   createSSRSearchClient(_a) {
 
-    const appId = _a.appId,
-      apiKey = _a.apiKey,
-      httpClient = _a.httpClient,
-      HttpHeaders = _a.HttpHeaders,
-      transferState = _a.transferState,
-      makeStateKey = _a.makeStateKey;
-
-    const client = algoliasearch(appId, apiKey, {
-      requester: {
-        send({ headers, method, url, data }) {
-       
-          //httpClient.getSecuredApiKeyRemainingValidity(); 
-
-          const transferStateKey = makeStateKey(`ngais(${data})`);
-
-            if (transferState.hasKey(transferStateKey) && !this.refreshingFulltimers) {
-                const response = JSON.parse(transferState.get(transferStateKey, JSON.stringify({})));
-                return Promise.resolve({
-                    status: response.status,
-                    content: JSON.stringify(response.body),
-                    isTimedOut: false,
-                });
-            }
-
-            return new Promise((resolve, reject) => {
-                httpClient
-                    .request(method, url, {
-                    headers,
-                    body: data,
-                    observe: 'response',
-                })
-                    .subscribe(response => {
-                    
-                    //this.processResponse(response, transferState, transferStateKey);
-
-                    resolve({
-                        status: response.status,
-                        content: JSON.stringify(response.body),
-                        isTimedOut: false,
-                    });
-                }, response => {
-                  
-                  
-
-                  return reject({
-                    status: response.status,
-                    body: response.body,
-                  });
-                });
-            });
-        },
-      }
-    });
-
-    client.addAlgoliaAgent('angular-instantsearch ' + VERSION);
-
-    /*client._request = (rawUrl, opts, fromResetKey = false) => {
-
-      if (this.instantSearchConfig.searchClient) {
-        opts.headers['x-algolia-api-key'] = this.instantSearchConfig.searchClient.apiKey;
-      }
-
-      let headers = new HttpHeaders();
-      headers = headers.set('content-type', opts.method === 'POST' ? 'application/x-www-form-urlencoded' : 'application/json');
-      headers = headers.set('accept', 'application/json');
-
-      let url = rawUrl + (rawUrl.includes('?') ? '&' : '?') + encode(opts.headers);
-      url += '&x-requested-at=' + new Date().getTime();
-
-      const transferStateKey = makeStateKey('pogi-source-ais(' + opts.body + ')');
-
-      if (transferState.hasKey(transferStateKey)) {
-
-        // @type {?}
-        let resp = JSON.parse(transferState.get(transferStateKey, {}));
-
-        let index;
-        let XRequestedAt;
-
-        if (resp && resp.url) {
-          index = resp.url.indexOf('x-requested-at=');
-          XRequestedAt = parseInt(resp.url.substr(index + 15));
+    const transferState = _a.transferState;
+    const makeStateKey = _a.makeStateKey;
+    // Use AuthHttpService for authenticated requests (not raw httpClient)
+    
+    // Create search client that proxies through backend
+    return {
+      search: (requests) => {
+        const transferStateKey = makeStateKey(`meilisearch(${JSON.stringify(requests)})`);
+        
+        // Check cache
+        if (transferState.hasKey(transferStateKey) && !this.refreshingCandidates) {
+          const cached = JSON.parse(transferState.get(transferStateKey, JSON.stringify({})));
+          return Promise.resolve({
+            status: cached.status,
+            content: JSON.stringify(cached.body),
+            isTimedOut: false
+          });
         }
-
-        if (!XRequestedAt || ((new Date().getTime()) - XRequestedAt) > environment.algoliaCacheDuration) {
-          transferState.remove(transferStateKey);
-          return client._request(rawUrl, opts); // call again after removing transfer state
-        }
-
-        this.processResponse(resp);
-
-        return Promise.resolve(this.resolveResponse(resp));
-      }
-
-      this.lastQuery = opts.body;
-
-
-      return new Promise((resolve, reject) => {
-
-        // no loading when filtering facet values from filter search bar
-
-        /*if (rawUrl.indexOf('/facets/') === -1) {
-          setTimeout(_ => {
-            this.loading = true;
-
-            if (
-              opts.jsonBody &&
-              opts.jsonBody.requests &&
-              opts.jsonBody.requests[0].params &&
-              opts.jsonBody.requests[0].params.indexOf('page=0') != -1
-            ) {
-              setTimeout(() => {
-                this.refreshingCandidates = true;
+        
+        // Extract search parameters
+        const request = requests[0];
+        const searchParams = {
+          indexName: request.indexName,
+          params: request.params || {}
+        };
+        
+        // Call backend proxy using authenticated HTTP service
+        // AuthHttpService automatically adds auth headers and uses environment.apiEndpoint
+        return new Promise((resolve, reject) => {
+          this._authhttp.post('/meilisearch/search', searchParams).subscribe(
+            response => {
+              // Cache response (AuthHttpService returns body directly)
+              transferState.set(transferStateKey, JSON.stringify({
+                status: 200,
+                body: response
+              }));
+              
+              resolve({
+                status: 200,
+                content: JSON.stringify(response),
+                isTimedOut: false
               });
+            },
+            error => {
+              if (error.status === 400) {
+                // Key expired, refresh and retry
+                this.meilisearchService.getKey(true).then(() => {
+                  this.setConfig();
+                  this._authhttp.post('/meilisearch/search', searchParams).subscribe(
+                    response => resolve({
+                      status: 200,
+                      content: JSON.stringify(response),
+                      isTimedOut: false
+                    }),
+                    err => reject(err)
+                  );
+                });
+              } else {
+                reject(error);
+              }
             }
-          });
-        }*
-
-        //if key got time out
-
-        if (this.algoliaService.getCurrentTimeUTC() > this.algoliaService.securedApiKeyValidUntil) {
-          return this.resetKey(opts, rawUrl, resolve, transferState, transferStateKey);
-        }
-
-        //normal request
-
-        httpClient
-          .request(opts.method, url, {
-            headers: headers,
-            body: opts.body,
-            observe: 'response'
-          }).subscribe(resp => {
-
-            this.processResponse(resp, transferState, transferStateKey);
-
-            resolve(this.resolveResponse(resp));
-          }, resp => {
-
-            // http 400 = secure key expired
-
-            if (fromResetKey || resp.status != 400) {
-              this._handleError(resp);
-
-              return resolve(this.resolveResponse(resp));
-            }
-
-            // on fail get new key and call again
-
-            this.resetKey(opts, rawUrl, resolve, transferState, transferStateKey);
-
-          });
-      });
-    };*/
-    return client;
-  }
-
-  resetKey(opts, rawUrl, resolve,  transferState, transferStateKey) {
-
-    this.algoliaService.getKey(true).then(response => {
-
-      // update config
-
-      this.instantSearchConfig = this.instantSearchConfigRefactor(makeStateKey, HttpHeaders, response);
-
-      // update old key
-      opts.headers['x-algolia-api-key'] = response.securedApiKey;
-      opts.jsonBody.apiKey = response.securedApiKey;
-      opts.body = JSON.stringify(opts.jsonBody);
-
-      this.instantSearchConfig.searchClient._request(rawUrl, opts, true).then(resp => {
-
-        this.processResponse(resp, transferState, transferStateKey);
-
-        resolve(this.resolveResponse(resp));
-      });
-    });
+          );
+        });
+      }
+    };
   }
 
   /**
-   * process response from algolia
+   * process response from meilisearch
    * @param resp
    * @param transferState
    * @param transferStateKey
@@ -620,16 +505,14 @@ export class CandidateSearchPage implements OnInit {
    * @param response
    */
   instantSearchConfigRefactor(makeStateKey, HttpHeaders, response) {
-
+    // Note: host field is internal-only (http://meilisearch:7700), do not use for direct connections
+    // Only use backend proxy endpoint via AuthHttpService
     return {
-      indexName: environment.algoliaCandidateIndex,
+      indexName: environment.meilisearchCandidateIndex,
       searchClient: this.createSSRSearchClient({
         makeStateKey,
         HttpHeaders,
-        transferState: this.transferState,
-        httpClient: this.httpClient,
-        apiKey: response.securedApiKey,
-        appId: response.appId
+        transferState: this.transferState
       })
     };
   }

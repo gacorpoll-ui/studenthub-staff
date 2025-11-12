@@ -11,7 +11,7 @@ import { AuthHttpService } from './authhttp.service';
 })
 export class FulltimerService {
 
-  public algoliaConfig;
+  public meilisearchConfig;
 
   private _fulltimerEndpoint = '/fulltimers';
 

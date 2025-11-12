@@ -15,7 +15,7 @@ import { AuthService } from '../../providers/auth.service';
 
 /**
  * Display filter selection
- * Ref: https://www.algolia.com/doc/api-reference/widgets/current-refinements/angular/
+ * Uses angular-instantsearch for search functionality
  */
 @Component({
     selector: 'applied-filters',

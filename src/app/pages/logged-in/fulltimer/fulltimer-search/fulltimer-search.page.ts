@@ -1,17 +1,15 @@
 import {Component, ViewChild, OnInit, ChangeDetectorRef, ViewRef} from '@angular/core';
 import { NavController, Platform, MenuController, PopoverController, IonContent, ModalController } from '@ionic/angular';
 import { environment } from '../../../../../environments/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
 import { TransferState, makeStateKey } from '@angular/platform-browser';
-import algoliasearch from 'algoliasearch';
-import * as VERSION from 'algoliasearch-helper/src/version';
-import * as encodeProxy from 'querystring-es3/encode';
 // service
 import { AuthService } from '../../../../providers/auth.service';
 import { FulltimerService } from '../../../../providers/logged-in/fulltimer.service';
 import { TranslateLabelService } from '../../../../providers/translate-label.service';
 import { EventService } from '../../../../providers/event.service';
-import { AlgoliaService } from 'src/app/providers/logged-in/algolia.service';
+import { MeilisearchService } from 'src/app/providers/logged-in/meilisearch.service';
+import { AuthHttpService } from 'src/app/providers/logged-in/authhttp.service';
 //models
 import { Fulltimer } from 'src/app/models/fulltimer';
 //pages
@@ -19,7 +17,6 @@ import { FulltimerFormPage } from '../fulltimer-form/fulltimer-form.page';
 import { AnalyticsService } from 'src/app/providers/analytics.service';
 
 
-const encode = encodeProxy.default || encodeProxy;
 
 @Component({
   selector: 'app-fulltimer-search',
@@ -62,13 +59,13 @@ export class FulltimerSearchPage implements OnInit {
   public borderLimit = false;
 
   constructor(
-    public httpClient: HttpClient,
     public transferState: TransferState,
     public navCtrl: NavController,
     public modalCtrl: ModalController,
     public platform: Platform,
     public auth: AuthService,
-    public algoliaService: AlgoliaService,
+    public meilisearchService: MeilisearchService,
+    private _authhttp: AuthHttpService,
     public fulltimerService: FulltimerService,
     public changeDetector: ChangeDetectorRef,
     public eventService: EventService,
@@ -97,14 +94,14 @@ export class FulltimerSearchPage implements OnInit {
   ionViewWillEnter() {
 
     if (
-      this.fulltimerService.algoliaConfig &&
-      this.fulltimerService.algoliaConfig.searchParameters &&
+      this.fulltimerService.meilisearchConfig &&
+      this.fulltimerService.meilisearchConfig.searchParameters &&
       this.instantSearch &&
       this.instantSearch.instantSearchInstance.helper &&
       (
-        JSON.stringify(this.instantSearch.instantSearchInstance.helper.state.numericRefinements) != JSON.stringify(this.fulltimerService.algoliaConfig.searchParameters.numericRefinements) ||
-        JSON.stringify(this.instantSearch.instantSearchInstance.helper.state.facetFilters) != JSON.stringify(this.fulltimerService.algoliaConfig.searchParameters.facetFilters) ||
-        JSON.stringify(this.instantSearch.instantSearchInstance.helper.state.disjunctiveFacetsRefinements) != JSON.stringify(this.fulltimerService.algoliaConfig.searchParameters.disjunctiveFacetsRefinements)
+        JSON.stringify(this.instantSearch.instantSearchInstance.helper.state.numericRefinements) != JSON.stringify(this.fulltimerService.meilisearchConfig.searchParameters.numericRefinements) ||
+        JSON.stringify(this.instantSearch.instantSearchInstance.helper.state.facetFilters) != JSON.stringify(this.fulltimerService.meilisearchConfig.searchParameters.facetFilters) ||
+        JSON.stringify(this.instantSearch.instantSearchInstance.helper.state.disjunctiveFacetsRefinements) != JSON.stringify(this.fulltimerService.meilisearchConfig.searchParameters.disjunctiveFacetsRefinements)
       )
     ) {
       this.scrollPosition = 0;
@@ -151,8 +148,8 @@ export class FulltimerSearchPage implements OnInit {
    */
   initializeSearchParameters() {
 
-    if (this.fulltimerService.algoliaConfig) {
-      this.searchParameters = Object.assign({}, this.fulltimerService.algoliaConfig.searchParameters);
+    if (this.fulltimerService.meilisearchConfig) {
+      this.searchParameters = Object.assign({}, this.fulltimerService.meilisearchConfig.searchParameters);
     /*} else {
       this.searchParameters = {
         'getRankingInfo': true,
@@ -173,7 +170,7 @@ export class FulltimerSearchPage implements OnInit {
 
     this.showFilter = true;
     /*
-    this.updateAlgoliaState();
+    this.updateMeilisearchState();
 
     this.navCtrl.navigateForward('/fulltimer-filter', {
       animated: false,
@@ -182,17 +179,17 @@ export class FulltimerSearchPage implements OnInit {
   }
 
   /**
-   * update algolia state
+   * update meilisearch state
    */
-  async updateAlgoliaState() {
-    if(!this.fulltimerService.algoliaConfig) {
-      this.fulltimerService.algoliaConfig = {};
+  async updateMeilisearchState() {
+    if(!this.fulltimerService.meilisearchConfig) {
+      this.fulltimerService.meilisearchConfig = {};
     }
 
-    this.fulltimerService.algoliaConfig.instantSearchConfig = Object.assign({}, this.instantSearchConfig);
-    this.fulltimerService.algoliaConfig.searchParameters = this.instantSearch ? Object.assign({}, this.instantSearch.instantSearchInstance.helper.state) : Object.assign({}, this.searchParameters);
-    this.fulltimerService.algoliaConfig.nbHits = this.nbHits;
-    this.fulltimerService.algoliaConfig.nbPages = this.nbPages;
+    this.fulltimerService.meilisearchConfig.instantSearchConfig = Object.assign({}, this.instantSearchConfig);
+    this.fulltimerService.meilisearchConfig.searchParameters = this.instantSearch ? Object.assign({}, this.instantSearch.instantSearchInstance.helper.state) : Object.assign({}, this.searchParameters);
+    this.fulltimerService.meilisearchConfig.nbHits = this.nbHits;
+    this.fulltimerService.meilisearchConfig.nbPages = this.nbPages;
   }
 
   /**
@@ -229,7 +226,7 @@ export class FulltimerSearchPage implements OnInit {
   }
 
   /**
-   * Set algolia config
+   * Set meilisearch config
    */
   async setConfig() {
 
@@ -237,176 +234,85 @@ export class FulltimerSearchPage implements OnInit {
     //  this.loading = true;
     });
 
-    this.algoliaService.getKey().then(response => {
+    this.meilisearchService.getKey().then(response => {
       this.instantSearchConfig = this.instantSearchConfigRefactor(makeStateKey, HttpHeaders, response);
     });
   }
 
   /**
-   * @param {?} __0
-   * @return {?}
+   * Create search client that proxies through backend
    */
   createSSRSearchClient(_a) {
 
-    const appId = _a.appId,
-      apiKey = _a.apiKey,
-      httpClient = _a.httpClient,
-      HttpHeaders = _a.HttpHeaders,
-      transferState = _a.transferState,
-      makeStateKey = _a.makeStateKey;
-
-    const client = algoliasearch(appId, apiKey, {
-
-      requester: {
-        send({ headers, method, url, data }) {
-
-          const transferStateKey = makeStateKey(`ngais(${data})`);
-
-            if (transferState.hasKey(transferStateKey) && !this.refreshingFulltimers) {
-                const response = JSON.parse(transferState.get(transferStateKey, JSON.stringify({})));
-                return Promise.resolve({
-                    status: response.status,
-                    content: JSON.stringify(response.body),
-                    isTimedOut: false,
-                });
-            }
-
-            return new Promise((resolve, reject) => {
-                httpClient
-                    .request(method, url, {
-                    headers,
-                    body: data,
-                    observe: 'response',
-                })
-                    .subscribe(response => {
-
-                   // this.processResponse(response, transferState, transferStateKey);
-
-                    resolve({
-                        status: response.status,
-                        content: JSON.stringify(response.body),
-                        isTimedOut: false,
-                    });
-                }, response => reject({
-                    status: response.status,
-                    body: response.body,
-                }));
-            });
-        },
-      }
-    });
-
-    /*const requester = (rawUrl, opts, fromResetKey = false) => {
-
-      if (transferState.hasKey(transferStateKey) && !this.refreshingFulltimers) {
-
-        // @type {?}
-        let resp = JSON.parse(transferState.get(transferStateKey, {}));
-
-        let index;
-        let XRequestedAt;
-
-        if (resp && resp.url) {
-          index = resp.url.indexOf('x-requested-at=');
-          XRequestedAt = parseInt(resp.url.substr(index + 15));
+    const transferState = _a.transferState;
+    const makeStateKey = _a.makeStateKey;
+    // Use AuthHttpService for authenticated requests (not raw httpClient)
+    
+    // Create search client that proxies through backend
+    return {
+      search: (requests) => {
+        const transferStateKey = makeStateKey(`meilisearch(${JSON.stringify(requests)})`);
+        
+        // Check cache
+        if (transferState.hasKey(transferStateKey) && !this.refreshingFulltimers) {
+          const cached = JSON.parse(transferState.get(transferStateKey, JSON.stringify({})));
+          return Promise.resolve({
+            status: cached.status,
+            content: JSON.stringify(cached.body),
+            isTimedOut: false
+          });
         }
-
-        if (!XRequestedAt || ((new Date().getTime()) - XRequestedAt) > environment.algoliaCacheDuration) {
-          transferState.remove(transferStateKey);
-          return client._request(rawUrl, opts); // call again after removing transfer state
-        }
-
-        this.processResponse(resp);
-
-        return Promise.resolve(this.resolveResponse(resp));
-      }
-
-      this.lastQuery = opts.body;
-
-      return new Promise((resolve, reject) => {
-
-        // no loading when filtering facet values from filter search bar
-
-        /*if (rawUrl.indexOf('/facets/') === -1) {
-          setTimeout(_ => {
-            this.loading = true;
-
-            if (
-              opts.jsonBody &&
-              opts.jsonBody.requests &&
-              opts.jsonBody.requests[0].params &&
-              opts.jsonBody.requests[0].params.indexOf('page=0') != -1
-            ) {
-              setTimeout(() => {
-                this.refreshingFulltimers = true;
+        
+        // Extract search parameters
+        const request = requests[0];
+        const searchParams = {
+          indexName: request.indexName,
+          params: request.params || {}
+        };
+        
+        // Call backend proxy using authenticated HTTP service
+        // AuthHttpService automatically adds auth headers and uses environment.apiEndpoint
+        return new Promise((resolve, reject) => {
+          this._authhttp.post('/meilisearch/search', searchParams).subscribe(
+            response => {
+              // Cache response (AuthHttpService returns body directly)
+              transferState.set(transferStateKey, JSON.stringify({
+                status: 200,
+                body: response
+              }));
+              
+              resolve({
+                status: 200,
+                content: JSON.stringify(response),
+                isTimedOut: false
               });
+            },
+            error => {
+              if (error.status === 400) {
+                // Key expired, refresh and retry
+                this.meilisearchService.getKey(true).then(() => {
+                  this.setConfig();
+                  this._authhttp.post('/meilisearch/search', searchParams).subscribe(
+                    response => resolve({
+                      status: 200,
+                      content: JSON.stringify(response),
+                      isTimedOut: false
+                    }),
+                    err => reject(err)
+                  );
+                });
+              } else {
+                reject(error);
+              }
             }
-          });
-        }*
-
-        //if key got time out
-
-        if (this.algoliaService.getCurrentTimeUTC() > this.algoliaService.securedApiKeyValidUntil) {
-          return this.resetKey(opts, rawUrl, resolve, transferState, transferStateKey);
-        }
-
-        //normal request
-
-        httpClient
-          .request(opts.method, url, {
-            headers: headers,
-            body: opts.body,
-            observe: 'response'
-          }).subscribe(resp => {
-
-            this.processResponse(resp, transferState, transferStateKey);
-
-            resolve(this.resolveResponse(resp));
-          }, resp => {
-
-            // http 400 = secure key expired
-
-            if (fromResetKey || resp.status != 400) {
-              this._handleError(resp);
-
-              return resolve(this.resolveResponse(resp));
-            }
-
-            // on fail get new key and call again
-
-            this.resetKey(opts, rawUrl, resolve, transferState, transferStateKey);
-
-          });
-      });
-    };*/
-    return client;
-  }
-
-  resetKey(opts, rawUrl, resolve,  transferState, transferStateKey) {
-
-    this.algoliaService.getKey(true).then(response => {
-
-      //this.instantSearch.searchClient.api
-      // update config
-
-      this.instantSearchConfig = this.instantSearchConfigRefactor(makeStateKey, HttpHeaders, response);
-
-      // update old key
-      opts.headers['x-algolia-api-key'] = response.securedApiKey;
-      opts.jsonBody.apiKey = response.securedApiKey;
-      opts.body = JSON.stringify(opts.jsonBody);
-
-      this.instantSearchConfig.searchClient._request(rawUrl, opts, true).then(resp => {
-
-        this.processResponse(resp, transferState, transferStateKey);
-
-        resolve(this.resolveResponse(resp));
-      });
-    });
+          );
+        });
+      }
+    };
   }
 
   /**
-   * process response from algolia
+   * process response from meilisearch
    * @param resp
    * @param transferState
    * @param transferStateKey
@@ -536,21 +442,14 @@ export class FulltimerSearchPage implements OnInit {
    * @param response
    */
   instantSearchConfigRefactor(makeStateKey, HttpHeaders, response) {
-
+    // Note: host field is internal-only (http://meilisearch:7700), do not use for direct connections
+    // Only use backend proxy endpoint via AuthHttpService
     return {
-      indexName: environment.algoliaFulltimerIndex,
-
-      /*onStateChange({ uiState, setUiState }) {
-        // Custom logic
-        setUiState(uiState);
-      },*/
+      indexName: environment.meilisearchFulltimerIndex,
       searchClient: this.createSSRSearchClient({
         makeStateKey,
         HttpHeaders,
-        transferState: this.transferState,
-        httpClient: this.httpClient,
-        apiKey: response.securedApiKey,
-        appId: response.appId
+        transferState: this.transferState
       })
     };
   }
@@ -593,7 +492,7 @@ export class FulltimerSearchPage implements OnInit {
 
         setTimeout(() => {
           this.refreshFulltimers();
-        }, 2000);//give time to backend to sync with algolia
+        }, 2000);//give time to backend to sync with meilisearch
       }
     });
     return await modal.present();

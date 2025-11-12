@@ -15,7 +15,7 @@ describe('AppliedFiltersPage', () => {
 
   /*let config = { 
     indexName: 'krushn_job_public',
-    searchClient: algoliasearch(
+    searchClient: meilisearchClient(
     )
   };
 

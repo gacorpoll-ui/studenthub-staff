@@ -116,7 +116,7 @@ export class RefinementListComponent extends BaseWidget {
 
             item.isRefined = !item.isRefined;
 
-            // refine through Algolia API
+            // refine through Meilisearch API
 
             this.state.refine(item.value);
 

@@ -15,7 +15,7 @@ export class CandidateService {
 
   public candidates = [];
 
-  public algoliaConfig;
+  public meilisearchConfig;
 
   private _candidateEndpoint = '/candidates';
 
