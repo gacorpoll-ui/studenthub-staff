@@ -37,6 +37,21 @@ export class CandidateComponent implements OnInit {
   public deleting: boolean = false;
   public latestWorkStartedOn = null;
 
+  /**
+   * Get formatted distance if geo search is active
+   */
+  getDistance(): string | null {
+    if (this.candidate && (this.candidate as any)._geoDistance !== undefined) {
+      const distance = (this.candidate as any)._geoDistance;
+      if (distance < 1000) {
+        return `${Math.round(distance)} m away`;
+      } else {
+        return `${(distance / 1000).toFixed(1)} km away`;
+      }
+    }
+    return null;
+  }
+
   constructor(
     public platform: Platform,
     public modalCtrl: ModalController,

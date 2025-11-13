@@ -1,18 +1,18 @@
-import { Component, Inject, forwardRef, Input, Output, EventEmitter, Optional } from '@angular/core';
-import { BaseWidget, NgAisIndex, NgAisInstantSearch } from 'angular-instantsearch';
-import { connectRefinementList } from "instantsearch.js/es/connectors";
-import { parseNumberInput, noop } from "angular-instantsearch/esm2015/utils";
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 //services
 import { TranslateLabelService } from 'src/app/providers/translate-label.service';
 import { EventService } from 'src/app/providers/event.service';
+import { CandidateSearchService } from 'src/app/services/candidate-search.service';
+import { Subscription } from 'rxjs';
 
+const noop = () => {};
 
 @Component({
     selector: 'refinement-list',
     templateUrl: './refinement-list.component.html',
     styleUrls: ['./refinement-list.component.scss'],
 })
-export class RefinementListComponent extends BaseWidget {
+export class RefinementListComponent implements OnInit, OnDestroy {
 
     @Input() label;
     @Input() searchable;
@@ -28,61 +28,63 @@ export class RefinementListComponent extends BaseWidget {
 
     public open: boolean = false;
 
-    public state;
+    public state: any = {
+        canRefine: false,
+        canToggleShowMore: true,
+        createURL: noop,
+        isShowingMore: false,
+        items: [],
+        refine: noop,
+        toggleShowMore: noop,
+        searchForItems: noop,
+        isFormSearch: false
+    };
 
-    public limit;
-    public sortBy;
+    public limit: number = 5;
+    public sortBy: any;
+    public autoHideContainer: boolean = false;
 
-    //NgAisInstantSearch
+    private subscriptions: Subscription[] = [];
 
     constructor(
-        @Inject(forwardRef(() => NgAisInstantSearch))
-        public instantSearchInstance,
-        @Optional()
-        public parentIndex: NgAisIndex,
         public eventService: EventService,
-        public translateService: TranslateLabelService
+        public translateService: TranslateLabelService,
+        public searchService: CandidateSearchService
     ) {
-        super('RefinementListComponent');
-
-        this.limit = 5;
-
-        this.state = {
-            canRefine: false,
-            canToggleShowMore: true,
-            createURL: noop,
-            isShowingMore: false,
-            items: [],
-            refine: noop,
-            toggleShowMore: noop,
-            searchForItems: noop,
-            isFormSearch: false
-        };
-
-        this.updateState = (state, isFirstRendering) => {
-            return Promise.resolve().then(() => {
-                this.state = state;
-            });
-        };
-
         this.eventService.filterCollapse$.subscribe(() => {
             this.open = false;
         });
     }
 
     public ngOnInit() {
-        if(this.instantSearchInstance) {
-            this.createWidget(connectRefinementList, {
-                limit: parseNumberInput(this.limit),
-                showMoreLimit: parseNumberInput(this.showMoreLimit),
-                attributeName: this.attribute,
-                attribute: this.attribute,
-                sortBy: this.sortBy,
-                escapeFacetValues: true,
-                showMore: true
-            });
-            super.ngOnInit();
-        }
+        // Subscribe to facet counts for this attribute
+        this.subscriptions.push(
+            this.searchService.results$.subscribe(results => {
+                if (results && results.facets && this.attribute) {
+                    const facetCounts = results.facets[this.attribute] || {};
+                    this.state.items = Object.keys(facetCounts).map(value => ({
+                        value: value,
+                        label: value,
+                        count: facetCounts[value],
+                        isRefined: this.isValueSelected(value)
+                    }));
+                    this.state.canRefine = this.state.items.length > 0;
+                }
+            })
+        );
+    }
+
+    ngOnDestroy() {
+        this.subscriptions.forEach(sub => sub.unsubscribe());
+    }
+
+    /**
+     * Check if a value is selected in current filters
+     */
+    private isValueSelected(value: string): boolean {
+        const state = this.searchService.getState();
+        const values = state.filters[this.attribute] || [];
+        return values.includes(value);
     }
 
     /**
@@ -90,7 +92,6 @@ export class RefinementListComponent extends BaseWidget {
      */
     isHidden() {
         return this.state.canRefine == false && this.autoHideContainer;
-        //state.items.length === 0
     }
 
     /**
@@ -112,23 +113,10 @@ export class RefinementListComponent extends BaseWidget {
         event.stopPropagation();
 
         if (this.state.canRefine) {
-            // update UI directly, it will update the checkbox state
-
-            item.isRefined = !item.isRefined;
-
-            // refine through Meilisearch API
-
-            this.state.refine(item.value);
-
-            if (
-                this.isRefined() &&
-                this.instantSearchInstance.instantSearchInstance.helper.state &&
-                this.instantSearchInstance.instantSearchInstance.helper.state.disjunctiveFacetsRefinements &&
-                !this.instantSearchInstance.instantSearchInstance.helper.state.disjunctiveFacetsRefinements[this.attribute]
-            )
-                this.instantSearchInstance.instantSearchInstance.helper.state.disjunctiveFacetsRefinements[this.attribute] = [];
-
-            //this.change.emit();
+            // Toggle filter value
+            this.searchService.toggleFilter(this.attribute, item.value);
+            this.searchService.search();
+            this.change.emit();
         }
     }
 
@@ -156,5 +144,19 @@ export class RefinementListComponent extends BaseWidget {
      */
     toggleOpen() {
         this.open = !this.open;
+    }
+
+    /**
+     * CSS class helper (stub for template compatibility)
+     */
+    cx(classes?: string): string {
+        return classes || '';
+    }
+
+    /**
+     * Get item CSS class (stub for template compatibility)
+     */
+    getItemClass(item: any): string {
+        return item && item.isRefined ? 'is-refined' : '';
     }
 }

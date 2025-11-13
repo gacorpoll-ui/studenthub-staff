@@ -1,20 +1,19 @@
-import {Component, ViewChild, OnInit, ChangeDetectorRef, ViewRef} from '@angular/core';
+import {Component, ViewChild, OnInit, ChangeDetectorRef, ViewRef, OnDestroy} from '@angular/core';
 import { NavController, Platform, MenuController, PopoverController, IonContent, AlertController } from '@ionic/angular';
 // import { Storage } from '@ionic/storage';
 import { environment } from '../../../../../environments/environment';
-import { HttpHeaders } from '@angular/common/http';
-import { TransferState, makeStateKey } from '@angular/platform-browser';
 // service
 import { AuthService } from '../../../../providers/auth.service';
 import { CandidateService } from '../../../../providers/logged-in/candidate.service';
 import { TranslateLabelService } from '../../../../providers/translate-label.service';
 import { EventService } from '../../../../providers/event.service';
-import { MeilisearchService } from 'src/app/providers/logged-in/meilisearch.service';
-import { AuthHttpService } from 'src/app/providers/logged-in/authhttp.service';
 import { CandidateIdCardService } from 'src/app/providers/logged-in/candidate.id.card.service';
+import { CandidateSearchService } from 'src/app/services/candidate-search.service';
 //pages
 import { CandidateMergeSelectPage } from '../candidate-merge-select/candidate-merge-select.page';
 import { AnalyticsService } from 'src/app/providers/analytics.service';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 
 
@@ -23,50 +22,35 @@ import { AnalyticsService } from 'src/app/providers/analytics.service';
   templateUrl: './candidate-search.page.html',
   styleUrls: ['./candidate-search.page.scss'],
 })
-export class CandidateSearchPage implements OnInit {
+export class CandidateSearchPage implements OnInit, OnDestroy {
 
   @ViewChild(IonContent, { static: true }) content: IonContent;
 
-  @ViewChild('instantSearch', { static: false }) public instantSearch;
-
-  public lastQuery;
-
   public downloading;
-
   public merging;
-
   public eleInfinite;
-
-  public loading: boolean;
-
+  public loading: boolean = false;
   public isMobile: boolean;
-
-  public instantSearchConfig;
-
-  public nbHits = null;
-  public nbPages;
-  public page;
-  public searchParameters = {};
+  public nbHits: number | null = null;
+  public nbPages: number = 0;
+  public page: number = 0;
   public refreshingCandidates = false;
-  public dirty = false;
   public noCandidateList = false;
-  public showSearchForm = false;
   public showSearchBox = true;
-  public haveLocationFilter = false;
-  public lastRefinements;
-  public lastQueryId;
   public scrollPosition = 0;
   public borderLimit = false;
   public showFilter = false;
+  public candidates: any[] = [];
+  public searchQuery: string = '';
+
+  private searchSubject = new Subject<string>();
+  private subscriptions: Subscription[] = [];
 
   constructor(
-    public transferState: TransferState,
     public navCtrl: NavController,
     public alertCtrl: AlertController,
     public platform: Platform,
     public auth: AuthService,
-    public meilisearchService: MeilisearchService,
-    private _authhttp: AuthHttpService,
     public candidateService: CandidateService,
     public candidateIdCardService: CandidateIdCardService,
     public changeDetector: ChangeDetectorRef,
@@ -74,8 +58,17 @@ export class CandidateSearchPage implements OnInit {
     public translateService: TranslateLabelService,
     public analyticService: AnalyticsService,
     public popoverCtrl: PopoverController,
-    public _menuCtrl: MenuController
+    public _menuCtrl: MenuController,
+    public searchService: CandidateSearchService
   ) {
+    // Setup debounced search
+    this.searchSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(query => {
+      this.searchService.setQuery(query);
+      this.performSearch();
+    });
   }
 
   ngOnInit() {
@@ -86,44 +79,43 @@ export class CandidateSearchPage implements OnInit {
         this.isMobile = true;
       }
     });
+
+    // Subscribe to search service observables
+    this.subscriptions.push(
+      this.searchService.results$.subscribe(results => {
+        if (results) {
+          this.candidates = results.hits;
+          this.nbHits = results.pagination.total;
+          this.nbPages = results.pagination.totalPages;
+          this.page = results.pagination.page;
+          this.noCandidateList = results.pagination.total === 0;
+          this.showSearchBox = !this.noCandidateList || (this.searchQuery && this.searchQuery.length > 0);
+        }
+      })
+    );
+
+    this.subscriptions.push(
+      this.searchService.loading$.subscribe(loading => {
+        this.loading = loading;
+        this.refreshingCandidates = loading;
+      })
+    );
+
+    // Perform initial search
+    this.performSearch();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   ionViewWillEnter() {
-
-    if (
-      this.candidateService.meilisearchConfig &&
-      this.candidateService.meilisearchConfig.searchParameters &&
-      this.instantSearch &&
-      this.instantSearch.instantSearchInstance.helper &&
-      (
-        JSON.stringify(this.instantSearch.instantSearchInstance.helper.state.numericRefinements) != JSON.stringify(this.candidateService.meilisearchConfig.searchParameters.numericRefinements) ||
-        JSON.stringify(this.instantSearch.instantSearchInstance.helper.state.facetFilters) != JSON.stringify(this.candidateService.meilisearchConfig.searchParameters.facetFilters) ||
-        JSON.stringify(this.instantSearch.instantSearchInstance.helper.state.disjunctiveFacetsRefinements) != JSON.stringify(this.candidateService.meilisearchConfig.searchParameters.disjunctiveFacetsRefinements)
-      )
-    ) {
-      this.scrollPosition = 0;
-      this.dirty = true;
-      // this.refreshingCandidates = true;
-    } else {
-      setTimeout(() => {
-        this.refreshingCandidates = false;
-      });
-    }
-
     this.content.scrollToPoint(0, this.scrollPosition);
-
-    if (this.instantSearchConfig && this.dirty) {
-      this.initializeSearchParameters();
-    }
   }
 
   ionViewDidEnter() {
-
-    if (!this.instantSearchConfig) { // on first time app load
-      this.initializeSearchParameters();
-
-      this.setConfig();
-    }
+    // Refresh search if needed
+    this.performSearch();
   }
 
   ionViewWillLeave() {
@@ -225,25 +217,10 @@ export class CandidateSearchPage implements OnInit {
   }
 
   /**
-   * initialize search parameters from state
-   */
-  initializeSearchParameters() {
-
-    if (this.candidateService.meilisearchConfig) {
-      this.searchParameters = Object.assign({}, this.candidateService.meilisearchConfig.searchParameters);
-    }
-  }
-
-  /**
    * Open filter for mobile users
    */
   openFilter() {
-
     this.showFilter = true;
-    
-    //this.updateMeilisearchState();
-    //
-    // this.router.navigate(['job-with-filter']);
   }
 
   dismiss() {
@@ -251,192 +228,24 @@ export class CandidateSearchPage implements OnInit {
   }
 
   /**
-   * update meilisearch state
+   * Handle search input with debouncing
    */
-  async updateMeilisearchState() {
-    if(!this.candidateService.meilisearchConfig) {
-      this.candidateService.meilisearchConfig = {};
-    }
-
-    this.candidateService.meilisearchConfig.instantSearchConfig = Object.assign({}, this.instantSearchConfig);
-    this.candidateService.meilisearchConfig.searchParameters = this.instantSearch ? Object.assign({}, this.instantSearch.instantSearchInstance.helper.state) : Object.assign({}, this.searchParameters);
-    this.candidateService.meilisearchConfig.nbHits = this.nbHits;
-    this.candidateService.meilisearchConfig.nbPages = this.nbPages;
-  }
-
-  /**
-   * check is empty
-   * @param obj
-   */
-  isEmpty(obj) {
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  /**
-   * return current refinements
-   */
-  currentRefinements() {
-
-    const instantSearchInstance = Object.assign({}, this.instantSearch.instantSearchInstance);
-
-    return {
-      query: instantSearchInstance.helper.state.query,
-      tagRefinements: instantSearchInstance.helper.state.tagRefinements,
-      numericRefinements: instantSearchInstance.helper.state.numericRefinements,
-      disjunctiveFacetsRefinements: instantSearchInstance.helper.state.disjunctiveFacetsRefinements
-    };
-  }
-
   onSearch(event) {
-    if(this.instantSearch && this.instantSearch.instantSearchInstance)
-      this.instantSearch.instantSearchInstance.helper.setQuery(event.target.value).search();
+    this.searchQuery = event.target.value;
+    this.searchSubject.next(event.target.value);
   }
 
   /**
-   * Set meilisearch config
+   * Perform search using CandidateSearchService
    */
-  async setConfig() {
-
-    setTimeout(_ => {
-    //  this.loading = true;
-    });
-
-    this.meilisearchService.getKey().then(response => {
-      this.instantSearchConfig = this.instantSearchConfigRefactor(makeStateKey, HttpHeaders, response);
-    });
+  async performSearch() {
+    try {
+      await this.searchService.search();
+    } catch (error) {
+      this._handleError(error);
+    }
   }
 
-  /**
-   * Create search client that proxies through backend
-   */
-  createSSRSearchClient(_a) {
-
-    const transferState = _a.transferState;
-    const makeStateKey = _a.makeStateKey;
-    // Use AuthHttpService for authenticated requests (not raw httpClient)
-    
-    // Create search client that proxies through backend
-    return {
-      search: (requests) => {
-        const transferStateKey = makeStateKey(`meilisearch(${JSON.stringify(requests)})`);
-        
-        // Check cache
-        if (transferState.hasKey(transferStateKey) && !this.refreshingCandidates) {
-          const cached = JSON.parse(transferState.get(transferStateKey, JSON.stringify({})));
-          return Promise.resolve({
-            status: cached.status,
-            content: JSON.stringify(cached.body),
-            isTimedOut: false
-          });
-        }
-        
-        // Extract search parameters
-        const request = requests[0];
-        const searchParams = {
-          indexName: request.indexName,
-          params: request.params || {}
-        };
-        
-        // Call backend proxy using authenticated HTTP service
-        // AuthHttpService automatically adds auth headers and uses environment.apiEndpoint
-        return new Promise((resolve, reject) => {
-          this._authhttp.post('/meilisearch/search', searchParams).subscribe(
-            response => {
-              // Cache response (AuthHttpService returns body directly)
-              transferState.set(transferStateKey, JSON.stringify({
-                status: 200,
-                body: response
-              }));
-              
-              resolve({
-                status: 200,
-                content: JSON.stringify(response),
-                isTimedOut: false
-              });
-            },
-            error => {
-              if (error.status === 400) {
-                // Key expired, refresh and retry
-                this.meilisearchService.getKey(true).then(() => {
-                  this.setConfig();
-                  this._authhttp.post('/meilisearch/search', searchParams).subscribe(
-                    response => resolve({
-                      status: 200,
-                      content: JSON.stringify(response),
-                      isTimedOut: false
-                    }),
-                    err => reject(err)
-                  );
-                });
-              } else {
-                reject(error);
-              }
-            }
-          );
-        });
-      }
-    };
-  }
-
-  /**
-   * process response from meilisearch
-   * @param resp
-   * @param transferState
-   * @param transferStateKey
-   */
-  processResponse(resp, transferState = null, transferStateKey = null) {
- 
-    if (transferState) {
-      transferState.set(transferStateKey, JSON.stringify(resp));
-    }
-
-    if (this.eleInfinite) {
-      this.eleInfinite.complete();
-    }
-
-    setTimeout(() => {
-      this.loading = false;
-      this.refreshingCandidates = false;
-    });
-
-    if (resp.body && resp.body.results && resp.body.results[0]) {
-      const results = resp.body.results[0];
-
-      setTimeout(() => {
-        this.nbHits = results.nbHits;
-        this.nbPages = results.nbPages;
-        this.page = results.page;
-        this.noCandidateList = (results.page == 0 && results.nbHits == 0);
-      });
-    }
-
-    // either need candidates in result or query in search box
-
-    // TF condition
-    setTimeout(() => {
-
-      this.showSearchBox = (
-        !this.noCandidateList ||
-        (
-          this.instantSearch &&
-          this.instantSearch.instantSearchInstance &&
-          this.instantSearch.instantSearchInstance.helper.state.query &&
-          this.instantSearch.instantSearchInstance.helper.state.query.length > 0
-        )
-      );
-
-      if (this.changeDetector !== null &&
-        this.changeDetector !== undefined &&
-        !(this.changeDetector as ViewRef).destroyed) {
-        this.changeDetector.detectChanges();
-      }
-    });
-  }
 
   /**
    * Handles Caught Errors from All Authorized Requests Made to Server
@@ -466,55 +275,14 @@ export class CandidateSearchPage implements OnInit {
   }
 
   /**
-   * set loader on scroll to bottom if have more data
-   * @param e
+   * Load more results (pagination)
    */
-  doInfinite(e) {
-
-    // if already loading
-
-    if (this.loading) {
-      e.target.complete();
-      return false;
+  loadMore() {
+    if (this.loading || this.page >= this.nbPages - 1) {
+      return;
     }
-
-    setTimeout(_ => {
-      this.loading = true;
-    });
-    this.eleInfinite = event.target;
-
-    return true;
-  }
-
-  /**
-   * promise resolve response
-   * @param resp
-   */
-  resolveResponse(resp) {
-    return {
-      statusCode: resp.status,
-      body: resp.body,
-      headers: resp.headers
-    };
-  }
-
-  /**
-   * createSSRSearchClient refactor
-   * @param makeStateKey
-   * @param HttpHeaders
-   * @param response
-   */
-  instantSearchConfigRefactor(makeStateKey, HttpHeaders, response) {
-    // Note: host field is internal-only (http://meilisearch:7700), do not use for direct connections
-    // Only use backend proxy endpoint via AuthHttpService
-    return {
-      indexName: environment.meilisearchCandidateIndex,
-      searchClient: this.createSSRSearchClient({
-        makeStateKey,
-        HttpHeaders,
-        transferState: this.transferState
-      })
-    };
+    this.searchService.setPage(this.page + 1);
+    this.performSearch();
   }
 
   /**
@@ -533,17 +301,10 @@ export class CandidateSearchPage implements OnInit {
    * Refresh list
    */
   async refreshCandidates() {
-
-    if (!this.instantSearch) {
-      return null;
-    }
-
-    this.nbPages = 0;
-
-    //this.loading = true;
-    this.refreshingCandidates = true;
-
-    this.instantSearch.instantSearchInstance.helper.clearCache().setPage(0).setQuery('').search();
+    this.searchService.setPage(0);
+    this.searchService.setQuery('');
+    this.searchQuery = '';
+    await this.performSearch();
   }
 
   logScrolling(e) {

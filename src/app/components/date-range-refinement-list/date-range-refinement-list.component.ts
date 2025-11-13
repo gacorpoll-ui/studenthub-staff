@@ -1,17 +1,18 @@
-import { Component, Input, Inject, forwardRef, EventEmitter, Output, OnInit, Optional } from '@angular/core';
-import { connectRange } from 'instantsearch.js/es/connectors';
-import { BaseWidget, NgAisIndex, NgAisInstantSearch } from 'angular-instantsearch';
-import { parseNumberInput, noop } from 'angular-instantsearch/esm2015/utils';
+import { Component, Input, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
 import {CalendarModal, CalendarModalOptions, CalendarResult} from 'ion2-calendar';
 import { ModalController } from '@ionic/angular';
 import {Options} from "ng5-slider";
+import { CandidateSearchService } from 'src/app/services/candidate-search.service';
+import { Subscription } from 'rxjs';
+
+const noop = () => {};
 
 @Component({
   selector: 'date-range-refinement-list',
   templateUrl: './date-range-refinement-list.component.html',
   styleUrls: ['./date-range-refinement-list.component.scss'],
 })
-export class DateRangeRefinementListComponent extends BaseWidget {
+export class DateRangeRefinementListComponent implements OnInit, OnDestroy {
 
   @Input() title;
   @Input() subTitle;
@@ -29,8 +30,6 @@ export class DateRangeRefinementListComponent extends BaseWidget {
   state;
   slider;
   updateState;
-  handleChange;
-  formatTooltip;
 
   open = false;
   dirty = false;
@@ -46,92 +45,44 @@ export class DateRangeRefinementListComponent extends BaseWidget {
     ceil: 1,
   }
 
-  constructor(
-      @Inject(forwardRef(() => NgAisInstantSearch))
-      public instantSearchInstance,
-      @Optional()
-        public parentIndex: NgAisIndex,
-      public modalCtrl: ModalController
-  ) {
-      super('RangeRefinementComponent');
+  private subscriptions: Subscription[] = [];
 
+  constructor(
+      public modalCtrl: ModalController,
+      public searchService: CandidateSearchService
+  ) {
       // render options
       this.pips = true;
       this.tooltips = true;
       this.precision = 2;
-
       this.state = {
           range: {min: 0, max: 1},
           refine: noop,
           start: [0, 1],
       };
-
-      this.updateState = (state, isFirstRendering) => {
-          // update component inner state
-          this.state = state;
-
-          // update the slider state
-          const {range: {min, max}, start, } = state;
-
-          setTimeout(_ => {
-
-              this.min = (min === max) ? 0 : Math.ceil(min);
-              this.max = Math.ceil(max);
-
-              const disabled = this.min === this.max;
-
-              let lower;
-              let upper;
-
-              if (this.state.start[0] == '-Infinity') {
-                  lower = this.min;
-              } else {
-                  lower = this.state.start[0];
-              }
-
-              if (this.state.start[1] == 'Infinity') {
-                   upper = this.max;
-              } else {
-                   upper = this.state.start[1];
-              }
-
-              if (this.state.start[0] == '-Infinity' && this.state.start[1] == 'Infinity') {
-                  this.dirty = false;
-              } else {
-                  this.dirty = true;
-              }
-
-              this.value = disabled ? { lower: lower, upper: upper + 0.0001 } : { lower: lower, upper: upper };
-
-              // Due to change detection rules in Angular, we need to re-create the options object to apply the change
-              const newOptions: Options = Object.assign({}, this.options);
-              newOptions.ceil = Math.max(this.max, this.value.upper);
-              newOptions.floor = Math.min(this.min, this.value.lower);
-
-              //newOptions.animate = false;
-              //newOptions.rightToLeft = this.translateLabel.currentLang == 'ar';
-              this.options = newOptions;
-
-              this.setLabel(); // update label
-          });
-      };
-
-      this.handleChange = () => {
-
-          //let range = [e.detail.value.lower, e.detail.value.upper];
- 
-          let range = [this.value.lower, this.value.upper];
-          this.state.refine(range);
-
-          //this.change.emit();
-
-          console.log(this.state);
-      };
-
-      this.formatTooltip = (value) => {
-          return value.toFixed(parseNumberInput(this.precision));
-      };
   }
+
+  ngOnInit() {
+      // Initialize component
+  }
+
+  ngOnDestroy() {
+      this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  handleChange = () => {
+      if (this.value && this.attribute) {
+          // Set date range filter
+          const lowerTimestamp = Math.floor(this.value.lower);
+          const upperTimestamp = Math.floor(this.value.upper);
+          this.searchService.setFilter(this.attribute, [`>= ${lowerTimestamp}`, `<= ${upperTimestamp}`]);
+          this.searchService.search();
+      }
+  };
+
+  formatTooltip = (value: number) => {
+      return value.toFixed(this.precision || 2);
+  };
 
   /**
    * on range change by user
@@ -142,19 +93,6 @@ export class DateRangeRefinementListComponent extends BaseWidget {
       this.handleChange();
   }
 
-  /**
-   * @return {?}
-   */
-  ngOnInit() {
-      this.createWidget(connectRange, {
-          attributeName: this.attribute,
-          attribute: this.attribute,
-          max: parseNumberInput(this.max),
-          min: parseNumberInput(this.min),
-          precision: parseNumberInput(this.precision),
-      });
-      super.ngOnInit();
-  }
 
   /**
    * @return {?}
@@ -162,7 +100,7 @@ export class DateRangeRefinementListComponent extends BaseWidget {
   get step() {
       // compute step from the precision value
       /** @type {?} */
-      const precision = parseNumberInput(this.precision) || 2;
+      const precision = this.precision || 2;
       return 1 / Math.pow(10, precision);
   }
 
@@ -177,25 +115,10 @@ export class DateRangeRefinementListComponent extends BaseWidget {
    * Clear range selection
    */
   handleClearAllClick(event) {
-
-      //to fix: https://www.pivotaltracker.com/story/show/170494756
-
-      if (
-          this.instantSearchInstance.searchParameters && this.instantSearchInstance.searchParameters.disjunctiveFacetsRefinements
-          && this.instantSearchInstance.searchParameters.disjunctiveFacetsRefinements[this.attribute]
-      ) {
-          this.instantSearchInstance.searchParameters.disjunctiveFacetsRefinements[this.attribute] = [];
-      }
-
-      //clear value
-
       this.value = { lower: this.min, upper: this.max };
-
       this.dirty = false;
-
-      //update list
-
-      this.handleChange();
+      this.searchService.removeFilter(this.attribute);
+      this.searchService.search();
       event.preventDefault();
       event.stopPropagation();
   }
@@ -256,10 +179,6 @@ export class DateRangeRefinementListComponent extends BaseWidget {
     this.value.upper = Math.floor(new Date(this.upperDate).getTime() / 1000);
 
     this.handleChange();
-
-    let range = [this.value.lower, this.value.upper];
-    this.state.refine(range);
-
     this.change.emit();
   }
 }

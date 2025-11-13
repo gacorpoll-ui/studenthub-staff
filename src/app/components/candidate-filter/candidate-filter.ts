@@ -1,7 +1,8 @@
-import { Component, forwardRef, Inject } from '@angular/core';
-import { NgAisInstantSearch } from 'angular-instantsearch';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 // services
 import { TranslateLabelService } from '../../providers/translate-label.service';
+import { CandidateSearchService } from '../../services/candidate-search.service';
+import { Subscription } from 'rxjs';
 
 
 /**
@@ -12,11 +13,14 @@ import { TranslateLabelService } from '../../providers/translate-label.service';
     templateUrl: 'candidate-filter.html',
     styleUrls: ['./candidate-filter.scss']
 })
-export class CandidateFilterComponent {
+export class CandidateFilterComponent implements OnInit, OnDestroy {
 
     public current_language;
 
-    public arrRefined = [];
+    public arrRefined: Record<string, boolean> = {};
+    public facetCounts: Record<string, Record<string, number>> = {};
+
+    private subscriptions: Subscription[] = [];
 
     genderTransformItems = (items) => {
 
@@ -106,35 +110,64 @@ export class CandidateFilterComponent {
     }
 
     constructor(
-        @Inject(forwardRef(() => NgAisInstantSearch))
-        public instantSearchParent,
-        public translateLabel: TranslateLabelService
+        public translateLabel: TranslateLabelService,
+        public searchService: CandidateSearchService
     ) {
         //this.current_language = this.translateLabel.currentLang;
     }
 
     ngOnInit() {
-
-        this.instantSearchParent.change.subscribe(() => {
-
-            if (!this.instantSearchParent.instantSearchInstance.helper) {
-                return null;
-            }
-
-            this.arrRefined = [];
-
-            Object.keys(
-                this.instantSearchParent.instantSearchInstance.helper.state.disjunctiveFacetsRefinements
-            ).forEach(key => {
-                if (this.instantSearchParent.instantSearchInstance.helper.state.disjunctiveFacetsRefinements[key].length > 0) {
-                    this.arrRefined[key] = true;
+        // Subscribe to search results to get facet counts
+        this.subscriptions.push(
+            this.searchService.results$.subscribe(results => {
+                if (results && results.facets) {
+                    this.facetCounts = results.facets;
                 }
-            });
+            })
+        );
 
-            setTimeout(_ => {
-                this.sortRefinementLists();
-            }, 200);
-        });
+        // Subscribe to state changes to update arrRefined
+        this.subscriptions.push(
+            this.searchService.state$.subscribe(state => {
+                this.arrRefined = {};
+                Object.keys(state.filters).forEach(key => {
+                    if (state.filters[key] && state.filters[key].length > 0) {
+                        this.arrRefined[key] = true;
+                    }
+                });
+                if (state.geo) {
+                    this.arrRefined['_geo'] = true;
+                }
+            })
+        );
+    }
+
+    ngOnDestroy() {
+        this.subscriptions.forEach(sub => sub.unsubscribe());
+    }
+
+    /**
+     * Get facet count for a specific attribute and value
+     */
+    getFacetCount(attribute: string, value: string): number {
+        return this.searchService.getFacetCount(attribute, value);
+    }
+
+    /**
+     * Check if a filter value is selected
+     */
+    isFilterSelected(attribute: string, value: string): boolean {
+        const state = this.searchService.getState();
+        const values = state.filters[attribute] || [];
+        return values.includes(value);
+    }
+
+    /**
+     * Toggle a filter value
+     */
+    toggleFilter(attribute: string, value: string): void {
+        this.searchService.toggleFilter(attribute, value);
+        this.searchService.search();
     }
 
     /**

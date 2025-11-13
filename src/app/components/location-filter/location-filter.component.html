@@ -1,0 +1,54 @@
+<div class="location-filter">
+  <h4 class="filter-group-name">{{ "Location" | translate }}</h4>
+  
+  <div class="map-container">
+    <div #mapContainer class="map"></div>
+  </div>
+
+  <div class="location-controls">
+    <ion-item>
+      <ion-label position="stacked">{{ "Search Address" | translate }}</ion-label>
+      <ion-input 
+        [(ngModel)]="addressSearch" 
+        placeholder="{{ 'Enter address...' | translate }}"
+        (ionBlur)="searchAddress()"
+        (keyup.enter)="searchAddress()">
+      </ion-input>
+      <ion-button 
+        slot="end" 
+        fill="clear" 
+        (click)="searchAddress()" 
+        [disabled]="isSearching">
+        <ion-icon name="search"></ion-icon>
+      </ion-button>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">
+        {{ "Radius" | translate }}: {{ radius }} km
+      </ion-label>
+      <ion-range 
+        [(ngModel)]="radius" 
+        min="1" 
+        max="50" 
+        step="1"
+        (ionChange)="onRadiusChange()">
+        <ion-label slot="start">1 km</ion-label>
+        <ion-label slot="end">50 km</ion-label>
+      </ion-range>
+    </ion-item>
+
+    <ion-button 
+      expand="block" 
+      fill="outline" 
+      (click)="clearLocation()"
+      *ngIf="searchCenter">
+      {{ "Clear Location" | translate }}
+    </ion-button>
+
+    <p class="help-text">
+      {{ "Click on the map to set search center" | translate }}
+    </p>
+  </div>
+</div>
+

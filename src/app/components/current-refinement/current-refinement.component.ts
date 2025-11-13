@@ -1,8 +1,9 @@
-import { Component, Inject, forwardRef, Input, ViewEncapsulation, Optional } from '@angular/core';
-import { BaseWidget, NgAisIndex, NgAisInstantSearch } from 'angular-instantsearch';
-import { noop } from "angular-instantsearch/esm2015/utils";
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { AgePipe } from 'src/app/pipes/age.pipe';
-import { connectCurrentRefinements } from "instantsearch.js/es/connectors";
+import { CandidateSearchService } from 'src/app/services/candidate-search.service';
+import { Subscription } from 'rxjs';
+
+const noop = () => {};
 
 @Component({
     selector: 'current-refinement',
@@ -10,7 +11,7 @@ import { connectCurrentRefinements } from "instantsearch.js/es/connectors";
     styleUrls: ['./current-refinement.component.scss'],
     // encapsulation: ViewEncapsulation.None
 })
-export class CurrentRefinementComponent extends BaseWidget {
+export class CurrentRefinementComponent implements OnInit, OnDestroy {
 
     @Input() attribute;
     @Input() transformItems;
@@ -19,16 +20,12 @@ export class CurrentRefinementComponent extends BaseWidget {
     public clearsQuery;
     public state;
 
+    private subscriptions: Subscription[] = [];
+
     constructor(
-        @Inject(forwardRef(() => NgAisInstantSearch))
-        public instantSearchInstance,
-        @Optional()
-        public parentIndex: NgAisIndex,
+        public searchService: CandidateSearchService
     ) {
-        super('CurrentRefinementComponent');
-
         this.clearsQuery = false;
-
         this.state = {
             attributes: {},
             clearAllClick: noop,
@@ -43,18 +40,37 @@ export class CurrentRefinementComponent extends BaseWidget {
      * Initialize widget
      */
     public ngOnInit() {
-      // console.log(this.state);
         this.attributes = [this.attribute];
+        // Subscribe to search state to get current refinements
+        this.subscriptions.push(
+            this.searchService.results$.subscribe(() => {
+                const state = this.searchService.getState();
+                // Build items from current filters
+                this.state.items = [];
+                if (state.filters[this.attribute]) {
+                    state.filters[this.attribute].forEach(value => {
+                        this.state.items.push({
+                            attribute: this.attribute,
+                            label: value,
+                            value: value,
+                            refine: () => {
+                                const values = this.searchService.getState().filters[this.attribute] || [];
+                                const newValues = values.filter(v => v !== value);
+                                if (newValues.length > 0) {
+                                    this.searchService.setFilter(this.attribute, newValues);
+                                } else {
+                                    this.searchService.removeFilter(this.attribute);
+                                }
+                            }
+                        });
+                    });
+                }
+            })
+        );
+    }
 
-        let options = {
-            includedAttributes: this.attributes
-        };
-
-        //connectCurrentRefinedValues
-        if(this.instantSearchInstance) {
-            this.createWidget(connectCurrentRefinements, options);
-            super.ngOnInit();
-        }
+    ngOnDestroy() {
+        this.subscriptions.forEach(sub => sub.unsubscribe());
     }
 
     json() {
@@ -69,7 +85,10 @@ export class CurrentRefinementComponent extends BaseWidget {
     handleClick(event, refinement) {
         event.preventDefault();
         event.stopPropagation();
-        this.state.refine(refinement);
+        if (refinement.refine) {
+            refinement.refine();
+            this.searchService.search();
+        }
     }
 
     /**
@@ -88,8 +107,8 @@ export class CurrentRefinementComponent extends BaseWidget {
             helper.setQueryParameter('aroundRadius', 'all');
         }*/
 
-        this.instantSearchInstance.instantSearchInstance.helper.clearRefinements(this.attribute);
-        this.instantSearchInstance.instantSearchInstance.refresh();
+        this.searchService.removeFilter(this.attribute);
+        this.searchService.search();
 
         event.preventDefault();
         event.stopPropagation();
@@ -112,13 +131,20 @@ export class CurrentRefinementComponent extends BaseWidget {
     }
 
     /**
+     * CSS class helper (stub for template compatibility)
+     */
+    cx(classes?: string): string {
+        return classes || '';
+    }
+
+    /**
      * Return current selection comma(,) separated
      */
-    currentSelections() {
+    currentSelections(): string {
       // console.log(this.state);
 
-        if(!this.state || !this.state.canRefine) {
-            return false;
+        if(!this.state || !this.state.canRefine || !this.state.items || this.state.items.length === 0) {
+            return '';
         }
 
 

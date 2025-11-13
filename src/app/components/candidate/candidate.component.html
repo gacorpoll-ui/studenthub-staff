@@ -19,6 +19,9 @@
 
       <p>{{ candidate.candidate_birth_date | candidateAge }}
         <span *ngIf="candidate.candidate_hourly_rate > 0"><span class="sep">•</span>{{ candidate.candidate_hourly_rate }} {{ candidate.currency_code }} /hour</span>
+        <span *ngIf="getDistance()"><span class="sep">•</span>
+          <ion-badge color="primary" style="font-size: 11px;">{{ getDistance() }}</ion-badge>
+        </span>
       </p>
 
       <p class="nationality" *ngIf="candidate.nationality">

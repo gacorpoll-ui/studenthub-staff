@@ -1,17 +1,25 @@
-import { Component, Input, Inject, forwardRef, EventEmitter, Output, ChangeDetectorRef, Optional } from '@angular/core';
-import { connectRange } from 'instantsearch.js/es/connectors';
-import { RangeRenderState } from 'instantsearch.js/es/connectors/range/connectRange';
-import { BaseWidget, NgAisIndex, NgAisInstantSearch } from 'angular-instantsearch';
-import { parseNumberInput, noop } from 'angular-instantsearch/esm2015/utils';
+import { Component, Input, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
 import { Options } from 'ng5-slider';
+import { CandidateSearchService } from 'src/app/services/candidate-search.service';
+import { Subscription } from 'rxjs';
 
+const noop = () => {};
+
+interface RangeRenderState {
+    range: {min: number, max: number};
+    refine: (values: [number, number]) => void;
+    canRefine: boolean | null;
+    sendEvent: () => void;
+    format: (value: number) => string;
+    start: [number, number];
+}
 
 @Component({
   selector: 'age-refinement-list',
   templateUrl: './age-refinement-list.component.html',
   styleUrls: ['./age-refinement-list.component.scss'],
 })
-export class AgeRefinementListComponent extends BaseWidget {
+export class AgeRefinementListComponent implements OnInit, OnDestroy {
 
     @Input() title;
     @Input() subTitle;
@@ -27,19 +35,16 @@ export class AgeRefinementListComponent extends BaseWidget {
     @Output() change: EventEmitter<any> = new EventEmitter();
 
 
-    public override state: RangeRenderState = {
+    public state: RangeRenderState = {
         range: {min: 0, max: 1},
         refine: noop,
         canRefine: null,
         sendEvent: noop,
-        format: noop,
+        format: (v: number) => v.toString(),
         start: [0, 1],
     };
 
     slider;
-
-    handleChange;
-    formatTooltip;
 
     open = false;
     dirty = false;
@@ -53,14 +58,11 @@ export class AgeRefinementListComponent extends BaseWidget {
         ceil: 1,
     }
 
-    constructor(
-        @Inject(forwardRef(() => NgAisInstantSearch))
-        public instantSearchInstance,
-        @Optional()
-        public parentIndex: NgAisIndex,
-    ) {
-        super('RangeRefinementComponent');
+    private subscriptions: Subscription[] = [];
 
+    constructor(
+        public searchService: CandidateSearchService
+    ) {
         // render options
         this.pips = true;
         this.tooltips = true;
@@ -72,77 +74,36 @@ export class AgeRefinementListComponent extends BaseWidget {
             start: [0, 1],
         };*/
 
-        this.updateState = (state: RangeRenderState, isFirstRendering) => {
-
-            // update component inner state
-            if(isFirstRendering)
-                this.state = state;
-            else {
-                this.state.range = state.range;
-                this.state.start = state.start;
-            }
-
-            // update the slider state
-            const { range: {min, max}, start, } = state;
-            //const min = state.range.min, max = 0;
-
-            //setTimeout(_ => {
-
-                this.min = (min === max) ? 0 : Math.ceil(min);
-                this.max = Math.ceil(max);
-
-                const disabled = this.min === this.max;
-
-                let lower;
-                let upper;
-
-                if (this.state.start[0] == -Infinity) {
-                    lower = this.min;
-                } else {
-                    lower = this.state.start[0];
-                }
-
-                if (this.state.start[1] == Infinity) {
-                     upper = this.max;
-                } else {
-                     upper = this.state.start[1];
-                }
-
-                if (this.state.start[0] == -Infinity && this.state.start[1] == Infinity) {
-                    this.dirty = false;
-                } else {
-                    this.dirty = true;
-                }
-
-                this.value = disabled ? { lower: lower, upper: upper + 0.0001 } : { lower: lower, upper: upper };
-
-                // Due to change detection rules in Angular, we need to re-create the options object to apply the change
-                const newOptions: Options = Object.assign({}, this.options);
-                newOptions.ceil = Math.max(this.max, this.value.upper);
-                newOptions.floor = Math.min(this.min, this.value.lower);
-
-                //newOptions.animate = false;
-                //newOptions.rightToLeft = this.translateLabel.currentLang == 'ar';
-                this.options = newOptions;
-
-                this.setLabel(); // update label
-            //}
-        };
-
-        this.handleChange = (e) => {
-
-           // let range = [e.detail.value.lower, e.detail.value.upper];
-                //[this.value.lower, this.value.upper]
-
-             //   this.state.range.lower = [this.value.lower, this.value.upper];
-            this.state.refine([this.value.lower, this.value.upper]);
-            //this.change.emit();
-        };
-
-        this.formatTooltip = (value) => {
-            return value.toFixed(parseNumberInput(this.precision));
-        };
+        // Initialize default values
+        this.min = this.min || 18;
+        this.max = this.max || 65;
+        this.value = { lower: this.min, upper: this.max };
+        this.options.floor = this.min;
+        this.options.ceil = this.max;
     }
+
+    ngOnInit() {
+        // Initialize from search service if needed
+        this.setLabel();
+    }
+
+    ngOnDestroy() {
+        this.subscriptions.forEach(sub => sub.unsubscribe());
+    }
+
+    handleChange = () => {
+        if (this.value && this.attribute) {
+            // Set age range filter
+            const minAge = Math.floor(this.value.lower);
+            const maxAge = Math.floor(this.value.upper);
+            this.searchService.setFilter(this.attribute, [`>= ${minAge}`, `<= ${maxAge}`]);
+            this.searchService.search();
+        }
+    };
+
+    formatTooltip = (value: number) => {
+        return value.toFixed(this.precision || 2);
+    };
 
     /**
      * on range change by user
@@ -156,24 +117,9 @@ export class AgeRefinementListComponent extends BaseWidget {
     /**
      * @return {?}
      */
-    override ngOnInit() {
-        this.createWidget(connectRange, {
-            attributeName: this.attribute,
-            attribute: this.attribute,
-            max: parseNumberInput(this.max),
-            min: parseNumberInput(this.min),
-            precision: parseNumberInput(this.precision),
-        });
-        super.ngOnInit();
-    }
-
-    /**
-     * @return {?}
-     */
     get step() {
         // compute step from the precision value
-        /** @type {?} */
-        const precision = parseNumberInput(this.precision) || 2;
+        const precision = this.precision || 2;
         return 1 / Math.pow(10, precision);
     }
 
@@ -188,25 +134,10 @@ export class AgeRefinementListComponent extends BaseWidget {
      * Clear range selection
      */
     handleClearAllClick(event) {
-
-        //to fix: https://www.pivotaltracker.com/story/show/170494756
-
-        if (
-            this.instantSearchInstance.searchParameters && this.instantSearchInstance.searchParameters.disjunctiveFacetsRefinements
-            && this.instantSearchInstance.searchParameters.disjunctiveFacetsRefinements[this.attribute]
-        ) {
-            this.instantSearchInstance.searchParameters.disjunctiveFacetsRefinements[this.attribute] = [];
-        }
-
-        //clear value
-
         this.value = { lower: this.min, upper: this.max };
-
         this.dirty = false;
-
-        //update list
-
-        this.handleChange();
+        this.searchService.removeFilter(this.attribute);
+        this.searchService.search();
         event.preventDefault();
         event.stopPropagation();
     }

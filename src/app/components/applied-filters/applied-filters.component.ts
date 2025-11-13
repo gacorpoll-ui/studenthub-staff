@@ -1,100 +1,92 @@
-import { Component, Inject, forwardRef, Input, Optional } from '@angular/core';
-import { TypedBaseWidget, NgAisIndex, NgAisInstantSearch } from 'angular-instantsearch';
-import connectCurrentRefinements, {
-  CurrentRefinementsWidgetDescription,
-  CurrentRefinementsConnectorParams
-} from 'instantsearch.js/es/connectors/current-refinements/connectCurrentRefinements';
-
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { Platform } from "@ionic/angular";
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { AgePipe } from 'src/app/pipes/age.pipe';
+import { Subscription } from 'rxjs';
 
 //services
 import { AuthService } from '../../providers/auth.service';
+import { CandidateSearchService } from '../../services/candidate-search.service';
 
 
 /**
  * Display filter selection
- * Uses angular-instantsearch for search functionality
  */
 @Component({
     selector: 'applied-filters',
     templateUrl: './applied-filters.component.html',
     styleUrls: ['./applied-filters.component.scss'],
 })
-export class AppliedFiltersComponent extends TypedBaseWidget<CurrentRefinementsWidgetDescription, CurrentRefinementsConnectorParams> {
-    public state: CurrentRefinementsWidgetDescription['renderState']; // Rendering options
+export class AppliedFiltersComponent implements OnInit, OnDestroy {
     @Input() loading;
     @Input() transformItems;
     @Input() attributes;
     @Input() currencies;
-
     @Input() labelWithFilter;
     @Input() labelWithoutFilter;
 
-
-    public total;
-
+    public total: number = 0;
     public average = null;
+    public currentSelectionsList: any[] = [];
+
+    private subscriptions: Subscription[] = [];
 
   constructor(
-    @Inject(forwardRef(() => NgAisIndex))
-    @Optional()
-    public parentIndex: NgAisIndex,
-    @Inject(forwardRef(() => NgAisInstantSearch))
-    public instantSearchInstance: NgAisInstantSearch,
     public authService: AuthService,
     public platform: Platform,
-    public currencyPipe: CurrencyPipe
+    public currencyPipe: CurrencyPipe,
+    public searchService: CandidateSearchService
   ) {
-    super('AppliedFiltersComponent');
-
-        if (this.instantSearchInstance) {
-            this.instantSearchInstance.change.subscribe(() => {
-              // console.log(this.instantSearchInstance);
-                let lastResults = this.instantSearchInstance.instantSearchInstance.helper.lastResults;
-
-                if (lastResults) {
-                    this.total = lastResults.nbHits;
-                }
-            });
-        }
     }
 
-    /**
-     * Initialize widget
-     */
-    public ngOnInit() {
-        // console.log(this.state);
-        let options = {
-            includedAttributes: this.attributes
-        };
+    ngOnInit() {
+        // Subscribe to results to get total count
+        this.subscriptions.push(
+            this.searchService.results$.subscribe(results => {
+                if (results) {
+                    this.total = results.pagination.total;
+                }
+            })
+        );
 
-        if (this.instantSearchInstance) {
-            this.createWidget(connectCurrentRefinements, options);
-            setTimeout(() => { // to protect dual request
-                super.ngOnInit();
-            },500);
-        }
+        // Subscribe to state changes to update current selections
+        this.subscriptions.push(
+            this.searchService.state$.subscribe(() => {
+                this.currentSelectionsList = this.currentSelections();
+            })
+        );
+    }
+
+    ngOnDestroy() {
+        this.subscriptions.forEach(sub => sub.unsubscribe());
     }
 
     /**
      * @return boolean
      */
     isHidden() {
-        return this.state && this.state['items'] && this.state['items'].length === 0;
-        /*&& (
-            !this.instantSearchInstance.instantSearchInstance.searchParameters.query ||
-            this.instantSearchInstance.instantSearchInstance.searchParameters.query.length == 0
-        );*/
+        return this.currentSelectionsList.length === 0;
     }
 
     /**
      * remove current selection
      * @param currentSelection
      */
-    toggleCurrentSelection(currentSelection) {
-        this.state.refine(currentSelection);
+    toggleCurrentSelection(currentSelection: any) {
+        if (currentSelection.attribute) {
+            if (currentSelection.operator === '>=' || currentSelection.operator === '<=') {
+                // Range filter - remove the entire filter
+                this.searchService.removeFilter(currentSelection.attribute);
+            } else {
+                // Regular filter - toggle the value
+                this.searchService.toggleFilter(currentSelection.attribute, currentSelection.value);
+            }
+            this.searchService.search();
+        } else if (currentSelection.type === 'geo') {
+            // Remove geo filter
+            this.searchService.setGeo(undefined);
+            this.searchService.search();
+        }
     }
 
     committedTransformItems = (item) => {
@@ -229,60 +221,57 @@ export class AppliedFiltersComponent extends TypedBaseWidget<CurrentRefinementsW
     }
 
     /**
-     * Return current selection comma(,) separated
+     * Return current selections from search state
      */
-    currentSelections() {
+    currentSelections(): any[] {
+        const buttons: any[] = [];
+        const state = this.searchService.getState();
 
-        let buttons = [];
+        // Add query if present
+        if (state.query && state.query.length > 0) {
+            buttons.push({
+                type: 'query',
+                label: state.query,
+                value: state.query
+            });
+        }
 
-        /*if(this.instantSearchInstance.instantSearchInstance.searchParameters.query && this.instantSearchInstance.instantSearchInstance.searchParameters.query.length > 0) {
-            a.push(this.instantSearchInstance.instantSearchInstance.searchParameters.query);
-        }*/
+        // Add filters
+        Object.keys(state.filters).forEach(attribute => {
+            const values = state.filters[attribute];
+            values.forEach(value => {
+                let item: any = {
+                    attribute: attribute,
+                    value: value,
+                    label: value
+                };
 
-        for (let a of this.state.items) {
-            for(let b of a.refinements) {
-
-                if (b.attribute == 'candidate_committed') {
-                    b = this.committedTransformItems(b);
+                // Apply transformations
+                if (attribute === 'candidate_committed') {
+                    item = this.committedTransformItems(item);
+                } else if (attribute === 'have_video') {
+                    item = this.haveVideoTransformItems(item);
+                } else if (attribute === 'have_resume') {
+                    item = this.haveResumeTransformItems(item);
+                } else if (attribute === 'candidate_driving_license' || attribute === 'fulltimer_driving_license') {
+                    item = this.licenseTransformItems(item);
+                } else if (attribute === 'assigned' || attribute === 'fulltimer_employed') {
+                    item = this.assignedTransformItems(item);
+                } else if (attribute === 'candidate_mom_kuwaiti') {
+                    item = this.kuwaitiMomTransformItems(item);
                 }
 
-                else if (b.attribute == 'have_video') {
-                    b = this.haveVideoTransformItems(b);
-                }
+                buttons.push(item);
+            });
+        });
 
-                else if (b.attribute == 'have_resume') {
-                    b = this.haveResumeTransformItems(b);
-                }
-
-                else if (b.attribute == 'candidate_created_at_timestamp' || b.attribute == 'start_date_timestamp') {
-                    b = this.dateTimestampItems(b);
-                }
-
-                else if(b.attribute == 'candidate_birth_timestamp' || b.attribute == 'candidate_updated_at_timestamp' || b.attribute == 'fulltimer_birth_timestamp') {
-                    b = this.birthTimestampItems(b);
-                }
-
-                //else if (b.attribute == 'candidate_gender') {
-                //    b = this.genderTransformItems(b);
-                //}
-
-                else if (b.attribute == 'candidate_driving_license') {
-                    b = this.licenseTransformItems(b);
-                }
-                else if (b.attribute == 'fulltimer_driving_license') {
-                    b = this.licenseTransformItems(b);
-                }
-
-                else if (b.attribute == 'assigned' || b.attribute == 'fulltimer_employed') {
-                    b = this.assignedTransformItems(b);
-                }
-
-                else if (b.attribute == 'candidate_mom_kuwaiti') {
-                    b = this.kuwaitiMomTransformItems(b);
-                }
-
-                buttons.push(b);
-            }
+        // Add geo filter if present
+        if (state.geo) {
+            buttons.push({
+                type: 'geo',
+                label: `Location (${(state.geo.radius / 1000).toFixed(1)}km)`,
+                attribute: '_geo'
+            });
         }
 
         return buttons;

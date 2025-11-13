@@ -1,5 +1,4 @@
-import { Component, forwardRef, Inject } from '@angular/core';
-import { NgAisInstantSearch } from 'angular-instantsearch';
+import { Component } from '@angular/core';
 // services
 import { TranslateLabelService } from '../../providers/translate-label.service';
 
@@ -78,35 +77,15 @@ export class FulltimerFilterComponent {
     }
 
     constructor(
-        @Inject(forwardRef(() => NgAisInstantSearch))
-        public instantSearchParent,
         public translateLabel: TranslateLabelService
     ) {
         //this.current_language = this.translateLabel.currentLang;
     }
 
     ngOnInit() {
-
-        this.instantSearchParent.change.subscribe(() => {
-
-            if (!this.instantSearchParent.instantSearchInstance.helper) {
-                return null;
-            }
-
-            this.arrRefined = [];
-
-            Object.keys(
-                this.instantSearchParent.instantSearchInstance.helper.state.disjunctiveFacetsRefinements
-            ).forEach(key => {
-                if (this.instantSearchParent.instantSearchInstance.helper.state.disjunctiveFacetsRefinements[key].length > 0) {
-                    this.arrRefined[key] = true;
-                }
-            });
-
-            setTimeout(_ => {
-                this.sortRefinementLists();
-            }, 200);
-        });
+        // TODO: Implement filter state tracking for fulltimer search
+        // This was previously using instantSearchParent which is no longer available
+        // For now, this is a stub implementation
     }
 
     /**

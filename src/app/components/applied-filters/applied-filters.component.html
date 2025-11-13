@@ -1,10 +1,10 @@
 <div class="component-content" dir="ltr">
-  <h3 *ngIf="total > -1 && !loading">
+  <h3 *ngIf="total >= 0 && !loading">
 
-    <span *ngIf="state && state.items.length == 0 && total">
+    <span *ngIf="currentSelectionsList.length == 0 && total">
         {{ total }} {{ labelWithoutFilter }}
     </span>
-    <span *ngIf="state && state.items.length > 0 && total">
+    <span *ngIf="currentSelectionsList.length > 0 && total">
       {{ total }}  {{ labelWithFilter }}
     </span>
   </h3>
@@ -24,21 +24,21 @@
 
   <div class="clearfix"></div>
 
-  <div [class]="cx()"><!--  *ngIf="!isHidden()" -->
-    <span [class]="cx('list')" *ngIf="this.platform.is('mobile') && state && state.items">
+  <div *ngIf="!isHidden()">
+    <span *ngIf="this.platform.is('mobile') && currentSelectionsList.length > 0">
         <div class="outer-slider">
             <div class="inner-element">
-                <ion-button (click)="toggleCurrentSelection(currentSelection)" class="skip-hover" *ngFor="let currentSelection of currentSelections()">
-                  {{ currentSelection.label? currentSelection.label : currentSelection.label}}
+                <ion-button (click)="toggleCurrentSelection(currentSelection)" class="skip-hover" *ngFor="let currentSelection of currentSelectionsList">
+                  {{ currentSelection.label }}
                   <ion-icon name="close"></ion-icon>
                 </ion-button>
             </div>
         </div>
     </span>
 
-      <span [class]="cx('list')" *ngIf="this.platform.is('desktop') && state && state.items"> <!-- refinements -->
-        <ion-button (click)="toggleCurrentSelection(currentSelection)"  *ngFor="let currentSelection of currentSelections()" class="skip-hover">
-          {{ currentSelection.label? currentSelection.label : currentSelection.label}}
+      <span *ngIf="this.platform.is('desktop') && currentSelectionsList.length > 0">
+        <ion-button (click)="toggleCurrentSelection(currentSelection)"  *ngFor="let currentSelection of currentSelectionsList" class="skip-hover">
+          {{ currentSelection.label }}
             <ion-icon name="close"></ion-icon>
         </ion-button>
     </span>

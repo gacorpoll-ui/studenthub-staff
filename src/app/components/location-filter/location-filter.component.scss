@@ -1,0 +1,36 @@
+.location-filter {
+  margin-bottom: 20px;
+
+  .filter-group-name {
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  .map-container {
+    margin-bottom: 15px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+
+    .map {
+      height: 300px;
+      width: 100%;
+    }
+  }
+
+  .location-controls {
+    ion-item {
+      --padding-start: 0;
+      --inner-padding-end: 0;
+      margin-bottom: 10px;
+    }
+
+    .help-text {
+      font-size: 12px;
+      color: #666;
+      margin-top: 10px;
+      font-style: italic;
+    }
+  }
+}
+

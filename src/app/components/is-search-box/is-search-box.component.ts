@@ -1,10 +1,10 @@
-import { Component, Inject, forwardRef, Input, Output, EventEmitter, Optional } from '@angular/core';
-import { connectSearchBox } from 'instantsearch.js/es/connectors';
-import { BaseWidget, NgAisIndex, NgAisInstantSearch } from 'angular-instantsearch';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { Subject, timer, EMPTY } from 'rxjs';
 import { debounceTime, distinctUntilChanged, debounce } from 'rxjs/operators';
 // services
 import { TranslateLabelService } from 'src/app/providers/translate-label.service';
+import { CandidateSearchService } from 'src/app/services/candidate-search.service';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -12,7 +12,7 @@ import { TranslateLabelService } from 'src/app/providers/translate-label.service
     templateUrl: './is-search-box.component.html',
     styleUrls: ['./is-search-box.component.scss'],
 })
-export class IsSearchBoxComponent extends BaseWidget {
+export class IsSearchBoxComponent implements OnInit, OnDestroy {
 
     @Input() placeholder;
     @Input() submitTitle;
@@ -25,30 +25,24 @@ export class IsSearchBoxComponent extends BaseWidget {
     @Output() focus: EventEmitter<any> = new EventEmitter();
     @Output() blur: EventEmitter<any> = new EventEmitter();
 
-    override state;
+    state: any = {
+        query: "",
+        refine: (query: string) => {}
+    };
 
     modelChanged: Subject<{query: string, code: number }> = new Subject();
-
-    /*= {
-        query: "",
-        refine: noop
-    };*/
+    private subscriptions: Subscription[] = [];
 
     constructor(
-        @Inject(forwardRef(() => NgAisInstantSearch))
-        public instantSearchInstance,
-        @Optional()
-        public parentIndex: NgAisIndex,
-        public _translateService: TranslateLabelService
+        public _translateService: TranslateLabelService,
+        public searchService: CandidateSearchService
     ) {
-        super('IsSearchBoxComponent');
-
         this.modelChanged.pipe(
             debounce(ev => ev.code != 13 ? timer(800) : EMPTY),
-            //debounceTime(800),  // wait 1000ms after the last event before emitting last event
-            distinctUntilChanged(),  // only emit if value is different from previous value
+            distinctUntilChanged(),
         ).subscribe(ev => {
-            this.state.refine(ev.query);
+            this.searchService.setQuery(ev.query);
+            this.searchService.search();
         });
     }
 
@@ -56,12 +50,13 @@ export class IsSearchBoxComponent extends BaseWidget {
      * Initialize widget
      */
     public ngOnInit() {
-        if (this.instantSearchInstance) {
-            this.createWidget(connectSearchBox);
-            setTimeout( _ => { // to protect dual request
-                super.ngOnInit();
-            },500)
-        }
+        // Subscribe to search state to get current query
+        this.subscriptions.push(
+            this.searchService.results$.subscribe(() => {
+                const state = this.searchService.getState();
+                this.state.query = state.query || '';
+            })
+        );
     }
 
     ngOnDestroy() {
@@ -92,6 +87,14 @@ export class IsSearchBoxComponent extends BaseWidget {
         // send reset event to parent component
         this.reset.emit(event);
         // reset search
-        this.state.refine('');
+        this.searchService.setQuery('');
+        this.searchService.search();
+    }
+
+    /**
+     * CSS class helper (stub for template compatibility)
+     */
+    cx(classes?: string): string {
+        return classes || '';
     }
 }

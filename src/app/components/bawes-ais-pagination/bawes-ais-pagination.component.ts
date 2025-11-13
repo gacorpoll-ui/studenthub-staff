@@ -1,44 +1,58 @@
-import { Component, Inject, forwardRef, Optional, OnInit } from '@angular/core';
-import { TypedBaseWidget, NgAisInstantSearch, NgAisIndex } from 'angular-instantsearch';
-
-import connectPagination, {
-  PaginationWidgetDescription,
-  PaginationConnectorParams
-} from 'instantsearch.js/es/connectors/pagination/connectPagination';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CandidateSearchService } from '../../services/candidate-search.service';
+import { Subscription } from 'rxjs';
  
 @Component({
   selector: 'bawes-ais-pagination',
   templateUrl: './bawes-ais-pagination.component.html',
   styleUrls: ['./bawes-ais-pagination.component.scss'],
 })
-export class BawesAisPaginationComponent extends TypedBaseWidget<PaginationWidgetDescription, PaginationConnectorParams> implements OnInit {
+export class BawesAisPaginationComponent implements OnInit, OnDestroy {
     
-  //public state: PaginationWidgetDescription['renderState']; // Rendering options
+  public currentPage: number = 0;
+  public totalPages: number = 0;
+  public isLastPage: boolean = false;
+
+  private subscriptions: Subscription[] = [];
 
     constructor(
-      @Inject(forwardRef(() => NgAisIndex))
-      @Optional()
-      public parentIndex: NgAisIndex,
-      @Inject(forwardRef(() => NgAisInstantSearch))
-      public instantSearchInstance: NgAisInstantSearch
+      public searchService: CandidateSearchService
     ) {
-      super('Pagination');
     }
 
     ngOnInit() {
-      let a = this.createWidget(connectPagination, {
-        // instance options
-      });
-      super.ngOnInit();
+      // Subscribe to results to get pagination info
+      this.subscriptions.push(
+        this.searchService.results$.subscribe(results => {
+          if (results) {
+            this.currentPage = results.pagination.page;
+            this.totalPages = results.pagination.totalPages;
+            this.isLastPage = this.currentPage >= this.totalPages - 1;
+          }
+        })
+      );
+
+      // Subscribe to state changes
+      this.subscriptions.push(
+        this.searchService.state$.subscribe(state => {
+          this.currentPage = state.page;
+        })
+      );
     }
 
-    doInfinite(event) {
+    ngOnDestroy() {
+      this.subscriptions.forEach(sub => sub.unsubscribe());
+    }
 
-      //const remainingValidity = this.instantSearchInstance.instantSearchInstance. getSecuredApiKeyRemainingValidity('YourSecuredAPIkey');
-          
-      if(this.state)
-       this.state.refine(this.state.currentRefinement + 1);
+    async doInfinite(event) {
+      if (this.isLastPage) {
+        event.target.complete();
+        return;
+      }
 
+      const state = this.searchService.getState();
+      this.searchService.setPage(state.page + 1);
+      await this.searchService.search();
       event.target.complete();
     }
   }
