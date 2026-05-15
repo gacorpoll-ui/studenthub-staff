@@ -14,7 +14,6 @@ import { AgeRefinementListComponent } from './age-refinement-list.component';
   ],
   imports: [
       IonicModule,
-      NgAisModule,
       CommonModule,
       FormsModule,
       PipesModule,
