@@ -1,4 +1,3 @@
-
 <ion-header mode="md" [class.add-border]="borderLimit" class="ion-no-border">
   <ion-toolbar class="container">
     <ion-buttons slot="start">
@@ -8,9 +7,8 @@
     <ion-title>
       Fulltimer
     </ion-title>
-    
-    <ion-buttons slot="end">
 
+    <ion-buttons slot="end">
       <ion-button (click)="openFilter()" class="btn-filter mobile-only" *ngIf="!showFilter">
         <ion-icon slot="start" src="assets/images/ic-filter.svg"></ion-icon> Filter
       </ion-button>
@@ -18,18 +16,15 @@
       <ion-button class="btn-add-filter" routerLink="/fulltimer-form">
         Add Fulltimer
       </ion-button>
-
     </ion-buttons>
-
   </ion-toolbar>
 </ion-header>
 
 <ion-content #container scrollEvents="true" (ionScroll)="logScrolling($event)" class="source-browser-page">
 
+  <!-- loader when initializing -->
   <div class="container">
-    <!-- loader when config not available -->
-
-    <ion-grid *ngIf="!instantSearchConfig" class="dummy">
+    <ion-grid *ngIf="!instantSearchInstance" class="dummy">
       <ion-row>
         <ion-col size-xs="0" size-sm="0" size-md="4" size-lg="4" class="desktop-only">
           <div class="filter-wrapper">
@@ -57,133 +52,56 @@
         </ion-col>
       </ion-row>
     </ion-grid>
+  </div>
 
-    <ais-instantsearch #instantSearch index-name="fulltimer-search" *ngIf="instantSearchConfig" (onRender)="onRender($event)" [config]="instantSearchConfig">
-      <ion-grid>
-        <ion-row [class.filter-closed]="!showFilter" [class.filter-opened]="showFilter">
+  <!-- InstantSearch.js Implementation -->
+  <div *ngIf="instantSearchInstance" class="instantsearch-container">
+    <ion-grid>
+      <ion-row [class.filter-closed]="!showFilter" [class.filter-opened]="showFilter">
 
-          <ion-col size-sm="12" size-md="4" size-lg="4" class="col-filter">
-            <div class="filter-wrapper" (scroll)="logScrolling($event)">
-              <fulltimer-filter></fulltimer-filter><!--  [class.hidden]="loading && !nbHits" todo
-              <loading-modal [loading]="loading && !nbHits" type="candidate-filter"></loading-modal>-->
-            </div>
-          </ion-col>
+        <ion-col size-sm="12" size-md="4" size-lg="4" class="col-filter">
+          <div class="filter-wrapper" (scroll)="logScrolling($event)">
+            <fulltimer-filter></fulltimer-filter>
+          </div>
+        </ion-col>
 
-          <ion-col size-xs="12" size-sm="12" size-md="8" size-lg="8" size-xl="8" class="col-listing employer-list-wrapper">
+        <ion-col size-xs="12" size-sm="12" size-md="8" size-lg="8" size-xl="8" class="col-listing employer-list-wrapper">
 
-            <div class="list-header" *ngIf="showSearchBox">
-
-              <div class="applied-filters-wrapper">
-                <applied-filters [loading]="refreshingFulltimers" [labelWithoutFilter]="'Showing fulltimers'"
-                  [labelWithFilter]="'Showing fulltimers for'">
-                </applied-filters>
-              </div>
-
-              <div class="searchBox">
-                <ion-searchbar (ionChange)="onSearch($event)" placeholder="Type to filter from these results">
-                </ion-searchbar>
-                <!-- <is-search-box [searchAsYouType]="true"
-        placeholder="{{ 'Type to filter from these results' | translate }}">
-      </is-search-box>-->
-              </div>
-
+          <div class="list-header" *ngIf="showSearchBox">
+            <div class="applied-filters-wrapper">
+              <applied-filters [loading]="refining" [labelWithoutFilter]="'Showing fulltimers'"
+                                [labelWithFilter]="'Showing fulltimers for'">
+              </applied-filters>
             </div>
 
-            <ais-infinite-hits class="cv-list">
-              <ng-template let-results="results" let-showMore="showMore" let-hits="hits">
+            <div class="searchBox" id="searchbox">
+              <!-- Search box will be instantiated by instantsearch.js -->
+            </div>
+          </div>
 
-                <!-- [class.hidden] -->
-                <div *ngIf="!refreshingFulltimers" class="fulltimer-wrapper">
-                  <!-- <fulltimer [fulltimer]="hit" *ngFor="let hit of hits"></fulltimer>-->
+          <!-- Results container -->
+          <div id="hits" class="cv-list">
+            <!-- Hits will be instantiated by instantsearch.js -->
+          </div>
 
-                  <ion-card tappable (click)="onFulltimerClicked(hit)" *ngFor="let hit of hits">
-                    <ion-card-header>
-                      <ion-card-title>
-                        {{ hit.fulltimer_name }}
-                      </ion-card-title>
-                    </ion-card-header>
-                    <ion-card-content>
+          <!-- Pagination container -->
+          <div id="pagination" class="pagination-container">
+            <!-- Pagination will be instantiated by instantsearch.js -->
+          </div>
 
-                      <ion-item lines="none" *ngIf="hit.fulltimer_phone" href='tel:{{ hit.fulltimer_phone }}'
-                        target='_blank'>
-                        <div tabindex="0"></div>
-                        <ion-icon name="call" slot="start"></ion-icon>
-                        {{ hit.fulltimer_phone }}
-                      </ion-item>
+          <!-- Loading state -->
+          <div *ngIf="refining" class="loading-fulltimer">
+            <loading-modal [loading]="true" type="fulltimer"></loading-modal>
+          </div>
 
-                      <ion-item lines="none" *ngIf="hit.fulltimer_phone"
-                        href='https://api.whatsapp.com/send?phone={{ hit.fulltimer_phone }}' target='_blank'>
-                        <div tabindex="0"></div>
-                        <ion-icon name="logo-whatsapp" slot="start"></ion-icon>
-                        Whats App Link
-                      </ion-item>
+          <!-- No results message -->
+          <p *ngIf="!refining && !instantSearchInstance.isStalled" class="no-fulltimer-on-filter">
+            {{ "No results found for your search" | translate }}
+          </p>
 
-                      <ion-item lines="none" *ngIf="hit.fulltimer_email" href='mailto:{{ hit.fulltimer_email }}'
-                        target='_blank'>
-                        <div tabindex="0"></div>
-                        <ion-icon name="mail" slot="start"></ion-icon>
-                        {{ hit.fulltimer_email }}
-                      </ion-item>
-
-                      <ion-item lines="none" *ngIf="hit.area && hit.country">
-                        <div tabindex="0"></div>
-                        <ion-icon name="globe" slot="start"></ion-icon>
-                        {{ hit.area.area_name_en }}, {{ hit.country.country_name_en }}
-                      </ion-item>
-
-                      <ion-item lines="none" *ngIf="hit.nationality">
-                        <div tabindex="0"></div>
-                        <ion-icon name="person" slot="start"></ion-icon>
-                        {{ hit.nationality.nationality_name_en }}
-                      </ion-item>
-
-                      <ion-item lines="none" *ngIf="hit.fulltimerTags && hit.fulltimerTags.length > 0">
-                        <div tabindex="0"></div>
-                        <ion-chip *ngFor="let fulltimerTag of hit.fulltimerTags">
-                          {{ fulltimerTag.tag }}
-                        </ion-chip>
-                      </ion-item>
-
-                    </ion-card-content>
-                  </ion-card>
-
-                </div>
-
-              <!--  <loading-modal [loading]="refreshingFulltimers || loading" type="fulltimer"></loading-modal>
-
-                to load more on scroll to bottom, usinng 0(zero) based pagination  --
-                <!-- <ais-pagination let-nbPages="nbPages"></ais-pagination> *ngIf="page + 1 < this.nbPages"
-
-                  <ion-infinite-scroll
-                    (ionInfinite)="doInfinite($event) && showMore()">
-                    <ion-infinite-scroll-content loadingSpinner=""></ion-infinite-scroll-content>
-                  </ion-infinite-scroll>
-
-            <ais-pagination>
-              <ng-template let-showMoreHandler="showMoreHandler" let-state="state">
-                <ion-infinite-scroll [disabled]="state.isLastPage" (ionInfinite)="showMoreHandler($event)">
-                  <ion-infinite-scroll-content loadingSpinner=""></ion-infinite-scroll-content>
-                </ion-infinite-scroll>
-              </ng-template>
-            </ais-pagination>
-          -->
-
-              </ng-template>
-            </ais-infinite-hits>
-
-
-            <bawes-ais-pagination></bawes-ais-pagination>
-
-            <!-- No results message -->
-
-            <p *ngIf="!loading && !refreshingFulltimers && noFulltimerList" class="no-fulltimer-on-filter">
-              No results found for your search
-            </p>
-
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ais-instantsearch>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </div>
 </ion-content>
 
@@ -191,7 +109,7 @@
   <ion-toolbar class="container ion-no-padding">
     <!-- || nbHits == 0-->
     <ion-button [disabled]="loading" (click)="dismiss()" expands="full" class="btn-view-fulltimers">
-      <span *ngIf="!loading || !refreshingFulltimers">
+      <span *ngIf="!loading">
         {{ "View Result" | translate }}
         <!--
         <span *ngIf="nbHits == 0">No Job Found</span>

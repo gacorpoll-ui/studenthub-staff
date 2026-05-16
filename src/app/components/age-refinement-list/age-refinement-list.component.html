@@ -43,9 +43,12 @@
                     {{ value.upper | age }}
                 </ion-label>
 
-                <ng5-slider [(value)]="value.lower" [(highValue)]="value.upper"
-                    (userChangeEnd)="handleChange()"
-                    (userChange)="setLabel()" [options]="options"></ng5-slider>
+                <ngx-slider [(lowValue)]="value.lower" [(highValue)]="value.upper"
+                    (changeEnd)="handleChange()"
+                    (change)="setLabel()" [options]="options"
+                    [pips]="pips"
+                    [tooltip]="tooltips ? 'always' : 'none'"
+                    [tooltipFormat]="formatTooltip"></ngx-slider>
                 <!--
                 <ion-range debounce="500" dualKnobs="true" (ionChange)="handleChange($event)"
                     [value]="value"

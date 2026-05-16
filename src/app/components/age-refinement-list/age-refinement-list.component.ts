@@ -1,9 +1,11 @@
-import { Component, Input, Inject, forwardRef, EventEmitter, Output, ChangeDetectorRef, Optional } from '@angular/core';
+import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { connectRange } from 'instantsearch.js/es/connectors';
 import { RangeRenderState } from 'instantsearch.js/es/connectors/range/connectRange';
-import { BaseWidget, NgAisIndex, NgAisInstantSearch } from 'angular-instantsearch';
-import { parseNumberInput, noop } from 'angular-instantsearch/esm2015/utils';
-import { Options } from 'ng5-slider';
+import { parseNumberInput, noop } from 'instantsearch.js/es/lib/utils';
+import { Options } from '@angular-slider/ngx-slider';
+import { Inject, forwardRef, Optional } from '@angular/core';
+import { NgAisInstantSearch } from 'instantsearch.js';
+import { NgAisIndex } from 'instantsearch.js/es/widgets';
 
 
 @Component({
@@ -11,7 +13,7 @@ import { Options } from 'ng5-slider';
   templateUrl: './age-refinement-list.component.html',
   styleUrls: ['./age-refinement-list.component.scss'],
 })
-export class AgeRefinementListComponent extends BaseWidget {
+export class AgeRefinementListComponent {
 
     @Input() title;
     @Input() subTitle;
@@ -27,7 +29,7 @@ export class AgeRefinementListComponent extends BaseWidget {
     @Output() change: EventEmitter<any> = new EventEmitter();
 
 
-    public override state: RangeRenderState = {
+    public state: RangeRenderState = {
         range: {min: 0, max: 1},
         refine: noop,
         canRefine: null,
@@ -35,8 +37,6 @@ export class AgeRefinementListComponent extends BaseWidget {
         format: noop,
         start: [0, 1],
     };
-
-    slider;
 
     handleChange;
     formatTooltip;
@@ -59,7 +59,6 @@ export class AgeRefinementListComponent extends BaseWidget {
         @Optional()
         public parentIndex: NgAisIndex,
     ) {
-        super('RangeRefinementComponent');
 
         // render options
         this.pips = true;
@@ -156,7 +155,7 @@ export class AgeRefinementListComponent extends BaseWidget {
     /**
      * @return {?}
      */
-    override ngOnInit() {
+    ngOnInit() {
         this.createWidget(connectRange, {
             attributeName: this.attribute,
             attribute: this.attribute,
@@ -164,7 +163,6 @@ export class AgeRefinementListComponent extends BaseWidget {
             min: parseNumberInput(this.min),
             precision: parseNumberInput(this.precision),
         });
-        super.ngOnInit();
     }
 
     /**

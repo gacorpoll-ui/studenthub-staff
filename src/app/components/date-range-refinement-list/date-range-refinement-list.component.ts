@@ -1,17 +1,18 @@
 import { Component, Input, Inject, forwardRef, EventEmitter, Output, OnInit, Optional } from '@angular/core';
 import { connectRange } from 'instantsearch.js/es/connectors';
-import { BaseWidget, NgAisIndex, NgAisInstantSearch } from 'angular-instantsearch';
-import { parseNumberInput, noop } from 'angular-instantsearch/esm2015/utils';
+import { NgAisInstantSearch } from 'instantsearch.js';
+import { NgAisIndex } from 'instantsearch.js/es/widgets';
+import { parseNumberInput, noop } from 'instantsearch.js/es/lib/utils';
 import {CalendarModal, CalendarModalOptions, CalendarResult} from 'ion2-calendar';
 import { ModalController } from '@ionic/angular';
-import {Options} from "ng5-slider";
+import { Options } from '@angular-slider/ngx-slider';
 
 @Component({
   selector: 'date-range-refinement-list',
   templateUrl: './date-range-refinement-list.component.html',
   styleUrls: ['./date-range-refinement-list.component.scss'],
 })
-export class DateRangeRefinementListComponent extends BaseWidget {
+export class DateRangeRefinementListComponent {
 
   @Input() title;
   @Input() subTitle;

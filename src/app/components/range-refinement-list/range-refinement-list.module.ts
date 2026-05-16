@@ -5,23 +5,20 @@ import { FormsModule } from "@angular/forms";
 
 import { RangeRefinementComponent } from './range-refinement-list';
 
-import { NgAisModule } from 'angular-instantsearch';
-import { Ng5SliderModule } from 'ng5-slider'; 
-
 import { PipesModule } from '../../pipes/pipes.module';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 
 @NgModule({
-    declarations: [     
+    declarations: [
         RangeRefinementComponent
     ],
     imports: [
         IonicModule,
-        NgAisModule,
         CommonModule,
         FormsModule,
         PipesModule,
-        Ng5SliderModule,
+        NgxSliderModule,
     ],
     exports: [
         RangeRefinementComponent
