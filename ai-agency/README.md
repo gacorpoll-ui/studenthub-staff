@@ -36,6 +36,41 @@ A structured AI agency setup with the following teams, each composed of 6 specia
 
 If you want, I can also create a GitHub branch and push this agency setup to the remote repository.
 
+## Run the AI agency CLI
+
+This project now includes a small AI agency runtime that can inspect your GitHub profile, search opportunities, and generate README suggestions.
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Set your environment variables:
+
+```bash
+setx GITHUB_TOKEN "your_token_here"
+setx OPENAI_API_KEY "your_openai_key"
+```
+
+3. Run the CLI:
+
+```bash
+npm run ai-agency -- preview
+npm run ai-agency -- profile
+npm run ai-agency -- search "hiring remote javascript"
+npm run ai-agency -- suggest-readme
+npm run ai-agency -- create-issue owner/repo "Title" "Issue body"
+```
+
+## What this does
+
+- `preview` prints the current agency structure
+- `profile` reads your GitHub profile with `GITHUB_TOKEN`
+- `search` scans GitHub issues for hiring/opportunity keywords
+- `suggest-readme` generates improvement suggestions using OpenAI
+- `create-issue` opens a new issue in a chosen repo
+
 ## Run the AI agency preview
 
 This agency manifest is currently a design blueprint. To inspect it locally, run:
