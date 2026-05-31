@@ -41,6 +41,13 @@ For ionic serve command, replace port 3000 with 8100
 
 For more commands follow the link 
 
+## 🤖 AI Agency Setup
+
+This repository now includes an AI agency design in `ai-agency/`, with 8 teams and 6 agents per team.
+
+<details>
+<summary>:zap: View My Dev Card</summary>
+
 https://raw.githubusercontent.com/sangam14/dockercheatsheets/master/dockercheatsheet8.png
 
 To fix heap limit error 
