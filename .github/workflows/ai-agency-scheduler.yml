@@ -9,7 +9,7 @@ on:
 
 jobs:
   run-agency:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest\n    permissions:\n      contents: write
     
     steps:
       - name: Checkout repository
