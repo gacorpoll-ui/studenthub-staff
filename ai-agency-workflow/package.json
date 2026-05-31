@@ -1,0 +1,21 @@
+{
+  "name": "ai-agency-workflow",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "ai-agency-workflow": "./cli.js"
+  },
+  "scripts": {
+    "start": "node cli.js",
+    "preview": "node cli.js preview",
+    "profile": "node cli.js profile",
+    "search": "node cli.js search",
+    "jobs": "node cli.js jobs",
+    "portfolio": "node cli.js portfolio",
+    "update-readme": "node cli.js update-readme",
+    "cover-letter": "node cli.js cover-letter",
+    "auto-hunter": "node cli.js auto-hunter",
+    "build-resume": "node cli.js build-resume"
+  }
+}

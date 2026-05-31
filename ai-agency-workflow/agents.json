@@ -1,0 +1,33 @@
+{
+  "agencyName": "AI Agency Workflow",
+  "description": "A standalone AI workflow for portfolio and job automation.",
+  "teams": [
+    {
+      "name": "Project Commander",
+      "role": "Strategy, planning, and delivery oversight",
+      "agents": [
+        { "name": "Command Chief", "focus": "roadmap and execution planning" },
+        { "name": "Risk Controller", "focus": "challenge identification and mitigation" },
+        { "name": "Delivery Auditor", "focus": "progress tracking and quality checks" }
+      ]
+    },
+    {
+      "name": "Engineering",
+      "role": "Implementation and automation",
+      "agents": [
+        { "name": "Backend Builder", "focus": "backend service and API design" },
+        { "name": "DevOps Automator", "focus": "deployment and CI automation" },
+        { "name": "Security Engineer", "focus": "secure integration and data handling" }
+      ]
+    },
+    {
+      "name": "Product",
+      "role": "Vision and user outcome",
+      "agents": [
+        { "name": "Product Manager", "focus": "feature prioritization and roadmap" },
+        { "name": "User Researcher", "focus": "user insights and feedback" },
+        { "name": "Growth Strategist", "focus": "positioning and launch planning" }
+      ]
+    }
+  ]
+}

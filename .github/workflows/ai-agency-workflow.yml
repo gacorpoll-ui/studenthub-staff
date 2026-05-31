@@ -1,0 +1,25 @@
+name: AI Agency Workflow CI
+
+on:
+  push:
+    paths:
+      - 'ai-agency-workflow/**'
+  pull_request:
+    paths:
+      - 'ai-agency-workflow/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        working-directory: ai-agency-workflow
+        run: npm install
+      - name: Run preview command
+        working-directory: ai-agency-workflow
+        run: npm run preview
