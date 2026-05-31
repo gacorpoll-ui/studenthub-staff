@@ -3,7 +3,7 @@
 **Company**: BAWES StudentHub Staff  
 **Location**: Remote (International)  
 **Rate**: $200–$1500/bounty (per merged PR)  
-**Contact**: DM @gacolpoll-ui (punokawan) di GitHub
+**Contact**: DM @gacorpoll-ui (punokawan) di GitHub
 
 ---
 
