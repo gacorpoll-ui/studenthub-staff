@@ -10,23 +10,40 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    
+
     steps:
+      - name: Check API key availability
+        id: check-keys
+        run: |
+          if [ -z "$OPENAI_API_KEY" ] && [ -z "$FREETHEAI_API_KEY" ]; then
+            echo "has_api_key=false" >> "$GITHUB_OUTPUT"
+            echo "⚠️ No AI API key found. Skipping auto-hunter. Set OPENAI_API_KEY or FREETHEAI_API_KEY in repo secrets."
+          else
+            echo "has_api_key=true" >> "$GITHUB_OUTPUT"
+          fi
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          FREETHEAI_API_KEY: ${{ secrets.FREETHEAI_API_KEY }}
+
       - name: Checkout repository
+        if: steps.check-keys.outputs.has_api_key == 'true'
         uses: actions/checkout@v4
-        
+
       - name: Setup Node.js
+        if: steps.check-keys.outputs.has_api_key == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
           cache-dependency-path: './ai-agency-workflow/package-lock.json'
-          
+
       - name: Install Dependencies
+        if: steps.check-keys.outputs.has_api_key == 'true'
         working-directory: ./ai-agency-workflow
         run: npm install
-        
+
       - name: Run Auto Job Hunter
+        if: steps.check-keys.outputs.has_api_key == 'true'
         working-directory: ./ai-agency-workflow
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
